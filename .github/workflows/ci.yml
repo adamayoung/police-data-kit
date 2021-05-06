@@ -31,13 +31,20 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
 
-      - name: Cache
+      - name: Cache SPM
         uses: actions/cache@v2
         with:
           path: .build
           key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
           restore-keys: |
             ${{ runner.os }}-spm-
+
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v2
+        with:
+          path: .sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
 
       - name: Lint
         run: |
@@ -111,7 +118,10 @@ jobs:
     if: github.event_name == 'pull_request'
 
     steps:
-      - uses: actions/checkout@v1
+      - name: Checkout
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 0
 
       - name: Install tools
         run: brew install danger/tap/danger-swift
