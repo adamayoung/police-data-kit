@@ -37,7 +37,7 @@ extension UKNeighbourhoodService {
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     func detailsPublisher(forNeighbourhood id: String,
                           inPoliceForce policeForceID: String) -> AnyPublisher<Neighbourhood, PoliceDataError> {
-        apiClient.get(endpoint: NeighbourhoodsEndpoint.list(policeForceID: policeForceID))
+        apiClient.get(endpoint: NeighbourhoodsEndpoint.details(id: id, policeForceID: policeForceID))
     }
 
 }

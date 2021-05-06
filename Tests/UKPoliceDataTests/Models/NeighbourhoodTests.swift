@@ -1,8 +1,13 @@
-//
-//  File.swift
-//  
-//
-//  Created by Adam Young on 06/05/2021.
-//
+@testable import UKPoliceData
+import XCTest
 
-import Foundation
+final class NeighbourhoodTests: XCTestCase {
+
+    func testDecodeReturnsNeighbourhood() throws {
+        let result = try JSONDecoder.policeDataAPI
+            .decode(Neighbourhood.self, fromResource: "neighbourhood", withExtension: "json")
+
+        XCTAssertEqual(result, .mock)
+    }
+
+}
