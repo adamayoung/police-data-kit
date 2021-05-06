@@ -23,7 +23,13 @@ identifier_name:
     error: 4
   max_length: 60
   excluded:
-
+    - bio
+    - fax
+    - id
+    - key
+    - rss
+    - url
+    - web
 
 file_length:
   warning: 500
