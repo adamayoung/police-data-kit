@@ -60,7 +60,7 @@ jobs:
         run: brew install sonar-scanner
 
       - name: SonarCloud Scan
-        run: sonar-scanner
+        run: sonar-scanner -Dsonar.projectKey=adamayoung_UKPoliceData -Dsonar.organization=adamayoung -Dsonar.host.url="https://sonarcloud.io" -Dsonar.sources=Sources -Dsonar.swift.coverage.reportPaths=info.lcov -Dsonar.swift.swiftLint.reportPaths=swiftlint.result.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
