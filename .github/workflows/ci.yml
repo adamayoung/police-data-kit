@@ -49,6 +49,9 @@ jobs:
       - name: Generate Code Coverage report
         run: xcrun llvm-cov show .build/debug/UKPoliceDataPackageTests.xctest/Contents/MacOS/UKPoliceDataPackageTests -instr-profile .build/debug/codecov/default.profdata Sources/ > info.lcov
 
+      - name: Install SonarScanner
+        run: brew install sonar-scanner
+
       - name: SonarCloud Scan
         run: sonar-scanner -Dsonar.projectKey=adamayoung_UKPoliceData -Dsonar.organization=adamayoung -Dsonar.host.url="https://sonarcloud.io" -Dsonar.sources=Sources -Dsonar.swift.coverage.reportPaths=info.lcov -Dsonar.swift.swiftLint.reportPaths=swiftlint.result.json
         env:
