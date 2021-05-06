@@ -1,10 +1,24 @@
 @testable import UKPoliceData
 import XCTest
 
-final class UKPoliceDataTests: XCTestCase {
+final class UKPoliceDataAPITests: XCTestCase {
 
-    func testExample() {
-        XCTAssertEqual(UKPoliceData().text, "Hello, World!")
+    var policeDataAPI: UKPoliceDataAPI!
+
+    override func setUp() {
+        super.setUp()
+
+        policeDataAPI = UKPoliceDataAPI()
+    }
+
+    override func tearDown() {
+        policeDataAPI = nil
+
+        super.tearDown()
+    }
+
+    func testExists() {
+        XCTAssertNotNil(policeDataAPI)
     }
 
 }
