@@ -17,7 +17,7 @@ on:
 
 jobs:
   lint:
-    name: Test on macOS
+    name: Lint
     runs-on: macos-latest
 
     steps:
