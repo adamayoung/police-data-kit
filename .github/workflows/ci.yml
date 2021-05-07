@@ -27,7 +27,7 @@ jobs:
           fetch-depth: 0
 
       - name: Danger
-        uses: docker://ghcr.io/danger/danger-swift-with-swiftlint:3.10.1
+        uses: docker://ghcr.io/danger/danger-swift-with-swiftlint:3.9.1
         with:
             args: --failOnErrors
         env:
