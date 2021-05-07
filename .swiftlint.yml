@@ -27,6 +27,7 @@ identifier_name:
     - fax
     - id
     - key
+    - lat
     - lhs
     - rhs
     - rss
