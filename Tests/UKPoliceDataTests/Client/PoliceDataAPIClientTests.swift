@@ -1,6 +1,7 @@
 @testable import UKPoliceData
 import XCTest
 
+#if !os(Linux)
 final class PoliceDataAPIClientTests: XCTestCase {
 
     var baseURL: URL!
@@ -218,3 +219,4 @@ extension Person {
     }
 
 }
+#endif

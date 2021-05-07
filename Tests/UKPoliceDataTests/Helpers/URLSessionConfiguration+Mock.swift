@@ -1,9 +1,6 @@
 import Foundation
 
-#if canImport(FoundationNetworking)
-import FoundationNetworking
-#endif
-
+#if !os(Linux)
 extension URLSessionConfiguration {
 
     static var mock: URLSessionConfiguration {
@@ -13,3 +10,4 @@ extension URLSessionConfiguration {
     }
 
 }
+#endif
