@@ -12,17 +12,19 @@ class PoliceForcesEndpointTests: XCTestCase {
     }
 
     func testDetailsEndpointReturnsURL() {
-        let expectedURL = URL(string: "/forces/leicestershire")!
+        let id = "leicestershire"
+        let expectedURL = URL(string: "/forces/\(id)")!
 
-        let url = PoliceForcesEndpoint.details(id: "leicestershire").url
+        let url = PoliceForcesEndpoint.details(id: id).url
 
         XCTAssertEqual(url, expectedURL)
     }
 
     func testSeniorOfficersEndpointReturnsURL() {
-        let expectedURL = URL(string: "/forces/leicestershire/people")!
+        let policeForceID = "leicestershire"
+        let expectedURL = URL(string: "/forces/\(policeForceID)/people")!
 
-        let url = PoliceForcesEndpoint.seniorOfficers(policeForceID: "leicestershire").url
+        let url = PoliceForcesEndpoint.seniorOfficers(policeForceID: policeForceID).url
 
         XCTAssertEqual(url, expectedURL)
     }

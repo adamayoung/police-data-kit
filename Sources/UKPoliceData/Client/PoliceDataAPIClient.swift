@@ -10,19 +10,21 @@ import FoundationNetworking
 
 final class PoliceDataAPIClient: APIClient {
 
+    private let baseURL: URL
     private let urlSession: URLSession
     private let jsonDecoder: JSONDecoder
 
     static let shared = PoliceDataAPIClient()
 
-    init(urlSession: URLSession = URLSession(configuration: .default), jsonDecoder: JSONDecoder = .policeDataAPI) {
+    init(baseURL: URL = .policeDataAPIBaseURL, urlSession: URLSession = URLSession(configuration: .default),
+         jsonDecoder: JSONDecoder = .policeDataAPI) {
+        self.baseURL = baseURL
         self.urlSession = urlSession
         self.jsonDecoder = jsonDecoder
     }
 
-    func get<Response: Decodable>(path: URL, httpHeaders: [String: String]?,
-                                  completion: @escaping (Result<Response, PoliceDataError>) -> Void) {
-        let urlRequest = buildURLRequest(for: path, httpHeaders: httpHeaders)
+    func get<Response: Decodable>(path: URL, completion: @escaping (Result<Response, PoliceDataError>) -> Void) {
+        let urlRequest = buildURLRequest(for: path)
 
         urlSession.dataTask(with: urlRequest) { [weak self] data, response, error in
             guard let self = self else {
@@ -34,13 +36,18 @@ final class PoliceDataAPIClient: APIClient {
                 return
             }
 
-            guard let response = response, let data = data else {
+            guard let response = response else {
                 completion(.failure(.unknown))
                 return
             }
 
             if let policeDataError = PoliceDataError(response: response) {
                 completion(.failure(policeDataError))
+                return
+            }
+
+            guard let data = data, !data.isEmpty else {
+                completion(.failure(.unknown))
                 return
             }
 
@@ -63,9 +70,8 @@ final class PoliceDataAPIClient: APIClient {
 extension PoliceDataAPIClient {
 
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func get<Response: Decodable>(path: URL,
-                                  httpHeaders: [String: String]? = nil) -> AnyPublisher<Response, PoliceDataError> {
-        let urlRequest = buildURLRequest(for: path, httpHeaders: httpHeaders)
+    func get<Response: Decodable>(path: URL) -> AnyPublisher<Response, PoliceDataError> {
+        let urlRequest = buildURLRequest(for: path)
 
         return urlSession.dataTaskPublisher(for: urlRequest)
             .mapPoliceDataError()
@@ -78,14 +84,11 @@ extension PoliceDataAPIClient {
 
 extension PoliceDataAPIClient {
 
-    private func buildURLRequest(for path: URL, httpHeaders: [String: String]?) -> URLRequest {
+    private func buildURLRequest(for path: URL) -> URLRequest {
         let url = urlFromPath(path)
         var urlRequest = URLRequest(url: url)
 
         urlRequest.addValue("application/json", forHTTPHeaderField: "Accept")
-        httpHeaders?.forEach { (key: String, value: String) in
-            urlRequest.addValue(value, forHTTPHeaderField: key)
-        }
 
         return urlRequest
     }
@@ -95,10 +98,11 @@ extension PoliceDataAPIClient {
             return path
         }
 
-        urlComponents.scheme = URL.policeDataAPIBaseURL.scheme
-        urlComponents.host = URL.policeDataAPIBaseURL.host
-        urlComponents.path = URL.policeDataAPIBaseURL.path + "\(urlComponents.path)"
+        urlComponents.scheme = baseURL.scheme
+        urlComponents.host = baseURL.host
+        urlComponents.path = baseURL.path + "\(urlComponents.path)"
 
+        print(baseURL.path)
         return urlComponents.url!
     }
 
@@ -112,13 +116,12 @@ private extension PoliceDataError {
             return nil
         }
 
-        switch statusCode {
-        case 404:
+        if statusCode == 404 {
             self = .notFound
-
-        default:
-            self = .unknown
+            return
         }
+
+        self = .unknown
     }
 
 }

@@ -11,4 +11,7 @@ public protocol PoliceDataAPI {
     /// Police Forces.
     var policeForces: PoliceForceService { get }
 
+    /// Neighbourhoods.
+    var neighbourhoods: NeighbourhoodService { get }
+
 }
