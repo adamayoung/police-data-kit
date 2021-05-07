@@ -13,6 +13,9 @@ public protocol NeighbourhoodService {
     func fetchDetails(forNeighbourhood id: String, inPoliceForce policeForceID: String,
                       completion: @escaping (_ result: Result<Neighbourhood, PoliceDataError>) -> Void)
 
+    func fetchBoundary(forNeighbourhood neighbourhoodID: String, inPoliceForce policeForceID: String,
+                       completion: @escaping (_ result: Result<[Coordinate], PoliceDataError>) -> Void)
+
     #if canImport(Combine)
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     func neighbourhoodsPublisher(
@@ -21,6 +24,10 @@ public protocol NeighbourhoodService {
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     func detailsPublisher(forNeighbourhood id: String,
                           inPoliceForce policeForceID: String) -> AnyPublisher<Neighbourhood, PoliceDataError>
+
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func boundaryPublisher(forNeighbourhood neighbourhoodID: String,
+                           inPoliceForce policeForceID: String) -> AnyPublisher<[Coordinate], PoliceDataError>
 
     #endif
 

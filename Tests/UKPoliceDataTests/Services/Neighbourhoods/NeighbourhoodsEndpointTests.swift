@@ -22,4 +22,14 @@ class NeighbourhoodsEndpointTests: XCTestCase {
         XCTAssertEqual(url, expectedURL)
     }
 
+    func testBoundaryEndpointReturnsURL() {
+        let neighbourhoodID = "AB123"
+        let policeForceID = "leicestershire"
+        let expectedURL = URL(string: "/\(policeForceID)/\(neighbourhoodID)/boundary")!
+
+        let url = NeighbourhoodsEndpoint.boundary(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID).url
+
+        XCTAssertEqual(url, expectedURL)
+    }
+
 }

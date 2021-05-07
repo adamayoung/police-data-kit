@@ -23,6 +23,13 @@ final class UKNeighbourhoodService: NeighbourhoodService {
                       completion: completion)
     }
 
+    func fetchBoundary(forNeighbourhood neighbourhoodID: String, inPoliceForce policeForceID: String,
+                       completion: @escaping (Result<[Coordinate], PoliceDataError>) -> Void) {
+        apiClient.get(endpoint: NeighbourhoodsEndpoint.boundary(neighbourhoodID: neighbourhoodID,
+                                                                policeForceID: policeForceID),
+                      completion: completion)
+    }
+
 }
 
 #if canImport(Combine)
@@ -38,6 +45,13 @@ extension UKNeighbourhoodService {
     func detailsPublisher(forNeighbourhood id: String,
                           inPoliceForce policeForceID: String) -> AnyPublisher<Neighbourhood, PoliceDataError> {
         apiClient.get(endpoint: NeighbourhoodsEndpoint.details(id: id, policeForceID: policeForceID))
+    }
+
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func boundaryPublisher(forNeighbourhood neighbourhoodID: String,
+                           inPoliceForce policeForceID: String) -> AnyPublisher<[Coordinate], PoliceDataError> {
+        apiClient.get(endpoint: NeighbourhoodsEndpoint.boundary(neighbourhoodID: neighbourhoodID,
+                                                                policeForceID: policeForceID))
     }
 
 }

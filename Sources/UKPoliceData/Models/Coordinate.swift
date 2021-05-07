@@ -1,16 +1,51 @@
 import Foundation
 
+#if canImport(CoreLocation)
+import CoreLocation
+#endif
+
 /// Coordinate.
 public struct Coordinate: Decodable, Equatable {
 
     /// Latitude.
-    public let latitude: String
+    public var latitude: Double {
+        Double(latitudeString) ?? 0
+    }
     /// Longitude.
-    public let longitude: String
+    public var longitude: Double {
+        Double(longitudeString) ?? 0
+    }
 
-    public init(latitude: String, longitude: String) {
-        self.latitude = latitude
-        self.longitude = longitude
+    private let latitudeString: String
+    private let longitudeString: String
+
+    /// Creates a a new `Coordinate`.
+    ///
+    /// - Parameters:
+    ///     - latitude: Latitude.
+    ///     - longitude: Longitude.
+    public init(latitude: Double, longitude: Double) {
+        self.latitudeString = String(latitude)
+        self.longitudeString = String(longitude)
+    }
+
+}
+
+#if canImport(CoreLocation)
+extension Coordinate {
+
+    public var locationCoordinate: CLLocationCoordinate2D {
+        CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+
+}
+#endif
+
+extension Coordinate {
+
+    private enum CodingKeys: String, CodingKey {
+        case latitudeString = "latitude"
+        case longitudeString = "longitude"
     }
 
 }

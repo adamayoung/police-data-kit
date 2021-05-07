@@ -12,8 +12,8 @@ extension Neighbourhood {
                 + "Leicester Tigers rugby ground and the Clarendon Park and Riverside communities.</p>\n<p>The "
                 + "Highcross and Haymarket shopping centres and Leicester's famous Market are all covered by this "
                 + "neighbourhood.</p>",
-            urlForce: URL(string: "http://www.leics.police.uk/local-policing/city-centre")!,
-            population: "0",
+            policeForceWebsite: URL(string: "http://www.leics.police.uk/local-policing/city-centre")!,
+            population: 1000,
             contactDetails: ContactDetails(
                 email: "centralleicester.npa@leicestershire.pnn.police.uk",
                 telephone: "101",
@@ -21,8 +21,8 @@ extension Neighbourhood {
                 twitter: URL(string: "http://www.twitter.com/centralleicsNPA")!
             ),
             centre: Coordinate(
-                latitude: "52.6389",
-                longitude: "-1.13619"
+                latitude: 52.6389,
+                longitude: -1.13619
             ),
             locations: [
                 Location(
