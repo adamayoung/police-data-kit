@@ -9,12 +9,10 @@ class MockAPIClient: APIClient {
 
     var response: Any?
     private(set) var lastPath: URL?
-    private(set) var lastHTTPHeaders: [String: String]?
 
-    func get<Response>(path: URL, httpHeaders: [String: String]?,
+    func get<Response>(path: URL,
                        completion: @escaping (Result<Response, PoliceDataError>) -> Void) where Response: Decodable {
         self.lastPath = path
-        self.lastHTTPHeaders = httpHeaders
 
         guard let decodedResponse = response as? Response else {
             XCTFail("Can't cast response to type \(String(describing: Response.self))")
@@ -27,10 +25,8 @@ class MockAPIClient: APIClient {
     }
 
     #if canImport(Combine)
-    func get<Response: Decodable>(path: URL,
-                                  httpHeaders: [String: String]?) -> AnyPublisher<Response, PoliceDataError> {
+    func get<Response: Decodable>(path: URL) -> AnyPublisher<Response, PoliceDataError> {
         self.lastPath = path
-        self.lastHTTPHeaders = httpHeaders
 
         guard let result = response as? Response else {
             XCTFail("Can't cast response to type \(String(describing: Response.self))")
@@ -48,7 +44,6 @@ class MockAPIClient: APIClient {
     func reset() {
         response = nil
         lastPath = nil
-        lastHTTPHeaders = nil
     }
 
 }

@@ -20,9 +20,8 @@ final class PoliceDataAPIClient: APIClient {
         self.jsonDecoder = jsonDecoder
     }
 
-    func get<Response: Decodable>(path: URL, httpHeaders: [String: String]?,
-                                  completion: @escaping (Result<Response, PoliceDataError>) -> Void) {
-        let urlRequest = buildURLRequest(for: path, httpHeaders: httpHeaders)
+    func get<Response: Decodable>(path: URL, completion: @escaping (Result<Response, PoliceDataError>) -> Void) {
+        let urlRequest = buildURLRequest(for: path)
 
         urlSession.dataTask(with: urlRequest) { [weak self] data, response, error in
             guard let self = self else {
@@ -63,9 +62,8 @@ final class PoliceDataAPIClient: APIClient {
 extension PoliceDataAPIClient {
 
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func get<Response: Decodable>(path: URL,
-                                  httpHeaders: [String: String]? = nil) -> AnyPublisher<Response, PoliceDataError> {
-        let urlRequest = buildURLRequest(for: path, httpHeaders: httpHeaders)
+    func get<Response: Decodable>(path: URL) -> AnyPublisher<Response, PoliceDataError> {
+        let urlRequest = buildURLRequest(for: path)
 
         return urlSession.dataTaskPublisher(for: urlRequest)
             .mapPoliceDataError()
@@ -78,14 +76,11 @@ extension PoliceDataAPIClient {
 
 extension PoliceDataAPIClient {
 
-    private func buildURLRequest(for path: URL, httpHeaders: [String: String]?) -> URLRequest {
+    private func buildURLRequest(for path: URL) -> URLRequest {
         let url = urlFromPath(path)
         var urlRequest = URLRequest(url: url)
 
         urlRequest.addValue("application/json", forHTTPHeaderField: "Accept")
-        httpHeaders?.forEach { (key: String, value: String) in
-            urlRequest.addValue(value, forHTTPHeaderField: key)
-        }
 
         return urlRequest
     }
@@ -112,13 +107,12 @@ private extension PoliceDataError {
             return nil
         }
 
-        switch statusCode {
-        case 404:
+        if statusCode == 404 {
             self = .notFound
-
-        default:
-            self = .unknown
+            return
         }
+
+        self = .unknown
     }
 
 }

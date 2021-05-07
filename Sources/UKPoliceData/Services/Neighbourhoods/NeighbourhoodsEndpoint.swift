@@ -20,8 +20,8 @@ extension NeighbourhoodsEndpoint: Endpoint {
 
         case .details(let id, let policeForceID):
             return Self.basePath
-                .appendingPathComponent(id)
                 .appendingPathComponent(policeForceID)
+                .appendingPathComponent(id)
         }
     }
 
