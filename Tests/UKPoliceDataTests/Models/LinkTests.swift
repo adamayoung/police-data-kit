@@ -10,4 +10,11 @@ final class LinkTests: XCTestCase {
         XCTAssertEqual(result, .mock)
     }
 
+    func testDecodeWhenNoDescriptionReturnsLink() throws {
+        let result = try JSONDecoder.policeDataAPI
+            .decode(Link.self, fromResource: "link-no-description", withExtension: "json")
+
+        XCTAssertEqual(result, .mockNoDescription)
+    }
+
 }

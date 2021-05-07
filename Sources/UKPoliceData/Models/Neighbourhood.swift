@@ -34,6 +34,19 @@ public struct Neighbourhood: Identifiable, Decodable, Equatable {
 
     private let populationString: String
 
+    /// Creates a a new `Neighbourhood`.
+    ///
+    /// - Parameters:
+    ///     - id: Police Force specific team identifier.
+    ///     - name: Name for the neighbourhood.
+    ///     - description: Description.
+    ///     - policeForceWebsite: URL for the neighbourhood on the Force's website.
+    ///     - welcomeMessage: An introduction message for the neighbourhood.
+    ///     - population: Population of the neighbourhood.
+    ///     - contactDetails: Ways to get in touch with the neighbourhood officers.
+    ///     - centre: Centre point locator for the neighbourhood.
+    ///     - locations: Any associated locations with the neighbourhood.
+    ///     - links: Links.
     public init(id: String, name: String, description: String? = nil, policeForceWebsite: URL,
                 welcomeMessage: String? = nil, population: Int, contactDetails: ContactDetails, centre: Coordinate,
                 locations: [Location], links: [Link]) {

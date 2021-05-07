@@ -54,6 +54,18 @@ public protocol NeighbourhoodService {
     func fetchPoliceOfficers(forNeighbourhood neighbourhoodID: String, inPoliceForce policeForceID: String,
                              completion: @escaping (_ result: Result<[PoliceOfficer], PoliceDataError>) -> Void)
 
+    /// Fetches a list priorities for a neighbourhood.
+    ///
+    /// - Note: [Police API | Neighbourhood priorities](https://data.police.uk/docs/method/neighbourhood-priorities/)
+    ///
+    /// - Parameters:
+    ///     - neighbourhoodID: Neighbourhood identifier.
+    ///     - policeForceID: Police Force identifier.
+    ///     - completion: Completion handler.
+    ///     - result: A list of priorities for the matching neighbourhood.
+    func fetchPriorities(forNeighbourhood neighbourhoodID: String, inPoliceForce policeForceID: String,
+                         completion: @escaping (_ result: Result<[NeighbourhoodPriority], PoliceDataError>) -> Void)
+
     #if canImport(Combine)
     /// Publishes a list of all the neighbourhoods in a police force.
     ///
@@ -104,6 +116,19 @@ public protocol NeighbourhoodService {
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     func policeOfficersPublisher(forNeighbourhood neighbourhoodID: String,
                                  inPoliceForce policeForceID: String) -> AnyPublisher<[PoliceOfficer], PoliceDataError>
+
+    /// Publishes a list of Priorities for a neighbourhood.
+    ///
+    /// - Note: [Police API | Neighbourhood priorities](https://data.police.uk/docs/method/neighbourhood-priorities/)
+    ///
+    /// - Parameters:
+    ///     - neighbourhoodID: Neighbourhood identifier.
+    ///     - policeForceID: Police Force identifier.
+    /// - Returns: A publisher with a list of police officers who are members of the neighbourhood team for the matching neighbourhood.
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func prioritiesPublisher(
+        forNeighbourhood neighbourhoodID: String,
+        inPoliceForce policeForceID: String) -> AnyPublisher<[NeighbourhoodPriority], PoliceDataError>
     #endif
 
 }

@@ -36,6 +36,16 @@ public struct Location: Decodable, Equatable {
     /// Location longitude.
     private let longitude: String?
 
+    /// Creates a a new `Location`.
+    ///
+    /// - Parameters:
+    ///     - name: Name.
+    ///     - type: Type of location.
+    ///     - description: Description.
+    ///     - address: Location address.
+    ///     - postcode: Postcode
+    ///     - latitiude: Location coordinate latitude.
+    ///     - longitude: Location coordinate longitude.
     public init(name: String? = nil, type: String, description: String? = nil, address: String, postcode: String,
                 latitude: Double? = nil, longitude: Double? = nil) {
         self.name = name

@@ -37,6 +37,13 @@ final class UKNeighbourhoodService: NeighbourhoodService {
                       completion: completion)
     }
 
+    func fetchPriorities(forNeighbourhood neighbourhoodID: String, inPoliceForce policeForceID: String,
+                         completion: @escaping (_ result: Result<[NeighbourhoodPriority], PoliceDataError>) -> Void) {
+        apiClient.get(endpoint: NeighbourhoodsEndpoint.priorities(neighbourhoodID: neighbourhoodID,
+                                                                  policeForceID: policeForceID),
+                      completion: completion)
+    }
+
 }
 
 #if canImport(Combine)
@@ -68,6 +75,15 @@ extension UKNeighbourhoodService {
     ) -> AnyPublisher<[PoliceOfficer], PoliceDataError> {
         apiClient.get(endpoint: NeighbourhoodsEndpoint.policeOfficers(neighbourhoodID: neighbourhoodID,
                                                                       policeForceID: policeForceID))
+    }
+
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func prioritiesPublisher(
+        forNeighbourhood neighbourhoodID: String,
+        inPoliceForce policeForceID: String
+    ) -> AnyPublisher<[NeighbourhoodPriority], PoliceDataError> {
+        apiClient.get(endpoint: NeighbourhoodsEndpoint.priorities(neighbourhoodID: neighbourhoodID,
+                                                                  policeForceID: policeForceID))
     }
 
 }
