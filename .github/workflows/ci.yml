@@ -16,8 +16,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  lint:
-    name: Lint
+  danger:
+    name: Run Danger
     runs-on: macos-latest
 
     steps:
@@ -26,8 +26,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Lint
-        run: swiftlint --strict
+      - name: Install tools
+        run: brew install danger/tap/danger-swift
+      
+      - name: Danger
+        run: danger-swift ci -f
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   test-on-macos:
     name: Test on macOS
@@ -133,9 +138,7 @@ jobs:
           restore-keys: ${{ runner.os }}-sonar
 
       - name: Install tools
-        run: |
-          brew install sonar-scanner
-          brew install danger/tap/danger-swift
+        run: brew install sonar-scanner
 
       - name: Lint
         run: |
@@ -152,8 +155,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-      - name: Danger
-        run: danger-swift ci
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
