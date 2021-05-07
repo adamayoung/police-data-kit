@@ -19,6 +19,7 @@ jobs:
   lint:
     name: Lint
     runs-on: macos-latest
+    if: github.event_name == 'pull_request'
 
     steps:
       - name: Checkout
@@ -32,6 +33,7 @@ jobs:
   danger:
     name: Run Danger
     runs-on: macos-latest
+    if: github.event_name == 'pull_request'
 
     steps:
       - name: Checkout

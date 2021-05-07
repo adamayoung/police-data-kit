@@ -41,4 +41,41 @@ final class PoliceDataErrorTests: XCTestCase {
         XCTAssertEqual(result, expectedResult)
     }
 
+    func testEqualWhenNetworkAndSameErrorReturnsTrue() {
+        let error = MockError(message: "Some error message")
+        let lhs = PoliceDataError.network(error)
+        let rhs = PoliceDataError.network(error)
+
+        XCTAssertEqual(lhs, rhs)
+    }
+
+    func testEqualWhenNotFoundReturnsTrue() {
+        let lhs = PoliceDataError.notFound
+        let rhs = PoliceDataError.notFound
+
+        XCTAssertEqual(lhs, rhs)
+    }
+
+    func testEqualWhenUnknownReturnsTrue() {
+        let lhs = PoliceDataError.unknown
+        let rhs = PoliceDataError.unknown
+
+        XCTAssertEqual(lhs, rhs)
+    }
+
+    func testEqualWhenDecodeReturnsTrue() {
+        let error = MockError(message: "Some error message")
+        let lhs = PoliceDataError.decode(error)
+        let rhs = PoliceDataError.decode(error)
+
+        XCTAssertEqual(lhs, rhs)
+    }
+
+    func testEqualWhenNotFoundAndUnknownReturnsFalse() {
+        let lhs = PoliceDataError.notFound
+        let rhs = PoliceDataError.unknown
+
+        XCTAssertNotEqual(lhs, rhs)
+    }
+
 }

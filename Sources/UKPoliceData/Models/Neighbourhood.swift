@@ -12,11 +12,13 @@ public struct Neighbourhood: Identifiable, Decodable, Equatable {
     /// Description.
     public let description: String?
     /// URL for the neighbourhood on the Force's website.
-    public let urlForce: URL
+    public let policeForceWebsite: URL
     /// An introduction message for the neighbourhood.
     public let welcomeMessage: String?
     /// Population of the neighbourhood.
-    public let population: String
+    public var population: Int {
+        Int(populationString) ?? 0
+    }
     /// Ways to get in touch with the neighbourhood officers.
     public let contactDetails: ContactDetails
     /// Centre point locator for the neighbourhood.
@@ -30,19 +32,38 @@ public struct Neighbourhood: Identifiable, Decodable, Equatable {
     /// Links.
     public let links: [Link]
 
-    public init(id: String, name: String, description: String? = nil, urlForce: URL, welcomeMessage: String? = nil,
-                population: String, contactDetails: ContactDetails, centre: Coordinate, locations: [Location],
-                links: [Link]) {
+    private let populationString: String
+
+    public init(id: String, name: String, description: String? = nil, policeForceWebsite: URL,
+                welcomeMessage: String? = nil, population: Int, contactDetails: ContactDetails, centre: Coordinate,
+                locations: [Location], links: [Link]) {
         self.id = id
         self.name = name
         self.description = description
-        self.urlForce = urlForce
+        self.policeForceWebsite = policeForceWebsite
         self.welcomeMessage = welcomeMessage
-        self.population = population
+        self.populationString = String(population)
         self.contactDetails = contactDetails
         self.centre = centre
         self.locations = locations
         self.links = links
+    }
+
+}
+
+extension Neighbourhood {
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case description
+        case policeForceWebsite = "urlForce"
+        case welcomeMessage
+        case populationString = "population"
+        case contactDetails
+        case centre
+        case locations
+        case links
     }
 
 }

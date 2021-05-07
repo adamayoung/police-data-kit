@@ -61,6 +61,24 @@ final class UKNeighbourhoodServiceTests: XCTestCase {
         XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.details(id: id, policeForceID: policeForceID).url)
     }
 
+    func testFetchBoundaryReturnsCoordinates() {
+        let neighbourhoodID = "NC04"
+        let policeForceID = "leicestershire"
+        let expectedResult = Coordinate.mocks
+        apiClient.response = expectedResult
+
+        let expectation = XCTestExpectation(description: "await")
+        service.fetchBoundary(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID) { result in
+            XCTAssertEqual(try? result.get(), expectedResult)
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 1)
+
+        XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.boundary(neighbourhoodID: neighbourhoodID,
+                                                                           policeForceID: policeForceID).url)
+    }
+
 }
 
 #if canImport(Combine)
@@ -90,6 +108,21 @@ extension UKNeighbourhoodServiceTests {
 
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.details(id: id, policeForceID: policeForceID).url)
+    }
+
+    func testBoundaryPublisherReturnsCoordinates() throws {
+        let neighbourhoodID = "NC04"
+        let policeForceID = "leicestershire"
+        let expectedResult = Coordinate.mocks
+        apiClient.response = expectedResult
+
+        let result = try waitFor(publisher: service.boundaryPublisher(forNeighbourhood: neighbourhoodID,
+                                                                      inPoliceForce: policeForceID),
+                                 storeIn: &cancellables)
+
+        XCTAssertEqual(result, expectedResult)
+        XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.boundary(neighbourhoodID: neighbourhoodID,
+                                                                           policeForceID: policeForceID).url)
     }
 
 }

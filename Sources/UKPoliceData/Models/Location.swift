@@ -1,5 +1,9 @@
 import Foundation
 
+#if canImport(CoreLocation)
+import CoreLocation
+#endif
+
 /// A location
 public struct Location: Decodable, Equatable {
 
@@ -15,20 +19,44 @@ public struct Location: Decodable, Equatable {
     public let address: String
     /// Postcode
     public let postcode: String
+    /// Location coordinate.
+    public var coordinate: Coordinate? {
+        guard let lat = latitude, let long = longitude else {
+            return nil
+        }
+
+        let latitude = Double(lat) ?? 0
+        let longitude = Double(long) ?? 0
+
+        return Coordinate(latitude: latitude, longitude: longitude)
+    }
+
     /// Location latitude.
-    public let latitude: String?
+    private let latitude: String?
     /// Location longitude.
-    public let longitude: String?
+    private let longitude: String?
 
     public init(name: String? = nil, type: String, description: String? = nil, address: String, postcode: String,
-                latitude: String? = nil, longitude: String? = nil) {
+                latitude: Double? = nil, longitude: Double? = nil) {
         self.name = name
         self.type = type
         self.description = description
         self.address = address
         self.postcode = postcode
-        self.latitude = latitude
-        self.longitude = longitude
+        self.latitude = {
+            guard let latitude = latitude else {
+                return nil
+            }
+
+            return String(latitude)
+        }()
+        self.longitude = {
+            guard let longitude = longitude else {
+                return nil
+            }
+
+            return String(longitude)
+        }()
     }
 
 }
