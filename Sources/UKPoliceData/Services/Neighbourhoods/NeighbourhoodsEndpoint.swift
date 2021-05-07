@@ -7,6 +7,7 @@ enum NeighbourhoodsEndpoint {
     case list(policeForceID: String)
     case details(id: String, policeForceID: String)
     case boundary(neighbourhoodID: String, policeForceID: String)
+    case policeOfficers(neighbourhoodID: String, policeForceID: String)
 
 }
 
@@ -29,6 +30,12 @@ extension NeighbourhoodsEndpoint: Endpoint {
                 .appendingPathComponent(policeForceID)
                 .appendingPathComponent(neighbourhoodID)
                 .appendingPathComponent("boundary")
+
+        case .policeOfficers(let neighbourhoodID, let policeForceID):
+            return Self.basePath
+                .appendingPathComponent(policeForceID)
+                .appendingPathComponent(neighbourhoodID)
+                .appendingPathComponent("people")
         }
     }
 

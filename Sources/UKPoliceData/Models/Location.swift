@@ -4,7 +4,7 @@ import Foundation
 import CoreLocation
 #endif
 
-/// A location
+/// A Location.
 public struct Location: Decodable, Equatable {
 
     /// Name.

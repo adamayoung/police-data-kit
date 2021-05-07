@@ -79,6 +79,24 @@ final class UKNeighbourhoodServiceTests: XCTestCase {
                                                                            policeForceID: policeForceID).url)
     }
 
+    func testFetchPeopleOfficersReturnsPoliceOfficers() {
+        let neighbourhoodID = "NC04"
+        let policeForceID = "leicestershire"
+        let expectedResult = PoliceOfficer.mocks
+        apiClient.response = expectedResult
+
+        let expectation = XCTestExpectation(description: "await")
+        service.fetchPoliceOfficers(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID) { result in
+            XCTAssertEqual(try? result.get(), expectedResult)
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 1)
+
+        XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.policeOfficers(neighbourhoodID: neighbourhoodID,
+                                                                                 policeForceID: policeForceID).url)
+    }
+
 }
 
 #if canImport(Combine)
@@ -123,6 +141,21 @@ extension UKNeighbourhoodServiceTests {
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.boundary(neighbourhoodID: neighbourhoodID,
                                                                            policeForceID: policeForceID).url)
+    }
+
+    func testPoliceOfficersPublisherReturnsPoliceOfficers() throws {
+        let neighbourhoodID = "NC04"
+        let policeForceID = "leicestershire"
+        let expectedResult = PoliceOfficer.mocks
+        apiClient.response = expectedResult
+
+        let result = try waitFor(publisher: service.policeOfficersPublisher(forNeighbourhood: neighbourhoodID,
+                                                                            inPoliceForce: policeForceID),
+                                 storeIn: &cancellables)
+
+        XCTAssertEqual(result, expectedResult)
+        XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.policeOfficers(neighbourhoodID: neighbourhoodID,
+                                                                                 policeForceID: policeForceID).url)
     }
 
 }
