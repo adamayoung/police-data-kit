@@ -18,7 +18,7 @@ on:
 jobs:
   danger:
     name: Run Danger
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - name: Checkout
@@ -26,10 +26,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Install tools
+        run: brew install danger/tap/danger-swift
+      
       - name: Danger
-        uses: docker://ghcr.io/danger/danger-swift-with-swiftlint:3.9.1
-        with:
-            args: --failOnErrors
+        run: danger-swift ci -f
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
