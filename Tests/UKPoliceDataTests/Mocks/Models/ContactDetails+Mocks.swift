@@ -23,4 +23,8 @@ extension ContactDetails {
         )
     }
 
+    static var mockNone: ContactDetails {
+        ContactDetails()
+    }
+
 }

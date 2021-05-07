@@ -43,4 +43,14 @@ class NeighbourhoodsEndpointTests: XCTestCase {
         XCTAssertEqual(url, expectedURL)
     }
 
+    func testPrioritiesEndpointReturnsURL() {
+        let neighbourhoodID = "AB123"
+        let policeForceID = "leicestershire"
+        let expectedURL = URL(string: "/\(policeForceID)/\(neighbourhoodID)/priorities")!
+
+        let url = NeighbourhoodsEndpoint.priorities(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID).url
+
+        XCTAssertEqual(url, expectedURL)
+    }
+
 }
