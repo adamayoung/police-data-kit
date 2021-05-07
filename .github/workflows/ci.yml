@@ -16,6 +16,19 @@ on:
   workflow_dispatch:
 
 jobs:
+  lint:
+    name: Lint
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: swiftlint
+        run: swiftlint --strict
+
   danger:
     name: Run Danger
     runs-on: macos-latest
