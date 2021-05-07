@@ -1,7 +1,7 @@
 import Foundation
 
 /// Police Data Error.
-public enum PoliceDataError: Error {
+public enum PoliceDataError: Error, Equatable {
 
     /// Network error.
     case network(Error)
@@ -11,6 +11,25 @@ public enum PoliceDataError: Error {
     case unknown
     /// Data decoding error.
     case decode(Error)
+
+    public static func == (lhs: PoliceDataError, rhs: PoliceDataError) -> Bool {
+        switch (lhs, rhs) {
+        case (.network(let lhsError), .network(let rhsError)):
+            return lhsError.localizedDescription == rhsError.localizedDescription
+
+        case (.notFound, .notFound):
+            return true
+
+        case (.unknown, .unknown):
+            return true
+
+        case (.decode, .decode):
+            return true
+
+        default:
+            return false
+        }
+    }
 
 }
 

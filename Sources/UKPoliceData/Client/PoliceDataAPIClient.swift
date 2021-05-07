@@ -10,12 +10,15 @@ import FoundationNetworking
 
 final class PoliceDataAPIClient: APIClient {
 
+    private let baseURL: URL
     private let urlSession: URLSession
     private let jsonDecoder: JSONDecoder
 
     static let shared = PoliceDataAPIClient()
 
-    init(urlSession: URLSession = URLSession(configuration: .default), jsonDecoder: JSONDecoder = .policeDataAPI) {
+    init(baseURL: URL = .policeDataAPIBaseURL, urlSession: URLSession = URLSession(configuration: .default),
+         jsonDecoder: JSONDecoder = .policeDataAPI) {
+        self.baseURL = baseURL
         self.urlSession = urlSession
         self.jsonDecoder = jsonDecoder
     }
@@ -33,13 +36,18 @@ final class PoliceDataAPIClient: APIClient {
                 return
             }
 
-            guard let response = response, let data = data else {
+            guard let response = response else {
                 completion(.failure(.unknown))
                 return
             }
 
             if let policeDataError = PoliceDataError(response: response) {
                 completion(.failure(policeDataError))
+                return
+            }
+
+            guard let data = data, !data.isEmpty else {
+                completion(.failure(.unknown))
                 return
             }
 
@@ -90,10 +98,11 @@ extension PoliceDataAPIClient {
             return path
         }
 
-        urlComponents.scheme = URL.policeDataAPIBaseURL.scheme
-        urlComponents.host = URL.policeDataAPIBaseURL.host
-        urlComponents.path = URL.policeDataAPIBaseURL.path + "\(urlComponents.path)"
+        urlComponents.scheme = baseURL.scheme
+        urlComponents.host = baseURL.host
+        urlComponents.path = baseURL.path + "\(urlComponents.path)"
 
+        print(baseURL.path)
         return urlComponents.url!
     }
 

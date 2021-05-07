@@ -27,6 +27,8 @@ identifier_name:
     - fax
     - id
     - key
+    - lhs
+    - rhs
     - rss
     - url
     - web
