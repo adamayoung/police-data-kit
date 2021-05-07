@@ -32,4 +32,15 @@ class NeighbourhoodsEndpointTests: XCTestCase {
         XCTAssertEqual(url, expectedURL)
     }
 
+    func testTeamEndpointReturnsURL() {
+        let neighbourhoodID = "AB123"
+        let policeForceID = "leicestershire"
+        let expectedURL = URL(string: "/\(policeForceID)/\(neighbourhoodID)/people")!
+
+        let url = NeighbourhoodsEndpoint.policeOfficers(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID)
+            .url
+
+        XCTAssertEqual(url, expectedURL)
+    }
+
 }
