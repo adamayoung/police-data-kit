@@ -53,4 +53,14 @@ class NeighbourhoodsEndpointTests: XCTestCase {
         XCTAssertEqual(url, expectedURL)
     }
 
+    func testLocateNeighbourhoodReturnsURL() {
+        let latitude = 51.500617
+        let longitude = -0.124629
+        let expectedURL = URL(string: "/locate-neighbourhood?q=\(latitude),\(longitude)")!
+
+        let url = NeighbourhoodsEndpoint.locateNeighbourhood(latitude: latitude, longitude: longitude).url
+
+        XCTAssertEqual(url, expectedURL)
+    }
+
 }

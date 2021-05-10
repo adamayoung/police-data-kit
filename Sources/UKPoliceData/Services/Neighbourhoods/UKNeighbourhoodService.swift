@@ -44,6 +44,14 @@ final class UKNeighbourhoodService: NeighbourhoodService {
                       completion: completion)
     }
 
+    func fetchPolicingTeam(
+        forLatitude latitude: Double, longitude: Double,
+        completion: @escaping (_ result: Result<NeighbourhoodPolicingTeam, PoliceDataError>) -> Void
+    ) {
+        apiClient.get(endpoint: NeighbourhoodsEndpoint.locateNeighbourhood(latitude: latitude, longitude: longitude),
+                      completion: completion)
+    }
+
 }
 
 #if canImport(Combine)
@@ -84,6 +92,12 @@ extension UKNeighbourhoodService {
     ) -> AnyPublisher<[NeighbourhoodPriority], PoliceDataError> {
         apiClient.get(endpoint: NeighbourhoodsEndpoint.priorities(neighbourhoodID: neighbourhoodID,
                                                                   policeForceID: policeForceID))
+    }
+
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func policingTeamPublisher(forLatitude latitude: Double,
+                               longitude: Double) -> AnyPublisher<NeighbourhoodPolicingTeam, PoliceDataError> {
+        apiClient.get(endpoint: NeighbourhoodsEndpoint.locateNeighbourhood(latitude: latitude, longitude: longitude))
     }
 
 }
