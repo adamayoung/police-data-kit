@@ -6,13 +6,16 @@ public final class UKPoliceDataAPI: PoliceDataAPI {
 
     public let policeForces: PoliceForceService
     public let neighbourhoods: NeighbourhoodService
+    public let crimes: CrimeService
 
     init(
-        policeForces: PoliceForceService = UKPoliceForceService(),
-        neighbourhoods: NeighbourhoodService = UKNeighbourhoodService()
+        policeForceService: PoliceForceService = UKPoliceForceService(),
+        neighbourhoodService: NeighbourhoodService = UKNeighbourhoodService(),
+        crimeService: CrimeService = UKCrimeService()
     ) {
-        self.policeForces = policeForces
-        self.neighbourhoods = neighbourhoods
+        self.policeForces = policeForceService
+        self.neighbourhoods = neighbourhoodService
+        self.crimes = crimeService
     }
 
 }

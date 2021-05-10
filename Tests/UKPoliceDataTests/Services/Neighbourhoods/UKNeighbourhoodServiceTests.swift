@@ -133,6 +133,24 @@ final class UKNeighbourhoodServiceTests: XCTestCase {
                                                                                       longitude: longitude).url)
     }
 
+    func testFetchPolicingTeamWithCoordinateReturnsNeighbourhoodPolicingTeam() {
+        let coordinate = Coordinate(latitude: 51.500617, longitude: -0.124629)
+        let expectedResult = NeighbourhoodPolicingTeam.mock
+        apiClient.response = expectedResult
+
+        let expectation = XCTestExpectation(description: "await")
+        service.fetchPolicingTeam(forCoordinate: coordinate) { result in
+            XCTAssertEqual(try? result.get(), expectedResult)
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 1)
+
+        XCTAssertEqual(apiClient.lastPath,
+                       NeighbourhoodsEndpoint.locateNeighbourhood(latitude: coordinate.latitude,
+                                                                  longitude: coordinate.longitude).url)
+    }
+
 }
 
 #if canImport(Combine)
@@ -221,6 +239,20 @@ extension UKNeighbourhoodServiceTests {
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.locateNeighbourhood(latitude: latitude,
                                                                                       longitude: longitude).url)
+    }
+
+    func testPolicingTeamPublisherWithCoordinateReturnsNeighbourhoodPolicingTeam() throws {
+        let coordinate = Coordinate(latitude: 51.500617, longitude: -0.124629)
+        let expectedResult = NeighbourhoodPolicingTeam.mock
+        apiClient.response = expectedResult
+
+        let result = try waitFor(publisher: service.policingTeamPublisher(forCoordinate: coordinate),
+                                 storeIn: &cancellables)
+
+        XCTAssertEqual(result, expectedResult)
+        XCTAssertEqual(apiClient.lastPath,
+                       NeighbourhoodsEndpoint.locateNeighbourhood(latitude: coordinate.latitude,
+                                                                  longitude: coordinate.longitude).url)
     }
 
 }

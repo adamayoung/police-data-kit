@@ -31,9 +31,7 @@ public struct Location: Decodable, Equatable {
         return Coordinate(latitude: latitude, longitude: longitude)
     }
 
-    /// Location latitude.
     private let latitude: String?
-    /// Location longitude.
     private let longitude: String?
 
     /// Creates a a new `Location`.
