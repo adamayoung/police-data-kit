@@ -1,0 +1,21 @@
+{
+    "category": "violent-crime",
+    "location_type": "Force",
+    "location": {
+        "latitude": "52.629909",
+        "street": {
+            "id": 883345,
+            "name": "On or near Marquis Street"
+        },
+        "longitude": "-1.132073"
+    },
+    "context": "",
+    "outcome_status": {
+        "category": "Status update unavailable",
+        "date": "2020-06"
+    },
+    "persistent_id": "0e51b9ceb4aedef3f9679481aa11262a6c5ea90a68d0dd0e0002a0b521c445e0",
+    "id": 81012437,
+    "location_subtype": "",
+    "month": "2020-02"
+}

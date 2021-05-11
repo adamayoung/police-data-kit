@@ -24,6 +24,7 @@ identifier_name:
   max_length: 60
   excluded:
     - bio
+    - btp
     - fax
     - id
     - key

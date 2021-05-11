@@ -8,4 +8,10 @@ extension DateFormatter {
         return dateFormatter
     }
 
+    static var yearMonth: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM"
+        return dateFormatter
+    }
+
 }
