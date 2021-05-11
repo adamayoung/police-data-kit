@@ -102,7 +102,6 @@ extension PoliceDataAPIClient {
         urlComponents.host = baseURL.host
         urlComponents.path = baseURL.path + "\(urlComponents.path)"
 
-        print(baseURL.path)
         return urlComponents.url!
     }
 
