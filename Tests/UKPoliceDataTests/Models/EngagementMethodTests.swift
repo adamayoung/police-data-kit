@@ -3,32 +3,36 @@ import XCTest
 
 final class EngagementMethodTests: XCTestCase {
 
-    func testDecodeReturnsFacebookEngagementMethod() throws {
+    func testDecodeReturnsEngagementMethod() throws {
         let result = try JSONDecoder.policeDataAPI
-            .decode(EngagementMethod.self, fromResource: "engagement-method-facebook", withExtension: "json")
+            .decode(EngagementMethod.self, fromResource: "engagement-method", withExtension: "json")
 
-        XCTAssertEqual(result, .mockFacebook)
+        XCTAssertEqual(result, .mock)
     }
 
-    func testDecodeReturnsTwitterEngagementMethod() throws {
-        let result = try JSONDecoder.policeDataAPI
-            .decode(EngagementMethod.self, fromResource: "engagement-method-twitter", withExtension: "json")
+    func testDecodeReturnsEngagementMethodWithURL() throws {
+        let engagementMethod = try JSONDecoder.policeDataAPI
+            .decode(EngagementMethod.self, fromResource: "engagement-method", withExtension: "json")
 
-        XCTAssertEqual(result, .mockTwitter)
+        let result = engagementMethod.url
+
+        XCTAssertEqual(result, EngagementMethod.mock.url)
     }
 
-    func testDecodeReturnsYouTubeEngagementMethod() throws {
+    func testDecodeWithEmptyURLReturnsEngagementMethod() throws {
         let result = try JSONDecoder.policeDataAPI
-            .decode(EngagementMethod.self, fromResource: "engagement-method-youtube", withExtension: "json")
+            .decode(EngagementMethod.self, fromResource: "engagement-method-empty-url", withExtension: "json")
 
-        XCTAssertEqual(result, .mockYouTube)
+        XCTAssertEqual(result, .mockNoURL)
     }
 
-    func testDecodeReturnsRSSEngagementMethod() throws {
-        let result = try JSONDecoder.policeDataAPI
-            .decode(EngagementMethod.self, fromResource: "engagement-method-rss", withExtension: "json")
+    func testDecodeWithEmptyURLReturnsEngagementMethodWithNilURL() throws {
+        let engagementMethod = try JSONDecoder.policeDataAPI
+            .decode(EngagementMethod.self, fromResource: "engagement-method-empty-url", withExtension: "json")
 
-        XCTAssertEqual(result, .mockRSS)
+        let result = engagementMethod.url
+
+        XCTAssertNil(result)
     }
 
 }
