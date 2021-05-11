@@ -4,35 +4,35 @@ import Foundation
 public struct ContactDetails: Decodable, Equatable {
 
     /// Email address.
-    let email: String?
+    public let email: String?
     /// Telephone number.
-    let telephone: String?
+    public let telephone: String?
     /// Mobile number.
-    let mobile: String?
+    public let mobile: String?
     /// Fax number.
-    let fax: String?
+    public let fax: String?
     /// Website address.
-    let web: URL?
+    public let web: URL?
     /// Street address.
-    let address: String?
+    public let address: String?
     /// Facebook profile URL.
-    let facebook: URL?
+    public let facebook: URL?
     /// Twitter profile URL.
-    let twitter: URL?
+    public let twitter: URL?
     /// YouTube profile URL.
-    let youtube: URL?
+    public let youtube: URL?
     /// Myspace profile URL.
-    let myspace: URL?
+    public let myspace: URL?
     /// Bebo profile URL.
-    let bebo: URL?
+    public let bebo: URL?
     /// Flickr profile URL.
-    let flickr: URL?
+    public let flickr: URL?
     /// Forum URL.
-    let forum: URL?
+    public let forum: URL?
     /// Blog URL.
-    let blog: URL?
+    public let blog: URL?
     /// RSS URL.
-    let rss: URL?
+    public let rss: URL?
 
     /// Creates a a new `ContactDetails`.
     ///
