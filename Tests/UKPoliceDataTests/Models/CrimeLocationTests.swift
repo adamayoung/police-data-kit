@@ -29,4 +29,13 @@ final class CrimeLocationTests: XCTestCase {
         XCTAssertEqual(result, expectedResult)
     }
 
+    func testStreetDescriptionReturnsString() {
+        let street = CrimeLocation.mock.street
+        let expectedResult = "(\(street.id)) \(street.name)"
+
+        let result = (street as CustomStringConvertible).description
+
+        XCTAssertEqual(result, expectedResult)
+    }
+
 }

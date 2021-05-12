@@ -46,6 +46,15 @@ final class CoordinateTests: XCTestCase {
         XCTAssertEqual(result, 0)
     }
 
+    func testDescriptionReturnsString() {
+        let coordinate = Coordinate.mock
+        let expectedResult = "(\(coordinate.latitude), \(coordinate.longitude))"
+
+        let result = (coordinate as CustomStringConvertible).description
+
+        XCTAssertEqual(result, expectedResult)
+    }
+
 }
 
 #if canImport(CoreLocation)

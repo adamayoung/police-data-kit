@@ -44,11 +44,11 @@ final class UKNeighbourhoodService: NeighbourhoodService {
                       completion: completion)
     }
 
-    func fetchPolicingTeam(
-        forLatitude latitude: Double, longitude: Double,
-        completion: @escaping (_ result: Result<NeighbourhoodPolicingTeam, PoliceDataError>) -> Void
+    func fetchNeighbourhood(
+        atCoordinate coordinate: Coordinate,
+        completion: @escaping (_ result: Result<PoliceForceNeighbourhood, PoliceDataError>) -> Void
     ) {
-        apiClient.get(endpoint: NeighbourhoodsEndpoint.locateNeighbourhood(latitude: latitude, longitude: longitude),
+        apiClient.get(endpoint: NeighbourhoodsEndpoint.locateNeighbourhood(coordinate: coordinate),
                       completion: completion)
     }
 
@@ -95,9 +95,10 @@ extension UKNeighbourhoodService {
     }
 
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func policingTeamPublisher(forLatitude latitude: Double,
-                               longitude: Double) -> AnyPublisher<NeighbourhoodPolicingTeam, PoliceDataError> {
-        apiClient.get(endpoint: NeighbourhoodsEndpoint.locateNeighbourhood(latitude: latitude, longitude: longitude))
+    func neighbourhoodPublisher(
+        atCoordinate coordinate: Coordinate
+    ) -> AnyPublisher<PoliceForceNeighbourhood, PoliceDataError> {
+        apiClient.get(endpoint: NeighbourhoodsEndpoint.locateNeighbourhood(coordinate: coordinate))
     }
 
 }

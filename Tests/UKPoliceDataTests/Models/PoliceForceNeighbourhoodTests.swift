@@ -1,11 +1,11 @@
 @testable import UKPoliceData
 import XCTest
 
-final class NeighbourhoodPolicingTeamTests: XCTestCase {
+final class PoliceForceNeighbourhoodTests: XCTestCase {
 
     func testDecodeReturnsNeighbourhoodPolicingTeam() throws {
         let result = try JSONDecoder.policeDataAPI
-            .decode(NeighbourhoodPolicingTeam.self, fromResource: "neighbourhood-policing-team", withExtension: "json")
+            .decode(PoliceForceNeighbourhood.self, fromResource: "police-force-neighbourhood", withExtension: "json")
 
         XCTAssertEqual(result, .mock)
     }

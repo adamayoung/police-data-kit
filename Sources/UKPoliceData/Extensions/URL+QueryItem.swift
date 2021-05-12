@@ -19,6 +19,10 @@ extension URL {
         return appendingQueryItem(name: name, value: dateString)
     }
 
+    func appendingQueryItem(name: String, value: Coordinate) -> Self {
+        appendingQueryItem(name: name, value: "\(value.latitude),\(value.longitude)")
+    }
+
     func appendingQueryItem(name: String, value: [Coordinate]) -> Self {
         let pairs = value.map { "\($0.latitude),\($0.longitude)" }
         return appendingQueryItem(name: name, value: pairs.joined(separator: ":"))
