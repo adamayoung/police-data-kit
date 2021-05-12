@@ -5,7 +5,7 @@ import CoreLocation
 #endif
 
 /// Coordinate.
-public struct Coordinate: Decodable, Equatable {
+public struct Coordinate: Decodable, Equatable, CustomStringConvertible {
 
     /// Latitude.
     public var latitude: Double {
@@ -27,6 +27,10 @@ public struct Coordinate: Decodable, Equatable {
     public init(latitude: Double, longitude: Double) {
         self.latitudeString = String(latitude)
         self.longitudeString = String(longitude)
+    }
+
+    public var description: String {
+        "(\(latitude), \(longitude))"
     }
 
 }

@@ -1,14 +1,14 @@
 import Foundation
 
-/// A neighbourhood policing team responsible for a particular area.
-public struct NeighbourhoodPolicingTeam: Decodable, Equatable {
+/// A Police Force's Neighbourhood.
+public struct PoliceForceNeighbourhood: Decodable, Equatable {
 
     /// Unique force identifier.
     public let force: String
     /// Force specific team identifier.
     public let neighbourhood: String
 
-    /// Creates a a new `NeighbourhoodPolicingTeam`.
+    /// Creates a a new `PoliceForceNeighbourhood`.
     ///
     /// - Parameters:
     ///     - force: Unique force identifier.

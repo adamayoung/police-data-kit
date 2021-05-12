@@ -66,17 +66,18 @@ public protocol NeighbourhoodService {
     func fetchPriorities(forNeighbourhood neighbourhoodID: String, inPoliceForce policeForceID: String,
                          completion: @escaping (_ result: Result<[NeighbourhoodPriority], PoliceDataError>) -> Void)
 
-    /// Fetches the neighbourhood policing team responsible for a particular area.
+    /// Fetches the neighbourhood at a coordinate.
     ///
     /// - Note: [Police API | Locate a neighbourhood](https://data.police.uk/docs/method/neighbourhood-locate/)
     ///
     /// - Parameters:
-    ///     - latitude: A latitude.
-    ///     - longitude: A longitude.
+    ///     - coordinate: A coordinate.
     ///     - completion: Completion handler.
     ///     - result: The neighbourhood policing team for a location.
-    func fetchPolicingTeam(forLatitude latitude: Double, longitude: Double,
-                           completion: @escaping (_ result: Result<NeighbourhoodPolicingTeam, PoliceDataError>) -> Void)
+    func fetchNeighbourhood(
+        atCoordinate coordinate: Coordinate,
+        completion: @escaping (_ result: Result<PoliceForceNeighbourhood, PoliceDataError>) -> Void
+    )
 
     #if canImport(Combine)
     /// Publishes a list of all the neighbourhoods in a police force.
@@ -142,7 +143,43 @@ public protocol NeighbourhoodService {
         forNeighbourhood neighbourhoodID: String,
         inPoliceForce policeForceID: String) -> AnyPublisher<[NeighbourhoodPriority], PoliceDataError>
 
-    /// Publishes the neighbourhood policing team responsible for a particular area.
+    /// Publishes the neighbourhood at a coordinate.
+    ///
+    /// - Note: [Police API | Locate a neighbourhood](https://data.police.uk/docs/method/neighbourhood-locate/)
+    ///
+    /// - Parameters:
+    ///     - coordinate: A coordinate.
+    ///
+    /// - Returns: A publisher with the neighbourhood policing team for a location.
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func neighbourhoodPublisher(
+        atCoordinate coordinate: Coordinate) -> AnyPublisher<PoliceForceNeighbourhood, PoliceDataError>
+    #endif
+
+}
+
+extension NeighbourhoodService {
+
+    /// Fetches the neighbourhood at a coordinate.
+    ///
+    /// - Note: [Police API | Locate a neighbourhood](https://data.police.uk/docs/method/neighbourhood-locate/)
+    ///
+    /// - Parameters:
+    ///     - latitude: A latitude.
+    ///     - longitude: A longitude.
+    ///     - completion: Completion handler.
+    ///     - result: The neighbourhood policing team for a location.
+    func fetchNeighbourhood(
+        atLatitude latitude: Double,
+        longitude: Double,
+        completion: @escaping (_ result: Result<PoliceForceNeighbourhood, PoliceDataError>) -> Void
+    ) {
+        let coordinate = Coordinate(latitude: latitude, longitude: longitude)
+        fetchNeighbourhood(atCoordinate: coordinate, completion: completion)
+    }
+
+    #if canImport(Combine)
+    /// Publishes the neighbourhood at a coordinate.
     ///
     /// - Note: [Police API | Locate a neighbourhood](https://data.police.uk/docs/method/neighbourhood-locate/)
     ///
@@ -151,40 +188,10 @@ public protocol NeighbourhoodService {
     ///     - longitude: A longitude.
     /// - Returns: A publisher with the neighbourhood policing team for a location.
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func policingTeamPublisher(forLatitude latitude: Double,
-                               longitude: Double) -> AnyPublisher<NeighbourhoodPolicingTeam, PoliceDataError>
-    #endif
-
-}
-
-extension NeighbourhoodService {
-
-    /// Fetches the neighbourhood policing team responsible for a particular area.
-    ///
-    /// - Note: [Police API | Locate a neighbourhood](https://data.police.uk/docs/method/neighbourhood-locate/)
-    ///
-    /// - Parameters:
-    ///     - coordinate: A coordinate.
-    ///     - completion: Completion handler.
-    ///     - result: The neighbourhood policing team for a location.
-    func fetchPolicingTeam(
-        forCoordinate coordinate: Coordinate,
-        completion: @escaping (_ result: Result<NeighbourhoodPolicingTeam, PoliceDataError>) -> Void) {
-        fetchPolicingTeam(forLatitude: coordinate.latitude, longitude: coordinate.longitude, completion: completion)
-    }
-
-    #if canImport(Combine)
-    /// Publishes the neighbourhood policing team responsible for a particular area.
-    ///
-    /// - Note: [Police API | Locate a neighbourhood](https://data.police.uk/docs/method/neighbourhood-locate/)
-    ///
-    /// - Parameters:
-    ///     - coordinate: A coordinate.
-    /// - Returns: A publisher with the neighbourhood policing team for a location.
-    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func policingTeamPublisher(
-        forCoordinate coordinate: Coordinate) -> AnyPublisher<NeighbourhoodPolicingTeam, PoliceDataError> {
-        policingTeamPublisher(forLatitude: coordinate.latitude, longitude: coordinate.longitude)
+    func neighbourhoodPublisher(atLatitude latitude: Double,
+                                longitude: Double) -> AnyPublisher<PoliceForceNeighbourhood, PoliceDataError> {
+        let coordinate = Coordinate(latitude: latitude, longitude: longitude)
+        return neighbourhoodPublisher(atCoordinate: coordinate)
     }
     #endif
 

@@ -29,7 +29,7 @@ public struct CrimeLocation: Decodable, Equatable {
 extension CrimeLocation {
 
     /// A street where a crime occurred
-    public struct Street: Identifiable, Decodable, Equatable {
+    public struct Street: Identifiable, Decodable, Equatable, CustomStringConvertible {
 
         /// Unique identifier for the street.
         public let id: Int
@@ -44,6 +44,10 @@ extension CrimeLocation {
         public init(id: Int, name: String) {
             self.id = id
             self.name = name
+        }
+
+        public var description: String {
+            "(\(id)) \(name)"
         }
 
     }
