@@ -116,28 +116,12 @@ class UKNeighbourhoodServiceTests: XCTestCase {
     }
 
     func testFetchNeighbourhoodAtCoordinateReturnsPoliceForceNeighbourhood() {
-        let coordinate = Coordinate(latitude: 52.6688, longitude: -0.750049)
+        let coordinate = Coordinate.mock
         let expectedResult = PoliceForceNeighbourhood.mock
         apiClient.response = expectedResult
 
         let expectation = XCTestExpectation(description: "await")
         service.fetchNeighbourhood(atCoordinate: coordinate) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
-
-        wait(for: [expectation], timeout: 1)
-
-        XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.locateNeighbourhood(coordinate: coordinate).url)
-    }
-
-    func testFetchNeighbourhoodAtLatitudeLongitudeReturnsPoliceForceNeighbourhood() {
-        let coordinate = Coordinate(latitude: 52.6688, longitude: -0.750049)
-        let expectedResult = PoliceForceNeighbourhood.mock
-        apiClient.response = expectedResult
-
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchNeighbourhood(atLatitude: coordinate.latitude, longitude: coordinate.longitude) { result in
             XCTAssertEqual(try? result.get(), expectedResult)
             expectation.fulfill()
         }
@@ -224,24 +208,11 @@ extension UKNeighbourhoodServiceTests {
     }
 
     func testNeighbourhoodAtCoordinatePublisherReturnsPoliceForceNeighbourhood() throws {
-        let coordinate = Coordinate(latitude: 52.6688, longitude: -0.750049)
+        let coordinate = Coordinate.mock
         let expectedResult = PoliceForceNeighbourhood.mock
         apiClient.response = expectedResult
 
         let result = try waitFor(publisher: service.neighbourhoodPublisher(atCoordinate: coordinate),
-                                 storeIn: &cancellables)
-
-        XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.locateNeighbourhood(coordinate: coordinate).url)
-    }
-
-    func testNeighbourhoodAtLatitudeLongitudePublisherReturnsPoliceForceNeighbourhood() throws {
-        let coordinate = Coordinate(latitude: 52.6688, longitude: -0.750049)
-        let expectedResult = PoliceForceNeighbourhood.mock
-        apiClient.response = expectedResult
-
-        let result = try waitFor(publisher: service.neighbourhoodPublisher(atLatitude: coordinate.latitude,
-                                                                           longitude: coordinate.longitude),
                                  storeIn: &cancellables)
 
         XCTAssertEqual(result, expectedResult)

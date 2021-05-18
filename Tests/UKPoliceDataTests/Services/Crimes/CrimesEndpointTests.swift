@@ -4,7 +4,7 @@ import XCTest
 class CrimesEndpointTests: XCTestCase {
 
     func testStreetLevelCrimesAtSpecificPointEndpointReturnsURL() {
-        let coordinate = Coordinate(latitude: 52.6688, longitude: -0.750049)
+        let coordinate = Coordinate.mock
         let dateString = "2021-04"
         let date = DateFormatter.yearMonth.date(from: dateString)!
         let expectedURL = URL(
@@ -17,7 +17,7 @@ class CrimesEndpointTests: XCTestCase {
     }
 
     func testStreetLevelCrimesAtSpecificPointEndpointWhenNoDateReturnsURL() {
-        let coordinate = Coordinate(latitude: 52.6688, longitude: -0.750049)
+        let coordinate = Coordinate.mock
         let expectedURL = URL(
             string: "/crimes-at-location?lat=\(coordinate.latitude)&lng=\(coordinate.longitude)"
         )!
@@ -28,10 +28,7 @@ class CrimesEndpointTests: XCTestCase {
     }
 
     func testStreetLevelCrimesInCustomAreaEndpointReturnURL() {
-        let coordinates = [
-            Coordinate(latitude: 52.6688, longitude: -0.750049),
-            Coordinate(latitude: 54.3698, longitude: -0.713541)
-        ]
+        let coordinates = Coordinate.mocks
         let coordinatePairs = coordinates.map { "\($0.latitude),\($0.longitude)" }
         let dateString = "2021-04"
         let date = DateFormatter.yearMonth.date(from: dateString)!
@@ -45,10 +42,7 @@ class CrimesEndpointTests: XCTestCase {
     }
 
     func testStreetLevelCrimesInCustomAreaEndpointWhenNoDateReturnURL() {
-        let coordinates = [
-            Coordinate(latitude: 52.6688, longitude: -0.750049),
-            Coordinate(latitude: 54.3698, longitude: -0.713541)
-        ]
+        let coordinates = Coordinate.mocks
         let coordinatePairs = coordinates.map { "\($0.latitude),\($0.longitude)" }
         let expectedURL = URL(
             string: "/crimes-at-location?poly=\(coordinatePairs.joined(separator: ":"))"
@@ -79,6 +73,19 @@ class CrimesEndpointTests: XCTestCase {
         )!
 
         let url = CrimesEndpoint.streetLevelOutcomesForStreet(streetID: streetID).url
+
+        XCTAssertEqual(url, expectedURL)
+    }
+
+    func testStreetLevelOutcomesAtSpecificPointEndpointReturnsURL() {
+        let coordinate = Coordinate.mock
+        let dateString = "2021-04"
+        let date = DateFormatter.yearMonth.date(from: dateString)!
+        let expectedURL = URL(
+            string: "/outcomes-at-location?lat=\(coordinate.latitude)&lng=\(coordinate.longitude)&date=\(dateString)"
+        )!
+
+        let url = CrimesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate, date: date).url
 
         XCTAssertEqual(url, expectedURL)
     }
