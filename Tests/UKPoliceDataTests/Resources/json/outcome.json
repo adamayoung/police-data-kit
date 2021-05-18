@@ -1,0 +1,25 @@
+{
+    "category": {
+        "code": "no-further-action",
+        "name": "Investigation complete; no suspect identified"
+    },
+    "date": "2020-09",
+    "person_id": null,
+    "crime": {
+        "category": "burglary",
+        "location_type": "Force",
+        "location": {
+            "latitude": "52.640374",
+            "street": {
+                "id": 884330,
+                "name": "On or near Christow Street"
+            },
+            "longitude": "-1.122319"
+        },
+        "context": "",
+        "persistent_id": "c69de56fd2fcd523ab65b588811caf53e7ff3a577b2bfd2f731173f5f95af99d",
+        "id": 86783916,
+        "location_subtype": "ROAD",
+        "month": "2020-09"
+    }
+}

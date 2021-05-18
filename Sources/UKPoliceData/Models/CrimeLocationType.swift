@@ -5,6 +5,7 @@ public enum CrimeLocationType: String, Decodable, CaseIterable, CustomStringConv
 
     /// A normal police force location.
     case force = "Force"
+
     /// British Transport Police location.
     ///
     /// - Note: British Transport Police locations fall within normal police force boundaries.

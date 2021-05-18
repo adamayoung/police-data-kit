@@ -1,7 +1,7 @@
 @testable import UKPoliceData
 import XCTest
 
-final class CrimeLocationTests: XCTestCase {
+class CrimeLocationTests: XCTestCase {
 
     func testDecodeReturnsCrimeLocation() throws {
         let result = try JSONDecoder.policeDataAPI
