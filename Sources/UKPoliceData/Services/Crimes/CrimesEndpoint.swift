@@ -5,9 +5,10 @@ enum CrimesEndpoint {
     static let basePath = URL(string: "/")!
 
     case streetLevelCrimesAtSpecificPoint(coordinate: Coordinate, date: Date? = nil)
-    case streetLevelCrimesInCustomArea(coordinates: [Coordinate], date: Date? = nil)
+    case streetLevelCrimesInArea(coordinates: [Coordinate], date: Date? = nil)
     case streetLevelOutcomesForStreet(streetID: Int, date: Date? = nil)
     case streetLevelOutcomesAtSpecificPoint(coordinate: Coordinate, date: Date? = nil)
+    case streetLevelOutcomesInArea(coordinates: [Coordinate], date: Date? = nil)
     case categories(date: Date)
 
 }
@@ -23,7 +24,7 @@ extension CrimesEndpoint: Endpoint {
                 .appendingQueryItem(name: "lng", value: coordinate.longitude)
                 .appendingQueryItem(name: "date", value: date)
 
-        case .streetLevelCrimesInCustomArea(let coordinates, let date):
+        case .streetLevelCrimesInArea(let coordinates, let date):
             return Self.basePath
                 .appendingPathComponent("crimes-at-location")
                 .appendingQueryItem(name: "poly", value: coordinates)
@@ -40,6 +41,12 @@ extension CrimesEndpoint: Endpoint {
                 .appendingPathComponent("outcomes-at-location")
                 .appendingQueryItem(name: "lat", value: coordinate.latitude)
                 .appendingQueryItem(name: "lng", value: coordinate.longitude)
+                .appendingQueryItem(name: "date", value: date)
+
+        case .streetLevelOutcomesInArea(let coordinates, let date):
+            return Self.basePath
+                .appendingPathComponent("outcomes-at-location")
+                .appendingQueryItem(name: "poly", value: coordinates)
                 .appendingQueryItem(name: "date", value: date)
 
         case .categories(let date):
