@@ -2,7 +2,7 @@
 import XCTest
 
 #if !os(Linux)
-final class PoliceDataAPIClientTests: XCTestCase {
+class PoliceDataAPIClientTests: XCTestCase {
 
     var baseURL: URL!
     var client: PoliceDataAPIClient!

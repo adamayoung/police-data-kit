@@ -5,7 +5,7 @@ import XCTest
 import Combine
 #endif
 
-final class UKNeighbourhoodServiceTests: XCTestCase {
+class UKNeighbourhoodServiceTests: XCTestCase {
 
     #if canImport(Combine)
     var cancellables: Set<AnyCancellable> = []

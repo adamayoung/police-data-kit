@@ -158,7 +158,7 @@ public protocol NeighbourhoodService {
 
 }
 
-extension NeighbourhoodService {
+public extension NeighbourhoodService {
 
     /// Fetches the neighbourhood at a coordinate.
     ///

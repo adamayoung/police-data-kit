@@ -1,7 +1,7 @@
 import Foundation
 
-/// A crime.
-public struct Crime: Identifiable, Decodable, Equatable {
+/// An outcome's crime.
+public struct OutcomeCrime: Identifiable, Decodable, Equatable {
 
     /// Identifier of the crime.
     ///
@@ -25,24 +25,20 @@ public struct Crime: Identifiable, Decodable, Equatable {
     public let locationSubtype: String?
     /// Month of the crime.
     public let month: String
-    /// The category and date of the latest recorded outcome for the crime.
-    public let outcomeStatus: OutcomeStatus?
 
-    /// Creates a a new `Crime`.
+    /// Creates a a new `OutcomeCrime`.
     ///
     /// - Parameters:
-    ///     - id: Category code.
-    ///     - persistentID: Name of the category.
+    ///     - id: Identifier of the crime.
+    ///     - persistentID: 64-character unique identifier for that crime.
     ///     - context: Extra information about the crime.
     ///     - categoryID: Crime category identifier.
     ///     - location: Approximate location of the incident.
-    ///     - locationType: The type of the location
+    ///     - locationType: The type of the location.
     ///     - locationSubtype: For Bristish Transport Police locations, the type of location at which this crime was recorded.
     ///     - month: Month of the crime.
-    ///     - outcomeStatus: The category and date of the latest recorded outcome for the crime.
     public init(id: Int, persistentID: String, context: String? = nil, categoryID: String, location: CrimeLocation,
-                locationType: CrimeLocationType, locationSubtype: String? = nil, month: String,
-                outcomeStatus: OutcomeStatus? = nil) {
+                locationType: CrimeLocationType, locationSubtype: String? = nil, month: String) {
         self.id = id
         self.persistentID = persistentID
         self.context = context
@@ -51,12 +47,11 @@ public struct Crime: Identifiable, Decodable, Equatable {
         self.locationType = locationType
         self.locationSubtype = locationSubtype
         self.month = month
-        self.outcomeStatus = outcomeStatus
     }
 
 }
 
-extension Crime {
+extension OutcomeCrime {
 
     private enum CodingKeys: String, CodingKey {
         case id
@@ -67,7 +62,6 @@ extension Crime {
         case locationType
         case locationSubtype
         case month
-        case outcomeStatus
     }
 
 }

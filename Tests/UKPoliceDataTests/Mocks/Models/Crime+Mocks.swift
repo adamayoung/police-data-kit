@@ -20,7 +20,7 @@ extension Crime {
             locationType: .force,
             locationSubtype: "",
             month: "2020-02",
-            outcomeStatus: CrimeOutcomeStatus(
+            outcomeStatus: OutcomeStatus(
                 category: "Status update unavailable",
                 date: "2020-06"
             )
@@ -46,7 +46,7 @@ extension Crime {
                 locationType: .force,
                 locationSubtype: "",
                 month: "2021-02",
-                outcomeStatus: CrimeOutcomeStatus(
+                outcomeStatus: OutcomeStatus(
                     category: "Investigation complete; no suspect identified",
                     date: "2021-02"
                 )

@@ -31,6 +31,18 @@ public protocol CrimeService {
     func fetchStreetLevelCrimes(inArea coordinates: [Coordinate], date: Date?,
                                 completion: @escaping (_ result: Result<[Crime], PoliceDataError>) -> Void)
 
+    /// Fetches a list of crime outcomes at a specific location.
+    ///
+    /// - Note: [Police API | Street-level outcomes](https://data.police.uk/docs/method/outcomes-at-location/)
+    ///
+    /// - Parameters:
+    ///     - streetID: A street ID.
+    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///     - completion: Completion handler.
+    ///     - result: A list of street level crime outcomes.
+    func fetchStreetLevelOutcomes(forStreet streetID: Int, date: Date?,
+                                  completion: @escaping (_ result: Result<[Outcome], PoliceDataError>) -> Void)
+
     /// Fetches a list of valid crime categories for a given data set date.
     ///
     /// - Note: [Police API | Crime categories](https://data.police.uk/docs/method/crime-categories/)
@@ -69,6 +81,18 @@ public protocol CrimeService {
     func streetLevelCrimesPublisher(inArea coordinates: [Coordinate],
                                     date: Date?) -> AnyPublisher<[Crime], PoliceDataError>
 
+    /// Publishes a list of crime outcomes at a specific location.
+    ///
+    /// - Note: [Police API | Street-level outcomes](https://data.police.uk/docs/method/outcomes-at-location/)
+    ///
+    /// - Parameters:
+    ///     - streetID: A street ID.
+    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///
+    /// - Returns: A publisher with a list of street level crime outcomes.
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func streetLevelOutcomesPublisher(forStreet streetID: Int, date: Date?) -> AnyPublisher<[Outcome], PoliceDataError>
+
     /// Publishes a list of valid crime categories for a given data set date.
     ///
     /// - Note: [Police API | Crime categories](https://data.police.uk/docs/method/crime-categories/)
@@ -83,7 +107,7 @@ public protocol CrimeService {
 
 }
 
-extension CrimeService {
+public extension CrimeService {
 
     func fetchStreetLevelCrimes(atCoordinate coordinate: Coordinate, date: Date? = nil,
                                 completion: @escaping (_ result: Result<[Crime], PoliceDataError>) -> Void) {
@@ -127,6 +151,11 @@ extension CrimeService {
         }
 
         fetchStreetLevelCrimes(inArea: coordinates, date: date, completion: completion)
+    }
+
+    func fetchStreetLevelOutcomes(forStreet streetID: Int, date: Date? = nil,
+                                  completion: @escaping (_ result: Result<[Outcome], PoliceDataError>) -> Void) {
+        fetchStreetLevelOutcomes(forStreet: streetID, date: date, completion: completion)
     }
 
     #if canImport(Combine)
@@ -176,6 +205,12 @@ extension CrimeService {
         }
 
         return streetLevelCrimesPublisher(inArea: coordinates, date: date)
+    }
+
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func streetLevelOutcomesPublisher(forStreet streetID: Int,
+                                      date: Date? = nil) -> AnyPublisher<[Outcome], PoliceDataError> {
+        streetLevelOutcomesPublisher(forStreet: streetID, date: date)
     }
     #endif
 

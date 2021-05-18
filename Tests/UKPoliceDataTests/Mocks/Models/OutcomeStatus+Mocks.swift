@@ -1,10 +1,10 @@
 import Foundation
 import UKPoliceData
 
-extension CrimeOutcomeStatus {
+extension OutcomeStatus {
 
-    static var mock: CrimeOutcomeStatus {
-        CrimeOutcomeStatus(
+    static var mock: OutcomeStatus {
+        OutcomeStatus(
             category: "Investigation complete; no suspect identified",
             date: "2020-02"
         )

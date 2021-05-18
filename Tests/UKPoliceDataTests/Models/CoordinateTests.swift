@@ -5,7 +5,7 @@ import XCTest
 import CoreLocation
 #endif
 
-final class CoordinateTests: XCTestCase {
+class CoordinateTests: XCTestCase {
 
     func testDecodeReturnsCoordinate() throws {
         let result = try JSONDecoder.policeDataAPI
