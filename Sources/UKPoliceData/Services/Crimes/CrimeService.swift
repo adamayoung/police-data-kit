@@ -105,8 +105,6 @@ public protocol CrimeService {
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     func streetLevelOutcomesPublisher(forStreet streetID: Int, date: Date?) -> AnyPublisher<[Outcome], PoliceDataError>
 
-
-
     /// Fetches a list of crime outcomes within a 1 mile radius of a single point.
     ///
     /// - Note: [Police API | Street-level outcomes](https://data.police.uk/docs/method/outcomes-at-location/)
