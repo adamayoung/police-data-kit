@@ -92,6 +92,19 @@ public protocol CrimeService {
     func fetchCrimesAtLocation(atCoordinate coordinate: Coordinate, date: Date?,
                                completion: @escaping (_ result: Result<[Crime], PoliceDataError>) -> Void)
 
+    /// Fetches a list of crimes that could not be mapped to a location.
+    ///
+    /// - Note: [Police API | Crimes with no location](https://data.police.uk/docs/method/crimes-no-location/)
+    ///
+    /// - Parameters:
+    ///     - catgeoryID: The category of the crimes. All crimes with be shown by default.
+    ///     - policeForceID: Police Force identifier.
+    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///     - completion: Completion handler.
+    ///     - result: A list of crimes.
+    func fetchCrimesWithNoLocation(forCategory categoryID: String, inPoliceForce policeForceID: String, date: Date?,
+                                   completion: @escaping (_ result: Result<[Crime], PoliceDataError>) -> Void)
+
     /// Fetches a list of valid crime categories for a given data set date.
     ///
     /// - Note: [Police API | Crime categories](https://data.police.uk/docs/method/crime-categories/)
@@ -194,6 +207,20 @@ public protocol CrimeService {
     func crimesAtLocationPublisher(atCoordinate coordinate: Coordinate,
                                    date: Date?) -> AnyPublisher<[Crime], PoliceDataError>
 
+    /// Publishes a list of crimes that could not be mapped to a location.
+    ///
+    /// - Note: [Police API | Crimes with no location](https://data.police.uk/docs/method/crimes-no-location/)
+    ///
+    /// - Parameters:
+    ///     - catgeoryID: The category of the crimes. All crimes with be shown by default.
+    ///     - policeForceID: Police Force identifier.
+    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///
+    /// - Returns: A publisher with a list of crimes.
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func crimesWithNoLocationPublisher(forCategory categoryID: String, inPoliceForce policeForceID: String,
+                                       date: Date?) -> AnyPublisher<[Crime], PoliceDataError>
+
     /// Publishes a list of valid crime categories for a given data set date.
     ///
     /// - Note: [Police API | Crime categories](https://data.police.uk/docs/method/crime-categories/)
@@ -245,6 +272,13 @@ public extension CrimeService {
         fetchCrimesAtLocation(forStreet: streetID, date: date, completion: completion)
     }
 
+    func fetchCrimesWithNoLocation(forCategory categoryID: String = CrimeCategory.defaultID,
+                                   inPoliceForce policeForceID: String, date: Date? = nil,
+                                   completion: @escaping (_ result: Result<[Crime], PoliceDataError>) -> Void) {
+        fetchCrimesWithNoLocation(forCategory: categoryID, inPoliceForce: policeForceID, date: date,
+                                  completion: completion)
+    }
+
     #if canImport(Combine)
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     func streetLevelCrimesPublisher(atCoordinate coordinate: Coordinate,
@@ -286,6 +320,13 @@ public extension CrimeService {
     func crimesAtLocationPublisher(atCoordinate coordinate: Coordinate,
                                    date: Date? = nil) -> AnyPublisher<[Crime], PoliceDataError> {
         crimesAtLocationPublisher(atCoordinate: coordinate, date: date)
+    }
+
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func crimesWithNoLocationPublisher(forCategory categoryID: String = CrimeCategory.defaultID,
+                                       inPoliceForce policeForceID: String,
+                                       date: Date? = nil) -> AnyPublisher<[Crime], PoliceDataError> {
+        crimesWithNoLocationPublisher(forCategory: categoryID, inPoliceForce: policeForceID, date: date)
     }
     #endif
 
