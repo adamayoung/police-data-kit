@@ -140,6 +140,17 @@ class CrimesEndpointTests: XCTestCase {
         XCTAssertEqual(url, expectedURL)
     }
 
+    func testCrimesAtLocationForStreetEndpointWhenNoDateReturnsURL() {
+        let streetID = 12345
+        let expectedURL = URL(
+            string: "/crimes-at-location?location_id=\(streetID)"
+        )!
+
+        let url = CrimesEndpoint.crimesAtLocationForStreet(streetID: streetID).url
+
+        XCTAssertEqual(url, expectedURL)
+    }
+
     func testCrimesAtLocationAtSpecificPointEndpointReturnsURL() {
         let coordinate = Coordinate.mock
         let dateString = "2021-04"
@@ -149,6 +160,44 @@ class CrimesEndpointTests: XCTestCase {
         )!
 
         let url = CrimesEndpoint.crimesAtLocationAtSpecificPoint(coordinate: coordinate, date: date).url
+
+        XCTAssertEqual(url, expectedURL)
+    }
+
+    func testCrimesAtLocationAtSpecificPointEndpointWhenNoDateReturnsURL() {
+        let coordinate = Coordinate.mock
+        let expectedURL = URL(
+            string: "/crimes-at-location?lat=\(coordinate.latitude)&lng=\(coordinate.longitude)"
+        )!
+
+        let url = CrimesEndpoint.crimesAtLocationAtSpecificPoint(coordinate: coordinate).url
+
+        XCTAssertEqual(url, expectedURL)
+    }
+
+    func testCrimesWithNoLocationEndpointReturnsURL() {
+        let categoryID = "all-crime"
+        let policeForceID = "leicestershire"
+        let dateString = "2021-04"
+        let date = DateFormatter.yearMonth.date(from: dateString)!
+        let expectedURL = URL(
+            string: "/crimes-no-location?category=\(categoryID)&force=\(policeForceID)&date=\(dateString)"
+        )!
+
+        let url = CrimesEndpoint.crimesWithNoLocation(categoryID: categoryID, policeForceID: policeForceID,
+                                                      date: date).url
+
+        XCTAssertEqual(url, expectedURL)
+    }
+
+    func testCrimesWithNoLocationEndpointWhenNoDateReturnsURL() {
+        let categoryID = "all-crime"
+        let policeForceID = "leicestershire"
+        let expectedURL = URL(
+            string: "/crimes-no-location?category=\(categoryID)&force=\(policeForceID)"
+        )!
+
+        let url = CrimesEndpoint.crimesWithNoLocation(categoryID: categoryID, policeForceID: policeForceID).url
 
         XCTAssertEqual(url, expectedURL)
     }

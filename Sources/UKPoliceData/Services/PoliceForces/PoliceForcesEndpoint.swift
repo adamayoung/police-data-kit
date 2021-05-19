@@ -2,7 +2,7 @@ import Foundation
 
 enum PoliceForcesEndpoint {
 
-    static let basePath = URL(string: "/forces")!
+    private static let basePath = URL(string: "/forces")!
 
     case list
     case details(id: String)

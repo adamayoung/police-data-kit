@@ -2,11 +2,12 @@ import Foundation
 
 enum CrimesEndpoint {
 
-    static let basePath = URL(string: "/")!
-    static let streetLevelCrimesAtLocationBasePath = basePath.appendingPathComponent("crimes-street")
-    static let outcomesAtLocationBasePath = basePath.appendingPathComponent("outcomes-at-location")
-    static let crimesAtLocationBasePath = basePath.appendingPathComponent("crimes-at-location")
-    static let crimeCategoriesBasePath = basePath.appendingPathComponent("crime-categories")
+    private static let basePath = URL(string: "/")!
+    private static let streetLevelCrimesAtLocationBasePath = basePath.appendingPathComponent("crimes-street")
+    private static let outcomesAtLocationBasePath = basePath.appendingPathComponent("outcomes-at-location")
+    private static let crimesAtLocationBasePath = basePath.appendingPathComponent("crimes-at-location")
+    private static let crimeCategoriesBasePath = basePath.appendingPathComponent("crime-categories")
+    private static let crimesWithNoLocationBasePath = basePath.appendingPathComponent("crimes-no-location")
 
     case streetLevelCrimesAtSpecificPoint(coordinate: Coordinate, date: Date? = nil)
     case streetLevelCrimesInArea(coordinates: [Coordinate], date: Date? = nil)
@@ -15,6 +16,7 @@ enum CrimesEndpoint {
     case streetLevelOutcomesInArea(coordinates: [Coordinate], date: Date? = nil)
     case crimesAtLocationForStreet(streetID: Int, date: Date? = nil)
     case crimesAtLocationAtSpecificPoint(coordinate: Coordinate, date: Date? = nil)
+    case crimesWithNoLocation(categoryID: String, policeForceID: String, date: Date? = nil)
     case categories(date: Date)
 
 }
@@ -61,6 +63,12 @@ extension CrimesEndpoint: Endpoint {
             return Self.crimesAtLocationBasePath
                 .appendingQueryItem(name: "lat", value: coordinate.latitude)
                 .appendingQueryItem(name: "lng", value: coordinate.longitude)
+                .appendingQueryItem(name: "date", value: date)
+
+        case .crimesWithNoLocation(let categoryID, let policeForceID, let date):
+            return Self.crimesWithNoLocationBasePath
+                .appendingQueryItem(name: "category", value: categoryID)
+                .appendingQueryItem(name: "force", value: policeForceID)
                 .appendingQueryItem(name: "date", value: date)
 
         case .categories(let date):

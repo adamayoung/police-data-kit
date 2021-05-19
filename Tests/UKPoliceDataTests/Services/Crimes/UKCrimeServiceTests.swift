@@ -270,6 +270,44 @@ class UKCrimeServiceTests: XCTestCase {
         XCTAssertEqual(apiClient.lastPath, CrimesEndpoint.crimesAtLocationAtSpecificPoint(coordinate: coordinate).url)
     }
 
+    func testFetchCrimesWithNoLocationReturnsCrimes() {
+        let categoryID = CrimeCategory.mock.id
+        let policeForceID = PoliceForce.mock.id
+        let date = Date()
+        let expectedResult = Crime.mocks
+        apiClient.response = expectedResult
+
+        let expectation = XCTestExpectation(description: "await")
+        service.fetchCrimesWithNoLocation(forCategory: categoryID, inPoliceForce: policeForceID, date: date) { result in
+            XCTAssertEqual(try? result.get(), expectedResult)
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 1)
+
+        XCTAssertEqual(apiClient.lastPath,
+                       CrimesEndpoint.crimesWithNoLocation(categoryID: categoryID, policeForceID: policeForceID,
+                                                           date: date).url)
+    }
+
+    func testFetchCrimesWithNoLocationWhenNoCategoryOrDateReturnsCrimes() {
+        let policeForceID = PoliceForce.mock.id
+        let expectedResult = Crime.mocks
+        apiClient.response = expectedResult
+
+        let expectation = XCTestExpectation(description: "await")
+        service.fetchCrimesWithNoLocation(inPoliceForce: policeForceID) { result in
+            XCTAssertEqual(try? result.get(), expectedResult)
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 1)
+
+        XCTAssertEqual(apiClient.lastPath,
+                       CrimesEndpoint.crimesWithNoLocation(categoryID: CrimeCategory.defaultID,
+                                                           policeForceID: policeForceID).url)
+    }
+
     func testFetchCategoriesReturnsCrimeCategories() {
         let expectedResult = CrimeCategory.mocks
         let date = Date()
@@ -477,6 +515,38 @@ extension UKCrimeServiceTests {
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(apiClient.lastPath,
                        CrimesEndpoint.crimesAtLocationAtSpecificPoint(coordinate: coordinate).url)
+    }
+
+    func testCrimesWithNoLocationPublisherReturnsCrimes() throws {
+        let categoryID = CrimeCategory.mock.id
+        let policeForceID = PoliceForce.mock.id
+        let date = Date()
+        let expectedResult = Crime.mocks
+        apiClient.response = expectedResult
+
+        let result = try waitFor(publisher: service.crimesWithNoLocationPublisher(forCategory: categoryID,
+                                                                                  inPoliceForce: policeForceID,
+                                                                                  date: date),
+                                 storeIn: &cancellables)
+
+        XCTAssertEqual(result, expectedResult)
+        XCTAssertEqual(apiClient.lastPath,
+                       CrimesEndpoint.crimesWithNoLocation(categoryID: categoryID, policeForceID: policeForceID,
+                                                           date: date).url)
+    }
+
+    func testCrimesWithNoLocationPublisherWhenNoCategoryOrDateReturnsCrimes() throws {
+        let policeForceID = PoliceForce.mock.id
+        let expectedResult = Crime.mocks
+        apiClient.response = expectedResult
+
+        let result = try waitFor(publisher: service.crimesWithNoLocationPublisher(inPoliceForce: policeForceID),
+                                 storeIn: &cancellables)
+
+        XCTAssertEqual(result, expectedResult)
+        XCTAssertEqual(apiClient.lastPath,
+                       CrimesEndpoint.crimesWithNoLocation(categoryID: CrimeCategory.defaultID,
+                                                           policeForceID: policeForceID).url)
     }
 
     func testCategoriesPublisherReturnsCrimeCategories() throws {
