@@ -140,6 +140,19 @@ class CrimesEndpointTests: XCTestCase {
         XCTAssertEqual(url, expectedURL)
     }
 
+    func testCrimesAtLocationAtSpecificPointEndpointReturnsURL() {
+        let coordinate = Coordinate.mock
+        let dateString = "2021-04"
+        let date = DateFormatter.yearMonth.date(from: dateString)!
+        let expectedURL = URL(
+            string: "/crimes-at-location?lat=\(coordinate.latitude)&lng=\(coordinate.longitude)&date=\(dateString)"
+        )!
+
+        let url = CrimesEndpoint.crimesAtLocationAtSpecificPoint(coordinate: coordinate, date: date).url
+
+        XCTAssertEqual(url, expectedURL)
+    }
+
     func testCategoriesEndpointReturnsURL() {
         let dateString = "2021-04"
         let date = DateFormatter.yearMonth.date(from: dateString)!
