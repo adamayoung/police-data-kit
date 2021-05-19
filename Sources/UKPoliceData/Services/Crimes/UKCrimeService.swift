@@ -42,6 +42,12 @@ final class UKCrimeService: CrimeService {
                       completion: completion)
     }
 
+    func fetchCrimesAtLocation(forStreet streetID: Int, date: Date?,
+                               completion: @escaping (_ result: Result<[Crime], PoliceDataError>) -> Void) {
+        apiClient.get(endpoint: CrimesEndpoint.crimesAtLocationForStreet(streetID: streetID, date: date),
+                      completion: completion)
+    }
+
     func fetchCategories(date: Date,
                          completion: @escaping (_ result: Result<[CrimeCategory], PoliceDataError>) -> Void) {
         apiClient.get(endpoint: CrimesEndpoint.categories(date: date), completion: completion)
@@ -79,6 +85,11 @@ extension UKCrimeService {
     func streetLevelOutcomesPublisher(inArea coordinates: [Coordinate],
                                       date: Date?) -> AnyPublisher<[Outcome], PoliceDataError> {
         apiClient.get(endpoint: CrimesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates, date: date))
+    }
+
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func crimesAtLocationPublisher(forStreet streetID: Int, date: Date?) -> AnyPublisher<[Crime], PoliceDataError> {
+        apiClient.get(endpoint: CrimesEndpoint.crimesAtLocationForStreet(streetID: streetID, date: date))
     }
 
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
