@@ -6,7 +6,7 @@ extension OutcomeCrime {
     static var mock: OutcomeCrime {
         OutcomeCrime(
             id: 86783916,
-            persistentID: "c69de56fd2fcd523ab65b588811caf53e7ff3a577b2bfd2f731173f5f95af99d",
+            crimeID: "c69de56fd2fcd523ab65b588811caf53e7ff3a577b2bfd2f731173f5f95af99d",
             context: "",
             categoryID: "burglary",
             location: CrimeLocation(

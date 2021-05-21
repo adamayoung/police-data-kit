@@ -202,6 +202,17 @@ class CrimesEndpointTests: XCTestCase {
         XCTAssertEqual(url, expectedURL)
     }
 
+    func testCaseHistoryReturnsURL() {
+        let crimeID = CaseHistory.mock.crime.crimeID
+        let expectedURL = URL(
+            string: "/outcomes-for-crime/\(crimeID)"
+        )!
+
+        let url = CrimesEndpoint.caseHistory(crimeID: crimeID).url
+
+        XCTAssertEqual(url, expectedURL)
+    }
+
     func testCategoriesEndpointReturnsURL() {
         let dateString = "2021-04"
         let date = DateFormatter.yearMonth.date(from: dateString)!

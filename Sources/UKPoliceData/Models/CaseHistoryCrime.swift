@@ -1,7 +1,7 @@
 import Foundation
 
-/// A crime.
-public struct Crime: Identifiable, Decodable, Equatable {
+/// Crime for a case history.
+public struct CaseHistoryCrime: Decodable, Equatable {
 
     /// Identifier of the crime.
     ///
@@ -18,20 +18,18 @@ public struct Crime: Identifiable, Decodable, Equatable {
     /// Approximate location of the incident.
     ///
     /// - Note: The latitude and longitude locations of Crime and ASB incidents published always represent the approximate location of a crime — not the exact place that it happened. [Police API | Location Anonymisation](https://data.police.uk/about/#location-anonymisation)
-    public let location: CrimeLocation
+    public let location: CrimeLocation?
     /// The type of the location.
-    public let locationType: CrimeLocationType
+    public let locationType: CrimeLocationType?
     /// For Bristish Transport Police locations, the type of location at which this crime was recorded.
     public let locationSubtype: String?
     /// Month of the crime.
     public let month: String
-    /// The category and date of the latest recorded outcome for the crime.
-    public let outcomeStatus: OutcomeStatus?
 
-    /// Creates a a new `Crime`.
+    /// Creates a a new `CaseHistoryCrime`.
     ///
     /// - Parameters:
-    ///     - id: Identifier of the crime
+    ///     - id: Identifier of the crime.
     ///     - crimeID: 64-character unique identifier for the crime.
     ///     - context: Extra information about the crime.
     ///     - categoryID: Crime category identifier.
@@ -39,10 +37,8 @@ public struct Crime: Identifiable, Decodable, Equatable {
     ///     - locationType: The type of the location
     ///     - locationSubtype: For Bristish Transport Police locations, the type of location at which this crime was recorded.
     ///     - month: Month of the crime.
-    ///     - outcomeStatus: The category and date of the latest recorded outcome for the crime.
-    public init(id: Int, crimeID: String, context: String? = nil, categoryID: String, location: CrimeLocation,
-                locationType: CrimeLocationType, locationSubtype: String? = nil, month: String,
-                outcomeStatus: OutcomeStatus? = nil) {
+    public init(id: Int, crimeID: String, context: String? = nil, categoryID: String, location: CrimeLocation? = nil,
+                locationType: CrimeLocationType? = nil, locationSubtype: String? = nil, month: String) {
         self.id = id
         self.crimeID = crimeID
         self.context = context
@@ -51,12 +47,11 @@ public struct Crime: Identifiable, Decodable, Equatable {
         self.locationType = locationType
         self.locationSubtype = locationSubtype
         self.month = month
-        self.outcomeStatus = outcomeStatus
     }
 
 }
 
-extension Crime {
+extension CaseHistoryCrime {
 
     private enum CodingKeys: String, CodingKey {
         case id
@@ -67,7 +62,6 @@ extension Crime {
         case locationType
         case locationSubtype
         case month
-        case outcomeStatus
     }
 
 }

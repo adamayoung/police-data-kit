@@ -13,11 +13,14 @@ class UKCrimeServiceTests: XCTestCase {
     }
 
     override func tearDown() {
-        apiClient.reset()
         apiClient = nil
         service = nil
         super.tearDown()
     }
+
+}
+
+extension UKCrimeServiceTests {
 
     func testFetchStreetLevelCrimesAtCoorindateReturnsCrimes() {
         let coordinate = Coordinate.mock
@@ -86,6 +89,10 @@ class UKCrimeServiceTests: XCTestCase {
 
         XCTAssertEqual(apiClient.lastPath, CrimesEndpoint.streetLevelCrimesInArea(coordinates: coordinates).url)
     }
+
+}
+
+extension UKCrimeServiceTests {
 
     func testFetchStreetLevelOutcomesForStreetReturnsOutcomes() {
         let expectedResult = Outcome.mocks
@@ -190,6 +197,10 @@ class UKCrimeServiceTests: XCTestCase {
         XCTAssertEqual(apiClient.lastPath, CrimesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates) .url)
     }
 
+}
+
+extension UKCrimeServiceTests {
+
     func testFetchCrimesAtLocationForStreetReturnsCrimes() {
         let expectedResult = Crime.mocks
         let streetID = expectedResult[0].location.street.id
@@ -257,6 +268,10 @@ class UKCrimeServiceTests: XCTestCase {
         XCTAssertEqual(apiClient.lastPath, CrimesEndpoint.crimesAtLocationAtSpecificPoint(coordinate: coordinate).url)
     }
 
+}
+
+extension UKCrimeServiceTests {
+
     func testFetchCrimesWithNoLocationReturnsCrimes() {
         let categoryID = CrimeCategory.mock.id
         let policeForceID = PoliceForce.mock.id
@@ -293,6 +308,30 @@ class UKCrimeServiceTests: XCTestCase {
         XCTAssertEqual(apiClient.lastPath, CrimesEndpoint.crimesWithNoLocation(categoryID: CrimeCategory.defaultID,
                                                                                policeForceID: policeForceID).url)
     }
+
+}
+
+extension UKCrimeServiceTests {
+
+    func testFetchCaseHistoryReturnCaseHistory() {
+        let expectedResult = CaseHistory.mock
+        let crimeID = expectedResult.crime.crimeID
+        apiClient.response = expectedResult
+
+        let expectation = XCTestExpectation(description: "await")
+        service.fetchCaseHistory(forCrime: crimeID) { result in
+            XCTAssertEqual(try? result.get(), expectedResult)
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 1)
+
+        XCTAssertEqual(apiClient.lastPath, CrimesEndpoint.caseHistory(crimeID: crimeID).url)
+    }
+
+}
+
+extension UKCrimeServiceTests {
 
     func testFetchCategoriesReturnsCrimeCategories() {
         let expectedResult = CrimeCategory.mocks

@@ -1,0 +1,30 @@
+{
+    "outcomes": [
+        {
+            "category": {
+                "code": "under-investigation",
+                "name": "Under investigation"
+            },
+            "date": "2020-03",
+            "person_id": null
+        },
+        {
+            "category": {
+                "code": "no-further-action",
+                "name": "Investigation complete; no suspect identified"
+            },
+            "date": "2020-03",
+            "person_id": null
+        }
+    ],
+    "crime": {
+        "category": "bicycle-theft",
+        "location_type": null,
+        "location": null,
+        "context": "",
+        "persistent_id": "46688f40815e3a4cb7fcf69550492d8bffa4ed267652e676e49e23d00955c486",
+        "id": 82067369,
+        "location_subtype": "",
+        "month": "2020-03"
+    }
+}
