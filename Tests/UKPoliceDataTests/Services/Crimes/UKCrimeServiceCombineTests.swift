@@ -21,6 +21,10 @@ class UKCrimeServiceCombineTests: XCTestCase {
         super.tearDown()
     }
 
+}
+
+extension UKCrimeServiceCombineTests {
+
     func testStreetLevelCrimesAtCoorindatePublisherReturnsCrimes() throws {
         let coordinate = Coordinate.mock
         let date = Date()
@@ -74,6 +78,10 @@ class UKCrimeServiceCombineTests: XCTestCase {
         XCTAssertEqual(apiClient.lastPath,
                        CrimesEndpoint.streetLevelCrimesInArea(coordinates: coordinates).url)
     }
+
+}
+
+extension UKCrimeServiceCombineTests {
 
     func testStreetLevelOutcomesForStreetPublisherReturnsOutcomes() throws {
         let expectedResult = Outcome.mocks
@@ -156,6 +164,10 @@ class UKCrimeServiceCombineTests: XCTestCase {
                        CrimesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates) .url)
     }
 
+}
+
+extension UKCrimeServiceCombineTests {
+
     func testCrimesAtLocationForStreetPublisherReturnsCrimes() throws {
         let expectedResult = Crime.mocks
         let streetID = expectedResult[0].location.street.id
@@ -209,6 +221,10 @@ class UKCrimeServiceCombineTests: XCTestCase {
                        CrimesEndpoint.crimesAtLocationAtSpecificPoint(coordinate: coordinate).url)
     }
 
+}
+
+extension UKCrimeServiceCombineTests {
+
     func testCrimesWithNoLocationPublisherReturnsCrimes() throws {
         let categoryID = CrimeCategory.mock.id
         let policeForceID = PoliceForce.mock.id
@@ -241,6 +257,10 @@ class UKCrimeServiceCombineTests: XCTestCase {
                                                            policeForceID: policeForceID).url)
     }
 
+}
+
+extension UKCrimeServiceCombineTests {
+
     func testCaseHistoryPublisherReturnsCaseHistory() throws {
         let expectedResult = CaseHistory.mock
         let crimeID = expectedResult.crime.crimeID
@@ -251,6 +271,10 @@ class UKCrimeServiceCombineTests: XCTestCase {
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(apiClient.lastPath, CrimesEndpoint.caseHistory(crimeID: crimeID).url)
     }
+
+}
+
+extension UKCrimeServiceCombineTests {
 
     func testCategoriesPublisherReturnsCrimeCategories() throws {
         let expectedResult = CrimeCategory.mocks

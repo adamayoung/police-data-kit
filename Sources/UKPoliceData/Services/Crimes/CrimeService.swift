@@ -105,7 +105,6 @@ public protocol CrimeService {
     func fetchCrimesWithNoLocation(forCategory categoryID: String, inPoliceForce policeForceID: String, date: Date?,
                                    completion: @escaping (_ result: Result<[Crime], PoliceDataError>) -> Void)
 
-
     /// Fetches the case history for a crime.
     ///
     /// - Note: [Police API | Outcomes for a specific crime](https://data.police.uk/docs/method/outcomes-for-crime/)
