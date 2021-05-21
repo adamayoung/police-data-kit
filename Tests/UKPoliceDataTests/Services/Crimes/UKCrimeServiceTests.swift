@@ -294,6 +294,22 @@ class UKCrimeServiceTests: XCTestCase {
                                                                                policeForceID: policeForceID).url)
     }
 
+    func testFetchCaseHistoryReturnCaseHistory() {
+        let expectedResult = CaseHistory.mock
+        let crimeID = expectedResult.crime.crimeID
+        apiClient.response = expectedResult
+
+        let expectation = XCTestExpectation(description: "await")
+        service.fetchCaseHistory(forCrime: crimeID) { result in
+            XCTAssertEqual(try? result.get(), expectedResult)
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 1)
+
+        XCTAssertEqual(apiClient.lastPath, CrimesEndpoint.caseHistory(crimeID: crimeID).url)
+    }
+
     func testFetchCategoriesReturnsCrimeCategories() {
         let expectedResult = CrimeCategory.mocks
         let date = Date()

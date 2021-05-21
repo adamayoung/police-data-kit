@@ -61,6 +61,11 @@ final class UKCrimeService: CrimeService {
                       completion: completion)
     }
 
+    func fetchCaseHistory(forCrime crimeID: String,
+                          completion: @escaping (_ result: Result<CaseHistory, PoliceDataError>) -> Void) {
+        apiClient.get(endpoint: CrimesEndpoint.caseHistory(crimeID: crimeID), completion: completion)
+    }
+
     func fetchCategories(date: Date,
                          completion: @escaping (_ result: Result<[CrimeCategory], PoliceDataError>) -> Void) {
         apiClient.get(endpoint: CrimesEndpoint.categories(date: date), completion: completion)
@@ -116,6 +121,11 @@ extension UKCrimeService {
                                        date: Date?) -> AnyPublisher<[Crime], PoliceDataError> {
         apiClient.get(endpoint: CrimesEndpoint.crimesWithNoLocation(categoryID: categoryID,
                                                                     policeForceID: policeForceID, date: date))
+    }
+
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func caseHistoryPublisher(forCrime crimeID: String) -> AnyPublisher<CaseHistory, PoliceDataError> {
+        apiClient.get(endpoint: CrimesEndpoint.caseHistory(crimeID: crimeID))
     }
 
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)

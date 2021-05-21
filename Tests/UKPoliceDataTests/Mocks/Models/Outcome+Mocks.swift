@@ -13,7 +13,7 @@ extension Outcome {
             ),
             crime: OutcomeCrime(
                 id: 86783916,
-                persistentID: "c69de56fd2fcd523ab65b588811caf53e7ff3a577b2bfd2f731173f5f95af99d",
+                crimeID: "c69de56fd2fcd523ab65b588811caf53e7ff3a577b2bfd2f731173f5f95af99d",
                 context: "",
                 categoryID: "burglary",
                 location: CrimeLocation(
@@ -43,7 +43,7 @@ extension Outcome {
                 ),
                 crime: OutcomeCrime(
                     id: 86783932232,
-                    persistentID: "hfd78fd89s078f9ds789fds789fdfdjnmlnm4432",
+                    crimeID: "hfd78fd89s078f9ds789fds789fdfdjnmlnm4432",
                     context: "",
                     categoryID: "theft",
                     location: CrimeLocation(

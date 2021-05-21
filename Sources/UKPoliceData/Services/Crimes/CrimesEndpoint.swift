@@ -8,6 +8,7 @@ enum CrimesEndpoint {
     private static let crimesAtLocationBasePath = basePath.appendingPathComponent("crimes-at-location")
     private static let crimeCategoriesBasePath = basePath.appendingPathComponent("crime-categories")
     private static let crimesWithNoLocationBasePath = basePath.appendingPathComponent("crimes-no-location")
+    private static let outcomesForCrimeBasePath = basePath.appendingPathComponent("outcomes-for-crime")
 
     case streetLevelCrimesAtSpecificPoint(coordinate: Coordinate, date: Date? = nil)
     case streetLevelCrimesInArea(coordinates: [Coordinate], date: Date? = nil)
@@ -17,6 +18,7 @@ enum CrimesEndpoint {
     case crimesAtLocationForStreet(streetID: Int, date: Date? = nil)
     case crimesAtLocationAtSpecificPoint(coordinate: Coordinate, date: Date? = nil)
     case crimesWithNoLocation(categoryID: String, policeForceID: String, date: Date? = nil)
+    case caseHistory(crimeID: String)
     case categories(date: Date)
 
 }
@@ -70,6 +72,10 @@ extension CrimesEndpoint: Endpoint {
                 .appendingQueryItem(name: "category", value: categoryID)
                 .appendingQueryItem(name: "force", value: policeForceID)
                 .appendingQueryItem(name: "date", value: date)
+
+        case .caseHistory(let crimeID):
+            return Self.outcomesForCrimeBasePath
+                .appendingPathComponent(crimeID)
 
         case .categories(let date):
             return Self.crimeCategoriesBasePath

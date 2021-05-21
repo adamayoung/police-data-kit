@@ -241,6 +241,17 @@ class UKCrimeServiceCombineTests: XCTestCase {
                                                            policeForceID: policeForceID).url)
     }
 
+    func testCaseHistoryPublisherReturnsCaseHistory() throws {
+        let expectedResult = CaseHistory.mock
+        let crimeID = expectedResult.crime.crimeID
+        apiClient.response = expectedResult
+
+        let result = try waitFor(publisher: service.caseHistoryPublisher(forCrime: crimeID), storeIn: &cancellables)
+
+        XCTAssertEqual(result, expectedResult)
+        XCTAssertEqual(apiClient.lastPath, CrimesEndpoint.caseHistory(crimeID: crimeID).url)
+    }
+
     func testCategoriesPublisherReturnsCrimeCategories() throws {
         let expectedResult = CrimeCategory.mocks
         let date = Date()
