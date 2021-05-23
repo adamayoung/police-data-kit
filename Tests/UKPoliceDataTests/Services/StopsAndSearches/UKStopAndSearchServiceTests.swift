@@ -1,15 +1,15 @@
 @testable import UKPoliceData
 import XCTest
 
-class UKStopAndSearchesServiceTests: XCTestCase {
+class UKStopAndSearchServiceTests: XCTestCase {
 
-    var service: UKStopAndSearchesService!
+    var service: UKStopAndSearchService!
     var apiClient: MockAPIClient!
 
     override func setUp() {
         super.setUp()
         apiClient = MockAPIClient()
-        service = UKStopAndSearchesService(apiClient: apiClient)
+        service = UKStopAndSearchService(apiClient: apiClient)
     }
 
     override func tearDown() {

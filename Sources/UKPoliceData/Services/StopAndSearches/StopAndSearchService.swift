@@ -7,7 +7,7 @@ import Combine
 /// Stop and Search information.
 ///
 /// - Note: The data published is provided by police forces on a monthly basis. The data submitted goes through validation to check for mandatory fields and data formats. The location coordinates of the stop are anonymised and the age of the person stopped is changed to an age group (e.g. 18-24) before publication.
-public protocol StopAndSearchesService {
+public protocol StopAndSearchService {
 
     /// Fetches stop and searches at street-level within a 1 mile radius of a single point.
     ///
@@ -63,7 +63,7 @@ public protocol StopAndSearchesService {
 
 }
 
-public extension StopAndSearchesService {
+public extension StopAndSearchService {
 
     func fetchAll(atCoordinate coordinate: Coordinate, date: Date? = nil,
                   completion: @escaping (_ result: Result<[StopAndSearch], PoliceDataError>) -> Void) {

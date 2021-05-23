@@ -4,7 +4,7 @@ import Foundation
 import Combine
 #endif
 
-final class UKStopAndSearchesService: StopAndSearchesService {
+final class UKStopAndSearchService: StopAndSearchService {
 
     private let apiClient: APIClient
 
@@ -28,7 +28,7 @@ final class UKStopAndSearchesService: StopAndSearchesService {
 }
 
 #if canImport(Combine)
-extension UKStopAndSearchesService {
+extension UKStopAndSearchService {
 
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     func stopAndSearchesPublisher(atCoordinate coordinate: Coordinate,

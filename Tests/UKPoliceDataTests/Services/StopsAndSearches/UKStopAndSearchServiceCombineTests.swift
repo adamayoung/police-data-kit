@@ -3,16 +3,16 @@ import Combine
 @testable import UKPoliceData
 import XCTest
 
-class UKStopAndSearchesServiceCombineTests: XCTestCase {
+class UKStopAndSearchServiceCombineTests: XCTestCase {
 
     var cancellables: Set<AnyCancellable> = []
-    var service: UKStopAndSearchesService!
+    var service: UKStopAndSearchService!
     var apiClient: MockAPIClient!
 
     override func setUp() {
         super.setUp()
         apiClient = MockAPIClient()
-        service = UKStopAndSearchesService(apiClient: apiClient)
+        service = UKStopAndSearchService(apiClient: apiClient)
     }
 
     override func tearDown() {

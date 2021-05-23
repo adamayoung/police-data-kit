@@ -1,0 +1,125 @@
+import Foundation
+
+#if canImport(Combine)
+import Combine
+#endif
+
+/// Get information about a Crime's Outcome.
+public protocol OutcomeService {
+
+    /// Fetches a list of crime outcomes at a specific location.
+    ///
+    /// - Note: [Police API | Street-level outcomes](https://data.police.uk/docs/method/outcomes-at-location/)
+    ///
+    /// - Parameters:
+    ///     - streetID: A street ID.
+    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///     - completion: Completion handler.
+    ///     - result: A list of street level crime outcomes.
+    func fetchStreetLevelOutcomes(forStreet streetID: Int, date: Date?,
+                                  completion: @escaping (_ result: Result<[Outcome], PoliceDataError>) -> Void)
+
+    /// Fetches a list of crime outcomes within a 1 mile radius of a single point.
+    ///
+    /// - Note: [Police API | Street-level outcomes](https://data.police.uk/docs/method/outcomes-at-location/)
+    ///
+    /// - Parameters:
+    ///     - coordinate: A coordinate.
+    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///     - completion: Completion handler.
+    ///     - result: A list of street level crime outcomes.
+    func fetchStreetLevelOutcomes(atCoordinate coordinate: Coordinate, date: Date?,
+                                  completion: @escaping (_ result: Result<[Outcome], PoliceDataError>) -> Void)
+
+    /// Fetches a list of crime outcomes within a custom area.
+    ///
+    /// - Note: [Police API | Street-level outcomes](https://data.police.uk/docs/method/outcomes-at-location/)
+    ///
+    /// - Parameters:
+    ///     - coordinates: Coordinates which define the boundary of the custom area.
+    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///     - completion: Completion handler.
+    ///     - result: A list of street level crime outcomes.
+    func fetchStreetLevelOutcomes(inArea coordinates: [Coordinate], date: Date?,
+                                  completion: @escaping (_ result: Result<[Outcome], PoliceDataError>) -> Void)
+
+    #if canImport(Combine)
+    /// Publishes a list of crime outcomes at a specific location.
+    ///
+    /// - Note: [Police API | Street-level outcomes](https://data.police.uk/docs/method/outcomes-at-location/)
+    ///
+    /// - Parameters:
+    ///     - streetID: A street ID.
+    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///
+    /// - Returns: A publisher with a list of street level crime outcomes.
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func streetLevelOutcomesPublisher(forStreet streetID: Int, date: Date?) -> AnyPublisher<[Outcome], PoliceDataError>
+
+    /// Publishes a list of crime outcomes within a 1 mile radius of a single point.
+    ///
+    /// - Note: [Police API | Street-level outcomes](https://data.police.uk/docs/method/outcomes-at-location/)
+    ///
+    /// - Parameters:
+    ///     - coordinate: A coordinate.
+    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///
+    /// - Returns: A publisher with a list of street level crime outcomes.
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func streetLevelOutcomesPublisher(atCoordinate coordinate: Coordinate,
+                                      date: Date?) -> AnyPublisher<[Outcome], PoliceDataError>
+
+    /// Publishes a list of crime outcomes within a custom area.
+    ///
+    /// - Note: [Police API | Street-level outcomes](https://data.police.uk/docs/method/outcomes-at-location/)
+    ///
+    /// - Parameters:
+    ///     - coordinates: Coordinates which define the boundary of the custom area.
+    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///
+    /// - Returns: A publisher with a list of street level crime outcomes.
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func streetLevelOutcomesPublisher(inArea coordinates: [Coordinate],
+                                      date: Date?) -> AnyPublisher<[Outcome], PoliceDataError>
+    #endif
+
+}
+
+public extension OutcomeService {
+
+    func fetchStreetLevelOutcomes(forStreet streetID: Int, date: Date? = nil,
+                                  completion: @escaping (_ result: Result<[Outcome], PoliceDataError>) -> Void) {
+        fetchStreetLevelOutcomes(forStreet: streetID, date: date, completion: completion)
+    }
+
+    func fetchStreetLevelOutcomes(atCoordinate coordinate: Coordinate, date: Date? = nil,
+                                  completion: @escaping (_ result: Result<[Outcome], PoliceDataError>) -> Void) {
+        fetchStreetLevelOutcomes(atCoordinate: coordinate, date: date, completion: completion)
+    }
+
+    func fetchStreetLevelOutcomes(inArea coordinates: [Coordinate], date: Date? = nil,
+                                  completion: @escaping (_ result: Result<[Outcome], PoliceDataError>) -> Void) {
+        fetchStreetLevelOutcomes(inArea: coordinates, date: date, completion: completion)
+    }
+
+    #if canImport(Combine)
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func streetLevelOutcomesPublisher(forStreet streetID: Int,
+                                      date: Date? = nil) -> AnyPublisher<[Outcome], PoliceDataError> {
+        streetLevelOutcomesPublisher(forStreet: streetID, date: date)
+    }
+
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func streetLevelOutcomesPublisher(atCoordinate coordinate: Coordinate,
+                                      date: Date? = nil) -> AnyPublisher<[Outcome], PoliceDataError> {
+        streetLevelOutcomesPublisher(atCoordinate: coordinate, date: date)
+    }
+
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func streetLevelOutcomesPublisher(inArea coordinates: [Coordinate],
+                                      date: Date? = nil) -> AnyPublisher<[Outcome], PoliceDataError> {
+        streetLevelOutcomesPublisher(inArea: coordinates, date: date)
+    }
+    #endif
+
+}
