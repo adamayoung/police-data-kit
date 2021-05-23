@@ -1,5 +1,5 @@
 import Foundation
-import UKPoliceData
+@testable import UKPoliceData
 
 extension CaseHistory {
 
@@ -13,12 +13,12 @@ extension CaseHistory {
                 location: nil,
                 locationType: nil,
                 locationSubtype: "",
-                month: "2020-03"
+                date: DateFormatter.yearMonth.date(from: "2020-03")!
             ),
             outcomes: [
                 CaseHistoryOutcome(
                     personID: nil,
-                    month: "2020-03",
+                    date: DateFormatter.yearMonth.date(from: "2020-03")!,
                     category: OutcomeCategory(
                         id: "under-investigation",
                         name: "Under investigation"
@@ -26,7 +26,7 @@ extension CaseHistory {
                 ),
                 CaseHistoryOutcome(
                     personID: nil,
-                    month: "2020-03",
+                    date: DateFormatter.yearMonth.date(from: "2020-03")!,
                     category: OutcomeCategory(
                         id: "no-further-action",
                         name: "Investigation complete; no suspect identified"

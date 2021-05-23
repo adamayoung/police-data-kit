@@ -28,7 +28,7 @@ public struct Neighbourhood: Identifiable, Decodable, Equatable {
     /// Any associated locations with the neighbourhood.
     ///
     /// - Note: e.g. police stations
-    public let locations: [Location]
+    public let locations: [NeighbourhoodLocation]
     /// Links.
     public let links: [Link]
 
@@ -49,7 +49,7 @@ public struct Neighbourhood: Identifiable, Decodable, Equatable {
     ///     - links: Links.
     public init(id: String, name: String, description: String? = nil, policeForceWebsite: URL,
                 welcomeMessage: String? = nil, population: Int, contactDetails: ContactDetails, centre: Coordinate,
-                locations: [Location], links: [Link]) {
+                locations: [NeighbourhoodLocation], links: [Link]) {
         self.id = id
         self.name = name
         self.description = description

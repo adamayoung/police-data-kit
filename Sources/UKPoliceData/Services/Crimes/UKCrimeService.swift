@@ -81,6 +81,7 @@ extension UKCrimeService {
                                     date: Date?) -> AnyPublisher<[Crime], PoliceDataError> {
         apiClient.get(endpoint: CrimesEndpoint.streetLevelCrimesAtSpecificPoint(coordinate: coordinate, date: date))
     }
+
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     func streetLevelCrimesPublisher(inArea coordinates: [Coordinate],
                                     date: Date?) -> AnyPublisher<[Crime], PoliceDataError> {

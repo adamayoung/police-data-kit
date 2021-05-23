@@ -5,12 +5,11 @@ extension Location {
 
     static var mock: Location {
         Location(
-            name: "Mansfield House",
-            type: "station",
-            address: "74 Belgrave Gate\n, Leicester",
-            postcode: "LE1 3GG",
-            latitude: 52.6389,
-            longitude: -1.13619
+            street: Street(
+                id: 883425,
+                name: "On or near Peacock Lane"
+            ),
+            coordinate: Coordinate(latitude: 52.633888, longitude: -1.138924)
         )
     }
 

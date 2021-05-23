@@ -5,8 +5,8 @@ public struct CaseHistoryOutcome: Decodable, Equatable {
 
     /// An identifier for the suspect/offender, where available.
     public let personID: String?
-    /// Month of the crime.
-    public let month: String
+    /// Date (truncated to the year and month) of the crime.
+    public let date: Date
     /// Category of the outcome.
     public let category: OutcomeCategory
 
@@ -14,11 +14,11 @@ public struct CaseHistoryOutcome: Decodable, Equatable {
     ///
     /// - Parameters:
     ///     - personID: An identifier for the suspect/offender, where available.
-    ///     - month: Month of the crime.
+    ///     - date: Month of the crime.
     ///     - category: Category of the outcome.
-    public init(personID: String? = nil, month: String, category: OutcomeCategory) {
+    public init(personID: String? = nil, date: Date, category: OutcomeCategory) {
         self.personID = personID
-        self.month = month
+        self.date = date
         self.category = category
     }
 
@@ -28,7 +28,7 @@ extension CaseHistoryOutcome {
 
     private enum CodingKeys: String, CodingKey {
         case personID = "personId"
-        case month = "date"
+        case date
         case category
     }
 

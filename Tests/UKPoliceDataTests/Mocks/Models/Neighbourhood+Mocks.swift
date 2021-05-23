@@ -25,7 +25,7 @@ extension Neighbourhood {
                 longitude: -1.13619
             ),
             locations: [
-                Location(
+                NeighbourhoodLocation(
                     name: "Mansfield House",
                     type: "station",
                     address: "74 Belgrave Gate\n, Leicester",
