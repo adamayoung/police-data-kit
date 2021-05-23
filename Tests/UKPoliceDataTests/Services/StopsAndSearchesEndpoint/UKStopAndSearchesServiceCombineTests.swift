@@ -21,14 +21,13 @@ class UKStopAndSearchesServiceCombineTests: XCTestCase {
         super.tearDown()
     }
 
-    func testStopAndSearchesByAreaPublisherReturnsStopAndSearches() throws {
+    func testStopAndSearchesAtCoordinatePublisherReturnsStopAndSearches() throws {
         let coordinate = Coordinate.mock
         let date = Date()
         let expectedResult = StopAndSearch.mocks
         apiClient.response = expectedResult
 
-        let result = try waitFor(publisher: service.stopAndSearchesByAreaPublisher(atCoordinate: coordinate,
-                                                                                   date: date),
+        let result = try waitFor(publisher: service.stopAndSearchesPublisher(atCoordinate: coordinate, date: date),
                                  storeIn: &cancellables)
 
         XCTAssertEqual(result, expectedResult)
@@ -37,17 +36,43 @@ class UKStopAndSearchesServiceCombineTests: XCTestCase {
                                                                                     date: date).url)
     }
 
-    func testStopAndSearchesByAreaPublisherWhenNoDateReturnsStopAndSearches() throws {
+    func testStopAndSearchesAtCoordinatePublisherWhenNoDateReturnsStopAndSearches() throws {
         let coordinate = Coordinate.mock
         let expectedResult = StopAndSearch.mocks
         apiClient.response = expectedResult
 
-        let result = try waitFor(publisher: service.stopAndSearchesByAreaPublisher(atCoordinate: coordinate),
+        let result = try waitFor(publisher: service.stopAndSearchesPublisher(atCoordinate: coordinate),
                                  storeIn: &cancellables)
 
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(apiClient.lastPath,
                        StopAndSearchesEndpoint.stopAndSearchesByAreaAtSpecificPoint(coordinate: coordinate).url)
+    }
+
+    func testStopAndSearchesAtLocationPublisherReturnsStopAndSearches() throws {
+        let streetID = 123456
+        let date = Date()
+        let expectedResult = StopAndSearch.mocks
+        apiClient.response = expectedResult
+
+        let result = try waitFor(publisher: service.stopAndSearchesPublisher(atLocation: streetID, date: date),
+                                 storeIn: &cancellables)
+
+        XCTAssertEqual(result, expectedResult)
+        XCTAssertEqual(apiClient.lastPath,
+                       StopAndSearchesEndpoint.stopAndSearchesAtLocation(streetID: streetID, date: date).url)
+    }
+
+    func testStopAndSearchesAtLocationPublisherWhenNoDateReturnsStopAndSearches() throws {
+        let streetID = 123456
+        let expectedResult = StopAndSearch.mocks
+        apiClient.response = expectedResult
+
+        let result = try waitFor(publisher: service.stopAndSearchesPublisher(atLocation: streetID),
+                                 storeIn: &cancellables)
+
+        XCTAssertEqual(result, expectedResult)
+        XCTAssertEqual(apiClient.lastPath, StopAndSearchesEndpoint.stopAndSearchesAtLocation(streetID: streetID).url)
     }
 
 }
