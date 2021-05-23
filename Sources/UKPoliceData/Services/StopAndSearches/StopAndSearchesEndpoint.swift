@@ -4,8 +4,10 @@ enum StopAndSearchesEndpoint {
 
     private static let basePath = URL(string: "/")!
     private static let stopsStreetBasePath = Self.basePath.appendingPathComponent("stops-street")
+    private static let stopsAtLocationBasePath = Self.basePath.appendingPathComponent("stops-at-location")
 
     case stopAndSearchesByAreaAtSpecificPoint(coordinate: Coordinate, date: Date? = nil)
+    case stopAndSearchesAtLocation(streetID: Int, date: Date? = nil)
 
 }
 
@@ -17,6 +19,11 @@ extension StopAndSearchesEndpoint: Endpoint {
             return Self.stopsStreetBasePath
                 .appendingQueryItem(name: "lat", value: coordinate.latitude)
                 .appendingQueryItem(name: "lng", value: coordinate.longitude)
+                .appendingQueryItem(name: "date", value: date)
+
+        case .stopAndSearchesAtLocation(let streetID, let date):
+            return Self.stopsAtLocationBasePath
+                .appendingQueryItem(name: "location_id", value: streetID)
                 .appendingQueryItem(name: "date", value: date)
         }
     }
