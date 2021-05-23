@@ -18,10 +18,6 @@ class UKCrimeServiceTests: XCTestCase {
         super.tearDown()
     }
 
-}
-
-extension UKCrimeServiceTests {
-
     func testFetchStreetLevelCrimesAtCoorindateReturnsCrimes() {
         let coordinate = Coordinate.mock
         let date = Date()
@@ -90,117 +86,6 @@ extension UKCrimeServiceTests {
         XCTAssertEqual(apiClient.lastPath, CrimesEndpoint.streetLevelCrimesInArea(coordinates: coordinates).url)
     }
 
-}
-
-extension UKCrimeServiceTests {
-
-    func testFetchStreetLevelOutcomesForStreetReturnsOutcomes() {
-        let expectedResult = Outcome.mocks
-        let streetID = expectedResult[0].crime.location.street.id
-        let date = Date()
-        apiClient.response = expectedResult
-
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchStreetLevelOutcomes(forStreet: streetID, date: date) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
-
-        wait(for: [expectation], timeout: 1)
-
-        XCTAssertEqual(apiClient.lastPath,
-                       CrimesEndpoint.streetLevelOutcomesForStreet(streetID: streetID, date: date).url)
-    }
-
-    func testFetchStreetLevelOutcomesForStreetWhenNoDateReturnsOutcomes() {
-        let expectedResult = Outcome.mocks
-        let streetID = expectedResult[0].crime.location.street.id
-        apiClient.response = expectedResult
-
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchStreetLevelOutcomes(forStreet: streetID) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
-
-        wait(for: [expectation], timeout: 1)
-
-        XCTAssertEqual(apiClient.lastPath, CrimesEndpoint.streetLevelOutcomesForStreet(streetID: streetID).url)
-    }
-
-    func testFetchStreetLevelOutcomesAtCoordinateReturnsOutcomes() {
-        let coordinate = Coordinate.mock
-        let expectedResult = Outcome.mocks
-        let date = Date()
-        apiClient.response = expectedResult
-
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchStreetLevelOutcomes(atCoordinate: coordinate, date: date) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
-
-        wait(for: [expectation], timeout: 1)
-
-        XCTAssertEqual(apiClient.lastPath,
-                       CrimesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate, date: date) .url)
-    }
-
-    func testFetchStreetLevelOutcomesAtCoordinateWhenNoDateReturnsOutcomes() {
-        let coordinate = Coordinate.mock
-        let expectedResult = Outcome.mocks
-        apiClient.response = expectedResult
-
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchStreetLevelOutcomes(atCoordinate: coordinate) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
-
-        wait(for: [expectation], timeout: 1)
-
-        XCTAssertEqual(apiClient.lastPath,
-                       CrimesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate) .url)
-    }
-
-    func testFetchStreetLevelOutcomesInAreaReturnsOutcomes() {
-        let coordinates = Coordinate.mocks
-        let expectedResult = Outcome.mocks
-        let date = Date()
-        apiClient.response = expectedResult
-
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchStreetLevelOutcomes(inArea: coordinates, date: date) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
-
-        wait(for: [expectation], timeout: 1)
-
-        XCTAssertEqual(apiClient.lastPath,
-                       CrimesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates, date: date) .url)
-    }
-
-    func testFetchStreetLevelOutcomesInAreaWhenNoDateReturnsOutcomes() {
-        let coordinates = Coordinate.mocks
-        let expectedResult = Outcome.mocks
-        apiClient.response = expectedResult
-
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchStreetLevelOutcomes(inArea: coordinates) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
-
-        wait(for: [expectation], timeout: 1)
-
-        XCTAssertEqual(apiClient.lastPath, CrimesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates) .url)
-    }
-
-}
-
-extension UKCrimeServiceTests {
-
     func testFetchCrimesAtLocationForStreetReturnsCrimes() {
         let expectedResult = Crime.mocks
         let streetID = expectedResult[0].location.street.id
@@ -268,10 +153,6 @@ extension UKCrimeServiceTests {
         XCTAssertEqual(apiClient.lastPath, CrimesEndpoint.crimesAtLocationAtSpecificPoint(coordinate: coordinate).url)
     }
 
-}
-
-extension UKCrimeServiceTests {
-
     func testFetchCrimesWithNoLocationReturnsCrimes() {
         let categoryID = CrimeCategory.mock.id
         let policeForceID = PoliceForce.mock.id
@@ -308,30 +189,6 @@ extension UKCrimeServiceTests {
         XCTAssertEqual(apiClient.lastPath, CrimesEndpoint.crimesWithNoLocation(categoryID: CrimeCategory.defaultID,
                                                                                policeForceID: policeForceID).url)
     }
-
-}
-
-extension UKCrimeServiceTests {
-
-    func testFetchCaseHistoryReturnCaseHistory() {
-        let expectedResult = CaseHistory.mock
-        let crimeID = expectedResult.crime.crimeID
-        apiClient.response = expectedResult
-
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchCaseHistory(forCrime: crimeID) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
-
-        wait(for: [expectation], timeout: 1)
-
-        XCTAssertEqual(apiClient.lastPath, CrimesEndpoint.caseHistory(crimeID: crimeID).url)
-    }
-
-}
-
-extension UKCrimeServiceTests {
 
     func testFetchCategoriesReturnsCrimeCategories() {
         let expectedResult = CrimeCategory.mocks

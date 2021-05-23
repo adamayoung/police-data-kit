@@ -24,24 +24,6 @@ final class UKCrimeService: CrimeService {
                       completion: completion)
     }
 
-    func fetchStreetLevelOutcomes(forStreet streetID: Int, date: Date?,
-                                  completion: @escaping (_ result: Result<[Outcome], PoliceDataError>) -> Void) {
-        apiClient.get(endpoint: CrimesEndpoint.streetLevelOutcomesForStreet(streetID: streetID, date: date),
-                      completion: completion)
-    }
-
-    func fetchStreetLevelOutcomes(atCoordinate coordinate: Coordinate, date: Date?,
-                                  completion: @escaping (_ result: Result<[Outcome], PoliceDataError>) -> Void) {
-        apiClient.get(endpoint: CrimesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate, date: date),
-                      completion: completion)
-    }
-
-    func fetchStreetLevelOutcomes(inArea coordinates: [Coordinate], date: Date?,
-                                  completion: @escaping (_ result: Result<[Outcome], PoliceDataError>) -> Void) {
-        apiClient.get(endpoint: CrimesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates, date: date),
-                      completion: completion)
-    }
-
     func fetchCrimesAtLocation(forStreet streetID: Int, date: Date?,
                                completion: @escaping (_ result: Result<[Crime], PoliceDataError>) -> Void) {
         apiClient.get(endpoint: CrimesEndpoint.crimesAtLocationForStreet(streetID: streetID, date: date),
@@ -59,11 +41,6 @@ final class UKCrimeService: CrimeService {
         apiClient.get(endpoint: CrimesEndpoint.crimesWithNoLocation(categoryID: categoryID,
                                                                     policeForceID: policeForceID, date: date),
                       completion: completion)
-    }
-
-    func fetchCaseHistory(forCrime crimeID: String,
-                          completion: @escaping (_ result: Result<CaseHistory, PoliceDataError>) -> Void) {
-        apiClient.get(endpoint: CrimesEndpoint.caseHistory(crimeID: crimeID), completion: completion)
     }
 
     func fetchCategories(date: Date,
@@ -89,24 +66,6 @@ extension UKCrimeService {
     }
 
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func streetLevelOutcomesPublisher(forStreet streetID: Int,
-                                      date: Date?) -> AnyPublisher<[Outcome], PoliceDataError> {
-        apiClient.get(endpoint: CrimesEndpoint.streetLevelOutcomesForStreet(streetID: streetID, date: date))
-    }
-
-    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func streetLevelOutcomesPublisher(atCoordinate coordinate: Coordinate,
-                                      date: Date?) -> AnyPublisher<[Outcome], PoliceDataError> {
-        apiClient.get(endpoint: CrimesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate, date: date))
-    }
-
-    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func streetLevelOutcomesPublisher(inArea coordinates: [Coordinate],
-                                      date: Date?) -> AnyPublisher<[Outcome], PoliceDataError> {
-        apiClient.get(endpoint: CrimesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates, date: date))
-    }
-
-    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     func crimesAtLocationPublisher(forStreet streetID: Int, date: Date?) -> AnyPublisher<[Crime], PoliceDataError> {
         apiClient.get(endpoint: CrimesEndpoint.crimesAtLocationForStreet(streetID: streetID, date: date))
     }
@@ -122,11 +81,6 @@ extension UKCrimeService {
                                        date: Date?) -> AnyPublisher<[Crime], PoliceDataError> {
         apiClient.get(endpoint: CrimesEndpoint.crimesWithNoLocation(categoryID: categoryID,
                                                                     policeForceID: policeForceID, date: date))
-    }
-
-    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func caseHistoryPublisher(forCrime crimeID: String) -> AnyPublisher<CaseHistory, PoliceDataError> {
-        apiClient.get(endpoint: CrimesEndpoint.caseHistory(crimeID: crimeID))
     }
 
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)

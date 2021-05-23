@@ -21,10 +21,6 @@ class UKCrimeServiceCombineTests: XCTestCase {
         super.tearDown()
     }
 
-}
-
-extension UKCrimeServiceCombineTests {
-
     func testStreetLevelCrimesAtCoorindatePublisherReturnsCrimes() throws {
         let coordinate = Coordinate.mock
         let date = Date()
@@ -79,95 +75,6 @@ extension UKCrimeServiceCombineTests {
                        CrimesEndpoint.streetLevelCrimesInArea(coordinates: coordinates).url)
     }
 
-}
-
-extension UKCrimeServiceCombineTests {
-
-    func testStreetLevelOutcomesForStreetPublisherReturnsOutcomes() throws {
-        let expectedResult = Outcome.mocks
-        let streetID = expectedResult[0].crime.location.street.id
-        let date = Date()
-        apiClient.response = expectedResult
-
-        let result = try waitFor(publisher: service.streetLevelOutcomesPublisher(forStreet: streetID,
-                                                                               date: date),
-                                 storeIn: &cancellables)
-
-        XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.lastPath,
-                       CrimesEndpoint.streetLevelOutcomesForStreet(streetID: streetID, date: date).url)
-    }
-
-    func testStreetLevelOutcomesForStreetPublisherWhenNoDateReturnsOutcomes() throws {
-        let expectedResult = Outcome.mocks
-        let streetID = expectedResult[0].crime.location.street.id
-        apiClient.response = expectedResult
-
-        let result = try waitFor(publisher: service.streetLevelOutcomesPublisher(forStreet: streetID),
-                                 storeIn: &cancellables)
-
-        XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.lastPath, CrimesEndpoint.streetLevelOutcomesForStreet(streetID: streetID).url)
-    }
-
-    func testStreetLevelOutcomesAtCoordinatePublisherReturnsOutcomes() throws {
-        let coordinate = Coordinate.mock
-        let expectedResult = Outcome.mocks
-        let date = Date()
-        apiClient.response = expectedResult
-
-        let result = try waitFor(publisher: service.streetLevelOutcomesPublisher(atCoordinate: coordinate, date: date),
-                                 storeIn: &cancellables)
-
-        XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.lastPath,
-                       CrimesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate, date: date) .url)
-    }
-
-    func testStreetLevelOutcomesAtCoordinatePublisherWhenNoDateReturnsOutcomes() throws {
-        let coordinate = Coordinate.mock
-        let expectedResult = Outcome.mocks
-        apiClient.response = expectedResult
-
-        let result = try waitFor(publisher: service.streetLevelOutcomesPublisher(atCoordinate: coordinate),
-                                 storeIn: &cancellables)
-
-        XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.lastPath,
-                       CrimesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate) .url)
-    }
-
-    func testStreetLevelOutcomesInAreaPublisherReturnsOutcomes() throws {
-        let coordinates = Coordinate.mocks
-        let expectedResult = Outcome.mocks
-        let date = Date()
-        apiClient.response = expectedResult
-
-        let result = try waitFor(publisher: service.streetLevelOutcomesPublisher(inArea: coordinates, date: date),
-                                 storeIn: &cancellables)
-
-        XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.lastPath,
-                       CrimesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates, date: date) .url)
-    }
-
-    func testStreetLevelOutcomesInAreaPublisherWhenNoDateReturnsOutcomes() throws {
-        let coordinates = Coordinate.mocks
-        let expectedResult = Outcome.mocks
-        apiClient.response = expectedResult
-
-        let result = try waitFor(publisher: service.streetLevelOutcomesPublisher(inArea: coordinates),
-                                 storeIn: &cancellables)
-
-        XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.lastPath,
-                       CrimesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates) .url)
-    }
-
-}
-
-extension UKCrimeServiceCombineTests {
-
     func testCrimesAtLocationForStreetPublisherReturnsCrimes() throws {
         let expectedResult = Crime.mocks
         let streetID = expectedResult[0].location.street.id
@@ -221,10 +128,6 @@ extension UKCrimeServiceCombineTests {
                        CrimesEndpoint.crimesAtLocationAtSpecificPoint(coordinate: coordinate).url)
     }
 
-}
-
-extension UKCrimeServiceCombineTests {
-
     func testCrimesWithNoLocationPublisherReturnsCrimes() throws {
         let categoryID = CrimeCategory.mock.id
         let policeForceID = PoliceForce.mock.id
@@ -256,25 +159,6 @@ extension UKCrimeServiceCombineTests {
                        CrimesEndpoint.crimesWithNoLocation(categoryID: CrimeCategory.defaultID,
                                                            policeForceID: policeForceID).url)
     }
-
-}
-
-extension UKCrimeServiceCombineTests {
-
-    func testCaseHistoryPublisherReturnsCaseHistory() throws {
-        let expectedResult = CaseHistory.mock
-        let crimeID = expectedResult.crime.crimeID
-        apiClient.response = expectedResult
-
-        let result = try waitFor(publisher: service.caseHistoryPublisher(forCrime: crimeID), storeIn: &cancellables)
-
-        XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.lastPath, CrimesEndpoint.caseHistory(crimeID: crimeID).url)
-    }
-
-}
-
-extension UKCrimeServiceCombineTests {
 
     func testCategoriesPublisherReturnsCrimeCategories() throws {
         let expectedResult = CrimeCategory.mocks
