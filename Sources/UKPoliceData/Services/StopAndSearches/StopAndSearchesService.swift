@@ -42,8 +42,7 @@ public extension StopAndSearchesService {
 
     func fetchStopAndSearchesByArea(
         atCoordinate coordinate: Coordinate, date: Date? = nil,
-        completion: @escaping (_ result: Result<[StopAndSearch], PoliceDataError>) -> Void)
-    {
+        completion: @escaping (_ result: Result<[StopAndSearch], PoliceDataError>) -> Void) {
         fetchStopAndSearchesByArea(atCoordinate: coordinate, date: date, completion: completion)
     }
 

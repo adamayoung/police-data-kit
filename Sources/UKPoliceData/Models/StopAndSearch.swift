@@ -52,9 +52,9 @@ public struct StopAndSearch: Decodable, Equatable {
     ///     - outcomeLinkedToObjectOfSearch: When the stop and search took place.
     ///     - date: When the stop and search took place.
     public init(type: StopAndSearchType, didInvolvePerson: Bool, gender: Gender? = nil, ageRange: String? = nil,
-                  selfDefinedEthnicity: String? = nil, officerDefinedEthnicity: String? = nil, legislation: String,
-                  objectOfSearch: String, removalOfMoreThanOuterClothing: Bool? = nil, operationName: String? = nil,
-                  location: Location, outcome: String? = nil, outcomeLinkedToObjectOfSearch: Bool? = nil, date: Date) {
+                selfDefinedEthnicity: String? = nil, officerDefinedEthnicity: String? = nil, legislation: String,
+                objectOfSearch: String, removalOfMoreThanOuterClothing: Bool? = nil, operationName: String? = nil,
+                location: Location, outcome: String? = nil, outcomeLinkedToObjectOfSearch: Bool? = nil, date: Date) {
         self.type = type
         self.didInvolvePerson = didInvolvePerson
         self.gender = gender
