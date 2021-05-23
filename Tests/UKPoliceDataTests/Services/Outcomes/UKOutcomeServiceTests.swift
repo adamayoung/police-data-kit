@@ -33,7 +33,7 @@ class UKOutcomeServiceTests: XCTestCase {
         wait(for: [expectation], timeout: 1)
 
         XCTAssertEqual(apiClient.lastPath,
-                       CrimesEndpoint.streetLevelOutcomesForStreet(streetID: streetID, date: date).url)
+                       OutcomesEndpoint.streetLevelOutcomesForStreet(streetID: streetID, date: date).url)
     }
 
     func testFetchStreetLevelOutcomesForStreetWhenNoDateReturnsOutcomes() {
@@ -49,7 +49,7 @@ class UKOutcomeServiceTests: XCTestCase {
 
         wait(for: [expectation], timeout: 1)
 
-        XCTAssertEqual(apiClient.lastPath, CrimesEndpoint.streetLevelOutcomesForStreet(streetID: streetID).url)
+        XCTAssertEqual(apiClient.lastPath, OutcomesEndpoint.streetLevelOutcomesForStreet(streetID: streetID).url)
     }
 
     func testFetchStreetLevelOutcomesAtCoordinateReturnsOutcomes() {
@@ -67,7 +67,7 @@ class UKOutcomeServiceTests: XCTestCase {
         wait(for: [expectation], timeout: 1)
 
         XCTAssertEqual(apiClient.lastPath,
-                       CrimesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate, date: date) .url)
+                       OutcomesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate, date: date) .url)
     }
 
     func testFetchStreetLevelOutcomesAtCoordinateWhenNoDateReturnsOutcomes() {
@@ -84,7 +84,7 @@ class UKOutcomeServiceTests: XCTestCase {
         wait(for: [expectation], timeout: 1)
 
         XCTAssertEqual(apiClient.lastPath,
-                       CrimesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate) .url)
+                       OutcomesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate) .url)
     }
 
     func testFetchStreetLevelOutcomesInAreaReturnsOutcomes() {
@@ -102,7 +102,7 @@ class UKOutcomeServiceTests: XCTestCase {
         wait(for: [expectation], timeout: 1)
 
         XCTAssertEqual(apiClient.lastPath,
-                       CrimesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates, date: date) .url)
+                       OutcomesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates, date: date) .url)
     }
 
     func testFetchStreetLevelOutcomesInAreaWhenNoDateReturnsOutcomes() {
@@ -118,7 +118,23 @@ class UKOutcomeServiceTests: XCTestCase {
 
         wait(for: [expectation], timeout: 1)
 
-        XCTAssertEqual(apiClient.lastPath, CrimesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates) .url)
+        XCTAssertEqual(apiClient.lastPath, OutcomesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates) .url)
+    }
+
+    func testFetchCaseHistoryReturnCaseHistory() {
+        let expectedResult = CaseHistory.mock
+        let crimeID = expectedResult.crime.crimeID
+        apiClient.response = expectedResult
+
+        let expectation = XCTestExpectation(description: "await")
+        service.fetchCaseHistory(forCrime: crimeID) { result in
+            XCTAssertEqual(try? result.get(), expectedResult)
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 1)
+
+        XCTAssertEqual(apiClient.lastPath, OutcomesEndpoint.caseHistory(crimeID: crimeID).url)
     }
 
 }

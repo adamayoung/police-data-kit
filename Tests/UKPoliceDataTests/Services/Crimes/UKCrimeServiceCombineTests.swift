@@ -21,10 +21,6 @@ class UKCrimeServiceCombineTests: XCTestCase {
         super.tearDown()
     }
 
-}
-
-extension UKCrimeServiceCombineTests {
-
     func testStreetLevelCrimesAtCoorindatePublisherReturnsCrimes() throws {
         let coordinate = Coordinate.mock
         let date = Date()
@@ -79,10 +75,6 @@ extension UKCrimeServiceCombineTests {
                        CrimesEndpoint.streetLevelCrimesInArea(coordinates: coordinates).url)
     }
 
-}
-
-extension UKCrimeServiceCombineTests {
-
     func testCrimesAtLocationForStreetPublisherReturnsCrimes() throws {
         let expectedResult = Crime.mocks
         let streetID = expectedResult[0].location.street.id
@@ -136,10 +128,6 @@ extension UKCrimeServiceCombineTests {
                        CrimesEndpoint.crimesAtLocationAtSpecificPoint(coordinate: coordinate).url)
     }
 
-}
-
-extension UKCrimeServiceCombineTests {
-
     func testCrimesWithNoLocationPublisherReturnsCrimes() throws {
         let categoryID = CrimeCategory.mock.id
         let policeForceID = PoliceForce.mock.id
@@ -171,25 +159,6 @@ extension UKCrimeServiceCombineTests {
                        CrimesEndpoint.crimesWithNoLocation(categoryID: CrimeCategory.defaultID,
                                                            policeForceID: policeForceID).url)
     }
-
-}
-
-extension UKCrimeServiceCombineTests {
-
-    func testCaseHistoryPublisherReturnsCaseHistory() throws {
-        let expectedResult = CaseHistory.mock
-        let crimeID = expectedResult.crime.crimeID
-        apiClient.response = expectedResult
-
-        let result = try waitFor(publisher: service.caseHistoryPublisher(forCrime: crimeID), storeIn: &cancellables)
-
-        XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.lastPath, CrimesEndpoint.caseHistory(crimeID: crimeID).url)
-    }
-
-}
-
-extension UKCrimeServiceCombineTests {
 
     func testCategoriesPublisherReturnsCrimeCategories() throws {
         let expectedResult = CrimeCategory.mocks

@@ -43,6 +43,17 @@ public protocol OutcomeService {
     func fetchStreetLevelOutcomes(inArea coordinates: [Coordinate], date: Date?,
                                   completion: @escaping (_ result: Result<[Outcome], PoliceDataError>) -> Void)
 
+    /// Fetches the case history for a crime.
+    ///
+    /// - Note: [Police API | Outcomes for a specific crime](https://data.police.uk/docs/method/outcomes-for-crime/)
+    ///
+    /// - Parameters:
+    ///     - crimeID: The crimeID of a crime, not the id.
+    ///     - completion: Completion handler.
+    ///     - result: The case history for a crime.
+    func fetchCaseHistory(forCrime crimeID: String,
+                          completion: @escaping (_ result: Result<CaseHistory, PoliceDataError>) -> Void)
+
     #if canImport(Combine)
     /// Publishes a list of crime outcomes at a specific location.
     ///
@@ -81,6 +92,17 @@ public protocol OutcomeService {
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     func streetLevelOutcomesPublisher(inArea coordinates: [Coordinate],
                                       date: Date?) -> AnyPublisher<[Outcome], PoliceDataError>
+
+    /// Publishes the case history for a crime.
+    ///
+    /// - Note: [Police API | Outcomes for a specific crime](https://data.police.uk/docs/method/outcomes-for-crime/)
+    ///
+    /// - Parameters:
+    ///     - crimeID: The crimeID of a crime, not the id.
+    ///
+    /// - Returns: A publisher with the case history for a crime.
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func caseHistoryPublisher(forCrime crimeID: String) -> AnyPublisher<CaseHistory, PoliceDataError>
     #endif
 
 }

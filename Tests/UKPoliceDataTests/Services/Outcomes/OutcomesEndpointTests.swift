@@ -11,7 +11,7 @@ class OutcomesEndpointTests: XCTestCase {
             string: "/outcomes-at-location?location_id=\(streetID)&date=\(dateString)"
         )!
 
-        let url = CrimesEndpoint.streetLevelOutcomesForStreet(streetID: streetID, date: date).url
+        let url = OutcomesEndpoint.streetLevelOutcomesForStreet(streetID: streetID, date: date).url
 
         XCTAssertEqual(url, expectedURL)
     }
@@ -22,7 +22,7 @@ class OutcomesEndpointTests: XCTestCase {
             string: "/outcomes-at-location?location_id=\(streetID)"
         )!
 
-        let url = CrimesEndpoint.streetLevelOutcomesForStreet(streetID: streetID).url
+        let url = OutcomesEndpoint.streetLevelOutcomesForStreet(streetID: streetID).url
 
         XCTAssertEqual(url, expectedURL)
     }
@@ -35,7 +35,7 @@ class OutcomesEndpointTests: XCTestCase {
             string: "/outcomes-at-location?lat=\(coordinate.latitude)&lng=\(coordinate.longitude)&date=\(dateString)"
         )!
 
-        let url = CrimesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate, date: date).url
+        let url = OutcomesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate, date: date).url
 
         XCTAssertEqual(url, expectedURL)
     }
@@ -46,7 +46,7 @@ class OutcomesEndpointTests: XCTestCase {
             string: "/outcomes-at-location?lat=\(coordinate.latitude)&lng=\(coordinate.longitude)"
         )!
 
-        let url = CrimesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate).url
+        let url = OutcomesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate).url
 
         XCTAssertEqual(url, expectedURL)
     }
@@ -60,7 +60,7 @@ class OutcomesEndpointTests: XCTestCase {
             string: "/outcomes-at-location?poly=\(coordinatePairs.joined(separator: ":"))&date=\(dateString)"
         )!
 
-        let url = CrimesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates, date: date).url
+        let url = OutcomesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates, date: date).url
 
         XCTAssertEqual(url, expectedURL)
     }
@@ -72,7 +72,18 @@ class OutcomesEndpointTests: XCTestCase {
             string: "/outcomes-at-location?poly=\(coordinatePairs.joined(separator: ":"))"
         )!
 
-        let url = CrimesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates).url
+        let url = OutcomesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates).url
+
+        XCTAssertEqual(url, expectedURL)
+    }
+
+    func testCaseHistoryReturnsURL() {
+        let crimeID = CaseHistory.mock.crime.crimeID
+        let expectedURL = URL(
+            string: "/outcomes-for-crime/\(crimeID)"
+        )!
+
+        let url = OutcomesEndpoint.caseHistory(crimeID: crimeID).url
 
         XCTAssertEqual(url, expectedURL)
     }

@@ -33,7 +33,7 @@ class UKOutcomeServiceCombineTests: XCTestCase {
 
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(apiClient.lastPath,
-                       CrimesEndpoint.streetLevelOutcomesForStreet(streetID: streetID, date: date).url)
+                       OutcomesEndpoint.streetLevelOutcomesForStreet(streetID: streetID, date: date).url)
     }
 
     func testStreetLevelOutcomesForStreetPublisherWhenNoDateReturnsOutcomes() throws {
@@ -45,7 +45,7 @@ class UKOutcomeServiceCombineTests: XCTestCase {
                                  storeIn: &cancellables)
 
         XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.lastPath, CrimesEndpoint.streetLevelOutcomesForStreet(streetID: streetID).url)
+        XCTAssertEqual(apiClient.lastPath, OutcomesEndpoint.streetLevelOutcomesForStreet(streetID: streetID).url)
     }
 
     func testStreetLevelOutcomesAtCoordinatePublisherReturnsOutcomes() throws {
@@ -59,7 +59,7 @@ class UKOutcomeServiceCombineTests: XCTestCase {
 
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(apiClient.lastPath,
-                       CrimesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate, date: date) .url)
+                       OutcomesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate, date: date) .url)
     }
 
     func testStreetLevelOutcomesAtCoordinatePublisherWhenNoDateReturnsOutcomes() throws {
@@ -72,7 +72,7 @@ class UKOutcomeServiceCombineTests: XCTestCase {
 
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(apiClient.lastPath,
-                       CrimesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate) .url)
+                       OutcomesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate) .url)
     }
 
     func testStreetLevelOutcomesInAreaPublisherReturnsOutcomes() throws {
@@ -86,7 +86,7 @@ class UKOutcomeServiceCombineTests: XCTestCase {
 
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(apiClient.lastPath,
-                       CrimesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates, date: date) .url)
+                       OutcomesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates, date: date) .url)
     }
 
     func testStreetLevelOutcomesInAreaPublisherWhenNoDateReturnsOutcomes() throws {
@@ -99,7 +99,18 @@ class UKOutcomeServiceCombineTests: XCTestCase {
 
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(apiClient.lastPath,
-                       CrimesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates) .url)
+                       OutcomesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates) .url)
+    }
+
+    func testCaseHistoryPublisherReturnsCaseHistory() throws {
+        let expectedResult = CaseHistory.mock
+        let crimeID = expectedResult.crime.crimeID
+        apiClient.response = expectedResult
+
+        let result = try waitFor(publisher: service.caseHistoryPublisher(forCrime: crimeID), storeIn: &cancellables)
+
+        XCTAssertEqual(result, expectedResult)
+        XCTAssertEqual(apiClient.lastPath, OutcomesEndpoint.caseHistory(crimeID: crimeID).url)
     }
 
 }

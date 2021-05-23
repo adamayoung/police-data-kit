@@ -9,6 +9,7 @@ enum OutcomesEndpoint {
     case streetLevelOutcomesForStreet(streetID: Int, date: Date? = nil)
     case streetLevelOutcomesAtSpecificPoint(coordinate: Coordinate, date: Date? = nil)
     case streetLevelOutcomesInArea(coordinates: [Coordinate], date: Date? = nil)
+    case caseHistory(crimeID: String)
 
 }
 
@@ -31,6 +32,10 @@ extension OutcomesEndpoint: Endpoint {
             return Self.outcomesAtLocationBasePath
                 .appendingQueryItem(name: "poly", value: coordinates)
                 .appendingQueryItem(name: "date", value: date)
+
+        case .caseHistory(let crimeID):
+            return Self.outcomesForCrimeBasePath
+                .appendingPathComponent(crimeID)
         }
     }
 
