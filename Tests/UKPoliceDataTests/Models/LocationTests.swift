@@ -3,23 +3,11 @@ import XCTest
 
 class LocationTests: XCTestCase {
 
-    func testDecodeReturnsLocation() throws {
+    func testDecodeReturnsCrimeLocation() throws {
         let result = try JSONDecoder.policeDataAPI
             .decode(Location.self, fromResource: "location", withExtension: "json")
 
         XCTAssertEqual(result, .mock)
-    }
-
-    func testInitWhenLatitudeIsNilSetsCoordinateAsNil() {
-        let result = Location(type: "test", address: "123 Kafe Street", postcode: "AB12 3CD", longitude: 1)
-
-        XCTAssertNil(result.coordinate)
-    }
-
-    func testInitWhenLongitudeIsNilSetsCoordinateAsNil() {
-        let result = Location(type: "test", address: "123 Kafe Street", postcode: "AB12 3CD", latitude: 1)
-
-        XCTAssertNil(result.coordinate)
     }
 
     func testCoordinateReturnsCoordinate() throws {
@@ -31,20 +19,23 @@ class LocationTests: XCTestCase {
         XCTAssertEqual(result, expectedResult)
     }
 
-    func testCoordinateWhenInvalidLatitudeAndLongitudeReturnsZeros() throws {
+    func testCoordinateWhenInvalidReturnsZeroCoordinate() throws {
         let expectedResult = Coordinate(latitude: 0, longitude: 0)
 
         let result = try JSONDecoder.policeDataAPI
-            .decode(Location.self, fromResource: "location-invalid-coordinates", withExtension: "json").coordinate
+            .decode(Location.self, fromResource: "location-invalid-coordinate", withExtension: "json")
+            .coordinate
 
         XCTAssertEqual(result, expectedResult)
     }
 
-    func testCoordinateWhenLatitudeAndLongitudeIsNilReturnsNil() throws {
-        let result = try JSONDecoder.policeDataAPI
-            .decode(Location.self, fromResource: "location-null-coordinates", withExtension: "json").coordinate
+    func testStreetDescriptionReturnsString() {
+        let street = Location.mock.street
+        let expectedResult = "(\(street.id)) \(street.name)"
 
-        XCTAssertNil(result)
+        let result = (street as CustomStringConvertible).description
+
+        XCTAssertEqual(result, expectedResult)
     }
 
 }

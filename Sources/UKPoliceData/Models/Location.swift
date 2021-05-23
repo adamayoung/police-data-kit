@@ -1,70 +1,61 @@
 import Foundation
 
-#if canImport(CoreLocation)
-import CoreLocation
-#endif
-
-/// A Location.
+/// A crime's location.
 public struct Location: Decodable, Equatable {
 
-    /// Name.
-    public let name: String?
-    /// Type of location.
+    /// An approximate street for the location.
     ///
-    /// - Note: e.g. 'station' (police station)
-    public let type: String
-    /// Description.
-    public let description: String?
-    /// Location address.
-    public let address: String
-    /// Postcode
-    public let postcode: String
+    /// - Note: This is only an approximation of where the crime happened.
+    public let street: Street
+
     /// Location coordinate.
-    public var coordinate: Coordinate? {
-        guard let lat = latitude, let long = longitude else {
-            return nil
-        }
+    public var coordinate: Coordinate {
+        let lat = Double(latitude) ?? 0
+        let long = Double(longitude) ?? 0
 
-        let latitude = Double(lat) ?? 0
-        let longitude = Double(long) ?? 0
-
-        return Coordinate(latitude: latitude, longitude: longitude)
+        return Coordinate(latitude: lat, longitude: long)
     }
 
-    private let latitude: String?
-    private let longitude: String?
+    private let latitude: String
+    private let longitude: String
 
     /// Creates a a new `Location`.
     ///
     /// - Parameters:
-    ///     - name: Name.
-    ///     - type: Type of location.
-    ///     - description: Description.
-    ///     - address: Location address.
-    ///     - postcode: Postcode
-    ///     - latitiude: Location coordinate latitude.
-    ///     - longitude: Location coordinate longitude.
-    public init(name: String? = nil, type: String, description: String? = nil, address: String, postcode: String,
-                latitude: Double? = nil, longitude: Double? = nil) {
-        self.name = name
-        self.type = type
-        self.description = description
-        self.address = address
-        self.postcode = postcode
-        self.latitude = {
-            guard let latitude = latitude else {
-                return nil
-            }
+    ///     - street: An approximate street for the location.
+    ///     - coordinate: Location coordinate.
+    public init(street: Street, coordinate: Coordinate) {
+        self.street = street
+        self.latitude = String(coordinate.latitude)
+        self.longitude = String(coordinate.longitude)
+    }
 
-            return String(latitude)
-        }()
-        self.longitude = {
-            guard let longitude = longitude else {
-                return nil
-            }
+}
 
-            return String(longitude)
-        }()
+extension Location {
+
+    /// A street for a location.
+    public struct Street: Identifiable, Decodable, Equatable, CustomStringConvertible {
+
+        /// Unique identifier for the street.
+        public let id: Int
+        /// Name of the location.
+        public let name: String
+
+        /// Creates a a new `Street`.
+        ///
+        /// - Parameters:
+        ///     - id: Unique identifier for the street.
+        ///     - name: Name of the approximate location.
+        public init(id: Int, name: String) {
+            self.id = id
+            self.name = name
+        }
+
+        public var description: String {
+            "(\(id)) \(name)"
+        }
+
     }
 
 }

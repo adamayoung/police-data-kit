@@ -56,20 +56,3 @@ class CoordinateTests: XCTestCase {
     }
 
 }
-
-#if canImport(CoreLocation)
-extension CoordinateTests {
-
-    func testLocationCoordinateReturnsLocationCoordinate() throws {
-        let expectedResult = CLLocationCoordinate2D(latitude: Coordinate.mock.latitude,
-                                                    longitude: Coordinate.mock.longitude)
-
-        let result = try JSONDecoder.policeDataAPI
-            .decode(Coordinate.self, fromResource: "coordinate", withExtension: "json").locationCoordinate
-
-        XCTAssertEqual(result.latitude, expectedResult.latitude)
-        XCTAssertEqual(result.longitude, expectedResult.longitude)
-    }
-
-}
-#endif

@@ -18,13 +18,13 @@ public struct OutcomeCrime: Identifiable, Decodable, Equatable {
     /// Approximate location of the incident.
     ///
     /// - Note: The latitude and longitude locations of Crime and ASB incidents published always represent the approximate location of a crime — not the exact place that it happened. [Police API | Location Anonymisation](https://data.police.uk/about/#location-anonymisation)
-    public let location: CrimeLocation
+    public let location: Location
     /// The type of the location.
     public let locationType: CrimeLocationType
     /// For Bristish Transport Police locations, the type of location at which this crime was recorded.
     public let locationSubtype: String?
-    /// Month of the crime.
-    public let month: String
+    /// Date (truncated to the year and month) of the crime.
+    public let date: Date
 
     /// Creates a a new `OutcomeCrime`.
     ///
@@ -36,9 +36,9 @@ public struct OutcomeCrime: Identifiable, Decodable, Equatable {
     ///     - location: Approximate location of the incident.
     ///     - locationType: The type of the location.
     ///     - locationSubtype: For Bristish Transport Police locations, the type of location at which this crime was recorded.
-    ///     - month: Month of the crime.
-    public init(id: Int, crimeID: String, context: String? = nil, categoryID: String, location: CrimeLocation,
-                locationType: CrimeLocationType, locationSubtype: String? = nil, month: String) {
+    ///     - date: Date of the crime.
+    public init(id: Int, crimeID: String, context: String? = nil, categoryID: String, location: Location,
+                locationType: CrimeLocationType, locationSubtype: String? = nil, date: Date) {
         self.id = id
         self.crimeID = crimeID
         self.context = context
@@ -46,7 +46,7 @@ public struct OutcomeCrime: Identifiable, Decodable, Equatable {
         self.location = location
         self.locationType = locationType
         self.locationSubtype = locationSubtype
-        self.month = month
+        self.date = date
     }
 
 }
@@ -61,7 +61,7 @@ extension OutcomeCrime {
         case location
         case locationType
         case locationSubtype
-        case month
+        case date = "month"
     }
 
 }

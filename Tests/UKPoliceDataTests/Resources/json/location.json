@@ -1,9 +1,8 @@
 {
-    "name": "Mansfield House",
-    "longitude": "-1.13619",
-    "postcode": "LE1 3GG",
-    "address": "74 Belgrave Gate\n, Leicester",
-    "latitude": "52.6389",
-    "type": "station",
-    "description": null
+    "latitude": "52.633888",
+    "street": {
+        "id": 883425,
+        "name": "On or near Peacock Lane"
+    },
+    "longitude": "-1.138924"
 }

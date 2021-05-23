@@ -1,0 +1,28 @@
+{
+    "age_range": "over 34",
+    "outcome": "A no further action disposal",
+    "involved_person": true,
+    "self_defined_ethnicity": "White - English/Welsh/Scottish/Northern Irish/British",
+    "gender": "Male",
+    "legislation": "Police and Criminal Evidence Act 1984 (section 1)",
+    "outcome_linked_to_object_of_search": null,
+    "datetime": "2018-06-08T13:40:00+00:00",
+    "removal_of_more_than_outer_clothing": null,
+    "outcome_object": {
+        "id": "bu-no-further-action",
+        "name": "A no further action disposal"
+    },
+    "location": {
+        "latitude": "52.63625",
+        "street": {
+            "id": 883415,
+            "name": "On or near Shopping Area"
+        },
+        "longitude": "-1.133691"
+    },
+    "operation": null,
+    "officer_defined_ethnicity": "White",
+    "type": "Person search",
+    "operation_name": null,
+    "object_of_search": "Offensive weapons"
+}

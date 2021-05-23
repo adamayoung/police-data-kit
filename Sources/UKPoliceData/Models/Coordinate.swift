@@ -1,9 +1,5 @@
 import Foundation
 
-#if canImport(CoreLocation)
-import CoreLocation
-#endif
-
 /// Coordinate.
 public struct Coordinate: Decodable, Equatable, CustomStringConvertible {
 
@@ -34,16 +30,6 @@ public struct Coordinate: Decodable, Equatable, CustomStringConvertible {
     }
 
 }
-
-#if canImport(CoreLocation)
-extension Coordinate {
-
-    public var locationCoordinate: CLLocationCoordinate2D {
-        CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-    }
-
-}
-#endif
 
 extension Coordinate {
 
