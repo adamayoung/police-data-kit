@@ -10,6 +10,8 @@ public protocol CrimeService {
     /// Fetches a list of crimes at street-level within a 1 mile radius of a single point.
     ///
     /// - Note: [Police API | Street-level crimes](https://data.police.uk/docs/method/crime-street/)
+    /// - Note: The street-level crimes returned in the API are only an approximation of where the actual crimes occurred, they are not the exact locations. See the [about page](https://data.police.uk/about/#location-anonymisation) for more information about location anonymisation.
+    /// - Note: Since only the British Transport Police provide data for Scotland, crime levels may appear much lower than they really are.
     ///
     /// - Parameters:
     ///     - coordinate: A coordinate.
@@ -22,6 +24,8 @@ public protocol CrimeService {
     /// Fetches a list of crimes within a custom area..
     ///
     /// - Note: [Police API | Street-level crimes](https://data.police.uk/docs/method/crime-street/)
+    /// - Note: The street-level crimes returned in the API are only an approximation of where the actual crimes occurred, they are not the exact locations. See the [about page](https://data.police.uk/about/#location-anonymisation) for more information about location anonymisation.
+    /// - Note: Since only the British Transport Police provide data for Scotland, crime levels may appear much lower than they really are.
     ///
     /// - Parameters:
     ///     - coordinates: Coordinates which define the boundary of the custom area.
@@ -34,6 +38,7 @@ public protocol CrimeService {
     /// Fetches just the crimes which occurred at the specified location, rather than those within a radius.
     ///
     /// - Note: [Police API | Crimes at a location](https://data.police.uk/docs/method/crimes-at-location/)
+    /// - Note: Since only the British Transport Police provide data for Scotland, crime levels may appear much lower than they really are.
     ///
     /// - Parameters:
     ///     - streetID: A street ID.
@@ -47,6 +52,7 @@ public protocol CrimeService {
     /// returns the crimes which occurred there.
     ///
     /// - Note: [Police API | Crimes at a location](https://data.police.uk/docs/method/crimes-at-location/)
+    /// - Note: Since only the British Transport Police provide data for Scotland, crime levels may appear much lower than they really are.
     ///
     /// - Parameters:
     ///     - coordinate: A coordinate.
@@ -84,6 +90,8 @@ public protocol CrimeService {
     /// Publishes a list of crimes at street-level within a 1 mile radius of a single point.
     ///
     /// - Note: [Police API | Street-level crimes](https://data.police.uk/docs/method/crime-street/)
+    /// - Note: The street-level crimes returned in the API are only an approximation of where the actual crimes occurred, they are not the exact locations. See the [about page](https://data.police.uk/about/#location-anonymisation) for more information about location anonymisation.
+    /// - Note: Since only the British Transport Police provide data for Scotland, crime levels may appear much lower than they really are.
     ///
     /// - Parameters:
     ///     - coordinate: A coordinate.
@@ -97,6 +105,8 @@ public protocol CrimeService {
     /// Publishes a list of crimes within a custom area..
     ///
     /// - Note: [Police API | Street-level crimes](https://data.police.uk/docs/method/crime-street/)
+    /// - Note: The street-level crimes returned in the API are only an approximation of where the actual crimes occurred, they are not the exact locations. See the [about page](https://data.police.uk/about/#location-anonymisation) for more information about location anonymisation.
+    /// - Note: Since only the British Transport Police provide data for Scotland, crime levels may appear much lower than they really are.
     ///
     /// - Parameters:
     ///     - coordinates: Coordinates which define the boundary of the custom area.
@@ -110,6 +120,7 @@ public protocol CrimeService {
     /// Publishes just the crimes which occurred at the specified location, rather than those within a radius.
     ///
     /// - Note: [Police API | Crimes at a location](https://data.police.uk/docs/method/crimes-at-location/)
+    /// - Note: Since only the British Transport Police provide data for Scotland, crime levels may appear much lower than they really are.
     ///
     /// - Parameters:
     ///     - streetID: A street ID.
@@ -123,6 +134,7 @@ public protocol CrimeService {
     /// returns the crimes which occurred there.
     ///
     /// - Note: [Police API | Crimes at a location](https://data.police.uk/docs/method/crimes-at-location/)
+    /// - Note: Since only the British Transport Police provide data for Scotland, crime levels may appear much lower than they really are.
     ///
     /// - Parameters:
     ///     - coordinate: A coordinate.

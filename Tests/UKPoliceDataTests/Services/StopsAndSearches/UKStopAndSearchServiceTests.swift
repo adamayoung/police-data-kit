@@ -160,4 +160,40 @@ class UKStopAndSearchServiceTests: XCTestCase {
                        StopAndSearchesEndpoint.stopAndSearchesWithNoLocation(policeForceID: policeForceID).url)
     }
 
+    func testFetchAllForPoliceForceReturnsStopAndSearches() {
+        let policeForceID = "avon-and-somerset"
+        let date = Date()
+        let expectedResult = StopAndSearch.mocks
+        apiClient.response = expectedResult
+
+        let expectation = XCTestExpectation(description: "await")
+        service.fetchAll(forPoliceForce: policeForceID, date: date) { result in
+            XCTAssertEqual(try? result.get(), expectedResult)
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 1)
+
+        XCTAssertEqual(apiClient.lastPath,
+                       StopAndSearchesEndpoint.stopAndSearchesByPoliceForce(policeForceID: policeForceID,
+                                                                            date: date).url)
+    }
+
+    func testFetchAllForPoliceForceWhenNoDateReturnsStopAndSearches() {
+        let policeForceID = "avon-and-somerset"
+        let expectedResult = StopAndSearch.mocks
+        apiClient.response = expectedResult
+
+        let expectation = XCTestExpectation(description: "await")
+        service.fetchAll(forPoliceForce: policeForceID) { result in
+            XCTAssertEqual(try? result.get(), expectedResult)
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 1)
+
+        XCTAssertEqual(apiClient.lastPath,
+                       StopAndSearchesEndpoint.stopAndSearchesByPoliceForce(policeForceID: policeForceID).url)
+    }
+
 }

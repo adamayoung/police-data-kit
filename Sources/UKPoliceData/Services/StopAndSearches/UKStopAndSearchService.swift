@@ -39,6 +39,13 @@ final class UKStopAndSearchService: StopAndSearchService {
                       completion: completion)
     }
 
+    func fetchAll(forPoliceForce policeForceID: String, date: Date?,
+                  completion: @escaping (_ result: Result<[StopAndSearch], PoliceDataError>) -> Void) {
+        apiClient.get(endpoint: StopAndSearchesEndpoint.stopAndSearchesByPoliceForce(policeForceID: policeForceID,
+                                                                                     date: date),
+                      completion: completion)
+    }
+
 }
 
 #if canImport(Combine)
@@ -69,6 +76,13 @@ extension UKStopAndSearchService {
                                                 date: Date?) -> AnyPublisher<[StopAndSearch], PoliceDataError> {
         apiClient.get(endpoint: StopAndSearchesEndpoint.stopAndSearchesWithNoLocation(policeForceID: policeForceID,
                                                                                       date: date))
+    }
+
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func stopAndSearchesPublisher(forPoliceForce policeForceID: String,
+                                  date: Date?) -> AnyPublisher<[StopAndSearch], PoliceDataError> {
+        apiClient.get(endpoint: StopAndSearchesEndpoint.stopAndSearchesByPoliceForce(policeForceID: policeForceID,
+                                                                                     date: date))
     }
 
 }

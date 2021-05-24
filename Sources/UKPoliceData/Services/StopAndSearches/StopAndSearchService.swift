@@ -12,6 +12,7 @@ public protocol StopAndSearchService {
     /// Fetches stop and searches at street-level within a 1 mile radius of a single point.
     ///
     /// - Note: [Police API | Stop and searches by area](https://data.police.uk/docs/method/stops-street/)
+    /// - Note: The stop and searches returned in the API, like the crimes, are only an approximation of where the actual stop and searches occurred, they are not the exact locations. See the [about page](https://data.police.uk/about/#location-anonymisation) for more information about location anonymisation.
     ///
     /// - Parameters:
     ///     - coordinate: A coordinate.
@@ -24,6 +25,7 @@ public protocol StopAndSearchService {
     /// Fetches stop and searches at street-level within a custom area.
     ///
     /// - Note: [Police API | Stop and searches by area](https://data.police.uk/docs/method/stops-street/)
+    /// - Note: The stop and searches returned in the API, like the crimes, are only an approximation of where the actual stop and searches occurred, they are not the exact locations. See the [about page](https://data.police.uk/about/#location-anonymisation) for more information about location anonymisation.
     ///
     /// - Parameters:
     ///     - coordinates: Coordinates which define the boundary of the custom area.
@@ -36,6 +38,7 @@ public protocol StopAndSearchService {
     /// Fetches stop and searches at a particular location.
     ///
     /// - Note: [Police API | Stop and searches by location](https://data.police.uk/docs/method/stops-at-location/)
+    /// - Note: The stop and searches returned in the API, like the crimes, are only an approximation of where the actual stop and searches occurred, they are not the exact locations. See the [about page](https://data.police.uk/about/#location-anonymisation) for more information about location anonymisation.
     ///
     /// - Parameters:
     ///     - streetID: A street ID.
@@ -48,6 +51,7 @@ public protocol StopAndSearchService {
     /// Fetches stop and searches that could not be mapped to a location.
     ///
     /// - Note: [Police API | Stop and searches with no location](https://data.police.uk/docs/method/stops-no-location/)
+    /// - Note: The stop and searches returned in the API, like the crimes, are only an approximation of where the actual stop and searches occurred, they are not the exact locations. See the [about page](https://data.police.uk/about/#location-anonymisation) for more information about location anonymisation.
     ///
     /// - Parameters:
     ///     - policeForceID: Police Force identifier.
@@ -57,10 +61,24 @@ public protocol StopAndSearchService {
     func fetchAllWithNoLocation(forPoliceForce policeForceID: String, date: Date?,
                                 completion: @escaping (_ result: Result<[StopAndSearch], PoliceDataError>) -> Void)
 
+    /// Fetches stop and searches reported by a particular force.
+    ///
+    /// - Note: [Police API | Stop and searches by force](https://data.police.uk/docs/method/stops-force/)
+    /// - Note: The stop and searches returned in the API, like the crimes, are only an approximation of where the actual stop and searches occurred, they are not the exact locations. See the [about page](https://data.police.uk/about/#location-anonymisation) for more information about location anonymisation.
+    ///
+    /// - Parameters:
+    ///     - policeForceID: Police Force identifier.
+    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///     - completion: Completion handler.
+    ///     - result: A list of stop and searches.
+    func fetchAll(forPoliceForce policeForceID: String, date: Date?,
+                  completion: @escaping (_ result: Result<[StopAndSearch], PoliceDataError>) -> Void)
+
     #if canImport(Combine)
     /// Publishes stop and searches at street-level within a 1 mile radius of a single point.
     ///
     /// - Note: [Police API | Stop and searches by area](https://data.police.uk/docs/method/stops-street/)
+    /// - Note: The stop and searches returned in the API, like the crimes, are only an approximation of where the actual stop and searches occurred, they are not the exact locations. See the [about page](https://data.police.uk/about/#location-anonymisation) for more information about location anonymisation.
     ///
     /// - Parameters:
     ///     - coordinate: A coordinate.
@@ -74,6 +92,7 @@ public protocol StopAndSearchService {
     /// Publishes stop and searches at street-level within a custom area.
     ///
     /// - Note: [Police API | Stop and searches by area](https://data.police.uk/docs/method/stops-street/)
+    /// - Note: The stop and searches returned in the API, like the crimes, are only an approximation of where the actual stop and searches occurred, they are not the exact locations. See the [about page](https://data.police.uk/about/#location-anonymisation) for more information about location anonymisation.
     ///
     /// - Parameters:
     ///     - coordinates: Coordinates which define the boundary of the custom area.
@@ -87,6 +106,7 @@ public protocol StopAndSearchService {
     /// Publishes stop and searches at a particular location.
     ///
     /// - Note: [Police API | Stop and searches by location](https://data.police.uk/docs/method/stops-at-location/)
+    /// - Note: The stop and searches returned in the API, like the crimes, are only an approximation of where the actual stop and searches occurred, they are not the exact locations. See the [about page](https://data.police.uk/about/#location-anonymisation) for more information about location anonymisation.
     ///
     /// - Parameters:
     ///     - streetID: A street ID.
@@ -100,6 +120,7 @@ public protocol StopAndSearchService {
     /// Publishes stop and searches that could not be mapped to a location.
     ///
     /// - Note: [Police API | Stop and searches with no location](https://data.police.uk/docs/method/stops-no-location/)
+    /// - Note: The stop and searches returned in the API, like the crimes, are only an approximation of where the actual stop and searches occurred, they are not the exact locations. See the [about page](https://data.police.uk/about/#location-anonymisation) for more information about location anonymisation.
     ///
     /// - Parameters:
     ///     - policeForceID: Police Force identifier.
@@ -109,6 +130,20 @@ public protocol StopAndSearchService {
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     func stopAndSearchesWithNoLocationPublisher(forPoliceForce policeForceID: String,
                                                 date: Date?) -> AnyPublisher<[StopAndSearch], PoliceDataError>
+
+    /// Publishes stop and searches reported by a particular force.
+    ///
+    /// - Note: [Police API | Stop and searches by force](https://data.police.uk/docs/method/stops-force/)
+    /// - Note: The stop and searches returned in the API, like the crimes, are only an approximation of where the actual stop and searches occurred, they are not the exact locations. See the [about page](https://data.police.uk/about/#location-anonymisation) for more information about location anonymisation.
+    ///
+    /// - Parameters:
+    ///     - policeForceID: Police Force identifier.
+    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///
+    /// - Returns: A publisher with a list of of stop and searches.
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func stopAndSearchesPublisher(forPoliceForce policeForceID: String,
+                                  date: Date?) -> AnyPublisher<[StopAndSearch], PoliceDataError>
     #endif
 
 }
@@ -135,6 +170,11 @@ public extension StopAndSearchService {
         fetchAllWithNoLocation(forPoliceForce: policeForceID, date: date, completion: completion)
     }
 
+    func fetchAll(forPoliceForce policeForceID: String, date: Date? = nil,
+                  completion: @escaping (_ result: Result<[StopAndSearch], PoliceDataError>) -> Void) {
+        fetchAll(forPoliceForce: policeForceID, date: date, completion: completion)
+    }
+
     #if canImport(Combine)
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     func stopAndSearchesPublisher(atCoordinate coordinate: Coordinate,
@@ -158,6 +198,12 @@ public extension StopAndSearchService {
     func stopAndSearchesWithNoLocationPublisher(forPoliceForce policeForceID: String,
                                                 date: Date? = nil) -> AnyPublisher<[StopAndSearch], PoliceDataError> {
         stopAndSearchesWithNoLocationPublisher(forPoliceForce: policeForceID, date: date)
+    }
+
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func stopAndSearchesPublisher(forPoliceForce policeForceID: String,
+                                  date: Date? = nil) -> AnyPublisher<[StopAndSearch], PoliceDataError> {
+        stopAndSearchesPublisher(forPoliceForce: policeForceID, date: date)
     }
     #endif
 
