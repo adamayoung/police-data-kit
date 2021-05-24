@@ -4,13 +4,20 @@ import Foundation
 public struct NeighbourhoodPriority: Decodable, Equatable {
 
     /// An issue raised with the police.
-    public let issue: String
+    public var issue: String {
+        issueString.htmlStripped
+    }
     /// When the priority was agreed upon.
     public let issueDate: Date
     /// Action taken to address the priority.
-    public let action: String?
+    public var action: String? {
+        actionString?.htmlStripped
+    }
     /// When action was last taken.
     public let actionDate: Date?
+
+    private let issueString: String
+    private let actionString: String?
 
     /// Creates a a new `NeighbourhoodPriority`.
     ///
@@ -20,9 +27,9 @@ public struct NeighbourhoodPriority: Decodable, Equatable {
     ///     - action: Action taken to address the priority.
     ///     - actionDate: When action was last taken.
     public init(issue: String, issueDate: Date, action: String? = nil, actionDate: Date? = nil) {
-        self.issue = issue
+        self.issueString = issue
         self.issueDate = issueDate
-        self.action = action
+        self.actionString = action
         self.actionDate = actionDate
     }
 
@@ -31,9 +38,9 @@ public struct NeighbourhoodPriority: Decodable, Equatable {
 extension NeighbourhoodPriority {
 
     private enum CodingKeys: String, CodingKey {
-        case issue
+        case issueString = "issue"
         case issueDate = "issue-date"
-        case action
+        case actionString = "action"
         case actionDate = "action-date"
     }
 

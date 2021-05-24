@@ -17,4 +17,24 @@ class NeighbourhoodPriorityTests: XCTestCase {
         XCTAssertEqual(result, .mockNoAction)
     }
 
+    func testDecodeWhenIssueContainsHTMLReturnsNeighbourhoodPriorityIssueWithoutHTML() throws {
+        let expectedResult = NeighbourhoodPriority.mockWithHTML.issue
+
+        let priority = try JSONDecoder.policeDataAPI
+            .decode(NeighbourhoodPriority.self, fromResource: "neighbourhood-priority-html", withExtension: "json")
+        let result = priority.issue
+
+        XCTAssertEqual(result, expectedResult)
+    }
+
+    func testDecodeWhenActionContainsHTMLReturnsNeighbourhoodPriorityActionWithoutHTML() throws {
+        let expectedResult = NeighbourhoodPriority.mockWithHTML.action
+
+        let priority = try JSONDecoder.policeDataAPI
+            .decode(NeighbourhoodPriority.self, fromResource: "neighbourhood-priority-html", withExtension: "json")
+        let result = priority.action
+
+        XCTAssertEqual(result, expectedResult)
+    }
+
 }
