@@ -23,4 +23,7 @@ public protocol PoliceDataAPI {
     /// Stop and Searches.
     var stopAndSearches: StopAndSearchService { get }
 
+    /// Availability.
+    var availability: AvailabilityService { get }
+
 }
