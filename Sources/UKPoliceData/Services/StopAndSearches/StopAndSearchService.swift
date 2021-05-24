@@ -45,6 +45,18 @@ public protocol StopAndSearchService {
     func fetchAll(atLocation streetID: Int, date: Date?,
                   completion: @escaping (_ result: Result<[StopAndSearch], PoliceDataError>) -> Void)
 
+    /// Fetches stop and searches that could not be mapped to a location.
+    ///
+    /// - Note: [Police API | Stop and searches with no location](https://data.police.uk/docs/method/stops-no-location/)
+    ///
+    /// - Parameters:
+    ///     - policeForceID: Police Force identifier.
+    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///     - completion: Completion handler.
+    ///     - result: A list of stop and searches.
+    func fetchAllWithNoLocation(forPoliceForce policeForceID: String, date: Date?,
+                                completion: @escaping (_ result: Result<[StopAndSearch], PoliceDataError>) -> Void)
+
     #if canImport(Combine)
     /// Publishes stop and searches at street-level within a 1 mile radius of a single point.
     ///
@@ -84,6 +96,19 @@ public protocol StopAndSearchService {
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     func stopAndSearchesPublisher(atLocation streetID: Int,
                                   date: Date?) -> AnyPublisher<[StopAndSearch], PoliceDataError>
+
+    /// Publishes stop and searches that could not be mapped to a location.
+    ///
+    /// - Note: [Police API | Stop and searches with no location](https://data.police.uk/docs/method/stops-no-location/)
+    ///
+    /// - Parameters:
+    ///     - policeForceID: Police Force identifier.
+    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///
+    /// - Returns: A publisher with a list of of stop and searches.
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func stopAndSearchesWithNoLocationPublisher(forPoliceForce policeForceID: String,
+                                                date: Date?) -> AnyPublisher<[StopAndSearch], PoliceDataError>
     #endif
 
 }
@@ -105,6 +130,11 @@ public extension StopAndSearchService {
         fetchAll(atLocation: streetID, date: date, completion: completion)
     }
 
+    func fetchAllWithNoLocation(forPoliceForce policeForceID: String, date: Date? = nil,
+                                completion: @escaping (_ result: Result<[StopAndSearch], PoliceDataError>) -> Void) {
+        fetchAllWithNoLocation(forPoliceForce: policeForceID, date: date, completion: completion)
+    }
+
     #if canImport(Combine)
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     func stopAndSearchesPublisher(atCoordinate coordinate: Coordinate,
@@ -118,9 +148,16 @@ public extension StopAndSearchService {
         stopAndSearchesPublisher(inArea: coordinates, date: date)
     }
 
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     func stopAndSearchesPublisher(atLocation streetID: Int,
                                   date: Date? = nil) -> AnyPublisher<[StopAndSearch], PoliceDataError> {
         stopAndSearchesPublisher(atLocation: streetID, date: date)
+    }
+
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func stopAndSearchesWithNoLocationPublisher(forPoliceForce policeForceID: String,
+                                                date: Date? = nil) -> AnyPublisher<[StopAndSearch], PoliceDataError> {
+        stopAndSearchesWithNoLocationPublisher(forPoliceForce: policeForceID, date: date)
     }
     #endif
 

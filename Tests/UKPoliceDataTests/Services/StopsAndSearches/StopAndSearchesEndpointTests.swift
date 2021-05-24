@@ -69,4 +69,24 @@ class StopAndSearchesEndpointTests: XCTestCase {
         XCTAssertEqual(url, expectedURL)
     }
 
+    func testStopAndSearchesWithNoLocationEndpointReturnsURL() {
+        let policeForceID = "cleveland"
+        let dateString = "2017-01"
+        let date = DateFormatter.yearMonth.date(from: dateString)!
+        let expectedURL = URL(string: "/stops-no-location?force=\(policeForceID)&date=\(dateString)")!
+
+        let url = StopAndSearchesEndpoint.stopAndSearchesWithNoLocation(policeForceID: policeForceID, date: date).url
+
+        XCTAssertEqual(url, expectedURL)
+    }
+
+    func testStopAndSearchesWithNoLocationEndpointWhenNoDateReturnsURL() {
+        let policeForceID = "cleveland"
+        let expectedURL = URL(string: "/stops-no-location?force=\(policeForceID)")!
+
+        let url = StopAndSearchesEndpoint.stopAndSearchesWithNoLocation(policeForceID: policeForceID).url
+
+        XCTAssertEqual(url, expectedURL)
+    }
+
 }
