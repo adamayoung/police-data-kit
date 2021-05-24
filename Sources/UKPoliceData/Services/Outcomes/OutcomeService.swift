@@ -10,6 +10,7 @@ public protocol OutcomeService {
     /// Fetches a list of crime outcomes at a specific location.
     ///
     /// - Note: [Police API | Street-level outcomes](https://data.police.uk/docs/method/outcomes-at-location/)
+    /// - Note: Outcomes are not available for the Police Service of Northern Ireland.
     ///
     /// - Parameters:
     ///     - streetID: A street ID.
@@ -22,6 +23,7 @@ public protocol OutcomeService {
     /// Fetches a list of crime outcomes within a 1 mile radius of a single point.
     ///
     /// - Note: [Police API | Street-level outcomes](https://data.police.uk/docs/method/outcomes-at-location/)
+    /// - Note: Outcomes are not available for the Police Service of Northern Ireland.
     ///
     /// - Parameters:
     ///     - coordinate: A coordinate.
@@ -34,6 +36,7 @@ public protocol OutcomeService {
     /// Fetches a list of crime outcomes within a custom area.
     ///
     /// - Note: [Police API | Street-level outcomes](https://data.police.uk/docs/method/outcomes-at-location/)
+    /// - Note: Outcomes are not available for the Police Service of Northern Ireland.
     ///
     /// - Parameters:
     ///     - coordinates: Coordinates which define the boundary of the custom area.
@@ -46,6 +49,7 @@ public protocol OutcomeService {
     /// Fetches the case history for a crime.
     ///
     /// - Note: [Police API | Outcomes for a specific crime](https://data.police.uk/docs/method/outcomes-for-crime/)
+    /// - Note: Outcomes are not available for the Police Service of Northern Ireland.
     ///
     /// - Parameters:
     ///     - crimeID: The crimeID of a crime, not the id.
@@ -58,6 +62,7 @@ public protocol OutcomeService {
     /// Publishes a list of crime outcomes at a specific location.
     ///
     /// - Note: [Police API | Street-level outcomes](https://data.police.uk/docs/method/outcomes-at-location/)
+    /// - Note: Outcomes are not available for the Police Service of Northern Ireland.
     ///
     /// - Parameters:
     ///     - streetID: A street ID.
@@ -70,6 +75,7 @@ public protocol OutcomeService {
     /// Publishes a list of crime outcomes within a 1 mile radius of a single point.
     ///
     /// - Note: [Police API | Street-level outcomes](https://data.police.uk/docs/method/outcomes-at-location/)
+    /// - Note: Outcomes are not available for the Police Service of Northern Ireland.
     ///
     /// - Parameters:
     ///     - coordinate: A coordinate.
@@ -83,6 +89,7 @@ public protocol OutcomeService {
     /// Publishes a list of crime outcomes within a custom area.
     ///
     /// - Note: [Police API | Street-level outcomes](https://data.police.uk/docs/method/outcomes-at-location/)
+    /// - Note: Outcomes are not available for the Police Service of Northern Ireland.
     ///
     /// - Parameters:
     ///     - coordinates: Coordinates which define the boundary of the custom area.
@@ -96,6 +103,7 @@ public protocol OutcomeService {
     /// Publishes the case history for a crime.
     ///
     /// - Note: [Police API | Outcomes for a specific crime](https://data.police.uk/docs/method/outcomes-for-crime/)
+    /// - Note: Outcomes are not available for the Police Service of Northern Ireland.
     ///
     /// - Parameters:
     ///     - crimeID: The crimeID of a crime, not the id.

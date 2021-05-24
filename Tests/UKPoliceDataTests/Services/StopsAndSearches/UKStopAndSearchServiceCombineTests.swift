@@ -134,5 +134,37 @@ class UKStopAndSearchServiceCombineTests: XCTestCase {
                        StopAndSearchesEndpoint.stopAndSearchesWithNoLocation(policeForceID: policeForceID).url)
     }
 
+    func testStopAndSearchesForPoliceForcePublisherReturnsStopAndSearches() throws {
+        let policeForceID = "avon-and-somerset"
+        let date = Date()
+        let expectedResult = StopAndSearch.mocks
+        apiClient.response = expectedResult
+
+        let result = try waitFor(
+            publisher: service.stopAndSearchesPublisher(forPoliceForce: policeForceID, date: date),
+            storeIn: &cancellables
+        )
+
+        XCTAssertEqual(result, expectedResult)
+        XCTAssertEqual(apiClient.lastPath,
+                       StopAndSearchesEndpoint.stopAndSearchesByPoliceForce(policeForceID: policeForceID,
+                                                                            date: date).url)
+    }
+
+    func testStopAndSearchesForPoliceForcePublisherWhenNoDateReturnsStopAndSearches() throws {
+        let policeForceID = "avon-and-somerset"
+        let expectedResult = StopAndSearch.mocks
+        apiClient.response = expectedResult
+
+        let result = try waitFor(
+            publisher: service.stopAndSearchesPublisher(forPoliceForce: policeForceID),
+            storeIn: &cancellables
+        )
+
+        XCTAssertEqual(result, expectedResult)
+        XCTAssertEqual(apiClient.lastPath,
+                       StopAndSearchesEndpoint.stopAndSearchesByPoliceForce(policeForceID: policeForceID).url)
+    }
+
 }
 #endif
