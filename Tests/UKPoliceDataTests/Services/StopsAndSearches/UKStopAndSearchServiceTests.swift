@@ -54,6 +54,41 @@ class UKStopAndSearchServiceTests: XCTestCase {
                        StopAndSearchesEndpoint.stopAndSearchesByAreaAtSpecificPoint(coordinate: coordinate).url)
     }
 
+    func testFetchAllInAreaReturnsStopAndSearches() {
+        let coordinates = Coordinate.mocks
+        let date = Date()
+        let expectedResult = StopAndSearch.mocks
+        apiClient.response = expectedResult
+
+        let expectation = XCTestExpectation(description: "await")
+        service.fetchAll(inArea: coordinates, date: date) { result in
+            XCTAssertEqual(try? result.get(), expectedResult)
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 1)
+
+        XCTAssertEqual(apiClient.lastPath,
+                       StopAndSearchesEndpoint.stopAndSearchesByAreaInArea(coordinates: coordinates, date: date).url)
+    }
+
+    func testFetchAllInAreaWhenNoDateReturnsStopAndSearches() {
+        let coordinates = Coordinate.mocks
+        let expectedResult = StopAndSearch.mocks
+        apiClient.response = expectedResult
+
+        let expectation = XCTestExpectation(description: "await")
+        service.fetchAll(inArea: coordinates) { result in
+            XCTAssertEqual(try? result.get(), expectedResult)
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 1)
+
+        XCTAssertEqual(apiClient.lastPath,
+                       StopAndSearchesEndpoint.stopAndSearchesByAreaInArea(coordinates: coordinates).url)
+    }
+
     func testFetchAllAtLocationReturnsStopAndSearches() {
         let streetID = 123456
         let date = Date()

@@ -26,34 +26,34 @@ extension CrimesEndpoint: Endpoint {
                 .appendingPathComponent("all-crime")
                 .appendingQueryItem(name: "lat", value: coordinate.latitude)
                 .appendingQueryItem(name: "lng", value: coordinate.longitude)
-                .appendingQueryItem(name: "date", value: date)
+                .appendingQueryItem(name: "date", date: date)
 
         case .streetLevelCrimesInArea(let coordinates, let date):
             return Self.streetLevelCrimesAtLocationBasePath
                 .appendingPathComponent("all-crime")
-                .appendingQueryItem(name: "poly", value: coordinates)
-                .appendingQueryItem(name: "date", value: date)
+                .appendingQueryItem(name: "poly", coordinates: coordinates)
+                .appendingQueryItem(name: "date", date: date)
 
         case .crimesAtLocationForStreet(let streetID, let date):
             return Self.crimesAtLocationBasePath
                 .appendingQueryItem(name: "location_id", value: streetID)
-                .appendingQueryItem(name: "date", value: date)
+                .appendingQueryItem(name: "date", date: date)
 
         case .crimesAtLocationAtSpecificPoint(let coordinate, let date):
             return Self.crimesAtLocationBasePath
                 .appendingQueryItem(name: "lat", value: coordinate.latitude)
                 .appendingQueryItem(name: "lng", value: coordinate.longitude)
-                .appendingQueryItem(name: "date", value: date)
+                .appendingQueryItem(name: "date", date: date)
 
         case .crimesWithNoLocation(let categoryID, let policeForceID, let date):
             return Self.crimesWithNoLocationBasePath
                 .appendingQueryItem(name: "category", value: categoryID)
                 .appendingQueryItem(name: "force", value: policeForceID)
-                .appendingQueryItem(name: "date", value: date)
+                .appendingQueryItem(name: "date", date: date)
 
         case .categories(let date):
             return Self.crimeCategoriesBasePath
-                .appendingQueryItem(name: "date", value: date, formatter: .yearMonth)
+                .appendingQueryItem(name: "date", date: date)
         }
     }
 

@@ -20,18 +20,18 @@ extension OutcomesEndpoint: Endpoint {
         case .streetLevelOutcomesForStreet(let streetID, let date):
             return Self.outcomesAtLocationBasePath
                 .appendingQueryItem(name: "location_id", value: streetID)
-                .appendingQueryItem(name: "date", value: date)
+                .appendingQueryItem(name: "date", date: date)
 
         case .streetLevelOutcomesAtSpecificPoint(let coordinate, let date):
             return Self.outcomesAtLocationBasePath
                 .appendingQueryItem(name: "lat", value: coordinate.latitude)
                 .appendingQueryItem(name: "lng", value: coordinate.longitude)
-                .appendingQueryItem(name: "date", value: date)
+                .appendingQueryItem(name: "date", date: date)
 
         case .streetLevelOutcomesInArea(let coordinates, let date):
             return Self.outcomesAtLocationBasePath
-                .appendingQueryItem(name: "poly", value: coordinates)
-                .appendingQueryItem(name: "date", value: date)
+                .appendingQueryItem(name: "poly", coordinates: coordinates)
+                .appendingQueryItem(name: "date", date: date)
 
         case .caseHistory(let crimeID):
             return Self.outcomesForCrimeBasePath

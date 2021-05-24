@@ -21,6 +21,18 @@ public protocol StopAndSearchService {
     func fetchAll(atCoordinate coordinate: Coordinate, date: Date?,
                   completion: @escaping (_ result: Result<[StopAndSearch], PoliceDataError>) -> Void)
 
+    /// Fetches stop and searches at street-level within a custom area.
+    ///
+    /// - Note: [Police API | Stop and searches by area](https://data.police.uk/docs/method/stops-street/)
+    ///
+    /// - Parameters:
+    ///     - coordinates: Coordinates which define the boundary of the custom area.
+    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///     - completion: Completion handler.
+    ///     - result: A list of stop and searches.
+    func fetchAll(inArea coordinates: [Coordinate], date: Date?,
+                  completion: @escaping (_ result: Result<[StopAndSearch], PoliceDataError>) -> Void)
+
     /// Fetches stop and searches at a particular location.
     ///
     /// - Note: [Police API | Stop and searches by location](https://data.police.uk/docs/method/stops-at-location/)
@@ -47,6 +59,19 @@ public protocol StopAndSearchService {
     func stopAndSearchesPublisher(atCoordinate coordinate: Coordinate,
                                   date: Date?) -> AnyPublisher<[StopAndSearch], PoliceDataError>
 
+    /// Publishes stop and searches at street-level within a custom area.
+    ///
+    /// - Note: [Police API | Stop and searches by area](https://data.police.uk/docs/method/stops-street/)
+    ///
+    /// - Parameters:
+    ///     - coordinates: Coordinates which define the boundary of the custom area.
+    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///
+    /// - Returns: A publisher with a list of of stop and searches.
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func stopAndSearchesPublisher(inArea coordinates: [Coordinate],
+                                  date: Date?) -> AnyPublisher<[StopAndSearch], PoliceDataError>
+
     /// Publishes stop and searches at a particular location.
     ///
     /// - Note: [Police API | Stop and searches by location](https://data.police.uk/docs/method/stops-at-location/)
@@ -70,6 +95,11 @@ public extension StopAndSearchService {
         fetchAll(atCoordinate: coordinate, date: date, completion: completion)
     }
 
+    func fetchAll(inArea coordinates: [Coordinate], date: Date? = nil,
+                  completion: @escaping (_ result: Result<[StopAndSearch], PoliceDataError>) -> Void) {
+        fetchAll(inArea: coordinates, date: date, completion: completion)
+    }
+
     func fetchAll(atLocation streetID: Int, date: Date? = nil,
                   completion: @escaping (_ result: Result<[StopAndSearch], PoliceDataError>) -> Void) {
         fetchAll(atLocation: streetID, date: date, completion: completion)
@@ -80,6 +110,12 @@ public extension StopAndSearchService {
     func stopAndSearchesPublisher(atCoordinate coordinate: Coordinate,
                                   date: Date? = nil) -> AnyPublisher<[StopAndSearch], PoliceDataError> {
         stopAndSearchesPublisher(atCoordinate: coordinate, date: date)
+    }
+
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func stopAndSearchesPublisher(inArea coordinates: [Coordinate],
+                                  date: Date? = nil) -> AnyPublisher<[StopAndSearch], PoliceDataError> {
+        stopAndSearchesPublisher(inArea: coordinates, date: date)
     }
 
     func stopAndSearchesPublisher(atLocation streetID: Int,

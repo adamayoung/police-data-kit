@@ -29,12 +29,10 @@ class CrimesEndpointTests: XCTestCase {
 
     func testStreetLevelCrimesInCustomAreaEndpointReturnURL() {
         let coordinates = Coordinate.mocks
-        let coordinatePairs = coordinates.map { "\($0.latitude),\($0.longitude)" }
+        let poly = coordinates.map { "\($0.latitude),\($0.longitude)" }.joined(separator: ":")
         let dateString = "2021-04"
         let date = DateFormatter.yearMonth.date(from: dateString)!
-        let expectedURL = URL(
-            string: "/crimes-street/all-crime?poly=\(coordinatePairs.joined(separator: ":"))&date=\(dateString)"
-        )!
+        let expectedURL = URL(string: "/crimes-street/all-crime?poly=\(poly)&date=\(dateString)")!
 
         let url = CrimesEndpoint.streetLevelCrimesInArea(coordinates: coordinates, date: date).url
 
@@ -43,10 +41,8 @@ class CrimesEndpointTests: XCTestCase {
 
     func testStreetLevelCrimesInCustomAreaEndpointWhenNoDateReturnURL() {
         let coordinates = Coordinate.mocks
-        let coordinatePairs = coordinates.map { "\($0.latitude),\($0.longitude)" }
-        let expectedURL = URL(
-            string: "/crimes-street/all-crime?poly=\(coordinatePairs.joined(separator: ":"))"
-        )!
+        let poly = coordinates.map { "\($0.latitude),\($0.longitude)" }.joined(separator: ":")
+        let expectedURL = URL(string: "/crimes-street/all-crime?poly=\(poly)")!
 
         let url = CrimesEndpoint.streetLevelCrimesInArea(coordinates: coordinates).url
 
@@ -57,9 +53,7 @@ class CrimesEndpointTests: XCTestCase {
         let streetID = 12345
         let dateString = "2021-03"
         let date = DateFormatter.yearMonth.date(from: dateString)!
-        let expectedURL = URL(
-            string: "/crimes-at-location?location_id=\(streetID)&date=\(dateString)"
-        )!
+        let expectedURL = URL(string: "/crimes-at-location?location_id=\(streetID)&date=\(dateString)")!
 
         let url = CrimesEndpoint.crimesAtLocationForStreet(streetID: streetID, date: date).url
 
@@ -68,9 +62,7 @@ class CrimesEndpointTests: XCTestCase {
 
     func testCrimesAtLocationForStreetEndpointWhenNoDateReturnsURL() {
         let streetID = 12345
-        let expectedURL = URL(
-            string: "/crimes-at-location?location_id=\(streetID)"
-        )!
+        let expectedURL = URL(string: "/crimes-at-location?location_id=\(streetID)")!
 
         let url = CrimesEndpoint.crimesAtLocationForStreet(streetID: streetID).url
 
@@ -92,9 +84,7 @@ class CrimesEndpointTests: XCTestCase {
 
     func testCrimesAtLocationAtSpecificPointEndpointWhenNoDateReturnsURL() {
         let coordinate = Coordinate.mock
-        let expectedURL = URL(
-            string: "/crimes-at-location?lat=\(coordinate.latitude)&lng=\(coordinate.longitude)"
-        )!
+        let expectedURL = URL(string: "/crimes-at-location?lat=\(coordinate.latitude)&lng=\(coordinate.longitude)")!
 
         let url = CrimesEndpoint.crimesAtLocationAtSpecificPoint(coordinate: coordinate).url
 
@@ -119,9 +109,7 @@ class CrimesEndpointTests: XCTestCase {
     func testCrimesWithNoLocationEndpointWhenNoDateReturnsURL() {
         let categoryID = "all-crime"
         let policeForceID = "leicestershire"
-        let expectedURL = URL(
-            string: "/crimes-no-location?category=\(categoryID)&force=\(policeForceID)"
-        )!
+        let expectedURL = URL(string: "/crimes-no-location?category=\(categoryID)&force=\(policeForceID)")!
 
         let url = CrimesEndpoint.crimesWithNoLocation(categoryID: categoryID, policeForceID: policeForceID).url
 

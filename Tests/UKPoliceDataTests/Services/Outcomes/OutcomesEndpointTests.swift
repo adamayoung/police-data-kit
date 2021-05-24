@@ -7,9 +7,7 @@ class OutcomesEndpointTests: XCTestCase {
         let streetID = 12345
         let dateString = "2021-03"
         let date = DateFormatter.yearMonth.date(from: dateString)!
-        let expectedURL = URL(
-            string: "/outcomes-at-location?location_id=\(streetID)&date=\(dateString)"
-        )!
+        let expectedURL = URL(string: "/outcomes-at-location?location_id=\(streetID)&date=\(dateString)")!
 
         let url = OutcomesEndpoint.streetLevelOutcomesForStreet(streetID: streetID, date: date).url
 
@@ -18,9 +16,7 @@ class OutcomesEndpointTests: XCTestCase {
 
     func testStreetLevelOutcomesForStreetEndpointWhenNoDateReturnsURL() {
         let streetID = 12345
-        let expectedURL = URL(
-            string: "/outcomes-at-location?location_id=\(streetID)"
-        )!
+        let expectedURL = URL(string: "/outcomes-at-location?location_id=\(streetID)")!
 
         let url = OutcomesEndpoint.streetLevelOutcomesForStreet(streetID: streetID).url
 
@@ -42,9 +38,7 @@ class OutcomesEndpointTests: XCTestCase {
 
     func testStreetLevelOutcomesAtSpecificPointEndpointWhenNoDateReturnsURL() {
         let coordinate = Coordinate.mock
-        let expectedURL = URL(
-            string: "/outcomes-at-location?lat=\(coordinate.latitude)&lng=\(coordinate.longitude)"
-        )!
+        let expectedURL = URL(string: "/outcomes-at-location?lat=\(coordinate.latitude)&lng=\(coordinate.longitude)")!
 
         let url = OutcomesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate).url
 
@@ -68,9 +62,7 @@ class OutcomesEndpointTests: XCTestCase {
     func testStreetLevelOutcomesInAreaEndpointWhenNoDateReturnsURL() {
         let coordinates = Coordinate.mocks
         let coordinatePairs = coordinates.map { "\($0.latitude),\($0.longitude)" }
-        let expectedURL = URL(
-            string: "/outcomes-at-location?poly=\(coordinatePairs.joined(separator: ":"))"
-        )!
+        let expectedURL = URL(string: "/outcomes-at-location?poly=\(coordinatePairs.joined(separator: ":"))")!
 
         let url = OutcomesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates).url
 
@@ -79,9 +71,7 @@ class OutcomesEndpointTests: XCTestCase {
 
     func testCaseHistoryReturnsURL() {
         let crimeID = CaseHistory.mock.crime.crimeID
-        let expectedURL = URL(
-            string: "/outcomes-for-crime/\(crimeID)"
-        )!
+        let expectedURL = URL(string: "/outcomes-for-crime/\(crimeID)")!
 
         let url = OutcomesEndpoint.caseHistory(crimeID: crimeID).url
 
