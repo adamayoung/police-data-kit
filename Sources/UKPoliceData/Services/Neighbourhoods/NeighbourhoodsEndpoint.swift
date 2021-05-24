@@ -48,7 +48,7 @@ extension NeighbourhoodsEndpoint: Endpoint {
         case .locateNeighbourhood(let coordinate):
             return Self.basePath
                 .appendingPathComponent("locate-neighbourhood")
-                .appendingQueryItem(name: "q", value: coordinate)
+                .appendingQueryItem(name: "q", coordinate: coordinate)
         }
     }
 

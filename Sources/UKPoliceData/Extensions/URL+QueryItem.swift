@@ -10,8 +10,8 @@ extension URL {
         return urlComponents.url!
     }
 
-    func appendingQueryItem(name: String, value: Date?, formatter: DateFormatter = .yearMonth) -> Self {
-        guard let date = value else {
+    func appendingQueryItem(name: String, date: Date?, formatter: DateFormatter = .yearMonth) -> Self {
+        guard let date = date else {
             return self
         }
 
@@ -19,13 +19,15 @@ extension URL {
         return appendingQueryItem(name: name, value: dateString)
     }
 
-    func appendingQueryItem(name: String, value: Coordinate) -> Self {
-        appendingQueryItem(name: name, value: "\(value.latitude),\(value.longitude)")
+    func appendingQueryItem(name: String, coordinate: Coordinate) -> Self {
+        appendingQueryItem(name: name, value: "\(coordinate.latitude),\(coordinate.longitude)")
     }
 
-    func appendingQueryItem(name: String, value: [Coordinate]) -> Self {
-        let pairs = value.map { "\($0.latitude),\($0.longitude)" }
-        return appendingQueryItem(name: name, value: pairs.joined(separator: ":"))
+    func appendingQueryItem(name: String, coordinates: [Coordinate]) -> Self {
+        let pairs = coordinates
+            .map { "\($0.latitude),\($0.longitude)" }
+            .joined(separator: ":")
+        return appendingQueryItem(name: name, value: pairs)
     }
 
 }
