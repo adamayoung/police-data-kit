@@ -8,7 +8,11 @@ public struct Link: Decodable, Equatable {
     /// Description of the link.
     public let description: String?
     /// URL.
-    public let url: URL
+    public var url: URL? {
+        URL(string: urlString)
+    }
+
+    private let urlString: String
 
     /// Creates a a new `Link`.
     ///
@@ -16,10 +20,20 @@ public struct Link: Decodable, Equatable {
     ///     - title: Title of the link.
     ///     - description: Description of the link.
     ///     - url: URL.
-    public init(title: String, description: String? = nil, url: URL) {
+    public init(title: String, description: String? = nil, url: URL? = nil) {
         self.title = title
         self.description = description
-        self.url = url
+        self.urlString = url?.absoluteString ?? ""
+    }
+
+}
+
+extension Link {
+
+    private enum CodingKeys: String, CodingKey {
+        case title
+        case description
+        case urlString = "url"
     }
 
 }
