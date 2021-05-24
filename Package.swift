@@ -17,12 +17,14 @@ let package = Package(
         )
     ],
 
-    dependencies: [],
+    dependencies: [
+        .package(url: "https://github.com/scinfu/SwiftSoup.git", from: "1.7.4")
+    ],
 
     targets: [
         .target(
             name: "UKPoliceData",
-            dependencies: []
+            dependencies: ["SwiftSoup"]
         ),
         .testTarget(
             name: "UKPoliceDataTests",
