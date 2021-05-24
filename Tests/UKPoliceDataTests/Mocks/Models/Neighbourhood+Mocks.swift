@@ -35,7 +35,7 @@ extension Neighbourhood {
             links: [
                 Link(
                     title: "Leicester City Council",
-                    url: URL(string: "http://www.leicester.gov.uk/")!
+                    url: URL(string: "http://www.leicester.gov.uk/")
                 )
             ]
         )

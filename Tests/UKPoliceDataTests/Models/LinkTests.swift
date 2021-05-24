@@ -17,4 +17,17 @@ class LinkTests: XCTestCase {
         XCTAssertEqual(result, .mockNoDescription)
     }
 
+    func testDecodeWhenURLIsEmptyStringReturnsLink() throws {
+        let result = try JSONDecoder.policeDataAPI
+            .decode(Link.self, fromResource: "link-empty-url", withExtension: "json")
+
+        XCTAssertEqual(result, .mockNilURL)
+    }
+
+    func testURLWhenURLIsEmptyReturnsNil() {
+        let link = Link(title: "Title", description: "Description", url: nil)
+
+        XCTAssertNil(link.url)
+    }
+
 }
