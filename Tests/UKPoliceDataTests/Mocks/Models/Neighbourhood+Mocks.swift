@@ -41,4 +41,18 @@ extension Neighbourhood {
         )
     }
 
+    static var mockWithAmpersandInName: Neighbourhood {
+        Neighbourhood(
+            id: "AB12",
+            name: "Banks & Hesketh",
+            description: "Some description",
+            policeForceWebsite: URL(string: "http://www.leics.police.uk/local-policing/city-centre")!,
+            population: 1000,
+            centre: Coordinate(
+                latitude: 52.6389,
+                longitude: -1.13619
+            )
+        )
+    }
+
 }

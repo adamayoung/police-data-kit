@@ -28,4 +28,15 @@ class NeighbourhoodTests: XCTestCase {
         XCTAssertEqual(result, 0)
     }
 
+    func testNameWhenDoesNotContainAmpersandHTMLEntity() throws {
+        let expectedResult = Neighbourhood.mockWithAmpersandInName.name
+
+        let result = try JSONDecoder.policeDataAPI
+            .decode(Neighbourhood.self, fromResource: "neighbourhood-html-in-name",
+                    withExtension: "json")
+            .name
+
+        XCTAssertEqual(result, expectedResult)
+    }
+
 }
