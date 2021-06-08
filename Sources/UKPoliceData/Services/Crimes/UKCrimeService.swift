@@ -24,14 +24,14 @@ final class UKCrimeService: CrimeService {
                       completion: completion)
     }
 
-    func fetchCrimesAtLocation(forStreet streetID: Int, date: Date?,
-                               completion: @escaping (_ result: Result<[Crime], PoliceDataError>) -> Void) {
+    func fetchCrimes(forStreet streetID: Int, date: Date?,
+                     completion: @escaping (_ result: Result<[Crime], PoliceDataError>) -> Void) {
         apiClient.get(endpoint: CrimesEndpoint.crimesAtLocationForStreet(streetID: streetID, date: date),
                       completion: completion)
     }
 
-    func fetchCrimesAtLocation(atCoordinate coordinate: Coordinate, date: Date?,
-                               completion: @escaping (_ result: Result<[Crime], PoliceDataError>) -> Void) {
+    func fetchCrimes(atCoordinate coordinate: Coordinate, date: Date?,
+                     completion: @escaping (_ result: Result<[Crime], PoliceDataError>) -> Void) {
         apiClient.get(endpoint: CrimesEndpoint.crimesAtLocationAtSpecificPoint(coordinate: coordinate, date: date),
                       completion: completion)
     }
@@ -43,8 +43,8 @@ final class UKCrimeService: CrimeService {
                       completion: completion)
     }
 
-    func fetchCategories(date: Date,
-                         completion: @escaping (_ result: Result<[CrimeCategory], PoliceDataError>) -> Void) {
+    func fetchCrimeCategories(forDate date: Date,
+                              completion: @escaping (_ result: Result<[CrimeCategory], PoliceDataError>) -> Void) {
         apiClient.get(endpoint: CrimesEndpoint.categories(date: date), completion: completion)
     }
 
@@ -66,13 +66,12 @@ extension UKCrimeService {
     }
 
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func crimesAtLocationPublisher(forStreet streetID: Int, date: Date?) -> AnyPublisher<[Crime], PoliceDataError> {
+    func crimesPublisher(forStreet streetID: Int, date: Date?) -> AnyPublisher<[Crime], PoliceDataError> {
         apiClient.get(endpoint: CrimesEndpoint.crimesAtLocationForStreet(streetID: streetID, date: date))
     }
 
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func crimesAtLocationPublisher(atCoordinate coordinate: Coordinate,
-                                   date: Date?) -> AnyPublisher<[Crime], PoliceDataError> {
+    func crimesPublisher(atCoordinate coordinate: Coordinate, date: Date?) -> AnyPublisher<[Crime], PoliceDataError> {
         apiClient.get(endpoint: CrimesEndpoint.crimesAtLocationAtSpecificPoint(coordinate: coordinate, date: date))
     }
 
@@ -84,7 +83,7 @@ extension UKCrimeService {
     }
 
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func categoriesPublisher(date: Date) -> AnyPublisher<[CrimeCategory], PoliceDataError> {
+    func crimeCategoriesPublisher(forDate date: Date) -> AnyPublisher<[CrimeCategory], PoliceDataError> {
         apiClient.get(endpoint: CrimesEndpoint.categories(date: date))
     }
 

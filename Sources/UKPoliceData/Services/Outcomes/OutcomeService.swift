@@ -153,3 +153,73 @@ public extension OutcomeService {
     #endif
 
 }
+
+#if swift(>=5.5)
+@available(macOS 12, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
+public extension OutcomeService {
+
+    /// Returns a list of crime outcomes at a specific location.
+    ///
+    /// - Note: [Police API | Street-level outcomes](https://data.police.uk/docs/method/outcomes-at-location/)
+    /// - Note: Outcomes are not available for the Police Service of Northern Ireland.
+    ///
+    /// - Parameters:
+    ///     - streetID: A street ID.
+    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///
+    /// - Returns: A list of street level crime outcomes.
+    func streetLevelOutcomes(forStreet streetID: Int, date: Date? = nil) async throws -> [Outcome] {
+        try await withCheckedThrowingContinuation { continuation in
+            self.fetchStreetLevelOutcomes(forStreet: streetID, date: date, completion: continuation.resume(with:))
+        }
+    }
+
+    /// Returns a list of crime outcomes within a 1 mile radius of a single point.
+    ///
+    /// - Note: [Police API | Street-level outcomes](https://data.police.uk/docs/method/outcomes-at-location/)
+    /// - Note: Outcomes are not available for the Police Service of Northern Ireland.
+    ///
+    /// - Parameters:
+    ///     - coordinate: A coordinate.
+    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///
+    /// - Returns: A list of street level crime outcomes.
+    func streetLevelOutcomes(atCoordinate coordinate: Coordinate, date: Date? = nil) async throws -> [Outcome] {
+        try await withCheckedThrowingContinuation { continuation in
+            self.fetchStreetLevelOutcomes(atCoordinate: coordinate, date: date, completion: continuation.resume(with:))
+        }
+    }
+
+    /// Returns a list of crime outcomes within a custom area.
+    ///
+    /// - Note: [Police API | Street-level outcomes](https://data.police.uk/docs/method/outcomes-at-location/)
+    /// - Note: Outcomes are not available for the Police Service of Northern Ireland.
+    ///
+    /// - Parameters:
+    ///     - coordinates: Coordinates which define the boundary of the custom area.
+    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///
+    /// - Returns: A list of street level crime outcomes.
+    func streetLevelOutcomes(inArea coordinates: [Coordinate], date: Date? = nil) async throws -> [Outcome] {
+        try await withCheckedThrowingContinuation { continuation in
+            self.fetchStreetLevelOutcomes(inArea: coordinates, date: date, completion: continuation.resume(with:))
+        }
+    }
+
+    /// Returns the case history for a crime.
+    ///
+    /// - Note: [Police API | Outcomes for a specific crime](https://data.police.uk/docs/method/outcomes-for-crime/)
+    /// - Note: Outcomes are not available for the Police Service of Northern Ireland.
+    ///
+    /// - Parameters:
+    ///     - crimeID: The crimeID of a crime, not the id.
+    ///
+    /// - Returns: The case history for a crime.
+    func caseHistory(forCrime crimeID: String) async throws -> CaseHistory {
+        try await withCheckedThrowingContinuation { continuation in
+            self.fetchCaseHistory(forCrime: crimeID, completion: continuation.resume(with:))
+        }
+    }
+
+}
+#endif

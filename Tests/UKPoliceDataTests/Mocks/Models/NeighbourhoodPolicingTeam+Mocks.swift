@@ -1,10 +1,10 @@
 import Foundation
 import UKPoliceData
 
-extension PoliceForceNeighbourhood {
+extension NeighbourhoodPolicingTeam {
 
-    static var mock: PoliceForceNeighbourhood {
-        PoliceForceNeighbourhood(
+    static var mock: NeighbourhoodPolicingTeam {
+        NeighbourhoodPolicingTeam(
             force: "metropolitan",
             neighbourhood: "00BKX6"
         )

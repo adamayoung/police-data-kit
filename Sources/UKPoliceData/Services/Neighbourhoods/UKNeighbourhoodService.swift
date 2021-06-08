@@ -44,9 +44,9 @@ final class UKNeighbourhoodService: NeighbourhoodService {
                       completion: completion)
     }
 
-    func fetchNeighbourhood(
+    func fetchNeighbourhoodPolicingTeam(
         atCoordinate coordinate: Coordinate,
-        completion: @escaping (_ result: Result<PoliceForceNeighbourhood, PoliceDataError>) -> Void
+        completion: @escaping (_ result: Result<NeighbourhoodPolicingTeam, PoliceDataError>) -> Void
     ) {
         apiClient.get(endpoint: NeighbourhoodsEndpoint.locateNeighbourhood(coordinate: coordinate),
                       completion: completion)
@@ -95,9 +95,9 @@ extension UKNeighbourhoodService {
     }
 
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func neighbourhoodPublisher(
+    func neighbourhoodPolicingTeamPublisher(
         atCoordinate coordinate: Coordinate
-    ) -> AnyPublisher<PoliceForceNeighbourhood, PoliceDataError> {
+    ) -> AnyPublisher<NeighbourhoodPolicingTeam, PoliceDataError> {
         apiClient.get(endpoint: NeighbourhoodsEndpoint.locateNeighbourhood(coordinate: coordinate))
     }
 

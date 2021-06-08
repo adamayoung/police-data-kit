@@ -160,12 +160,12 @@ class UKCrimeServiceCombineTests: XCTestCase {
                                                            policeForceID: policeForceID).url)
     }
 
-    func testCategoriesPublisherReturnsCrimeCategories() throws {
+    func testCrimeCategoriesPublisherReturnsCrimeCategories() throws {
         let expectedResult = CrimeCategory.mocks
         let date = Date()
         apiClient.response = expectedResult
 
-        let result = try waitFor(publisher: service.categoriesPublisher(date: date),
+        let result = try waitFor(publisher: service.crimeCategoriesPublisher(forDate: date),
                                  storeIn: &cancellables)
 
         XCTAssertEqual(result, expectedResult)

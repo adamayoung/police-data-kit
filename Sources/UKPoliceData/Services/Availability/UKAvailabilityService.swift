@@ -19,12 +19,13 @@ final class UKAvailabilityService: AvailabilityService {
 }
 
 #if canImport(Combine)
+@available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
 extension UKAvailabilityService {
 
-    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     func availableDataSetsPublisher() -> AnyPublisher<[DataSet], PoliceDataError> {
         apiClient.get(endpoint: AvailabilityEndpoint.dataSets)
     }
 
 }
 #endif
+

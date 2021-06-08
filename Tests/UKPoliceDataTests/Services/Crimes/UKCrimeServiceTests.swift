@@ -86,14 +86,14 @@ class UKCrimeServiceTests: XCTestCase {
         XCTAssertEqual(apiClient.lastPath, CrimesEndpoint.streetLevelCrimesInArea(coordinates: coordinates).url)
     }
 
-    func testFetchCrimesAtLocationForStreetReturnsCrimes() {
+    func testFetchCrimesForStreetReturnsCrimes() {
         let expectedResult = Crime.mocks
         let streetID = expectedResult[0].location.street.id
         let date = Date()
         apiClient.response = expectedResult
 
         let expectation = XCTestExpectation(description: "await")
-        service.fetchCrimesAtLocation(forStreet: streetID, date: date) { result in
+        service.fetchCrimes(forStreet: streetID, date: date) { result in
             XCTAssertEqual(try? result.get(), expectedResult)
             expectation.fulfill()
         }
@@ -103,13 +103,13 @@ class UKCrimeServiceTests: XCTestCase {
         XCTAssertEqual(apiClient.lastPath, CrimesEndpoint.crimesAtLocationForStreet(streetID: streetID, date: date).url)
     }
 
-    func testFetchCrimesAtLocationForStreetWhenNoDateReturnsCrimes() {
+    func testFetchCrimesForStreetWhenNoDateReturnsCrimes() {
         let expectedResult = Crime.mocks
         let streetID = expectedResult[0].location.street.id
         apiClient.response = expectedResult
 
         let expectation = XCTestExpectation(description: "await")
-        service.fetchCrimesAtLocation(forStreet: streetID) { result in
+        service.fetchCrimes(forStreet: streetID) { result in
             XCTAssertEqual(try? result.get(), expectedResult)
             expectation.fulfill()
         }
@@ -119,14 +119,14 @@ class UKCrimeServiceTests: XCTestCase {
         XCTAssertEqual(apiClient.lastPath, CrimesEndpoint.crimesAtLocationForStreet(streetID: streetID).url)
     }
 
-    func testFetchCrimesAtLocationAtCoordinateReturnsCrimes() {
+    func testFetchCrimesAtCoordinateReturnsCrimes() {
         let coordinate = Coordinate.mock
         let date = Date()
         let expectedResult = Crime.mocks
         apiClient.response = expectedResult
 
         let expectation = XCTestExpectation(description: "await")
-        service.fetchCrimesAtLocation(atCoordinate: coordinate, date: date) { result in
+        service.fetchCrimes(atCoordinate: coordinate, date: date) { result in
             XCTAssertEqual(try? result.get(), expectedResult)
             expectation.fulfill()
         }
@@ -137,13 +137,13 @@ class UKCrimeServiceTests: XCTestCase {
                        CrimesEndpoint.crimesAtLocationAtSpecificPoint(coordinate: coordinate, date: date).url)
     }
 
-    func testFetchCrimesAtLocationAtCoordinateWhenNoDateReturnsCrimes() {
+    func testFetchCrimesAtCoordinateWhenNoDateReturnsCrimes() {
         let coordinate = Coordinate.mock
         let expectedResult = Crime.mocks
         apiClient.response = expectedResult
 
         let expectation = XCTestExpectation(description: "await")
-        service.fetchCrimesAtLocation(atCoordinate: coordinate) { result in
+        service.fetchCrimes(atCoordinate: coordinate) { result in
             XCTAssertEqual(try? result.get(), expectedResult)
             expectation.fulfill()
         }
@@ -190,13 +190,13 @@ class UKCrimeServiceTests: XCTestCase {
                                                                                policeForceID: policeForceID).url)
     }
 
-    func testFetchCategoriesReturnsCrimeCategories() {
+    func testFetchCrimeCategoriesReturnsCrimeCategories() {
         let expectedResult = CrimeCategory.mocks
         let date = Date()
         apiClient.response = expectedResult
 
         let expectation = XCTestExpectation(description: "await")
-        service.fetchCategories(date: date) { result in
+        service.fetchCrimeCategories(forDate: date) { result in
             XCTAssertEqual(try? result.get(), expectedResult)
             expectation.fulfill()
         }

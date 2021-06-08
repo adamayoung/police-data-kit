@@ -1,25 +1,16 @@
-name: CI
+name: Pull Request
 
 on:
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - 'README.md'
-
   pull_request:
     branches:
       - main
     paths-ignore:
       - 'README.md'
 
-  workflow_dispatch:
-
 jobs:
   lint:
     name: Lint
     runs-on: macos-11
-    if: github.event_name == 'pull_request'
 
     steps:
       - name: Checkout
@@ -33,7 +24,6 @@ jobs:
   danger:
     name: Run Danger
     runs-on: macos-11
-    if: github.event_name == 'pull_request'
 
     steps:
       - name: Checkout
@@ -73,7 +63,6 @@ jobs:
   test-on-ios:
     name: Test on iOS
     runs-on: macos-11
-    if: github.event_name == 'pull_request'
 
     steps:
       - name: Checkout
@@ -95,7 +84,6 @@ jobs:
   test-on-linux:
     name: Test on Linux
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
     container:
       image: swift:5.3
       options: --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --security-opt apparmor=unconfined

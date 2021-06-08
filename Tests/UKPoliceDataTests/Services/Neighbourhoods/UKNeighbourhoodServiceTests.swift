@@ -105,13 +105,13 @@ class UKNeighbourhoodServiceTests: XCTestCase {
                                                                              policeForceID: policeForceID).url)
     }
 
-    func testFetchNeighbourhoodAtCoordinateReturnsPoliceForceNeighbourhood() {
+    func testFetchNeighbourhoodPolicingTeamAtCoordinateReturnsNeighbourhoodPolicingTeam() {
         let coordinate = Coordinate.mock
-        let expectedResult = PoliceForceNeighbourhood.mock
+        let expectedResult = NeighbourhoodPolicingTeam.mock
         apiClient.response = expectedResult
 
         let expectation = XCTestExpectation(description: "await")
-        service.fetchNeighbourhood(atCoordinate: coordinate) { result in
+        service.fetchNeighbourhoodPolicingTeam(atCoordinate: coordinate) { result in
             XCTAssertEqual(try? result.get(), expectedResult)
             expectation.fulfill()
         }
