@@ -94,7 +94,7 @@ jobs:
   
   test-on-linux:
     name: Test on Linux
-    runs-on: ubuntu-11
+    runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     container:
       image: swift:5.3
