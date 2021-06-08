@@ -308,7 +308,7 @@ public extension CrimeService {
     /// - Returns: A list of crimes.
     @available(macOS 12, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
     func crimes(atCoordinate coordinate: Coordinate, date: Date? = nil) async throws -> [Crime] {
-        try await withCheckedThrowingContinuation{ continuation in
+        try await withCheckedThrowingContinuation { continuation in
             self.fetchCrimes(atCoordinate: coordinate, date: date, completion: continuation.resume(with:))
         }
     }
