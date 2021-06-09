@@ -20,9 +20,10 @@ final class UKPoliceForceService: PoliceForceService {
         apiClient.get(endpoint: PoliceForcesEndpoint.details(id: id), completion: completion)
     }
 
-    func fetchSeniorOfficers(forPoliceForce id: String,
+    func fetchSeniorOfficers(forPoliceForce policeForceID: String,
                              completion: @escaping (Result<[PoliceOfficer], PoliceDataError>) -> Void) {
-        apiClient.get(endpoint: PoliceForcesEndpoint.seniorOfficers(policeForceID: id), completion: completion)
+        apiClient.get(endpoint: PoliceForcesEndpoint.seniorOfficers(policeForceID: policeForceID),
+                      completion: completion)
     }
 
 }
@@ -41,8 +42,10 @@ extension UKPoliceForceService {
     }
 
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func seniorOfficersPublisher(forPoliceForce id: String) -> AnyPublisher<[PoliceOfficer], PoliceDataError> {
-        apiClient.get(endpoint: PoliceForcesEndpoint.seniorOfficers(policeForceID: id))
+    func seniorOfficersPublisher(
+        forPoliceForce policeForceID: String
+    ) -> AnyPublisher<[PoliceOfficer], PoliceDataError> {
+        apiClient.get(endpoint: PoliceForcesEndpoint.seniorOfficers(policeForceID: policeForceID))
     }
 
 }
