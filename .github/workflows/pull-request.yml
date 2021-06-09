@@ -100,7 +100,7 @@ jobs:
             ${{ runner.os }}-spm-
 
       - name: Build and test
-        run: xcodebuild -scheme UKPoliceData -sdk watchsimulator -destination 'platform=watchOS Simulator,name=Apple Watch Series 6 - 44mm,OS=7.4' test
+        run: xcodebuild -scheme UKPoliceData -sdk watchsimulator -destination 'platform=watchOS Simulator,name=Apple Watch Series 6 - 44mm,OS=7.2' test
   
   test-on-linux:
     name: Test on Linux
