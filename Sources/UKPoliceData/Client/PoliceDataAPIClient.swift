@@ -67,9 +67,9 @@ final class PoliceDataAPIClient: APIClient {
 }
 
 #if canImport(Combine)
+@available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
 extension PoliceDataAPIClient {
 
-    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     func get<Response: Decodable>(path: URL) -> AnyPublisher<Response, PoliceDataError> {
         let urlRequest = buildURLRequest(for: path)
 

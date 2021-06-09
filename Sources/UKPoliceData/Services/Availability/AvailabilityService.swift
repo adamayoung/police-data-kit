@@ -27,3 +27,21 @@ public protocol AvailabilityService {
     #endif
 
 }
+
+#if swift(>=5.5)
+@available(macOS 12, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
+extension AvailabilityService {
+
+    /// Returns a list of available data sets.
+    ///
+    /// - Note: [Police API | Availability](https://data.police.uk/docs/method/crimes-street-dates/)
+    ///
+    /// - Returns: A list of available data sets.
+    func availableDataSets() async throws -> [DataSet] {
+        try await withCheckedThrowingContinuation { continuation in
+            self.fetchAvailableDataSets(completion: continuation.resume(with:))
+        }
+    }
+
+}
+#endif

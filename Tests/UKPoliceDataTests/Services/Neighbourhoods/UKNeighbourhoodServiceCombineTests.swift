@@ -92,12 +92,12 @@ class UKNeighbourhoodServiceCombineTests: XCTestCase {
                                                                              policeForceID: policeForceID).url)
     }
 
-    func testNeighbourhoodAtCoordinatePublisherReturnsPoliceForceNeighbourhood() throws {
+    func testNeighbourhoodPolicingTeamAtCoordinatePublisherReturnsNeighbourhoodPolicingTeam() throws {
         let coordinate = Coordinate.mock
-        let expectedResult = PoliceForceNeighbourhood.mock
+        let expectedResult = NeighbourhoodPolicingTeam.mock
         apiClient.response = expectedResult
 
-        let result = try waitFor(publisher: service.neighbourhoodPublisher(atCoordinate: coordinate),
+        let result = try waitFor(publisher: service.neighbourhoodPolicingTeamPublisher(atCoordinate: coordinate),
                                  storeIn: &cancellables)
 
         XCTAssertEqual(result, expectedResult)
