@@ -4,14 +4,12 @@ import XCTest
 final class PoliceDataAPIClientTests: XCTestCase {
 
     var apiClient: PoliceDataAPIClient!
-    var apiKey: String!
     var baseURL: URL!
     var urlSession: URLSession!
     var serialiser: Serialiser!
 
     override func setUp() {
         super.setUp()
-        apiKey = "abc123"
         baseURL = URL(string: "https://some.domain.com/path")
 
         let configuration = URLSessionConfiguration.default
@@ -25,7 +23,6 @@ final class PoliceDataAPIClientTests: XCTestCase {
         apiClient = nil
         serialiser = nil
         baseURL = nil
-        apiKey = nil
         MockURLProtocol.reset()
         super.tearDown()
     }
