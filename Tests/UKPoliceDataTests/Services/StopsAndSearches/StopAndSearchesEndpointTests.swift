@@ -1,30 +1,30 @@
 @testable import UKPoliceData
 import XCTest
 
-class StopAndSearchesEndpointTests: XCTestCase {
+final class StopAndSearchesEndpointTests: XCTestCase {
 
     func testStopAndSearchesByAreaAtSpecificPointEndpointReturnsURL() {
         let coordinate = Coordinate.mock
         let dateString = "2021-04"
         let date = DateFormatter.yearMonth.date(from: dateString)!
-        let expectedURL = URL(
+        let expectedPath = URL(
             string: "/stops-street?lat=\(coordinate.latitude)&lng=\(coordinate.longitude)&date=\(dateString)"
         )!
 
-        let url = StopAndSearchesEndpoint.stopAndSearchesByAreaAtSpecificPoint(coordinate: coordinate, date: date).url
+        let path = StopAndSearchesEndpoint.stopAndSearchesByAreaAtSpecificPoint(coordinate: coordinate, date: date).path
 
-        XCTAssertEqual(url, expectedURL)
+        XCTAssertEqual(path, expectedPath)
     }
 
     func testStopAndSearchesByAreaAtSpecificPointEndpointWhenNoDateReturnsURL() {
         let coordinate = Coordinate.mock
-        let expectedURL = URL(
+        let expectedPath = URL(
             string: "/stops-street?lat=\(coordinate.latitude)&lng=\(coordinate.longitude)"
         )!
 
-        let url = StopAndSearchesEndpoint.stopAndSearchesByAreaAtSpecificPoint(coordinate: coordinate).url
+        let path = StopAndSearchesEndpoint.stopAndSearchesByAreaAtSpecificPoint(coordinate: coordinate).path
 
-        XCTAssertEqual(url, expectedURL)
+        XCTAssertEqual(path, expectedPath)
     }
 
     func testStopAndSearchesByAreaInAreaEndpointReturnsURL() {
@@ -32,81 +32,81 @@ class StopAndSearchesEndpointTests: XCTestCase {
         let poly = coordinates.map { "\($0.latitude),\($0.longitude)" }.joined(separator: ":")
         let dateString = "2021-04"
         let date = DateFormatter.yearMonth.date(from: dateString)!
-        let expectedURL = URL(string: "/stops-street?poly=\(poly)&date=\(dateString)")!
+        let expectedPath = URL(string: "/stops-street?poly=\(poly)&date=\(dateString)")!
 
-        let url = StopAndSearchesEndpoint.stopAndSearchesByAreaInArea(coordinates: coordinates, date: date).url
+        let path = StopAndSearchesEndpoint.stopAndSearchesByAreaInArea(coordinates: coordinates, date: date).path
 
-        XCTAssertEqual(url, expectedURL)
+        XCTAssertEqual(path, expectedPath)
     }
 
     func testStopAndSearchesByAreaInAreaEndpointWhenNoDateReturnsURL() {
         let coordinates = Coordinate.mocks
         let poly = coordinates.map { "\($0.latitude),\($0.longitude)" }.joined(separator: ":")
-        let expectedURL = URL(string: "/stops-street?poly=\(poly)")!
+        let expectedPath = URL(string: "/stops-street?poly=\(poly)")!
 
-        let url = StopAndSearchesEndpoint.stopAndSearchesByAreaInArea(coordinates: coordinates).url
+        let path = StopAndSearchesEndpoint.stopAndSearchesByAreaInArea(coordinates: coordinates).path
 
-        XCTAssertEqual(url, expectedURL)
+        XCTAssertEqual(path, expectedPath)
     }
 
     func testStopAndSearchesAtLocationEndpointReturnsURL() {
         let streetID = 883407
         let dateString = "2017-01"
         let date = DateFormatter.yearMonth.date(from: dateString)!
-        let expectedURL = URL(string: "/stops-at-location?location_id=\(streetID)&date=\(dateString)")!
+        let expectedPath = URL(string: "/stops-at-location?location_id=\(streetID)&date=\(dateString)")!
 
-        let url = StopAndSearchesEndpoint.stopAndSearchesAtLocation(streetID: streetID, date: date).url
+        let path = StopAndSearchesEndpoint.stopAndSearchesAtLocation(streetID: streetID, date: date).path
 
-        XCTAssertEqual(url, expectedURL)
+        XCTAssertEqual(path, expectedPath)
     }
 
     func testStopAndSearchesAtLocationEndpointWhenNoDateReturnsURL() {
         let streetID = 883407
-        let expectedURL = URL(string: "/stops-at-location?location_id=\(streetID)")!
+        let expectedPath = URL(string: "/stops-at-location?location_id=\(streetID)")!
 
-        let url = StopAndSearchesEndpoint.stopAndSearchesAtLocation(streetID: streetID).url
+        let path = StopAndSearchesEndpoint.stopAndSearchesAtLocation(streetID: streetID).path
 
-        XCTAssertEqual(url, expectedURL)
+        XCTAssertEqual(path, expectedPath)
     }
 
     func testStopAndSearchesWithNoLocationEndpointReturnsURL() {
         let policeForceID = "cleveland"
         let dateString = "2017-01"
         let date = DateFormatter.yearMonth.date(from: dateString)!
-        let expectedURL = URL(string: "/stops-no-location?force=\(policeForceID)&date=\(dateString)")!
+        let expectedPath = URL(string: "/stops-no-location?force=\(policeForceID)&date=\(dateString)")!
 
-        let url = StopAndSearchesEndpoint.stopAndSearchesWithNoLocation(policeForceID: policeForceID, date: date).url
+        let path = StopAndSearchesEndpoint.stopAndSearchesWithNoLocation(policeForceID: policeForceID, date: date).path
 
-        XCTAssertEqual(url, expectedURL)
+        XCTAssertEqual(path, expectedPath)
     }
 
     func testStopAndSearchesWithNoLocationEndpointWhenNoDateReturnsURL() {
         let policeForceID = "cleveland"
-        let expectedURL = URL(string: "/stops-no-location?force=\(policeForceID)")!
+        let expectedPath = URL(string: "/stops-no-location?force=\(policeForceID)")!
 
-        let url = StopAndSearchesEndpoint.stopAndSearchesWithNoLocation(policeForceID: policeForceID).url
+        let path = StopAndSearchesEndpoint.stopAndSearchesWithNoLocation(policeForceID: policeForceID).path
 
-        XCTAssertEqual(url, expectedURL)
+        XCTAssertEqual(path, expectedPath)
     }
 
     func testStopAndSearchesByForceReturnsURL() {
         let policeForceID = "avon-and-somerset"
         let dateString = "2017-01"
         let date = DateFormatter.yearMonth.date(from: dateString)!
-        let expectedURL = URL(string: "/stops-force?force=\(policeForceID)&date=\(dateString)")!
+        let expectedPath = URL(string: "/stops-force?force=\(policeForceID)&date=\(dateString)")!
 
-        let url = StopAndSearchesEndpoint.stopAndSearchesByPoliceForce(policeForceID: policeForceID, date: date).url
+        let path = StopAndSearchesEndpoint.stopAndSearchesByPoliceForce(policeForceID: policeForceID, date: date).path
 
-        XCTAssertEqual(url, expectedURL)
+        XCTAssertEqual(path, expectedPath)
     }
 
     func testStopAndSearchesByForceWhenNoDateReturnsURL() {
         let policeForceID = "avon-and-somerset"
-        let expectedURL = URL(string: "/stops-force?force=\(policeForceID)")!
+        let expectedPath = URL(string: "/stops-force?force=\(policeForceID)")!
 
-        let url = StopAndSearchesEndpoint.stopAndSearchesByPoliceForce(policeForceID: policeForceID).url
+        let path = StopAndSearchesEndpoint.stopAndSearchesByPoliceForce(policeForceID: policeForceID).path
 
-        XCTAssertEqual(url, expectedURL)
+        XCTAssertEqual(path, expectedPath)
     }
 
 }

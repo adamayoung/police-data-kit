@@ -1,15 +1,10 @@
 @testable import UKPoliceData
 import XCTest
 
-#if canImport(CoreLocation)
-import CoreLocation
-#endif
-
-class CoordinateTests: XCTestCase {
+final class CoordinateTests: XCTestCase {
 
     func testDecodeReturnsCoordinate() throws {
-        let result = try JSONDecoder.policeDataAPI
-            .decode(Coordinate.self, fromResource: "coordinate", withExtension: "json")
+        let result = try JSONDecoder.policeDataAPI.decode(Coordinate.self, fromResource: "coordinate")
 
         XCTAssertEqual(result, .mock)
     }
@@ -17,15 +12,13 @@ class CoordinateTests: XCTestCase {
     func testLatitudeReturnsValue() throws {
         let expectedResult = Coordinate.mock.latitude
 
-        let result = try JSONDecoder.policeDataAPI
-            .decode(Coordinate.self, fromResource: "coordinate", withExtension: "json").latitude
+        let result = try JSONDecoder.policeDataAPI.decode(Coordinate.self, fromResource: "coordinate").latitude
 
         XCTAssertEqual(result, expectedResult)
     }
 
     func testLatitudeWhenNotANumberReturnsZero() throws {
-        let result = try JSONDecoder.policeDataAPI
-            .decode(Coordinate.self, fromResource: "coordinate-invalid", withExtension: "json").latitude
+        let result = try JSONDecoder.policeDataAPI.decode(Coordinate.self, fromResource: "coordinate-invalid").latitude
 
         XCTAssertEqual(result, 0)
     }
@@ -33,15 +26,13 @@ class CoordinateTests: XCTestCase {
     func testLongitudeReturnsValue() throws {
         let expectedResult = Coordinate.mock.longitude
 
-        let result = try JSONDecoder.policeDataAPI
-            .decode(Coordinate.self, fromResource: "coordinate", withExtension: "json").longitude
+        let result = try JSONDecoder.policeDataAPI.decode(Coordinate.self, fromResource: "coordinate").longitude
 
         XCTAssertEqual(result, expectedResult)
     }
 
     func testLongitudeWhenNotANumberReturnsZero() throws {
-        let result = try JSONDecoder.policeDataAPI
-            .decode(Coordinate.self, fromResource: "coordinate-invalid", withExtension: "json").longitude
+        let result = try JSONDecoder.policeDataAPI.decode(Coordinate.self, fromResource: "coordinate-invalid").longitude
 
         XCTAssertEqual(result, 0)
     }

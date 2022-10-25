@@ -2,10 +2,6 @@ import Foundation
 
 enum OutcomesEndpoint {
 
-    private static let basePath = URL(string: "/")!
-    private static let outcomesAtLocationBasePath = basePath.appendingPathComponent("outcomes-at-location")
-    private static let outcomesForCrimeBasePath = basePath.appendingPathComponent("outcomes-for-crime")
-
     case streetLevelOutcomesForStreet(streetID: Int, date: Date? = nil)
     case streetLevelOutcomesAtSpecificPoint(coordinate: Coordinate, date: Date? = nil)
     case streetLevelOutcomesInArea(coordinates: [Coordinate], date: Date? = nil)
@@ -15,7 +11,10 @@ enum OutcomesEndpoint {
 
 extension OutcomesEndpoint: Endpoint {
 
-    var url: URL {
+    private static let outcomesAtLocationBasePath = URL(string: "/outcomes-at-location")!
+    private static let outcomesForCrimeBasePath = URL(string: "/outcomes-for-crime")!
+
+    var path: URL {
         switch self {
         case .streetLevelOutcomesForStreet(let streetID, let date):
             return Self.outcomesAtLocationBasePath

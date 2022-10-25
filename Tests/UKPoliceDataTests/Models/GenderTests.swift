@@ -1,7 +1,7 @@
 @testable import UKPoliceData
 import XCTest
 
-class GenderTests: XCTestCase {
+final class GenderTests: XCTestCase {
 
     func testMale() {
         let result = Gender(rawValue: "Male")

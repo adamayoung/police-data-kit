@@ -1,7 +1,7 @@
 @testable import UKPoliceData
 import XCTest
 
-class UKAvailabilityTests: XCTestCase {
+final class UKAvailabilityTests: XCTestCase {
 
     var service: UKAvailabilityService!
     var apiClient: MockAPIClient!
@@ -18,19 +18,15 @@ class UKAvailabilityTests: XCTestCase {
         super.tearDown()
     }
 
-    func testFetchAvailableDataSetsReturnsDataSets() {
+    func testAvailableDataSetsReturnsDataSets() async throws {
         let expectedResult = DataSet.mocks
         apiClient.response = expectedResult
 
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchAvailableDataSets { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
+        let result = try await service.availableDataSets()
 
-        wait(for: [expectation], timeout: 1)
+        XCTAssertEqual(result, expectedResult)
 
-        XCTAssertEqual(apiClient.lastPath, AvailabilityEndpoint.dataSets.url)
+        XCTAssertEqual(apiClient.lastPath, AvailabilityEndpoint.dataSets.path)
     }
 
 }

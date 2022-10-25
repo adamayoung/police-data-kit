@@ -1,11 +1,11 @@
 @testable import UKPoliceData
 import XCTest
 
-class NeighbourhoodLocationTests: XCTestCase {
+final class NeighbourhoodLocationTests: XCTestCase {
 
     func testDecodeReturnsLocation() throws {
         let result = try JSONDecoder.policeDataAPI
-            .decode(NeighbourhoodLocation.self, fromResource: "neighbourhood-location", withExtension: "json")
+            .decode(NeighbourhoodLocation.self, fromResource: "neighbourhood-location")
 
         XCTAssertEqual(result, .mock)
     }
@@ -26,8 +26,7 @@ class NeighbourhoodLocationTests: XCTestCase {
         let expectedResult = NeighbourhoodLocation.mock.coordinate
 
         let result = try JSONDecoder.policeDataAPI
-            .decode(NeighbourhoodLocation.self, fromResource: "neighbourhood-location", withExtension: "json")
-            .coordinate
+            .decode(NeighbourhoodLocation.self, fromResource: "neighbourhood-location").coordinate
 
         XCTAssertEqual(result, expectedResult)
     }
@@ -36,18 +35,14 @@ class NeighbourhoodLocationTests: XCTestCase {
         let expectedResult = Coordinate(latitude: 0, longitude: 0)
 
         let result = try JSONDecoder.policeDataAPI
-            .decode(NeighbourhoodLocation.self, fromResource: "neighbourhood-location-invalid-coordinates",
-                    withExtension: "json")
-            .coordinate
+            .decode(NeighbourhoodLocation.self, fromResource: "neighbourhood-location-invalid-coordinates").coordinate
 
         XCTAssertEqual(result, expectedResult)
     }
 
     func testCoordinateWhenLatitudeAndLongitudeIsNilReturnsNil() throws {
         let result = try JSONDecoder.policeDataAPI
-            .decode(NeighbourhoodLocation.self, fromResource: "neighbourhood-location-null-coordinates",
-                    withExtension: "json")
-            .coordinate
+            .decode(NeighbourhoodLocation.self, fromResource: "neighbourhood-location-null-coordinates").coordinate
 
         XCTAssertNil(result)
     }

@@ -1,7 +1,6 @@
 import Foundation
 import XCTest
 
-#if !os(Linux)
 extension XCTestCase {
 
     func verify(request: URLRequest) {
@@ -19,4 +18,3 @@ extension XCTestCase {
     }
 
 }
-#endif

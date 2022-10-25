@@ -2,12 +2,6 @@ import Foundation
 
 enum StopAndSearchesEndpoint {
 
-    private static let basePath = URL(string: "/")!
-    private static let stopsStreetBasePath = Self.basePath.appendingPathComponent("stops-street")
-    private static let stopsAtLocationBasePath = Self.basePath.appendingPathComponent("stops-at-location")
-    private static let stopsNoLocationBasePath = Self.basePath.appendingPathComponent("stops-no-location")
-    private static let stopsForceBasePath = Self.basePath.appendingPathComponent("stops-force")
-
     case stopAndSearchesByAreaAtSpecificPoint(coordinate: Coordinate, date: Date? = nil)
     case stopAndSearchesByAreaInArea(coordinates: [Coordinate], date: Date? = nil)
     case stopAndSearchesAtLocation(streetID: Int, date: Date? = nil)
@@ -18,7 +12,13 @@ enum StopAndSearchesEndpoint {
 
 extension StopAndSearchesEndpoint: Endpoint {
 
-    var url: URL {
+    private static let basePath = URL(string: "/")!
+    private static let stopsStreetBasePath = URL(string: "/stops-street")!
+    private static let stopsAtLocationBasePath = URL(string: "/stops-at-location")!
+    private static let stopsNoLocationBasePath = URL(string: "/stops-no-location")!
+    private static let stopsForceBasePath = URL(string: "/stops-force")!
+
+    var path: URL {
         switch self {
         case .stopAndSearchesByAreaAtSpecificPoint(let coordinate, let date):
             return Self.stopsStreetBasePath

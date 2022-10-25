@@ -1,7 +1,7 @@
 @testable import UKPoliceData
 import XCTest
 
-class URLPoliceDataAPITests: XCTestCase {
+final class URLPoliceDataAPITests: XCTestCase {
 
     func testPoliceDataAPIBaseURLReturnsURL() {
         let expectedResult = URL(string: "https://data.police.uk/api")!

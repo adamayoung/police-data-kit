@@ -1,86 +1,34 @@
 import Foundation
 
-#if canImport(Combine)
-import Combine
-#endif
-
-#if canImport(FoundationNetworking)
-import FoundationNetworking
-#endif
-
 final class PoliceDataAPIClient: APIClient {
 
     private let baseURL: URL
     private let urlSession: URLSession
-    private let jsonDecoder: JSONDecoder
+    private let serialiser: Serialiser
 
-    static let shared = PoliceDataAPIClient()
-
-    init(baseURL: URL = .policeDataAPIBaseURL, urlSession: URLSession = URLSession(configuration: .default),
-         jsonDecoder: JSONDecoder = .policeDataAPI) {
+    init(baseURL: URL, urlSession: URLSession, serialiser: Serialiser) {
         self.baseURL = baseURL
         self.urlSession = urlSession
-        self.jsonDecoder = jsonDecoder
+        self.serialiser = serialiser
     }
 
-    func get<Response: Decodable>(path: URL, completion: @escaping (Result<Response, PoliceDataError>) -> Void) {
+    func get<Response: Decodable>(path: URL) async throws -> Response {
         let urlRequest = buildURLRequest(for: path)
 
-        urlSession.dataTask(with: urlRequest) { [weak self] data, response, error in
-            guard let self = self else {
-                return
-            }
+        let data: Data
+        let response: URLResponse
 
-            if let error = error {
-                completion(.failure(.network(error)))
-                return
-            }
-
-            guard let response = response else {
-                completion(.failure(.unknown))
-                return
-            }
-
-            if let policeDataError = PoliceDataError(response: response) {
-                completion(.failure(policeDataError))
-                return
-            }
-
-            guard let data = data, !data.isEmpty else {
-                completion(.failure(.unknown))
-                return
-            }
-
-            let decodedResponse: Response
-            do {
-                decodedResponse = try self.jsonDecoder.decode(Response.self, from: data)
-            } catch let error {
-                completion(.failure(.decode(error)))
-                return
-            }
-
-            completion(.success(decodedResponse))
+        do {
+            (data, response) = try await urlSession.data(for: urlRequest)
+        } catch {
+            throw PoliceDataError.network(error)
         }
-        .resume()
+
+        try validate(response: response)
+        return try await serialiser.decode(data)
     }
 
 }
-
-#if canImport(Combine)
-@available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-extension PoliceDataAPIClient {
-
-    func get<Response: Decodable>(path: URL) -> AnyPublisher<Response, PoliceDataError> {
-        let urlRequest = buildURLRequest(for: path)
-
-        return urlSession.dataTaskPublisher(for: urlRequest)
-            .mapPoliceDataError()
-            .mapResponse(to: Response.self, decoder: jsonDecoder)
-            .eraseToAnyPublisher()
-    }
-
-}
-#endif
 
 extension PoliceDataAPIClient {
 
@@ -103,6 +51,12 @@ extension PoliceDataAPIClient {
         urlComponents.path = baseURL.path + "\(urlComponents.path)"
 
         return urlComponents.url!
+    }
+
+    private func validate(response: URLResponse) throws {
+        if let error = PoliceDataError(response: response) {
+            throw error
+        }
     }
 
 }

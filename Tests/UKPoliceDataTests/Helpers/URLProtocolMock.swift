@@ -1,6 +1,5 @@
 import Foundation
 
-#if !os(Linux)
 final class URLProtocolMock: URLProtocol {
 
     static var responseConfigs = [URL?: (HTTPURLResponse?, Data?)]()
@@ -46,4 +45,3 @@ final class URLProtocolMock: URLProtocol {
     override func stopLoading() { }
 
 }
-#endif

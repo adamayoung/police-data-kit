@@ -1,18 +1,16 @@
 @testable import UKPoliceData
 import XCTest
 
-class ContactDetailsTests: XCTestCase {
+final class ContactDetailsTests: XCTestCase {
 
     func testDecodeReturnsContactDetails() throws {
-        let result = try JSONDecoder.policeDataAPI
-            .decode(ContactDetails.self, fromResource: "contact-details", withExtension: "json")
+        let result = try JSONDecoder.policeDataAPI.decode(ContactDetails.self, fromResource: "contact-details")
 
         XCTAssertEqual(result, .mock)
     }
 
     func testDecodeWhenNoItemsReturnsContactDetails() throws {
-        let result = try JSONDecoder.policeDataAPI
-            .decode(ContactDetails.self, fromResource: "contact-details-none", withExtension: "json")
+        let result = try JSONDecoder.policeDataAPI.decode(ContactDetails.self, fromResource: "contact-details-none")
 
         XCTAssertEqual(result, .mockNone)
     }

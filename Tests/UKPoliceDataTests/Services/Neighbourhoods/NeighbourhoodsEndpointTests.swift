@@ -1,65 +1,66 @@
 @testable import UKPoliceData
 import XCTest
 
-class NeighbourhoodsEndpointTests: XCTestCase {
+final class NeighbourhoodsEndpointTests: XCTestCase {
 
     func testListEndpointReturnsURL() {
         let policeForceID = "leicestershire"
-        let expectedURL = URL(string: "/\(policeForceID)/neighbourhoods")!
+        let expectedPath = URL(string: "/\(policeForceID)/neighbourhoods")!
 
-        let url = NeighbourhoodsEndpoint.list(policeForceID: policeForceID).url
+        let path = NeighbourhoodsEndpoint.list(policeForceID: policeForceID).path
 
-        XCTAssertEqual(url, expectedURL)
+        XCTAssertEqual(path, expectedPath)
     }
 
     func testDetailsEndpointReturnsURL() {
         let id = "AB123"
         let policeForceID = "leicestershire"
-        let expectedURL = URL(string: "/\(policeForceID)/\(id)")!
+        let expectedPath = URL(string: "/\(policeForceID)/\(id)")!
 
-        let url = NeighbourhoodsEndpoint.details(id: id, policeForceID: policeForceID).url
+        let path = NeighbourhoodsEndpoint.details(id: id, policeForceID: policeForceID).path
 
-        XCTAssertEqual(url, expectedURL)
+        XCTAssertEqual(path, expectedPath)
     }
 
     func testBoundaryEndpointReturnsURL() {
         let neighbourhoodID = "AB123"
         let policeForceID = "leicestershire"
-        let expectedURL = URL(string: "/\(policeForceID)/\(neighbourhoodID)/boundary")!
+        let expectedPath = URL(string: "/\(policeForceID)/\(neighbourhoodID)/boundary")!
 
-        let url = NeighbourhoodsEndpoint.boundary(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID).url
+        let path = NeighbourhoodsEndpoint.boundary(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID).path
 
-        XCTAssertEqual(url, expectedURL)
+        XCTAssertEqual(path, expectedPath)
     }
 
     func testTeamEndpointReturnsURL() {
         let neighbourhoodID = "AB123"
         let policeForceID = "leicestershire"
-        let expectedURL = URL(string: "/\(policeForceID)/\(neighbourhoodID)/people")!
+        let expectedPath = URL(string: "/\(policeForceID)/\(neighbourhoodID)/people")!
 
-        let url = NeighbourhoodsEndpoint.policeOfficers(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID)
-            .url
+        let path = NeighbourhoodsEndpoint.policeOfficers(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID)
+            .path
 
-        XCTAssertEqual(url, expectedURL)
+        XCTAssertEqual(path, expectedPath)
     }
 
     func testPrioritiesEndpointReturnsURL() {
         let neighbourhoodID = "AB123"
         let policeForceID = "leicestershire"
-        let expectedURL = URL(string: "/\(policeForceID)/\(neighbourhoodID)/priorities")!
+        let expectedPath = URL(string: "/\(policeForceID)/\(neighbourhoodID)/priorities")!
 
-        let url = NeighbourhoodsEndpoint.priorities(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID).url
+        let path = NeighbourhoodsEndpoint.priorities(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID)
+            .path
 
-        XCTAssertEqual(url, expectedURL)
+        XCTAssertEqual(path, expectedPath)
     }
 
     func testLocateNeighbourhoodReturnsURL() {
         let coordinate = Coordinate.mock
-        let expectedURL = URL(string: "/locate-neighbourhood?q=\(coordinate.latitude),\(coordinate.longitude)")!
+        let expectedPath = URL(string: "/locate-neighbourhood?q=\(coordinate.latitude),\(coordinate.longitude)")!
 
-        let url = NeighbourhoodsEndpoint.locateNeighbourhood(coordinate: coordinate).url
+        let path = NeighbourhoodsEndpoint.locateNeighbourhood(coordinate: coordinate).path
 
-        XCTAssertEqual(url, expectedURL)
+        XCTAssertEqual(path, expectedPath)
     }
 
 }
