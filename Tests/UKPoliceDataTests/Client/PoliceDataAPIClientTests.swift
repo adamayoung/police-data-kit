@@ -1,222 +1,126 @@
 @testable import UKPoliceData
 import XCTest
 
-#if !os(Linux)
-class PoliceDataAPIClientTests: XCTestCase {
+final class PoliceDataAPIClientTests: XCTestCase {
 
+    var apiClient: PoliceDataAPIClient!
+    var apiKey: String!
     var baseURL: URL!
-    var client: PoliceDataAPIClient!
+    var urlSession: URLSession!
+    var serialiser: Serialiser!
 
     override func setUp() {
         super.setUp()
+        apiKey = "abc123"
+        baseURL = URL(string: "https://some.domain.com/path")
 
-        baseURL = URL(string: "https://localhost/api")
-        client = PoliceDataAPIClient(baseURL: baseURL, urlSession: URLSession(configuration: .mock),
-                                     jsonDecoder: .policeDataAPI)
+        let configuration = URLSessionConfiguration.default
+        configuration.protocolClasses = [MockURLProtocol.self]
+        urlSession = URLSession(configuration: configuration)
+        serialiser = Serialiser(decoder: JSONDecoder())
+        apiClient = PoliceDataAPIClient(baseURL: baseURL, urlSession: urlSession, serialiser: serialiser)
     }
 
     override func tearDown() {
+        apiClient = nil
+        serialiser = nil
         baseURL = nil
-        client = nil
-
-        resetMockURLSession()
-
+        apiKey = nil
+        MockURLProtocol.reset()
         super.tearDown()
     }
 
-    func testGetReturnsPerson() throws {
-        let person = Person.mock
-        let data = try person.data()
-        let path = URL(string: "/people/\(person.id)")!
-        let url = baseURL
-            .appendingPathComponent("people")
-            .appendingPathComponent(person.id)
-        let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: nil)!
-        setMockURLSessionResponses([url: (response, data)])
+    func testGetWhenRequestFailsThrowsNetworkError() async throws {
+        let expectedError = NSError(domain: NSURLErrorDomain, code: URLError.badServerResponse.rawValue)
+        MockURLProtocol.failError = expectedError
 
-        let expectation = XCTestExpectation(description: "getRequest")
-        client.get(path: path) { (result: Result<Person, PoliceDataError>) in
-            XCTAssertEqual(person, try? result.get())
-
-            expectation.fulfill()
+        do {
+           _ = try await apiClient.get(path: URL(string: "/error")!) as String
+        } catch let error as PoliceDataError {
+            switch error {
+            case .network(let error as NSError):
+                XCTAssertEqual(error.code, expectedError.code)
+                return
+            default:
+                break
+            }
         }
 
-        wait(for: [expectation], timeout: 5)
+        XCTFail("Expected error to be thrown")
     }
 
-    func testGetWhenURLErrorReturnsNetworkError() throws {
-        let person = Person.mock
-        let path = URL(string: "/people/\(person.id)")!
+    func testGetWhenResponseStatusCodeIs404ReturnsNotFoundError() async throws {
+        MockURLProtocol.responseStatusCode = 404
 
-        let expectation = XCTestExpectation(description: "getRequest")
-        client.get(path: path) { (result: Result<Person, PoliceDataError>) in
-            switch result {
-            case .failure:
+        do {
+           _ = try await apiClient.get(path: URL(string: "/error")!) as String
+        } catch let error as PoliceDataError {
+            switch error {
+            case .notFound:
                 XCTAssertTrue(true)
-
+                return
             default:
-                XCTFail("Should return error")
+                break
             }
-
-            expectation.fulfill()
         }
 
-        wait(for: [expectation], timeout: 5)
+        XCTFail("Expected not found error to be thrown")
     }
 
-    func testGetWhenResponseIsNilReturnsUnknownError() throws {
-        let person = Person.mock
-        let data = try person.data()
-        let path = URL(string: "/people/\(person.id)")!
-        let url = baseURL
-            .appendingPathComponent("people")
-            .appendingPathComponent(person.id)
-        setMockURLSessionResponses([url: (nil, data)])
+    func testGetWhenResponseStatusCodeIs500ReturnsUnknownError() async throws {
+        MockURLProtocol.responseStatusCode = 500
 
-        let expectation = XCTestExpectation(description: "getRequest")
-        client.get(path: path) { (result: Result<Person, PoliceDataError>) in
-            switch result {
-            case .failure(let error):
-                XCTAssertEqual(error, .unknown)
-
+        do {
+           _ = try await apiClient.get(path: URL(string: "/error")!) as String
+        } catch let error as PoliceDataError {
+            switch error {
+            case .unknown:
+                XCTAssertTrue(true)
+                return
             default:
-                XCTFail("Should return error")
+                break
             }
-
-            expectation.fulfill()
         }
 
-        wait(for: [expectation], timeout: 5)
+        XCTFail("Expected unknown error to be thrown")
     }
 
-    func testGetWhenResponseStatusCodeIs404ReturnsNotFoundError() throws {
-        let person = Person.mock
-        let path = URL(string: "/people/\(person.id)")!
-        let url = baseURL
-            .appendingPathComponent("people")
-            .appendingPathComponent(person.id)
-        let response = HTTPURLResponse(url: url, statusCode: 404, httpVersion: nil, headerFields: nil)!
-        setMockURLSessionResponses([url: (response, nil)])
+    func testGetWhenResponseHasValidDataReturnsDecodedObject() async throws {
+        let expectedResult = MockObject()
+        MockURLProtocol.data = expectedResult.data
 
-        let expectation = XCTestExpectation(description: "getRequest")
-        client.get(path: path) { (result: Result<Person, PoliceDataError>) in
-            switch result {
-            case .failure(let error):
-                XCTAssertEqual(error, .notFound)
+        let result: MockObject = try await apiClient.get(path: URL(string: "/object")!)
 
-            default:
-                XCTFail("Should return error")
-            }
-
-            expectation.fulfill()
-        }
-
-        wait(for: [expectation], timeout: 5)
+        XCTAssertEqual(result, expectedResult)
     }
 
-    func testGetWhenResponseStatusCodeIs500ReturnsUnknownError() throws {
-        let person = Person.mock
-        let path = URL(string: "/people/\(person.id)")!
-        let url = baseURL
-            .appendingPathComponent("people")
-            .appendingPathComponent(person.id)
-        let response = HTTPURLResponse(url: url, statusCode: 500, httpVersion: nil, headerFields: nil)!
-        setMockURLSessionResponses([url: (response, nil)])
+    func testGetURLRequestAcceptHeaderSetToApplicationJSON() async throws {
+        let expectedResult = "application/json"
 
-        let expectation = XCTestExpectation(description: "getRequest")
-        client.get(path: path) { (result: Result<Person, PoliceDataError>) in
-            switch result {
-            case .failure(let error):
-                XCTAssertEqual(error, .unknown)
+        _ = try? await apiClient.get(path: URL(string: "/object")!) as String
 
-            default:
-                XCTFail("Should return error")
-            }
+        let result = MockURLProtocol.lastRequest?.value(forHTTPHeaderField: "Accept")
 
-            expectation.fulfill()
-        }
-
-        wait(for: [expectation], timeout: 5)
-    }
-
-    func testGetWhenDataIsNilReturnsUnknownError() throws {
-        let person = Person.mock
-        let path = URL(string: "/people/\(person.id)")!
-        let url = baseURL
-            .appendingPathComponent("people")
-            .appendingPathComponent(person.id)
-        let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: nil)!
-        setMockURLSessionResponses([url: (response, nil)])
-
-        let expectation = XCTestExpectation(description: "getRequest")
-        client.get(path: path) { (result: Result<Person, PoliceDataError>) in
-            switch result {
-            case .failure(let error):
-                XCTAssertEqual(error, .unknown)
-
-            default:
-                XCTFail("Should return error")
-            }
-
-            expectation.fulfill()
-        }
-
-        wait(for: [expectation], timeout: 5)
-    }
-
-    func testGetWhenDataCannotBeDecodedReturnsDecodeError() throws {
-        let person = Person.mock
-        let data = "{\"title\": \"something\"}".data(using: .utf8)
-        let path = URL(string: "/people/\(person.id)")!
-        let url = baseURL
-            .appendingPathComponent("people")
-            .appendingPathComponent(person.id)
-        let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: nil)!
-        setMockURLSessionResponses([url: (response, data)])
-
-        let expectation = XCTestExpectation(description: "getRequest")
-        client.get(path: path) { (result: Result<Person, PoliceDataError>) in
-            switch result {
-            case .failure(let error):
-                XCTAssertEqual(error, .decode(MockError()))
-
-            default:
-                XCTFail("Should return error")
-            }
-
-            expectation.fulfill()
-        }
-
-        wait(for: [expectation], timeout: 5)
+        XCTAssertEqual(result, expectedResult)
     }
 
 }
 
-private struct Person: Codable, Equatable {
+extension PoliceDataAPIClientTests {
 
-    let id: String
-    let firstName: String
-    let lastName: String
-    let height: Int
-    let homepage: URL
+    private struct MockObject: Codable, Equatable {
 
-}
+        let id: UUID
 
-extension Person {
+        var data: Data {
+            // swiftlint:disable force_try
+            try! JSONEncoder().encode(self)
+            // swiftlint:enable force_try
+        }
 
-    static var mock: Person {
-        Person(
-            id: "1234",
-            firstName: "John",
-            lastName: "Smith",
-            height: 180,
-            homepage: URL(string: "https://www.johnsmith.com")!
-        )
-    }
-
-    func data() throws -> Data {
-        try JSONEncoder().encode(self)
+        init(id: UUID = .init()) {
+            self.id = id
+        }
     }
 
 }
-#endif

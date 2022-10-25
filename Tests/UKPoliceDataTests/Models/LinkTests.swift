@@ -1,25 +1,22 @@
 @testable import UKPoliceData
 import XCTest
 
-class LinkTests: XCTestCase {
+final class LinkTests: XCTestCase {
 
     func testDecodeReturnsLink() throws {
-        let result = try JSONDecoder.policeDataAPI
-            .decode(Link.self, fromResource: "link", withExtension: "json")
+        let result = try JSONDecoder.policeDataAPI.decode(Link.self, fromResource: "link")
 
         XCTAssertEqual(result, .mock)
     }
 
     func testDecodeWhenNoDescriptionReturnsLink() throws {
-        let result = try JSONDecoder.policeDataAPI
-            .decode(Link.self, fromResource: "link-no-description", withExtension: "json")
+        let result = try JSONDecoder.policeDataAPI.decode(Link.self, fromResource: "link-no-description")
 
         XCTAssertEqual(result, .mockNoDescription)
     }
 
     func testDecodeWhenURLIsEmptyStringReturnsLink() throws {
-        let result = try JSONDecoder.policeDataAPI
-            .decode(Link.self, fromResource: "link-empty-url", withExtension: "json")
+        let result = try JSONDecoder.policeDataAPI.decode(Link.self, fromResource: "link-empty-url")
 
         XCTAssertEqual(result, .mockNilURL)
     }

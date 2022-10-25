@@ -1,7 +1,7 @@
 @testable import UKPoliceData
 import XCTest
 
-class UKPoliceForceServiceTests: XCTestCase {
+final class UKPoliceForceServiceTests: XCTestCase {
 
     var service: UKPoliceForceService!
     var apiClient: MockAPIClient!
@@ -18,51 +18,39 @@ class UKPoliceForceServiceTests: XCTestCase {
         super.tearDown()
     }
 
-    func testFetchAllReturnsPoliceForceReferences() {
+    func testPoliceForcesReturnsPoliceForceReferences() async throws {
         let expectedResult = PoliceForceReference.mocks
         apiClient.response = expectedResult
 
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchAll { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
+        let result = try await service.policeForces()
 
-        wait(for: [expectation], timeout: 1)
+        XCTAssertEqual(result, expectedResult)
 
-        XCTAssertEqual(apiClient.lastPath, PoliceForcesEndpoint.list.url)
+        XCTAssertEqual(apiClient.lastPath, PoliceForcesEndpoint.list.path)
     }
 
-    func testFetchDetailsReturnsPoliceForce() {
+    func testPoliceForceReturnsPoliceForce() async throws {
         let expectedResult = PoliceForce.mock
         let id = expectedResult.id
         apiClient.response = expectedResult
 
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchDetails(forPoliceForce: id) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
+        let result = try await service.policeForce(withID: id)
 
-        wait(for: [expectation], timeout: 1)
+        XCTAssertEqual(result, expectedResult)
 
-        XCTAssertEqual(apiClient.lastPath, PoliceForcesEndpoint.details(id: id).url)
+        XCTAssertEqual(apiClient.lastPath, PoliceForcesEndpoint.details(id: id).path)
     }
 
-    func testFetchSeniorOfficersReturnsPoliceOfficers() {
+    func testFetchSeniorOfficersReturnsPoliceOfficers() async throws {
         let expectedResult = PoliceOfficer.mocks
         let id = "leicestershire"
         apiClient.response = expectedResult
 
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchSeniorOfficers(forPoliceForce: id) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
+        let result = try await service.seniorOfficers(inPoliceForce: id)
 
-        wait(for: [expectation], timeout: 1)
+        XCTAssertEqual(result, expectedResult)
 
-        XCTAssertEqual(apiClient.lastPath, PoliceForcesEndpoint.seniorOfficers(policeForceID: id).url)
+        XCTAssertEqual(apiClient.lastPath, PoliceForcesEndpoint.seniorOfficers(policeForceID: id).path)
     }
 
 }

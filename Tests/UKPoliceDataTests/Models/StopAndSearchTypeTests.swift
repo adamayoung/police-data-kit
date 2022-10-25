@@ -1,7 +1,7 @@
 @testable import UKPoliceData
 import XCTest
 
-class StopAndSearchTypeTests: XCTestCase {
+final class StopAndSearchTypeTests: XCTestCase {
 
     func testPersonSearch() {
         let result = StopAndSearchType(rawValue: "Person search")

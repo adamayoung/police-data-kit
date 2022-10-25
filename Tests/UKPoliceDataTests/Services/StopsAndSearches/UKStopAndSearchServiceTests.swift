@@ -1,7 +1,7 @@
 @testable import UKPoliceData
 import XCTest
 
-class UKStopAndSearchServiceTests: XCTestCase {
+final class UKStopAndSearchServiceTests: XCTestCase {
 
     var service: UKStopAndSearchService!
     var apiClient: MockAPIClient!
@@ -18,182 +18,142 @@ class UKStopAndSearchServiceTests: XCTestCase {
         super.tearDown()
     }
 
-    func testFetchAllAtCoordinateReturnsStopAndSearches() {
+    func testStopAndSearchesAtCoordinateReturnsStopAndSearches() async throws {
         let coordinate = Coordinate.mock
         let date = Date()
         let expectedResult = StopAndSearch.mocks
         apiClient.response = expectedResult
 
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchAll(atCoordinate: coordinate, date: date) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
+        let result = try await service.stopAndSearches(atCoordinate: coordinate, date: date)
 
-        wait(for: [expectation], timeout: 1)
+        XCTAssertEqual(result, expectedResult)
 
         XCTAssertEqual(apiClient.lastPath,
                        StopAndSearchesEndpoint.stopAndSearchesByAreaAtSpecificPoint(coordinate: coordinate,
-                                                                                    date: date).url)
+                                                                                    date: date).path)
     }
 
-    func testFetchAllAtCoordinateWhenNoDateReturnsStopAndSearches() {
+    func testStopAndSearchesAtCoordinateWhenNoDateReturnsStopAndSearches() async throws {
         let coordinate = Coordinate.mock
         let expectedResult = StopAndSearch.mocks
         apiClient.response = expectedResult
 
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchAll(atCoordinate: coordinate) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
+        let result = try await service.stopAndSearches(atCoordinate: coordinate)
 
-        wait(for: [expectation], timeout: 1)
+        XCTAssertEqual(result, expectedResult)
 
         XCTAssertEqual(apiClient.lastPath,
-                       StopAndSearchesEndpoint.stopAndSearchesByAreaAtSpecificPoint(coordinate: coordinate).url)
+                       StopAndSearchesEndpoint.stopAndSearchesByAreaAtSpecificPoint(coordinate: coordinate).path)
     }
 
-    func testFetchAllInAreaReturnsStopAndSearches() {
+    func testStopAndSearchesInAreaReturnsStopAndSearches() async throws {
         let coordinates = Coordinate.mocks
         let date = Date()
         let expectedResult = StopAndSearch.mocks
         apiClient.response = expectedResult
 
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchAll(inArea: coordinates, date: date) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
+        let result = try await service.stopAndSearches(inArea: coordinates, date: date)
 
-        wait(for: [expectation], timeout: 1)
+        XCTAssertEqual(result, expectedResult)
 
         XCTAssertEqual(apiClient.lastPath,
-                       StopAndSearchesEndpoint.stopAndSearchesByAreaInArea(coordinates: coordinates, date: date).url)
+                       StopAndSearchesEndpoint.stopAndSearchesByAreaInArea(coordinates: coordinates, date: date).path)
     }
 
-    func testFetchAllInAreaWhenNoDateReturnsStopAndSearches() {
+    func testStopAndSearchesInAreaWhenNoDateReturnsStopAndSearches() async throws {
         let coordinates = Coordinate.mocks
         let expectedResult = StopAndSearch.mocks
         apiClient.response = expectedResult
 
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchAll(inArea: coordinates) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
+        let result = try await service.stopAndSearches(inArea: coordinates)
 
-        wait(for: [expectation], timeout: 1)
+        XCTAssertEqual(result, expectedResult)
 
         XCTAssertEqual(apiClient.lastPath,
-                       StopAndSearchesEndpoint.stopAndSearchesByAreaInArea(coordinates: coordinates).url)
+                       StopAndSearchesEndpoint.stopAndSearchesByAreaInArea(coordinates: coordinates).path)
     }
 
-    func testFetchAllAtLocationReturnsStopAndSearches() {
+    func testStopAndSearchesAtLocationReturnsStopAndSearches() async throws {
         let streetID = 123456
         let date = Date()
         let expectedResult = StopAndSearch.mocks
         apiClient.response = expectedResult
 
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchAll(atLocation: streetID, date: date) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
+        let result = try await service.stopAndSearches(atLocation: streetID, date: date)
 
-        wait(for: [expectation], timeout: 1)
+        XCTAssertEqual(result, expectedResult)
 
         XCTAssertEqual(apiClient.lastPath,
-                       StopAndSearchesEndpoint.stopAndSearchesAtLocation(streetID: streetID, date: date).url)
+                       StopAndSearchesEndpoint.stopAndSearchesAtLocation(streetID: streetID, date: date).path)
     }
 
-    func testFetchAllAtLocationWhenNoDateReturnsStopAndSearches() {
+    func testStopAndSearchesAtLocationWhenNoDateReturnsStopAndSearches() async throws {
         let streetID = 123456
         let expectedResult = StopAndSearch.mocks
         apiClient.response = expectedResult
 
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchAll(atLocation: streetID) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
+        let result = try await service.stopAndSearches(atLocation: streetID)
 
-        wait(for: [expectation], timeout: 1)
+        XCTAssertEqual(result, expectedResult)
 
         XCTAssertEqual(apiClient.lastPath,
-                       StopAndSearchesEndpoint.stopAndSearchesAtLocation(streetID: streetID).url)
+                       StopAndSearchesEndpoint.stopAndSearchesAtLocation(streetID: streetID).path)
     }
 
-    func testFetchAllWithNoLocationReturnsStopAndSearches() {
+    func testStopAndSearchesWithNoLocationReturnsStopAndSearches() async throws {
         let policeForceID = "cleveland"
         let date = Date()
         let expectedResult = StopAndSearch.mocks
         apiClient.response = expectedResult
 
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchAllWithNoLocation(forPoliceForce: policeForceID, date: date) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
+        let result = try await service.stopAndSearchesWithNoLocation(forPoliceForce: policeForceID, date: date)
 
-        wait(for: [expectation], timeout: 1)
+        XCTAssertEqual(result, expectedResult)
 
         XCTAssertEqual(apiClient.lastPath,
                        StopAndSearchesEndpoint.stopAndSearchesWithNoLocation(policeForceID: policeForceID,
-                                                                             date: date).url)
+                                                                             date: date).path)
     }
 
-    func testFetchAllWithNoLocationWhenNoDateReturnsStopAndSearches() {
+    func testStopAndSearchesWithNoLocationWhenNoDateReturnsStopAndSearches() async throws {
         let policeForceID = "cleveland"
         let expectedResult = StopAndSearch.mocks
         apiClient.response = expectedResult
 
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchAllWithNoLocation(forPoliceForce: policeForceID) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
+        let result = try await service.stopAndSearchesWithNoLocation(forPoliceForce: policeForceID)
 
-        wait(for: [expectation], timeout: 1)
+        XCTAssertEqual(result, expectedResult)
 
         XCTAssertEqual(apiClient.lastPath,
-                       StopAndSearchesEndpoint.stopAndSearchesWithNoLocation(policeForceID: policeForceID).url)
+                       StopAndSearchesEndpoint.stopAndSearchesWithNoLocation(policeForceID: policeForceID).path)
     }
 
-    func testFetchAllForPoliceForceReturnsStopAndSearches() {
+    func testStopAndSearchesForPoliceForceReturnsStopAndSearches() async throws {
         let policeForceID = "avon-and-somerset"
         let date = Date()
         let expectedResult = StopAndSearch.mocks
         apiClient.response = expectedResult
 
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchAll(forPoliceForce: policeForceID, date: date) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
+        let result = try await service.stopAndSearches(forPoliceForce: policeForceID, date: date)
 
-        wait(for: [expectation], timeout: 1)
+        XCTAssertEqual(result, expectedResult)
 
         XCTAssertEqual(apiClient.lastPath,
                        StopAndSearchesEndpoint.stopAndSearchesByPoliceForce(policeForceID: policeForceID,
-                                                                            date: date).url)
+                                                                            date: date).path)
     }
 
-    func testFetchAllForPoliceForceWhenNoDateReturnsStopAndSearches() {
+    func testStopAndSearchesForPoliceForceWhenNoDateReturnsStopAndSearches() async throws {
         let policeForceID = "avon-and-somerset"
         let expectedResult = StopAndSearch.mocks
         apiClient.response = expectedResult
 
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchAll(forPoliceForce: policeForceID) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
+        let result = try await service.stopAndSearches(forPoliceForce: policeForceID)
 
-        wait(for: [expectation], timeout: 1)
+        XCTAssertEqual(result, expectedResult)
 
         XCTAssertEqual(apiClient.lastPath,
-                       StopAndSearchesEndpoint.stopAndSearchesByPoliceForce(policeForceID: policeForceID).url)
+                       StopAndSearchesEndpoint.stopAndSearchesByPoliceForce(policeForceID: policeForceID).path)
     }
 
 }

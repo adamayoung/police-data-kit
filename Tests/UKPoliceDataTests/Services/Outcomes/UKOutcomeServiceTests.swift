@@ -1,7 +1,7 @@
 @testable import UKPoliceData
 import XCTest
 
-class UKOutcomeServiceTests: XCTestCase {
+final class UKOutcomeServiceTests: XCTestCase {
 
     var service: UKOutcomeService!
     var apiClient: MockAPIClient!
@@ -18,123 +18,95 @@ class UKOutcomeServiceTests: XCTestCase {
         super.tearDown()
     }
 
-    func testFetchStreetLevelOutcomesForStreetReturnsOutcomes() {
+    func testStreetLevelOutcomesForStreetReturnsOutcomes() async throws {
         let expectedResult = Outcome.mocks
         let streetID = expectedResult[0].crime.location.street.id
         let date = Date()
         apiClient.response = expectedResult
 
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchStreetLevelOutcomes(forStreet: streetID, date: date) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
+        let result = try await service.streetLevelOutcomes(forStreet: streetID, date: date)
 
-        wait(for: [expectation], timeout: 1)
+        XCTAssertEqual(result, expectedResult)
 
         XCTAssertEqual(apiClient.lastPath,
-                       OutcomesEndpoint.streetLevelOutcomesForStreet(streetID: streetID, date: date).url)
+                       OutcomesEndpoint.streetLevelOutcomesForStreet(streetID: streetID, date: date).path)
     }
 
-    func testFetchStreetLevelOutcomesForStreetWhenNoDateReturnsOutcomes() {
+    func testStreetLevelOutcomesForStreetWhenNoDateReturnsOutcomes() async throws {
         let expectedResult = Outcome.mocks
         let streetID = expectedResult[0].crime.location.street.id
         apiClient.response = expectedResult
 
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchStreetLevelOutcomes(forStreet: streetID) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
+        let result = try await service.streetLevelOutcomes(forStreet: streetID)
 
-        wait(for: [expectation], timeout: 1)
+        XCTAssertEqual(result, expectedResult)
 
-        XCTAssertEqual(apiClient.lastPath, OutcomesEndpoint.streetLevelOutcomesForStreet(streetID: streetID).url)
+        XCTAssertEqual(apiClient.lastPath, OutcomesEndpoint.streetLevelOutcomesForStreet(streetID: streetID).path)
     }
 
-    func testFetchStreetLevelOutcomesAtCoordinateReturnsOutcomes() {
+    func testStreetLevelOutcomesAtCoordinateReturnsOutcomes() async throws {
         let coordinate = Coordinate.mock
         let expectedResult = Outcome.mocks
         let date = Date()
         apiClient.response = expectedResult
 
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchStreetLevelOutcomes(atCoordinate: coordinate, date: date) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
+        let result = try await service.streetLevelOutcomes(atCoordinate: coordinate, date: date)
 
-        wait(for: [expectation], timeout: 1)
+        XCTAssertEqual(result, expectedResult)
 
         XCTAssertEqual(apiClient.lastPath,
-                       OutcomesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate, date: date) .url)
+                       OutcomesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate, date: date) .path)
     }
 
-    func testFetchStreetLevelOutcomesAtCoordinateWhenNoDateReturnsOutcomes() {
+    func testStreetLevelOutcomesAtCoordinateWhenNoDateReturnsOutcomes() async throws {
         let coordinate = Coordinate.mock
         let expectedResult = Outcome.mocks
         apiClient.response = expectedResult
 
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchStreetLevelOutcomes(atCoordinate: coordinate) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
+        let result = try await service.streetLevelOutcomes(atCoordinate: coordinate)
 
-        wait(for: [expectation], timeout: 1)
+        XCTAssertEqual(result, expectedResult)
 
         XCTAssertEqual(apiClient.lastPath,
-                       OutcomesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate) .url)
+                       OutcomesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate) .path)
     }
 
-    func testFetchStreetLevelOutcomesInAreaReturnsOutcomes() {
+    func testStreetLevelOutcomesInAreaReturnsOutcomes() async throws {
         let coordinates = Coordinate.mocks
         let expectedResult = Outcome.mocks
         let date = Date()
         apiClient.response = expectedResult
 
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchStreetLevelOutcomes(inArea: coordinates, date: date) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
+        let result = try await service.streetLevelOutcomes(inArea: coordinates, date: date)
 
-        wait(for: [expectation], timeout: 1)
+        XCTAssertEqual(result, expectedResult)
 
         XCTAssertEqual(apiClient.lastPath,
-                       OutcomesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates, date: date) .url)
+                       OutcomesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates, date: date) .path)
     }
 
-    func testFetchStreetLevelOutcomesInAreaWhenNoDateReturnsOutcomes() {
+    func testStreetLevelOutcomesInAreaWhenNoDateReturnsOutcomes() async throws {
         let coordinates = Coordinate.mocks
         let expectedResult = Outcome.mocks
         apiClient.response = expectedResult
 
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchStreetLevelOutcomes(inArea: coordinates) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
+        let result = try await service.streetLevelOutcomes(inArea: coordinates)
 
-        wait(for: [expectation], timeout: 1)
+        XCTAssertEqual(result, expectedResult)
 
-        XCTAssertEqual(apiClient.lastPath, OutcomesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates) .url)
+        XCTAssertEqual(apiClient.lastPath, OutcomesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates) .path)
     }
 
-    func testFetchCaseHistoryReturnCaseHistory() {
+    func testFetchCaseHistoryReturnCaseHistory() async throws {
         let expectedResult = CaseHistory.mock
         let crimeID = expectedResult.crime.crimeID
         apiClient.response = expectedResult
 
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchCaseHistory(forCrime: crimeID) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
+        let result = try await service.caseHistory(forCrime: crimeID)
 
-        wait(for: [expectation], timeout: 1)
+        XCTAssertEqual(result, expectedResult)
 
-        XCTAssertEqual(apiClient.lastPath, OutcomesEndpoint.caseHistory(crimeID: crimeID).url)
+        XCTAssertEqual(apiClient.lastPath, OutcomesEndpoint.caseHistory(crimeID: crimeID).path)
     }
 
 }

@@ -1,7 +1,7 @@
 @testable import UKPoliceData
 import XCTest
 
-class JSONDecoderDateDecodingStrategyPoliceDataAPITestsTests: XCTestCase {
+final class JSONDecoderDateDecodingStrategyPoliceDataAPITestsTests: XCTestCase {
 
     var decoder: JSONDecoder!
 

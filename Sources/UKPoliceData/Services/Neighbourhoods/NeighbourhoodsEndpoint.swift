@@ -2,8 +2,6 @@ import Foundation
 
 enum NeighbourhoodsEndpoint {
 
-    private static let basePath = URL(string: "/")!
-
     case list(policeForceID: String)
     case details(id: String, policeForceID: String)
     case boundary(neighbourhoodID: String, policeForceID: String)
@@ -15,7 +13,9 @@ enum NeighbourhoodsEndpoint {
 
 extension NeighbourhoodsEndpoint: Endpoint {
 
-    var url: URL {
+    private static let basePath = URL(string: "/")!
+
+    var path: URL {
         switch self {
         case .list(let policeForceID):
             return Self.basePath

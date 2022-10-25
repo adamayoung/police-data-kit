@@ -1,7 +1,7 @@
 @testable import UKPoliceData
 import XCTest
 
-class PoliceDataErrorTests: XCTestCase {
+final class PoliceDataErrorTests: XCTestCase {
 
     func testNetworkReturnsDescription() {
         let expectedResult = "Some network error message"

@@ -1,7 +1,7 @@
 @testable import UKPoliceData
 import XCTest
 
-class UKNeighbourhoodServiceTests: XCTestCase {
+final class UKNeighbourhoodServiceTests: XCTestCase {
 
     var service: UKNeighbourhoodService!
     var apiClient: MockAPIClient!
@@ -18,107 +18,83 @@ class UKNeighbourhoodServiceTests: XCTestCase {
         super.tearDown()
     }
 
-    func testFetchAllReturnsNeighbourhoodReferences() {
+    func testNeighboursReturnsNeighbourhoodReferences() async throws {
         let policeForceID = "leicestershire"
         let expectedResult = NeighbourhoodReference.mocks
         apiClient.response = expectedResult
 
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchAll(inPoliceForce: policeForceID) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
+        let result = try await service.neighbourhoods(inPoliceForce: policeForceID)
 
-        wait(for: [expectation], timeout: 1)
+        XCTAssertEqual(result, expectedResult)
 
-        XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.list(policeForceID: policeForceID).url)
+        XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.list(policeForceID: policeForceID).path)
     }
 
-    func testFetchDetailsReturnsNeighbourhood() {
+    func testNeighbourhoodReturnsNeighbourhood() async throws {
         let expectedResult = Neighbourhood.mock
         let id = expectedResult.id
         let policeForceID = "leicestershire"
         apiClient.response = expectedResult
 
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchDetails(forNeighbourhood: id, inPoliceForce: policeForceID) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
+        let result = try await service.neighbourhood(withID: id, inPoliceForce: policeForceID)
 
-        wait(for: [expectation], timeout: 1)
+        XCTAssertEqual(result, expectedResult)
 
-        XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.details(id: id, policeForceID: policeForceID).url)
+        XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.details(id: id, policeForceID: policeForceID).path)
     }
 
-    func testFetchBoundaryReturnsCoordinates() {
+    func testBoundaryReturnsCoordinates() async throws {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
         let expectedResult = Coordinate.mocks
         apiClient.response = expectedResult
 
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchBoundary(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
+        let result = try await service.boundary(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
-        wait(for: [expectation], timeout: 1)
+        XCTAssertEqual(result, expectedResult)
 
         XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.boundary(neighbourhoodID: neighbourhoodID,
-                                                                           policeForceID: policeForceID).url)
+                                                                           policeForceID: policeForceID).path)
     }
 
-    func testFetchPeopleOfficersReturnsPoliceOfficers() {
+    func testPeopleOfficersReturnsPoliceOfficers() async throws {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
         let expectedResult = PoliceOfficer.mocks
         apiClient.response = expectedResult
 
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchPoliceOfficers(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
+        let result = try await service.policeOfficers(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
-        wait(for: [expectation], timeout: 1)
+        XCTAssertEqual(result, expectedResult)
 
         XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.policeOfficers(neighbourhoodID: neighbourhoodID,
-                                                                                 policeForceID: policeForceID).url)
+                                                                                 policeForceID: policeForceID).path)
     }
 
-    func testFetchPrioritiesReturnsNeighbourhoodPriorities() {
+    func testPrioritiesReturnsNeighbourhoodPriorities() async throws {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
         let expectedResult = NeighbourhoodPriority.mocks
         apiClient.response = expectedResult
 
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchPriorities(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
+        let result = try await service.priorities(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
-        wait(for: [expectation], timeout: 1)
+        XCTAssertEqual(result, expectedResult)
 
         XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.priorities(neighbourhoodID: neighbourhoodID,
-                                                                             policeForceID: policeForceID).url)
+                                                                             policeForceID: policeForceID).path)
     }
 
-    func testFetchNeighbourhoodPolicingTeamAtCoordinateReturnsNeighbourhoodPolicingTeam() {
+    func testNeighbourhoodPolicingTeamAtCoordinateReturnsNeighbourhoodPolicingTeam() async throws {
         let coordinate = Coordinate.mock
         let expectedResult = NeighbourhoodPolicingTeam.mock
         apiClient.response = expectedResult
 
-        let expectation = XCTestExpectation(description: "await")
-        service.fetchNeighbourhoodPolicingTeam(atCoordinate: coordinate) { result in
-            XCTAssertEqual(try? result.get(), expectedResult)
-            expectation.fulfill()
-        }
+        let result = try await service.neighbourhoodPolicingTeam(atCoordinate: coordinate)
 
-        wait(for: [expectation], timeout: 1)
+        XCTAssertEqual(result, expectedResult)
 
-        XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.locateNeighbourhood(coordinate: coordinate).url)
+        XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.locateNeighbourhood(coordinate: coordinate).path)
     }
 
 }

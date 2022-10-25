@@ -1,11 +1,10 @@
 @testable import UKPoliceData
 import XCTest
 
-class LocationTests: XCTestCase {
+final class LocationTests: XCTestCase {
 
     func testDecodeReturnsCrimeLocation() throws {
-        let result = try JSONDecoder.policeDataAPI
-            .decode(Location.self, fromResource: "location", withExtension: "json")
+        let result = try JSONDecoder.policeDataAPI.decode(Location.self, fromResource: "location")
 
         XCTAssertEqual(result, .mock)
     }
@@ -13,8 +12,7 @@ class LocationTests: XCTestCase {
     func testCoordinateReturnsCoordinate() throws {
         let expectedResult = Location.mock.coordinate
 
-        let result = try JSONDecoder.policeDataAPI
-            .decode(Location.self, fromResource: "location", withExtension: "json").coordinate
+        let result = try JSONDecoder.policeDataAPI.decode(Location.self, fromResource: "location").coordinate
 
         XCTAssertEqual(result, expectedResult)
     }
@@ -23,8 +21,7 @@ class LocationTests: XCTestCase {
         let expectedResult = Coordinate(latitude: 0, longitude: 0)
 
         let result = try JSONDecoder.policeDataAPI
-            .decode(Location.self, fromResource: "location-invalid-coordinate", withExtension: "json")
-            .coordinate
+            .decode(Location.self, fromResource: "location-invalid-coordinate").coordinate
 
         XCTAssertEqual(result, expectedResult)
     }

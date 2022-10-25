@@ -1,7 +1,7 @@
 @testable import UKPoliceData
 import XCTest
 
-class DateFormatterPoliceDataAPITests: XCTestCase {
+final class DateFormatterPoliceDataAPITests: XCTestCase {
 
     func testDateTimeFormatterReturnsDate() {
         let dateString = "2021-05-24T10:22:45"

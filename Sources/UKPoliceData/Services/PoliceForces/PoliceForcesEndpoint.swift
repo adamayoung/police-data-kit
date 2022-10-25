@@ -2,8 +2,6 @@ import Foundation
 
 enum PoliceForcesEndpoint {
 
-    private static let basePath = URL(string: "/forces")!
-
     case list
     case details(id: String)
     case seniorOfficers(policeForceID: String)
@@ -12,7 +10,9 @@ enum PoliceForcesEndpoint {
 
 extension PoliceForcesEndpoint: Endpoint {
 
-    var url: URL {
+    private static let basePath = URL(string: "/forces")!
+
+    var path: URL {
         switch self {
         case .list:
             return Self.basePath

@@ -1,6 +1,5 @@
 import Foundation
 
-#if !os(Linux)
 extension URLSessionConfiguration {
 
     static var mock: URLSessionConfiguration {
@@ -10,4 +9,3 @@ extension URLSessionConfiguration {
     }
 
 }
-#endif

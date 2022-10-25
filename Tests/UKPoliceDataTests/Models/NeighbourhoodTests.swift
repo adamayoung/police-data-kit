@@ -1,11 +1,10 @@
 @testable import UKPoliceData
 import XCTest
 
-class NeighbourhoodTests: XCTestCase {
+final class NeighbourhoodTests: XCTestCase {
 
     func testDecodeReturnsNeighbourhood() throws {
-        let result = try JSONDecoder.policeDataAPI
-            .decode(Neighbourhood.self, fromResource: "neighbourhood", withExtension: "json")
+        let result = try JSONDecoder.policeDataAPI.decode(Neighbourhood.self, fromResource: "neighbourhood")
 
         XCTAssertEqual(result, .mock)
     }
@@ -13,17 +12,14 @@ class NeighbourhoodTests: XCTestCase {
     func testPopulationReturnsPopulation() throws {
         let expectedResult = Neighbourhood.mock.population
 
-        let result = try JSONDecoder.policeDataAPI
-            .decode(Neighbourhood.self, fromResource: "neighbourhood", withExtension: "json").population
+        let result = try JSONDecoder.policeDataAPI.decode(Neighbourhood.self, fromResource: "neighbourhood").population
 
         XCTAssertEqual(result, expectedResult)
     }
 
     func testPopulationWhenInvalidNumberReturnsZero() throws {
         let result = try JSONDecoder.policeDataAPI
-            .decode(Neighbourhood.self, fromResource: "neighbourhood-invalid-population",
-                    withExtension: "json")
-            .population
+            .decode(Neighbourhood.self, fromResource: "neighbourhood-invalid-population").population
 
         XCTAssertEqual(result, 0)
     }
@@ -32,9 +28,7 @@ class NeighbourhoodTests: XCTestCase {
         let expectedResult = Neighbourhood.mockWithAmpersandInName.name
 
         let result = try JSONDecoder.policeDataAPI
-            .decode(Neighbourhood.self, fromResource: "neighbourhood-html-in-name",
-                    withExtension: "json")
-            .name
+            .decode(Neighbourhood.self, fromResource: "neighbourhood-html-in-name").name
 
         XCTAssertEqual(result, expectedResult)
     }
@@ -43,9 +37,7 @@ class NeighbourhoodTests: XCTestCase {
         let expectedResult = Neighbourhood.mockWithAmpersandInName.description
 
         let result = try JSONDecoder.policeDataAPI
-            .decode(Neighbourhood.self, fromResource: "neighbourhood-html-in-name",
-                    withExtension: "json")
-            .description
+            .decode(Neighbourhood.self, fromResource: "neighbourhood-html-in-name").description
 
         XCTAssertEqual(result, expectedResult)
     }

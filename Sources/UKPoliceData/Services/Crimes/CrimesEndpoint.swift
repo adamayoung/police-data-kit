@@ -2,12 +2,6 @@ import Foundation
 
 enum CrimesEndpoint {
 
-    private static let basePath = URL(string: "/")!
-    private static let streetLevelCrimesAtLocationBasePath = basePath.appendingPathComponent("crimes-street")
-    private static let crimesAtLocationBasePath = basePath.appendingPathComponent("crimes-at-location")
-    private static let crimesWithNoLocationBasePath = basePath.appendingPathComponent("crimes-no-location")
-    private static let crimeCategoriesBasePath = basePath.appendingPathComponent("crime-categories")
-
     case streetLevelCrimesAtSpecificPoint(coordinate: Coordinate, date: Date? = nil)
     case streetLevelCrimesInArea(coordinates: [Coordinate], date: Date? = nil)
     case crimesAtLocationForStreet(streetID: Int, date: Date? = nil)
@@ -19,7 +13,12 @@ enum CrimesEndpoint {
 
 extension CrimesEndpoint: Endpoint {
 
-    var url: URL {
+    private static let streetLevelCrimesAtLocationBasePath = URL(string: "/crimes-street")!
+    private static let crimesAtLocationBasePath = URL(string: "/crimes-at-location")!
+    private static let crimesWithNoLocationBasePath = URL(string: "/crimes-no-location")!
+    private static let crimeCategoriesBasePath = URL(string: "/crime-categories")!
+
+    var path: URL {
         switch self {
         case .streetLevelCrimesAtSpecificPoint(let coordinate, let date):
             return Self.streetLevelCrimesAtLocationBasePath

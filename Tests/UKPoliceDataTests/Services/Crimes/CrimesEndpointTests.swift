@@ -1,30 +1,30 @@
 @testable import UKPoliceData
 import XCTest
 
-class CrimesEndpointTests: XCTestCase {
+final class CrimesEndpointTests: XCTestCase {
 
     func testStreetLevelCrimesAtSpecificPointEndpointReturnsURL() {
         let coordinate = Coordinate.mock
         let dateString = "2021-04"
         let date = DateFormatter.yearMonth.date(from: dateString)!
-        let expectedURL = URL(
+        let expectedPath = URL(
             string: "/crimes-street/all-crime?lat=\(coordinate.latitude)&lng=\(coordinate.longitude)&date=\(dateString)"
         )!
 
-        let url = CrimesEndpoint.streetLevelCrimesAtSpecificPoint(coordinate: coordinate, date: date).url
+        let path = CrimesEndpoint.streetLevelCrimesAtSpecificPoint(coordinate: coordinate, date: date).path
 
-        XCTAssertEqual(url, expectedURL)
+        XCTAssertEqual(path, expectedPath)
     }
 
     func testStreetLevelCrimesAtSpecificPointEndpointWhenNoDateReturnsURL() {
         let coordinate = Coordinate.mock
-        let expectedURL = URL(
+        let expectedPath = URL(
             string: "/crimes-street/all-crime?lat=\(coordinate.latitude)&lng=\(coordinate.longitude)"
         )!
 
-        let url = CrimesEndpoint.streetLevelCrimesAtSpecificPoint(coordinate: coordinate).url
+        let path = CrimesEndpoint.streetLevelCrimesAtSpecificPoint(coordinate: coordinate).path
 
-        XCTAssertEqual(url, expectedURL)
+        XCTAssertEqual(path, expectedPath)
     }
 
     func testStreetLevelCrimesInCustomAreaEndpointReturnURL() {
@@ -32,63 +32,63 @@ class CrimesEndpointTests: XCTestCase {
         let poly = coordinates.map { "\($0.latitude),\($0.longitude)" }.joined(separator: ":")
         let dateString = "2021-04"
         let date = DateFormatter.yearMonth.date(from: dateString)!
-        let expectedURL = URL(string: "/crimes-street/all-crime?poly=\(poly)&date=\(dateString)")!
+        let expectedPath = URL(string: "/crimes-street/all-crime?poly=\(poly)&date=\(dateString)")!
 
-        let url = CrimesEndpoint.streetLevelCrimesInArea(coordinates: coordinates, date: date).url
+        let path = CrimesEndpoint.streetLevelCrimesInArea(coordinates: coordinates, date: date).path
 
-        XCTAssertEqual(url, expectedURL)
+        XCTAssertEqual(path, expectedPath)
     }
 
     func testStreetLevelCrimesInCustomAreaEndpointWhenNoDateReturnURL() {
         let coordinates = Coordinate.mocks
         let poly = coordinates.map { "\($0.latitude),\($0.longitude)" }.joined(separator: ":")
-        let expectedURL = URL(string: "/crimes-street/all-crime?poly=\(poly)")!
+        let expectedPath = URL(string: "/crimes-street/all-crime?poly=\(poly)")!
 
-        let url = CrimesEndpoint.streetLevelCrimesInArea(coordinates: coordinates).url
+        let path = CrimesEndpoint.streetLevelCrimesInArea(coordinates: coordinates).path
 
-        XCTAssertEqual(url, expectedURL)
+        XCTAssertEqual(path, expectedPath)
     }
 
     func testCrimesAtLocationForStreetEndpointReturnsURL() {
         let streetID = 12345
         let dateString = "2021-03"
         let date = DateFormatter.yearMonth.date(from: dateString)!
-        let expectedURL = URL(string: "/crimes-at-location?location_id=\(streetID)&date=\(dateString)")!
+        let expectedPath = URL(string: "/crimes-at-location?location_id=\(streetID)&date=\(dateString)")!
 
-        let url = CrimesEndpoint.crimesAtLocationForStreet(streetID: streetID, date: date).url
+        let path = CrimesEndpoint.crimesAtLocationForStreet(streetID: streetID, date: date).path
 
-        XCTAssertEqual(url, expectedURL)
+        XCTAssertEqual(path, expectedPath)
     }
 
     func testCrimesAtLocationForStreetEndpointWhenNoDateReturnsURL() {
         let streetID = 12345
-        let expectedURL = URL(string: "/crimes-at-location?location_id=\(streetID)")!
+        let expectedPath = URL(string: "/crimes-at-location?location_id=\(streetID)")!
 
-        let url = CrimesEndpoint.crimesAtLocationForStreet(streetID: streetID).url
+        let path = CrimesEndpoint.crimesAtLocationForStreet(streetID: streetID).path
 
-        XCTAssertEqual(url, expectedURL)
+        XCTAssertEqual(path, expectedPath)
     }
 
     func testCrimesAtLocationAtSpecificPointEndpointReturnsURL() {
         let coordinate = Coordinate.mock
         let dateString = "2021-04"
         let date = DateFormatter.yearMonth.date(from: dateString)!
-        let expectedURL = URL(
+        let expectedPath = URL(
             string: "/crimes-at-location?lat=\(coordinate.latitude)&lng=\(coordinate.longitude)&date=\(dateString)"
         )!
 
-        let url = CrimesEndpoint.crimesAtLocationAtSpecificPoint(coordinate: coordinate, date: date).url
+        let path = CrimesEndpoint.crimesAtLocationAtSpecificPoint(coordinate: coordinate, date: date).path
 
-        XCTAssertEqual(url, expectedURL)
+        XCTAssertEqual(path, expectedPath)
     }
 
     func testCrimesAtLocationAtSpecificPointEndpointWhenNoDateReturnsURL() {
         let coordinate = Coordinate.mock
-        let expectedURL = URL(string: "/crimes-at-location?lat=\(coordinate.latitude)&lng=\(coordinate.longitude)")!
+        let expectedPath = URL(string: "/crimes-at-location?lat=\(coordinate.latitude)&lng=\(coordinate.longitude)")!
 
-        let url = CrimesEndpoint.crimesAtLocationAtSpecificPoint(coordinate: coordinate).url
+        let path = CrimesEndpoint.crimesAtLocationAtSpecificPoint(coordinate: coordinate).path
 
-        XCTAssertEqual(url, expectedURL)
+        XCTAssertEqual(path, expectedPath)
     }
 
     func testCrimesWithNoLocationEndpointReturnsURL() {
@@ -96,34 +96,34 @@ class CrimesEndpointTests: XCTestCase {
         let policeForceID = "leicestershire"
         let dateString = "2021-04"
         let date = DateFormatter.yearMonth.date(from: dateString)!
-        let expectedURL = URL(
+        let expectedPath = URL(
             string: "/crimes-no-location?category=\(categoryID)&force=\(policeForceID)&date=\(dateString)"
         )!
 
-        let url = CrimesEndpoint.crimesWithNoLocation(categoryID: categoryID, policeForceID: policeForceID,
-                                                      date: date).url
+        let path = CrimesEndpoint.crimesWithNoLocation(categoryID: categoryID, policeForceID: policeForceID,
+                                                       date: date).path
 
-        XCTAssertEqual(url, expectedURL)
+        XCTAssertEqual(path, expectedPath)
     }
 
     func testCrimesWithNoLocationEndpointWhenNoDateReturnsURL() {
         let categoryID = "all-crime"
         let policeForceID = "leicestershire"
-        let expectedURL = URL(string: "/crimes-no-location?category=\(categoryID)&force=\(policeForceID)")!
+        let expectedPath = URL(string: "/crimes-no-location?category=\(categoryID)&force=\(policeForceID)")!
 
-        let url = CrimesEndpoint.crimesWithNoLocation(categoryID: categoryID, policeForceID: policeForceID).url
+        let path = CrimesEndpoint.crimesWithNoLocation(categoryID: categoryID, policeForceID: policeForceID).path
 
-        XCTAssertEqual(url, expectedURL)
+        XCTAssertEqual(path, expectedPath)
     }
 
     func testCategoriesEndpointReturnsURL() {
         let dateString = "2021-04"
         let date = DateFormatter.yearMonth.date(from: dateString)!
-        let expectedURL = URL(string: "/crime-categories?date=\(dateString)")!
+        let expectedPath = URL(string: "/crime-categories?date=\(dateString)")!
 
-        let url = CrimesEndpoint.categories(date: date).url
+        let path = CrimesEndpoint.categories(date: date).path
 
-        XCTAssertEqual(url, expectedURL)
+        XCTAssertEqual(path, expectedPath)
     }
 
 }

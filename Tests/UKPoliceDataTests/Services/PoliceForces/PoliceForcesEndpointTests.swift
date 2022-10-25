@@ -1,32 +1,32 @@
 @testable import UKPoliceData
 import XCTest
 
-class PoliceForcesEndpointTests: XCTestCase {
+final class PoliceForcesEndpointTests: XCTestCase {
 
     func testListEndpointReturnsURL() {
-        let expectedURL = URL(string: "/forces")!
+        let expectedPath = URL(string: "/forces")!
 
-        let url = PoliceForcesEndpoint.list.url
+        let path = PoliceForcesEndpoint.list.path
 
-        XCTAssertEqual(url, expectedURL)
+        XCTAssertEqual(path, expectedPath)
     }
 
     func testDetailsEndpointReturnsURL() {
         let id = "leicestershire"
-        let expectedURL = URL(string: "/forces/\(id)")!
+        let expectedPath = URL(string: "/forces/\(id)")!
 
-        let url = PoliceForcesEndpoint.details(id: id).url
+        let path = PoliceForcesEndpoint.details(id: id).path
 
-        XCTAssertEqual(url, expectedURL)
+        XCTAssertEqual(path, expectedPath)
     }
 
     func testSeniorOfficersEndpointReturnsURL() {
         let policeForceID = "leicestershire"
-        let expectedURL = URL(string: "/forces/\(policeForceID)/people")!
+        let expectedPath = URL(string: "/forces/\(policeForceID)/people")!
 
-        let url = PoliceForcesEndpoint.seniorOfficers(policeForceID: policeForceID).url
+        let path = PoliceForcesEndpoint.seniorOfficers(policeForceID: policeForceID).path
 
-        XCTAssertEqual(url, expectedURL)
+        XCTAssertEqual(path, expectedPath)
     }
 
 }

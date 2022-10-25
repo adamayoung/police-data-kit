@@ -1,14 +1,14 @@
 @testable import UKPoliceData
 import XCTest
 
-class AvailabilityEndpointTests: XCTestCase {
+final class AvailabilityEndpointTests: XCTestCase {
 
     func testDataSetsEndpointReturnsURL() {
-        let expectedURL = URL(string: "/crimes-street-dates")!
+        let expectedPath = URL(string: "/crimes-street-dates")!
 
-        let url = AvailabilityEndpoint.dataSets.url
+        let path = AvailabilityEndpoint.dataSets.path
 
-        XCTAssertEqual(url, expectedURL)
+        XCTAssertEqual(path, expectedPath)
     }
 
 }

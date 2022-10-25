@@ -1,18 +1,18 @@
 @testable import UKPoliceData
 import XCTest
 
-class NeighbourhoodPriorityTests: XCTestCase {
+final class NeighbourhoodPriorityTests: XCTestCase {
 
     func testDecodeReturnsNeighbourhoodPriority() throws {
         let result = try JSONDecoder.policeDataAPI
-            .decode(NeighbourhoodPriority.self, fromResource: "neighbourhood-priority", withExtension: "json")
+            .decode(NeighbourhoodPriority.self, fromResource: "neighbourhood-priority")
 
         XCTAssertEqual(result, .mock)
     }
 
     func testDecodeWhenNotActionReturnsNeighbourhoodPriority() throws {
         let result = try JSONDecoder.policeDataAPI
-            .decode(NeighbourhoodPriority.self, fromResource: "neighbourhood-priority-no-action", withExtension: "json")
+            .decode(NeighbourhoodPriority.self, fromResource: "neighbourhood-priority-no-action")
 
         XCTAssertEqual(result, .mockNoAction)
     }
@@ -21,7 +21,7 @@ class NeighbourhoodPriorityTests: XCTestCase {
         let expectedResult = NeighbourhoodPriority.mockWithHTML.issue
 
         let priority = try JSONDecoder.policeDataAPI
-            .decode(NeighbourhoodPriority.self, fromResource: "neighbourhood-priority-html", withExtension: "json")
+            .decode(NeighbourhoodPriority.self, fromResource: "neighbourhood-priority-html")
         let result = priority.issue
 
         XCTAssertEqual(result, expectedResult)
@@ -31,7 +31,7 @@ class NeighbourhoodPriorityTests: XCTestCase {
         let expectedResult = NeighbourhoodPriority.mockWithHTML.action
 
         let priority = try JSONDecoder.policeDataAPI
-            .decode(NeighbourhoodPriority.self, fromResource: "neighbourhood-priority-html", withExtension: "json")
+            .decode(NeighbourhoodPriority.self, fromResource: "neighbourhood-priority-html")
         let result = priority.action
 
         XCTAssertEqual(result, expectedResult)

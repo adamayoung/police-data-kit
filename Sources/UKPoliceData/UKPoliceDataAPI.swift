@@ -1,8 +1,6 @@
 import Foundation
 
-public final class UKPoliceDataAPI: PoliceDataAPI {
-
-    public static let shared: PoliceDataAPI = UKPoliceDataAPI()
+public final class UKPoliceDataAPI {
 
     public let policeForces: PoliceForceService
     public let neighbourhoods: NeighbourhoodService
@@ -11,13 +9,32 @@ public final class UKPoliceDataAPI: PoliceDataAPI {
     public let stopAndSearches: StopAndSearchService
     public let availability: AvailabilityService
 
+    public convenience init() {
+        self.init(baseURL: .policeDataAPIBaseURL, urlSessionConfiguration: .default)
+    }
+
+    convenience init(baseURL: URL, urlSessionConfiguration: URLSessionConfiguration) {
+        let urlSession = URLSession(configuration: urlSessionConfiguration)
+        let serialiser = Serialiser(decoder: .policeDataAPI)
+        let apiClient = PoliceDataAPIClient(baseURL: baseURL, urlSession: urlSession, serialiser: serialiser)
+
+        self.init(
+            policeForceService: UKPoliceForceService(apiClient: apiClient),
+            neighbourhoodService: UKNeighbourhoodService(apiClient: apiClient),
+            crimeService: UKCrimeService(apiClient: apiClient),
+            outcomes: UKOutcomeService(apiClient: apiClient),
+            stopAndSearches: UKStopAndSearchService(apiClient: apiClient),
+            availability: UKAvailabilityService(apiClient: apiClient)
+        )
+    }
+
     init(
-        policeForceService: PoliceForceService = UKPoliceForceService(),
-        neighbourhoodService: NeighbourhoodService = UKNeighbourhoodService(),
-        crimeService: CrimeService = UKCrimeService(),
-        outcomes: OutcomeService = UKOutcomeService(),
-        stopAndSearches: StopAndSearchService = UKStopAndSearchService(),
-        availability: AvailabilityService = UKAvailabilityService()
+        policeForceService: PoliceForceService,
+        neighbourhoodService: NeighbourhoodService,
+        crimeService: CrimeService,
+        outcomes: OutcomeService,
+        stopAndSearches: StopAndSearchService,
+        availability: AvailabilityService
     ) {
         self.policeForces = policeForceService
         self.neighbourhoods = neighbourhoodService

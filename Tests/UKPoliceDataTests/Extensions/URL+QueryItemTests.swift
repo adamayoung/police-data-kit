@@ -1,7 +1,7 @@
 @testable import UKPoliceData
 import XCTest
 
-class URLQueryItemTests: XCTestCase {
+final class URLQueryItemTests: XCTestCase {
 
     func testAppendingQueryItemWithCustomStringConvertibleWhenURLContainsNoQueryItemsReturnsURL() {
         let baseURL = URL(string: "https://some.domain.com")
