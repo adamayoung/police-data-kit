@@ -12,7 +12,7 @@ A Swift Package for UK Police data which provides a rich data source for informa
 
 ### [Swift Package Manager](https://github.com/apple/swift-package-manager)
 
-Add the UKPoliceData package as a dependency to your `Package.swift` file, and add it as a dependency to your target.
+Add the PoliceAPI package as a dependency to your `Package.swift` file, and add it as a dependency to your target.
 
 ```swift
 // swift-tools-version:5.7
@@ -23,14 +23,40 @@ let package = Package(
   name: "MyProject",
 
   dependencies: [
-    .package(url: "https://github.com/adamayoung/UKPoliceData.git", from: "1.0.0")
+    .package(url: "https://github.com/adamayoung/police-api.git", from: "1.0.0")
   ],
 
   targets: [
-    .target(name: "MyProject", dependencies: ["UKPoliceData"])
+    .target(name: "MyProject", dependencies: [.product(name: "police-api", package: "PoliceAPI")])
   ]
 )
 ```
+
+## API Areas
+
+### Availability
+
+Information about availability of data.
+
+### Crimes
+
+Information about a Crimes.
+
+### Neighbourhoods
+
+Information about a Police Force Neighbourhoods.
+
+### Outcomes
+
+Information about a Crime's Outcome.
+
+### Police Forces
+
+Information about Police Forces and their Senior Officers.
+
+### Stop and Searches
+
+Information about Stop and Searches.
 
 ## References
 

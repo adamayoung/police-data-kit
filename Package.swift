@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "UKPoliceData",
+    name: "PoliceAPI",
 
     platforms: [
         .macOS(.v12), .iOS(.v15), .tvOS(.v15), .watchOS(.v8)
@@ -12,24 +12,24 @@ let package = Package(
 
     products: [
         .library(
-            name: "UKPoliceData",
-            targets: ["UKPoliceData"]
+            name: "PoliceAPI",
+            targets: ["PoliceAPI"]
         )
     ],
 
     dependencies: [
-        .package(url: "https://github.com/scinfu/SwiftSoup.git", .upToNextMajor(from: "2.3.2")),
-        .package(url: "https://github.com/apple/swift-docc-plugin.git", from: "1.0.0")
+        .package(url: "https://github.com/scinfu/SwiftSoup.git", .upToNextMajor(from: "2.5.3")),
+        .package(url: "https://github.com/apple/swift-docc-plugin.git", from: "1.2.0")
     ],
 
     targets: [
         .target(
-            name: "UKPoliceData",
+            name: "PoliceAPI",
             dependencies: ["SwiftSoup"]
         ),
         .testTarget(
-            name: "UKPoliceDataTests",
-            dependencies: ["UKPoliceData"],
+            name: "PoliceAPITests",
+            dependencies: ["PoliceAPI"],
             resources: [
                 .process("Resources")
             ]
