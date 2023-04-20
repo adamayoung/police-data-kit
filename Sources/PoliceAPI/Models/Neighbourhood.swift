@@ -16,7 +16,9 @@ public struct Neighbourhood: Identifiable, Decodable, Equatable {
         descriptionString?.htmlStripped
     }
     /// URL for the neighbourhood on the Force's website.
-    public let policeForceWebsite: URL
+    public var policeForceWebsite: URL? {
+        URL(string: policeForceWebsiteString)
+    }
     /// An introduction message for the neighbourhood.
     public let welcomeMessage: String?
     /// Population of the neighbourhood.
@@ -36,6 +38,7 @@ public struct Neighbourhood: Identifiable, Decodable, Equatable {
     /// Links.
     public let links: [Link]
 
+    private let policeForceWebsiteString: String
     private let nameString: String
     private let descriptionString: String?
     private let populationString: String
@@ -53,13 +56,13 @@ public struct Neighbourhood: Identifiable, Decodable, Equatable {
     ///     - centre: Centre point locator for the neighbourhood.
     ///     - locations: Any associated locations with the neighbourhood.
     ///     - links: Links.
-    public init(id: String, name: String, description: String? = nil, policeForceWebsite: URL,
+    public init(id: String, name: String, description: String? = nil, policeForceWebsite: URL? = nil,
                 welcomeMessage: String? = nil, population: Int, contactDetails: ContactDetails = .init(),
                 centre: Coordinate, locations: [NeighbourhoodLocation] = [], links: [Link] = []) {
         self.id = id
         self.nameString = name
         self.descriptionString = description
-        self.policeForceWebsite = policeForceWebsite
+        self.policeForceWebsiteString = policeForceWebsite?.absoluteString ?? ""
         self.welcomeMessage = welcomeMessage
         self.populationString = String(population)
         self.contactDetails = contactDetails
@@ -76,7 +79,7 @@ extension Neighbourhood {
         case id
         case nameString = "name"
         case descriptionString = "description"
-        case policeForceWebsite = "urlForce"
+        case policeForceWebsiteString = "urlForce"
         case welcomeMessage
         case populationString = "population"
         case contactDetails
