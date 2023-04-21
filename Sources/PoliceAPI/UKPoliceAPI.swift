@@ -20,7 +20,7 @@ public final class UKPoliceAPI {
         let cache = InMemoryCache(name: "PoliceAPICache")
 
         self.init(
-            policeForceService: UKPoliceForceService(apiClient: apiClient),
+            policeForceService: UKPoliceForceService(apiClient: apiClient, cache: cache),
             neighbourhoodService: UKNeighbourhoodService(apiClient: apiClient, cache: cache),
             crimeService: UKCrimeService(apiClient: apiClient),
             outcomes: UKOutcomeService(apiClient: apiClient),
