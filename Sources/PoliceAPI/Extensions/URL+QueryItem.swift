@@ -23,8 +23,8 @@ extension URL {
         appendingQueryItem(name: name, value: "\(coordinate.latitude),\(coordinate.longitude)")
     }
 
-    func appendingQueryItem(name: String, coordinates: [Coordinate]) -> Self {
-        let pairs = coordinates
+    func appendingQueryItem(name: String, boundary: Boundary) -> Self {
+        let pairs = boundary
             .map { "\($0.latitude),\($0.longitude)" }
             .joined(separator: ":")
         return appendingQueryItem(name: name, value: pairs)

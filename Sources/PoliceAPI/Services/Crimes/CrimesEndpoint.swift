@@ -3,10 +3,10 @@ import Foundation
 enum CrimesEndpoint {
 
     case streetLevelCrimesAtSpecificPoint(coordinate: Coordinate, date: Date? = nil)
-    case streetLevelCrimesInArea(coordinates: [Coordinate], date: Date? = nil)
+    case streetLevelCrimesInArea(boundary: Boundary, date: Date? = nil)
     case crimesAtLocationForStreet(streetID: Int, date: Date? = nil)
     case crimesAtLocationAtSpecificPoint(coordinate: Coordinate, date: Date? = nil)
-    case crimesWithNoLocation(categoryID: String, policeForceID: String, date: Date? = nil)
+    case crimesWithNoLocation(categoryID: CrimeCategory.ID, policeForceID: PoliceForce.ID, date: Date? = nil)
     case categories(date: Date)
 
 }
@@ -27,10 +27,10 @@ extension CrimesEndpoint: Endpoint {
                 .appendingQueryItem(name: "lng", value: coordinate.longitude)
                 .appendingQueryItem(name: "date", date: date)
 
-        case .streetLevelCrimesInArea(let coordinates, let date):
+        case .streetLevelCrimesInArea(let boundary, let date):
             return Self.streetLevelCrimesAtLocationBasePath
                 .appendingPathComponent("all-crime")
-                .appendingQueryItem(name: "poly", coordinates: coordinates)
+                .appendingQueryItem(name: "poly", boundary: boundary)
                 .appendingQueryItem(name: "date", date: date)
 
         case .crimesAtLocationForStreet(let streetID, let date):

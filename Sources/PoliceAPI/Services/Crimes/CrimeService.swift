@@ -27,7 +27,7 @@ public protocol CrimeService {
     ///     - date: Limit results to a specific month. The latest month will be shown by default.
     ///
     /// - Returns: A list of street level crimes.
-    func streetLevelCrimes(inArea coordinates: [Coordinate], date: Date?) async throws -> [Crime]
+    func streetLevelCrimes(inArea boundary: Boundary, date: Date?) async throws -> [Crime]
 
     /// Returns just the crimes which occurred at the specified location, rather than those within a radius.
     ///
@@ -64,7 +64,7 @@ public protocol CrimeService {
     ///     - date: Limit results to a specific month. The latest month will be shown by default.
     ///
     /// - Returns: A list of crimes.
-    func crimesWithNoLocation(forCategory categoryID: String, inPoliceForce policeForceID: String,
+    func crimesWithNoLocation(forCategory categoryID: CrimeCategory.ID, inPoliceForce policeForceID: PoliceForce.ID,
                               date: Date?) async throws -> [Crime]
 
     /// Fetches a list of valid crime categories for a given data set date.
@@ -85,8 +85,8 @@ extension CrimeService {
         try await streetLevelCrimes(atCoordinate: coordinate, date: date)
     }
 
-    func streetLevelCrimes(inArea coordinates: [Coordinate], date: Date? = nil) async throws -> [Crime] {
-        try await streetLevelCrimes(inArea: coordinates, date: date)
+    func streetLevelCrimes(inArea boundary: Boundary, date: Date? = nil) async throws -> [Crime] {
+        try await streetLevelCrimes(inArea: boundary, date: date)
     }
 
     func crimes(forStreet streetID: Int, date: Date? = nil) async throws -> [Crime] {
@@ -98,7 +98,7 @@ extension CrimeService {
     }
 
     func crimesWithNoLocation(forCategory categoryID: String = CrimeCategory.defaultID,
-                              inPoliceForce policeForceID: String, date: Date? = nil) async throws -> [Crime] {
+                              inPoliceForce policeForceID: PoliceForce.ID, date: Date? = nil) async throws -> [Crime] {
         try await crimesWithNoLocation(forCategory: categoryID, inPoliceForce: policeForceID, date: date)
     }
 

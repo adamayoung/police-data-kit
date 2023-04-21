@@ -2,9 +2,9 @@ import Foundation
 
 final class UKCrimeService: CrimeService {
 
-    private let apiClient: APIClient
+    private let apiClient: any APIClient
 
-    init(apiClient: APIClient) {
+    init(apiClient: some APIClient) {
         self.apiClient = apiClient
     }
 
@@ -14,8 +14,8 @@ final class UKCrimeService: CrimeService {
         )
     }
 
-    func streetLevelCrimes(inArea coordinates: [Coordinate], date: Date?) async throws -> [Crime] {
-        try await apiClient.get(endpoint: CrimesEndpoint.streetLevelCrimesInArea(coordinates: coordinates, date: date))
+    func streetLevelCrimes(inArea boundary: Boundary, date: Date?) async throws -> [Crime] {
+        try await apiClient.get(endpoint: CrimesEndpoint.streetLevelCrimesInArea(boundary: boundary, date: date))
     }
 
     func crimes(forStreet streetID: Int, date: Date?) async throws -> [Crime] {
@@ -28,11 +28,12 @@ final class UKCrimeService: CrimeService {
         )
     }
 
-    func crimesWithNoLocation(forCategory categoryID: String, inPoliceForce policeForceID: String,
+    func crimesWithNoLocation(forCategory categoryID: CrimeCategory.ID, inPoliceForce policeForceID: PoliceForce.ID,
                               date: Date?) async throws -> [Crime] {
         try await apiClient.get(
-            endpoint: CrimesEndpoint.crimesWithNoLocation(categoryID: categoryID, policeForceID: policeForceID,
-                                                          date: date)
+            endpoint: CrimesEndpoint.crimesWithNoLocation(
+                categoryID: categoryID, policeForceID: policeForceID, date: date
+            )
         )
     }
 

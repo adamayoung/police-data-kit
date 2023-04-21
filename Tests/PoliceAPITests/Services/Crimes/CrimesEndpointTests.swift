@@ -28,23 +28,23 @@ final class CrimesEndpointTests: XCTestCase {
     }
 
     func testStreetLevelCrimesInCustomAreaEndpointReturnURL() {
-        let coordinates = Coordinate.mocks
-        let poly = coordinates.map { "\($0.latitude),\($0.longitude)" }.joined(separator: ":")
+        let boundary = Boundary.mock
+        let poly = boundary.map { "\($0.latitude),\($0.longitude)" }.joined(separator: ":")
         let dateString = "2021-04"
         let date = DateFormatter.yearMonth.date(from: dateString)!
         let expectedPath = URL(string: "/crimes-street/all-crime?poly=\(poly)&date=\(dateString)")!
 
-        let path = CrimesEndpoint.streetLevelCrimesInArea(coordinates: coordinates, date: date).path
+        let path = CrimesEndpoint.streetLevelCrimesInArea(boundary: boundary, date: date).path
 
         XCTAssertEqual(path, expectedPath)
     }
 
     func testStreetLevelCrimesInCustomAreaEndpointWhenNoDateReturnURL() {
-        let coordinates = Coordinate.mocks
-        let poly = coordinates.map { "\($0.latitude),\($0.longitude)" }.joined(separator: ":")
+        let boundary = Boundary.mock
+        let poly = boundary.map { "\($0.latitude),\($0.longitude)" }.joined(separator: ":")
         let expectedPath = URL(string: "/crimes-street/all-crime?poly=\(poly)")!
 
-        let path = CrimesEndpoint.streetLevelCrimesInArea(coordinates: coordinates).path
+        let path = CrimesEndpoint.streetLevelCrimesInArea(boundary: boundary).path
 
         XCTAssertEqual(path, expectedPath)
     }

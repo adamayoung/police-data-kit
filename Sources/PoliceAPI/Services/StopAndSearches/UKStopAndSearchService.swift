@@ -2,9 +2,9 @@ import Foundation
 
 final class UKStopAndSearchService: StopAndSearchService {
 
-    private let apiClient: APIClient
+    private let apiClient: any APIClient
 
-    init(apiClient: APIClient) {
+    init(apiClient: some APIClient) {
         self.apiClient = apiClient
     }
 
@@ -14,9 +14,9 @@ final class UKStopAndSearchService: StopAndSearchService {
         )
     }
 
-    func stopAndSearches(inArea coordinates: [Coordinate], date: Date?) async throws -> [StopAndSearch] {
+    func stopAndSearches(inArea boundary: Boundary, date: Date?) async throws -> [StopAndSearch] {
         try await apiClient.get(
-            endpoint: StopAndSearchesEndpoint.stopAndSearchesByAreaInArea(coordinates: coordinates, date: date)
+            endpoint: StopAndSearchesEndpoint.stopAndSearchesByAreaInArea(boundary: boundary, date: date)
         )
     }
 

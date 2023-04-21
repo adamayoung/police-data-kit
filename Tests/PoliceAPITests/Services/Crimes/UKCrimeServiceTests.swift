@@ -45,29 +45,29 @@ final class UKCrimeServiceTests: XCTestCase {
     }
 
     func testStreetLevelCrimesInAreaReturnsCrimes() async throws {
-        let coordinates = Coordinate.mocks
+        let boundary = Boundary.mock
         let date = Date()
         let expectedResult = Crime.mocks
         apiClient.response = expectedResult
 
-        let result = try await service.streetLevelCrimes(inArea: coordinates, date: date)
+        let result = try await service.streetLevelCrimes(inArea: boundary, date: date)
 
         XCTAssertEqual(result, expectedResult)
 
         XCTAssertEqual(apiClient.lastPath,
-                       CrimesEndpoint.streetLevelCrimesInArea(coordinates: coordinates, date: date).path)
+                       CrimesEndpoint.streetLevelCrimesInArea(boundary: boundary, date: date).path)
     }
 
     func testStreetLevelCrimesInAreaWhenNoDateReturnsCrimes() async throws {
-        let coordinates = Coordinate.mocks
+        let boundary = Boundary.mock
         let expectedResult = Crime.mocks
         apiClient.response = expectedResult
 
-        let result = try await service.streetLevelCrimes(inArea: coordinates)
+        let result = try await service.streetLevelCrimes(inArea: boundary)
 
         XCTAssertEqual(result, expectedResult)
 
-        XCTAssertEqual(apiClient.lastPath, CrimesEndpoint.streetLevelCrimesInArea(coordinates: coordinates).path)
+        XCTAssertEqual(apiClient.lastPath, CrimesEndpoint.streetLevelCrimesInArea(boundary: boundary).path)
     }
 
     func testCrimesForStreetReturnsCrimes() async throws {

@@ -37,7 +37,7 @@ public protocol OutcomeService {
     ///     - date: Limit results to a specific month. The latest month will be shown by default.
     ///
     /// - Returns: A list of street level crime outcomes.
-    func streetLevelOutcomes(inArea coordinates: [Coordinate], date: Date?) async throws -> [Outcome]
+    func streetLevelOutcomes(inArea boundary: Boundary, date: Date?) async throws -> [Outcome]
 
     /// Returns the case history for a crime.
     ///
@@ -62,8 +62,8 @@ extension OutcomeService {
         try await streetLevelOutcomes(atCoordinate: coordinate, date: date)
     }
 
-    func streetLevelOutcomes(inArea coordinates: [Coordinate], date: Date? = nil) async throws -> [Outcome] {
-        try await streetLevelOutcomes(inArea: coordinates, date: date)
+    func streetLevelOutcomes(inArea boundary: Boundary, date: Date? = nil) async throws -> [Outcome] {
+        try await streetLevelOutcomes(inArea: boundary, date: date)
     }
 
 }

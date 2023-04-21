@@ -2,9 +2,9 @@ import Foundation
 
 final class UKAvailabilityService: AvailabilityService {
 
-    private let apiClient: APIClient
+    private let apiClient: any APIClient
 
-    init(apiClient: APIClient) {
+    init(apiClient: some APIClient) {
         self.apiClient = apiClient
     }
 

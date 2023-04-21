@@ -28,23 +28,23 @@ final class StopAndSearchesEndpointTests: XCTestCase {
     }
 
     func testStopAndSearchesByAreaInAreaEndpointReturnsURL() {
-        let coordinates = Coordinate.mocks
-        let poly = coordinates.map { "\($0.latitude),\($0.longitude)" }.joined(separator: ":")
+        let boundary = Boundary.mock
+        let poly = boundary.map { "\($0.latitude),\($0.longitude)" }.joined(separator: ":")
         let dateString = "2021-04"
         let date = DateFormatter.yearMonth.date(from: dateString)!
         let expectedPath = URL(string: "/stops-street?poly=\(poly)&date=\(dateString)")!
 
-        let path = StopAndSearchesEndpoint.stopAndSearchesByAreaInArea(coordinates: coordinates, date: date).path
+        let path = StopAndSearchesEndpoint.stopAndSearchesByAreaInArea(boundary: boundary, date: date).path
 
         XCTAssertEqual(path, expectedPath)
     }
 
     func testStopAndSearchesByAreaInAreaEndpointWhenNoDateReturnsURL() {
-        let coordinates = Coordinate.mocks
-        let poly = coordinates.map { "\($0.latitude),\($0.longitude)" }.joined(separator: ":")
+        let boundary = Boundary.mock
+        let poly = boundary.map { "\($0.latitude),\($0.longitude)" }.joined(separator: ":")
         let expectedPath = URL(string: "/stops-street?poly=\(poly)")!
 
-        let path = StopAndSearchesEndpoint.stopAndSearchesByAreaInArea(coordinates: coordinates).path
+        let path = StopAndSearchesEndpoint.stopAndSearchesByAreaInArea(boundary: boundary).path
 
         XCTAssertEqual(path, expectedPath)
     }

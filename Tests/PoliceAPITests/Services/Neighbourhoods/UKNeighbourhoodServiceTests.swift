@@ -5,20 +5,23 @@ final class UKNeighbourhoodServiceTests: XCTestCase {
 
     var service: UKNeighbourhoodService!
     var apiClient: MockAPIClient!
+    var cache: MockCache!
 
     override func setUp() {
         super.setUp()
         apiClient = MockAPIClient()
-        service = UKNeighbourhoodService(apiClient: apiClient)
+        cache = MockCache()
+        service = UKNeighbourhoodService(apiClient: apiClient, cache: cache)
     }
 
     override func tearDown() {
-        apiClient = nil
         service = nil
+        cache = nil
+        apiClient = nil
         super.tearDown()
     }
 
-    func testNeighboursReturnsNeighbourhoodReferences() async throws {
+    func testNeighboursWhenNotCachedReturnsNeighbourhoodReferences() async throws {
         let policeForceID = "leicestershire"
         let expectedResult = NeighbourhoodReference.mocks
         apiClient.response = expectedResult
@@ -30,7 +33,32 @@ final class UKNeighbourhoodServiceTests: XCTestCase {
         XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.list(policeForceID: policeForceID).path)
     }
 
-    func testNeighbourhoodReturnsNeighbourhood() async throws {
+    func testNeighboursWhenCachedReturnsCachedNeighbourhoodReferences() async throws {
+        let policeForceID = "leicestershire"
+        let cacheKey = NeighbourhoodsInPoliceForceCachingKey(policeForceID: policeForceID)
+        let expectedResult = NeighbourhoodReference.mocks
+        await cache.set(expectedResult, for: cacheKey)
+
+        let result = try await service.neighbourhoods(inPoliceForce: policeForceID)
+
+        XCTAssertEqual(result, expectedResult)
+
+        XCTAssertNil(apiClient.lastPath)
+    }
+
+    func testNeighboursWhenNotCachedAndReturnsNeighbourhoodReferencesShouldCacheResult() async throws {
+        let policeForceID = "leicestershire"
+        let cacheKey = NeighbourhoodsInPoliceForceCachingKey(policeForceID: policeForceID)
+        let expectedResult = NeighbourhoodReference.mocks
+        apiClient.response = expectedResult
+        _ = try await service.neighbourhoods(inPoliceForce: policeForceID)
+
+        let cachedResult = await cache.object(for: cacheKey, type: [NeighbourhoodReference].self)
+
+        XCTAssertEqual(cachedResult, expectedResult)
+    }
+
+    func testNeighbourhoodWhenNotCachedReturnsNeighbourhood() async throws {
         let expectedResult = Neighbourhood.mock
         let id = expectedResult.id
         let policeForceID = "leicestershire"
@@ -43,10 +71,37 @@ final class UKNeighbourhoodServiceTests: XCTestCase {
         XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.details(id: id, policeForceID: policeForceID).path)
     }
 
-    func testBoundaryReturnsCoordinates() async throws {
+    func testNeighbourhoodWhenCachedReturnsCachedNeighbourhood() async throws {
+        let expectedResult = Neighbourhood.mock
+        let id = expectedResult.id
+        let policeForceID = "leicestershire"
+        let cacheKey = NeighbourhoodCachingKey(id: id, policeForceID: policeForceID)
+        await cache.set(expectedResult, for: cacheKey)
+
+        let result = try await service.neighbourhood(withID: id, inPoliceForce: policeForceID)
+
+        XCTAssertEqual(result, expectedResult)
+
+        XCTAssertNil(apiClient.lastPath)
+    }
+
+    func testNeighbourhoodWhenNotCachedAndReturnsNeighbourhoodShouldCacheResult() async throws {
+        let expectedResult = Neighbourhood.mock
+        let id = expectedResult.id
+        let policeForceID = "leicestershire"
+        let cacheKey = NeighbourhoodCachingKey(id: id, policeForceID: policeForceID)
+        apiClient.response = expectedResult
+        _ = try await service.neighbourhood(withID: id, inPoliceForce: policeForceID)
+
+        let cachedResult = await cache.object(for: cacheKey, type: Neighbourhood.self)
+
+        XCTAssertEqual(cachedResult, expectedResult)
+    }
+
+    func testBoundaryWhenNotCachedReturnsBoundary() async throws {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
-        let expectedResult = Coordinate.mocks
+        let expectedResult = Boundary.mock
         apiClient.response = expectedResult
 
         let result = try await service.boundary(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
@@ -57,7 +112,34 @@ final class UKNeighbourhoodServiceTests: XCTestCase {
                                                                            policeForceID: policeForceID).path)
     }
 
-    func testPeopleOfficersReturnsPoliceOfficers() async throws {
+    func testBoundaryWhenCachedReturnsCachedBoundary() async throws {
+        let neighbourhoodID = "NC04"
+        let policeForceID = "leicestershire"
+        let expectedResult = Boundary.mock
+        let cacheKey = NeighbourhoodBoundaryCachingKey(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID)
+        await cache.set(expectedResult, for: cacheKey)
+
+        let result = try await service.boundary(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
+
+        XCTAssertEqual(result, expectedResult)
+
+        XCTAssertNil(apiClient.lastPath)
+    }
+
+    func testBoundaryWhenNotCachedAndReturnsBoundaryShouldCacheResult() async throws {
+        let neighbourhoodID = "NC04"
+        let policeForceID = "leicestershire"
+        let expectedResult = Boundary.mock
+        let cacheKey = NeighbourhoodBoundaryCachingKey(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID)
+        apiClient.response = expectedResult
+        _ = try await service.boundary(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
+
+        let cachedResult = await cache.object(for: cacheKey, type: Boundary.self)
+
+        XCTAssertEqual(cachedResult, expectedResult)
+    }
+
+    func testPoliceOfficersWhenNotCachedReturnsPoliceOfficers() async throws {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
         let expectedResult = PoliceOfficer.mocks
@@ -71,7 +153,38 @@ final class UKNeighbourhoodServiceTests: XCTestCase {
                                                                                  policeForceID: policeForceID).path)
     }
 
-    func testPrioritiesReturnsNeighbourhoodPriorities() async throws {
+    func testPoliceOfficersWhenCachedReturnsCachedPoliceOfficers() async throws {
+        let neighbourhoodID = "NC04"
+        let policeForceID = "leicestershire"
+        let expectedResult = PoliceOfficer.mocks
+        let cacheKey = NeighbourhoodPoliceOfficersCachingKey(
+            neighbourhoodID: neighbourhoodID, policeForceID: policeForceID
+        )
+        await cache.set(expectedResult, for: cacheKey)
+
+        let result = try await service.policeOfficers(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
+
+        XCTAssertEqual(result, expectedResult)
+
+        XCTAssertNil(apiClient.lastPath)
+    }
+
+    func testPoliceOfficersWhenNotCachedAndReturnsPoliceOfficersShouldCacheResult() async throws {
+        let neighbourhoodID = "NC04"
+        let policeForceID = "leicestershire"
+        let expectedResult = PoliceOfficer.mocks
+        let cacheKey = NeighbourhoodPoliceOfficersCachingKey(
+            neighbourhoodID: neighbourhoodID, policeForceID: policeForceID
+        )
+        apiClient.response = expectedResult
+        _ = try await service.policeOfficers(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
+
+        let cachedResult = await cache.object(for: cacheKey, type: [PoliceOfficer].self)
+
+        XCTAssertEqual(cachedResult, expectedResult)
+    }
+
+    func testPrioritiesWhenNotCachedReturnsNeighbourhoodPriorities() async throws {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
         let expectedResult = NeighbourhoodPriority.mocks
@@ -83,6 +196,37 @@ final class UKNeighbourhoodServiceTests: XCTestCase {
 
         XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.priorities(neighbourhoodID: neighbourhoodID,
                                                                              policeForceID: policeForceID).path)
+    }
+
+    func testPrioritiesWhenCachedReturnsCachedNeighbourhoodPriorities() async throws {
+        let neighbourhoodID = "NC04"
+        let policeForceID = "leicestershire"
+        let expectedResult = NeighbourhoodPriority.mocks
+        let cacheKey = NeighbourhoodPrioritiesCachingKey(
+            neighbourhoodID: neighbourhoodID, policeForceID: policeForceID
+        )
+        await cache.set(expectedResult, for: cacheKey)
+
+        let result = try await service.priorities(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
+
+        XCTAssertEqual(result, expectedResult)
+
+        XCTAssertNil(apiClient.lastPath)
+    }
+
+    func testPrioritiesWhenNotCachedAndReturnsNeighbourhoodPrioritiesShouldCacheResult() async throws {
+        let neighbourhoodID = "NC04"
+        let policeForceID = "leicestershire"
+        let expectedResult = NeighbourhoodPriority.mocks
+        let cacheKey = NeighbourhoodPrioritiesCachingKey(
+            neighbourhoodID: neighbourhoodID, policeForceID: policeForceID
+        )
+        apiClient.response = expectedResult
+        let result = try await service.priorities(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
+
+        let cachedResult = await cache.object(for: cacheKey, type: [NeighbourhoodPriority].self)
+
+        XCTAssertEqual(cachedResult, expectedResult)
     }
 
     func testNeighbourhoodPolicingTeamAtCoordinateReturnsNeighbourhoodPolicingTeam() async throws {

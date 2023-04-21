@@ -4,7 +4,7 @@ enum OutcomesEndpoint {
 
     case streetLevelOutcomesForStreet(streetID: Int, date: Date? = nil)
     case streetLevelOutcomesAtSpecificPoint(coordinate: Coordinate, date: Date? = nil)
-    case streetLevelOutcomesInArea(coordinates: [Coordinate], date: Date? = nil)
+    case streetLevelOutcomesInArea(boundary: Boundary, date: Date? = nil)
     case caseHistory(crimeID: String)
 
 }
@@ -27,14 +27,14 @@ extension OutcomesEndpoint: Endpoint {
                 .appendingQueryItem(name: "lng", value: coordinate.longitude)
                 .appendingQueryItem(name: "date", date: date)
 
-        case .streetLevelOutcomesInArea(let coordinates, let date):
+        case .streetLevelOutcomesInArea(let boundary, let date):
             return Self.outcomesAtLocationBasePath
-                .appendingQueryItem(name: "poly", coordinates: coordinates)
+                .appendingQueryItem(name: "poly", boundary: boundary)
                 .appendingQueryItem(name: "date", date: date)
 
         case .caseHistory(let crimeID):
             return Self.outcomesForCrimeBasePath
-                .appendingPathComponent(crimeID)
+                .appendingPathComponent("\(crimeID)")
         }
     }
 

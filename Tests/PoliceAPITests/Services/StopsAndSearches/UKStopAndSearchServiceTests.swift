@@ -47,30 +47,30 @@ final class UKStopAndSearchServiceTests: XCTestCase {
     }
 
     func testStopAndSearchesInAreaReturnsStopAndSearches() async throws {
-        let coordinates = Coordinate.mocks
+        let boundary = Boundary.mock
         let date = Date()
         let expectedResult = StopAndSearch.mocks
         apiClient.response = expectedResult
 
-        let result = try await service.stopAndSearches(inArea: coordinates, date: date)
+        let result = try await service.stopAndSearches(inArea: boundary, date: date)
 
         XCTAssertEqual(result, expectedResult)
 
         XCTAssertEqual(apiClient.lastPath,
-                       StopAndSearchesEndpoint.stopAndSearchesByAreaInArea(coordinates: coordinates, date: date).path)
+                       StopAndSearchesEndpoint.stopAndSearchesByAreaInArea(boundary: boundary, date: date).path)
     }
 
     func testStopAndSearchesInAreaWhenNoDateReturnsStopAndSearches() async throws {
-        let coordinates = Coordinate.mocks
+        let boundary = Boundary.mock
         let expectedResult = StopAndSearch.mocks
         apiClient.response = expectedResult
 
-        let result = try await service.stopAndSearches(inArea: coordinates)
+        let result = try await service.stopAndSearches(inArea: boundary)
 
         XCTAssertEqual(result, expectedResult)
 
         XCTAssertEqual(apiClient.lastPath,
-                       StopAndSearchesEndpoint.stopAndSearchesByAreaInArea(coordinates: coordinates).path)
+                       StopAndSearchesEndpoint.stopAndSearchesByAreaInArea(boundary: boundary).path)
     }
 
     func testStopAndSearchesAtLocationReturnsStopAndSearches() async throws {

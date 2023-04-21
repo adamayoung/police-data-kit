@@ -72,29 +72,29 @@ final class UKOutcomeServiceTests: XCTestCase {
     }
 
     func testStreetLevelOutcomesInAreaReturnsOutcomes() async throws {
-        let coordinates = Coordinate.mocks
+        let boundary = Boundary.mock
         let expectedResult = Outcome.mocks
         let date = Date()
         apiClient.response = expectedResult
 
-        let result = try await service.streetLevelOutcomes(inArea: coordinates, date: date)
+        let result = try await service.streetLevelOutcomes(inArea: boundary, date: date)
 
         XCTAssertEqual(result, expectedResult)
 
         XCTAssertEqual(apiClient.lastPath,
-                       OutcomesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates, date: date) .path)
+                       OutcomesEndpoint.streetLevelOutcomesInArea(boundary: boundary, date: date) .path)
     }
 
     func testStreetLevelOutcomesInAreaWhenNoDateReturnsOutcomes() async throws {
-        let coordinates = Coordinate.mocks
+        let boundary = Boundary.mock
         let expectedResult = Outcome.mocks
         apiClient.response = expectedResult
 
-        let result = try await service.streetLevelOutcomes(inArea: coordinates)
+        let result = try await service.streetLevelOutcomes(inArea: boundary)
 
         XCTAssertEqual(result, expectedResult)
 
-        XCTAssertEqual(apiClient.lastPath, OutcomesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates) .path)
+        XCTAssertEqual(apiClient.lastPath, OutcomesEndpoint.streetLevelOutcomesInArea(boundary: boundary) .path)
     }
 
     func testFetchCaseHistoryReturnCaseHistory() async throws {
