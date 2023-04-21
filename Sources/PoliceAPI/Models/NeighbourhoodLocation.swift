@@ -8,13 +8,13 @@ public struct NeighbourhoodLocation: Decodable, Equatable {
     /// Type of location.
     ///
     /// - Note: e.g. 'station' (police station)
-    public let type: String
+    public let type: String?
     /// Description.
     public let description: String?
     /// Location address.
     public let address: String
     /// Postcode
-    public let postcode: String
+    public let postcode: String?
     /// Location coordinate.
     public var coordinate: Coordinate? {
         guard let lat = latitude, let long = longitude else {
@@ -40,8 +40,15 @@ public struct NeighbourhoodLocation: Decodable, Equatable {
     ///     - postcode: Postcode
     ///     - latitiude: Location coordinate latitude.
     ///     - longitude: Location coordinate longitude.
-    public init(name: String? = nil, type: String, description: String? = nil, address: String, postcode: String,
-                latitude: Double? = nil, longitude: Double? = nil) {
+    public init(
+        name: String? = nil,
+        type: String? = nil,
+        description: String? = nil,
+        address: String,
+        postcode: String? = nil,
+        latitude: Double? = nil,
+        longitude: Double? = nil
+    ) {
         self.name = name
         self.type = type
         self.description = description

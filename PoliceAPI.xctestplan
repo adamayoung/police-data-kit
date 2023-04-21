@@ -1,0 +1,33 @@
+{
+  "configurations" : [
+    {
+      "id" : "41C002F4-B317-40CE-A718-D6B26C87E7AE",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:",
+          "identifier" : "PoliceAPI",
+          "name" : "PoliceAPI"
+        }
+      ]
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PoliceAPITests",
+        "name" : "PoliceAPITests"
+      }
+    }
+  ],
+  "version" : 1
+}
