@@ -17,7 +17,11 @@ public struct Neighbourhood: Identifiable, Decodable, Equatable {
     }
     /// URL for the neighbourhood on the Force's website.
     public var policeForceWebsite: URL? {
-        URL(string: policeForceWebsiteString)
+        guard let policeForceWebsiteString else {
+            return nil
+        }
+
+        return URL(string: policeForceWebsiteString)
     }
     /// An introduction message for the neighbourhood.
     public let welcomeMessage: String?
@@ -38,7 +42,7 @@ public struct Neighbourhood: Identifiable, Decodable, Equatable {
     /// Links.
     public let links: [Link]
 
-    private let policeForceWebsiteString: String
+    private let policeForceWebsiteString: String?
     private let nameString: String
     private let descriptionString: String?
     private let populationString: String
@@ -62,7 +66,7 @@ public struct Neighbourhood: Identifiable, Decodable, Equatable {
         self.id = id
         self.nameString = name
         self.descriptionString = description
-        self.policeForceWebsiteString = policeForceWebsite?.absoluteString ?? ""
+        self.policeForceWebsiteString = policeForceWebsite?.absoluteString
         self.welcomeMessage = welcomeMessage
         self.populationString = String(population)
         self.contactDetails = contactDetails
