@@ -17,10 +17,11 @@ public final class UKPoliceAPI {
         let urlSession = URLSession(configuration: urlSessionConfiguration)
         let serialiser = Serialiser(decoder: .policeDataAPI)
         let apiClient = PoliceDataAPIClient(baseURL: baseURL, urlSession: urlSession, serialiser: serialiser)
+        let cache = InMemoryCache(name: "PoliceAPICache")
 
         self.init(
             policeForceService: UKPoliceForceService(apiClient: apiClient),
-            neighbourhoodService: UKNeighbourhoodService(apiClient: apiClient),
+            neighbourhoodService: UKNeighbourhoodService(apiClient: apiClient, cache: cache),
             crimeService: UKCrimeService(apiClient: apiClient),
             outcomes: UKOutcomeService(apiClient: apiClient),
             stopAndSearches: UKStopAndSearchService(apiClient: apiClient),

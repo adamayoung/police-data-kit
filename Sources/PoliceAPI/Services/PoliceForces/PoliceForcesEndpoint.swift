@@ -3,8 +3,8 @@ import Foundation
 enum PoliceForcesEndpoint {
 
     case list
-    case details(id: String)
-    case seniorOfficers(policeForceID: String)
+    case details(id: PoliceForce.ID)
+    case seniorOfficers(policeForceID: PoliceForce.ID)
 
 }
 
@@ -21,9 +21,9 @@ extension PoliceForcesEndpoint: Endpoint {
             return Self.basePath
                 .appendingPathComponent(id)
 
-        case .seniorOfficers(let policeForceId):
+        case .seniorOfficers(let policeForceID):
             return Self.basePath
-                .appendingPathComponent(policeForceId)
+                .appendingPathComponent(policeForceID)
                 .appendingPathComponent("people")
         }
     }

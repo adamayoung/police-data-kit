@@ -2,9 +2,9 @@ import Foundation
 
 final class UKOutcomeService: OutcomeService {
 
-    private let apiClient: APIClient
+    private let apiClient: any APIClient
 
-    init(apiClient: APIClient) {
+    init(apiClient: some APIClient) {
         self.apiClient = apiClient
     }
 
@@ -18,9 +18,9 @@ final class UKOutcomeService: OutcomeService {
         )
     }
 
-    func streetLevelOutcomes(inArea coordinates: [Coordinate], date: Date?) async throws -> [Outcome] {
+    func streetLevelOutcomes(inArea boundary: Boundary, date: Date?) async throws -> [Outcome] {
         try await apiClient.get(
-            endpoint: OutcomesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates, date: date)
+            endpoint: OutcomesEndpoint.streetLevelOutcomesInArea(boundary: boundary, date: date)
         )
     }
 

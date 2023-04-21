@@ -111,15 +111,13 @@ final class URLQueryItemTests: XCTestCase {
     func testAppendingQueryItemWithCoordinatesWhenURLContainsNoQueryItemsReturnsURLWithCoordinates() {
         let baseURL = URL(string: "https://some.domain.com")
         let queryItemName = "poly"
-        let coordinates = Coordinate.mocks
-        let poly = coordinates
-            .map { "\($0.latitude),\($0.longitude)" }
-            .joined(separator: ":")
+        let boundary = Boundary.mock
+        let poly = boundary.map { "\($0.latitude),\($0.longitude)" }.joined(separator: ":")
         let expectedResult = URL(
             string: "https://some.domain.com?\(queryItemName)=\(poly)"
         )
 
-        let result = baseURL?.appendingQueryItem(name: queryItemName, coordinates: coordinates)
+        let result = baseURL?.appendingQueryItem(name: queryItemName, boundary: boundary)
 
         XCTAssertEqual(result, expectedResult)
     }
@@ -127,15 +125,13 @@ final class URLQueryItemTests: XCTestCase {
     func testAppendingQueryItemWithCoordinatesWhenURLContainsQueryItemsReturnsURLWithCoordinates() {
         let baseURL = URL(string: "https://some.domain.com?id=789")
         let queryItemName = "poly"
-        let coordinates = Coordinate.mocks
-        let poly = coordinates
-            .map { "\($0.latitude),\($0.longitude)" }
-            .joined(separator: ":")
+        let boundary = Boundary.mock
+        let poly = boundary.map { "\($0.latitude),\($0.longitude)" }.joined(separator: ":")
         let expectedResult = URL(
             string: "https://some.domain.com?id=789&\(queryItemName)=\(poly)"
         )
 
-        let result = baseURL?.appendingQueryItem(name: queryItemName, coordinates: coordinates)
+        let result = baseURL?.appendingQueryItem(name: queryItemName, boundary: boundary)
 
         XCTAssertEqual(result, expectedResult)
     }

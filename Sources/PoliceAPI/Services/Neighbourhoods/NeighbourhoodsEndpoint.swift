@@ -2,11 +2,11 @@ import Foundation
 
 enum NeighbourhoodsEndpoint {
 
-    case list(policeForceID: String)
-    case details(id: String, policeForceID: String)
-    case boundary(neighbourhoodID: String, policeForceID: String)
-    case policeOfficers(neighbourhoodID: String, policeForceID: String)
-    case priorities(neighbourhoodID: String, policeForceID: String)
+    case list(policeForceID: PoliceForce.ID)
+    case details(id: Neighbourhood.ID, policeForceID: PoliceForce.ID)
+    case boundary(neighbourhoodID: Neighbourhood.ID, policeForceID: PoliceForce.ID)
+    case policeOfficers(neighbourhoodID: Neighbourhood.ID, policeForceID: PoliceForce.ID)
+    case priorities(neighbourhoodID: Neighbourhood.ID, policeForceID: PoliceForce.ID)
     case locateNeighbourhood(coordinate: Coordinate)
 
 }

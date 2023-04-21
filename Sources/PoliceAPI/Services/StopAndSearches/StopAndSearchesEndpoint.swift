@@ -3,10 +3,10 @@ import Foundation
 enum StopAndSearchesEndpoint {
 
     case stopAndSearchesByAreaAtSpecificPoint(coordinate: Coordinate, date: Date? = nil)
-    case stopAndSearchesByAreaInArea(coordinates: [Coordinate], date: Date? = nil)
+    case stopAndSearchesByAreaInArea(boundary: Boundary, date: Date? = nil)
     case stopAndSearchesAtLocation(streetID: Int, date: Date? = nil)
-    case stopAndSearchesWithNoLocation(policeForceID: String, date: Date? = nil)
-    case stopAndSearchesByPoliceForce(policeForceID: String, date: Date? = nil)
+    case stopAndSearchesWithNoLocation(policeForceID: PoliceForce.ID, date: Date? = nil)
+    case stopAndSearchesByPoliceForce(policeForceID: PoliceForce.ID, date: Date? = nil)
 
 }
 
@@ -26,9 +26,9 @@ extension StopAndSearchesEndpoint: Endpoint {
                 .appendingQueryItem(name: "lng", value: coordinate.longitude)
                 .appendingQueryItem(name: "date", date: date)
 
-        case .stopAndSearchesByAreaInArea(let coordinates, let date):
+        case .stopAndSearchesByAreaInArea(let boundary, let date):
             return Self.stopsStreetBasePath
-                .appendingQueryItem(name: "poly", coordinates: coordinates)
+                .appendingQueryItem(name: "poly", boundary: boundary)
                 .appendingQueryItem(name: "date", date: date)
 
         case .stopAndSearchesAtLocation(let streetID, let date):

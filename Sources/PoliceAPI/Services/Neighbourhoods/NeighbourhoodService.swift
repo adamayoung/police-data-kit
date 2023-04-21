@@ -11,7 +11,7 @@ public protocol NeighbourhoodService {
     ///     - policeForceID: Police Force identifier.
     ///
     /// - Returns: A list of Neighbourhoods.
-    func neighbourhoods(inPoliceForce policeForceID: String) async throws -> [NeighbourhoodReference]
+    func neighbourhoods(inPoliceForce policeForceID: PoliceForce.ID) async throws -> [NeighbourhoodReference]
 
     /// Returns details of a neighbourhood in a police force.
     ///
@@ -22,7 +22,8 @@ public protocol NeighbourhoodService {
     ///     - policeForceID: Police Force identifier.
     ///
     /// - Returns: The matching Neighbourhood.
-    func neighbourhood(withID id: String, inPoliceForce policeForceID: String) async throws -> Neighbourhood
+    func neighbourhood(withID id: Neighbourhood.ID,
+                       inPoliceForce policeForceID: PoliceForce.ID) async throws -> Neighbourhood
 
     /// Returns a list of coordinates that make up the boundary of a neighbourhood.
     ///
@@ -33,8 +34,8 @@ public protocol NeighbourhoodService {
     ///     - policeForceID: Police Force identifier.
     ///
     /// - Returns: A list of coordinates that make up the boundary of the matching neighbourhood.
-    func boundary(forNeighbourhood neighbourhoodID: String,
-                  inPoliceForce policeForceID: String) async throws -> [Coordinate]
+    func boundary(forNeighbourhood neighbourhoodID: Neighbourhood.ID,
+                  inPoliceForce policeForceID: PoliceForce.ID) async throws -> Boundary
 
     /// Returns a list of Police Officers who are members of the neighbourhood team for a neighbourhood.
     ///
@@ -45,8 +46,8 @@ public protocol NeighbourhoodService {
     ///     - policeForceID: Police Force identifier.
     ///
     /// - Returns: A list of police officers who are members of the neighbourhood team for the matching neighbourhood.
-    func policeOfficers(forNeighbourhood neighbourhoodID: String,
-                        inPoliceForce policeForceID: String) async throws -> [PoliceOfficer]
+    func policeOfficers(forNeighbourhood neighbourhoodID: Neighbourhood.ID,
+                        inPoliceForce policeForceID: PoliceForce.ID) async throws -> [PoliceOfficer]
 
     /// Returns a list priorities for a neighbourhood.
     ///
@@ -57,8 +58,8 @@ public protocol NeighbourhoodService {
     ///     - policeForceID: Police Force identifier.
     ///
     /// - Returns: A list of priorities for the matching neighbourhood.
-    func priorities(forNeighbourhood neighbourhoodID: String,
-                    inPoliceForce policeForceID: String) async throws -> [NeighbourhoodPriority]
+    func priorities(forNeighbourhood neighbourhoodID: Neighbourhood.ID,
+                    inPoliceForce policeForceID: PoliceForce.ID) async throws -> [NeighbourhoodPriority]
 
     /// Returns the neighbourhood policing team responsible for a particular area.
     ///

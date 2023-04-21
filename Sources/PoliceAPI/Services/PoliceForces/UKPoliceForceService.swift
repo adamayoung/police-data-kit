@@ -2,9 +2,9 @@ import Foundation
 
 final class UKPoliceForceService: PoliceForceService {
 
-    private let apiClient: APIClient
+    private let apiClient: any APIClient
 
-    init(apiClient: APIClient) {
+    init(apiClient: some APIClient) {
         self.apiClient = apiClient
     }
 
@@ -12,11 +12,11 @@ final class UKPoliceForceService: PoliceForceService {
         try await apiClient.get(endpoint: PoliceForcesEndpoint.list)
     }
 
-    func policeForce(withID id: String) async throws -> PoliceForce {
+    func policeForce(withID id: PoliceForce.ID) async throws -> PoliceForce {
         try await apiClient.get(endpoint: PoliceForcesEndpoint.details(id: id))
     }
 
-    func seniorOfficers(inPoliceForce policeForceID: String) async throws -> [PoliceOfficer] {
+    func seniorOfficers(inPoliceForce policeForceID: PoliceForce.ID) async throws -> [PoliceOfficer] {
         try await apiClient.get(endpoint: PoliceForcesEndpoint.seniorOfficers(policeForceID: policeForceID))
     }
 
