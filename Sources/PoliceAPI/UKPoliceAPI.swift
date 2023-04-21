@@ -25,7 +25,7 @@ public final class UKPoliceAPI {
             crimeService: UKCrimeService(apiClient: apiClient),
             outcomes: UKOutcomeService(apiClient: apiClient),
             stopAndSearches: UKStopAndSearchService(apiClient: apiClient),
-            availability: UKAvailabilityService(apiClient: apiClient)
+            availability: UKAvailabilityService(apiClient: apiClient, cache: cache)
         )
     }
 

@@ -222,7 +222,7 @@ final class UKNeighbourhoodServiceTests: XCTestCase {
             neighbourhoodID: neighbourhoodID, policeForceID: policeForceID
         )
         apiClient.response = expectedResult
-        let result = try await service.priorities(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
+        _ = try await service.priorities(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
         let cachedResult = await cache.object(for: cacheKey, type: [NeighbourhoodPriority].self)
 
