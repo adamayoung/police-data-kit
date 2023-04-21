@@ -10,6 +10,13 @@ final class NeighbourhoodLocationTests: XCTestCase {
         XCTAssertEqual(result, .mock)
     }
 
+    func testDecodeWhenTypeIsNill() throws {
+        let result = try JSONDecoder.policeDataAPI
+            .decode(NeighbourhoodLocation.self, fromResource: "neighbourhood-location-null-type")
+
+        XCTAssertNil(result.type)
+    }
+
     func testInitWhenLatitudeIsNilSetsCoordinateAsNil() {
         let result = NeighbourhoodLocation(type: "test", address: "123 Kafe Street", postcode: "AB12 3CD", longitude: 1)
 
