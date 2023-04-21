@@ -5,20 +5,23 @@ final class UKPoliceForceServiceTests: XCTestCase {
 
     var service: UKPoliceForceService!
     var apiClient: MockAPIClient!
+    var cache: MockCache!
 
     override func setUp() {
         super.setUp()
         apiClient = MockAPIClient()
-        service = UKPoliceForceService(apiClient: apiClient)
+        cache = MockCache()
+        service = UKPoliceForceService(apiClient: apiClient, cache: cache)
     }
 
     override func tearDown() {
-        apiClient = nil
         service = nil
+        cache = nil
+        apiClient = nil
         super.tearDown()
     }
 
-    func testPoliceForcesReturnsPoliceForceReferences() async throws {
+    func testPoliceForcesWhenNotCachedReturnsPoliceForceReferences() async throws {
         let expectedResult = PoliceForceReference.mocks
         apiClient.response = expectedResult
 
@@ -29,7 +32,30 @@ final class UKPoliceForceServiceTests: XCTestCase {
         XCTAssertEqual(apiClient.lastPath, PoliceForcesEndpoint.list.path)
     }
 
-    func testPoliceForceReturnsPoliceForce() async throws {
+    func testPoliceForcesWhenCachedReturnsCachedPoliceForceReferences() async throws {
+        let expectedResult = PoliceForceReference.mocks
+        let cacheKey = PoliceForcesCachingKey()
+        await cache.set(expectedResult, for: cacheKey)
+
+        let result = try await service.policeForces()
+
+        XCTAssertEqual(result, expectedResult)
+
+        XCTAssertNil(apiClient.lastPath)
+    }
+
+    func testPoliceForcesWhenNotCachedAndReturnsPoliceForceReferencesShouldCacheResult() async throws {
+        let expectedResult = PoliceForceReference.mocks
+        let cacheKey = PoliceForcesCachingKey()
+        apiClient.response = expectedResult
+        _ = try await service.policeForces()
+
+        let cachedResult = await cache.object(for: cacheKey, type: [PoliceForceReference].self)
+
+        XCTAssertEqual(cachedResult, expectedResult)
+    }
+
+    func testPoliceForceWhenNotCachedReturnsPoliceForce() async throws {
         let expectedResult = PoliceForce.mock
         let id = expectedResult.id
         apiClient.response = expectedResult
@@ -41,16 +67,66 @@ final class UKPoliceForceServiceTests: XCTestCase {
         XCTAssertEqual(apiClient.lastPath, PoliceForcesEndpoint.details(id: id).path)
     }
 
-    func testFetchSeniorOfficersReturnsPoliceOfficers() async throws {
-        let expectedResult = PoliceOfficer.mocks
-        let id = "leicestershire"
-        apiClient.response = expectedResult
+    func testPoliceForceWhenCachedReturnsCachedPoliceForce() async throws {
+        let expectedResult = PoliceForce.mock
+        let id = expectedResult.id
+        let cacheKey = PoliceForceCachingKey(id: id)
+        await cache.set(expectedResult, for: cacheKey)
 
-        let result = try await service.seniorOfficers(inPoliceForce: id)
+        let result = try await service.policeForce(withID: id)
 
         XCTAssertEqual(result, expectedResult)
 
-        XCTAssertEqual(apiClient.lastPath, PoliceForcesEndpoint.seniorOfficers(policeForceID: id).path)
+        XCTAssertNil(apiClient.lastPath)
+    }
+
+    func testPoliceForceWhenNotCachedAndReturnsCachedPoliceForceShouldCacheResult() async throws {
+        let expectedResult = PoliceForce.mock
+        let id = expectedResult.id
+        let cacheKey = PoliceForceCachingKey(id: id)
+        apiClient.response = expectedResult
+        _ = try await service.policeForce(withID: id)
+
+        let cachedResult = await cache.object(for: cacheKey, type: PoliceForce.self)
+
+        XCTAssertEqual(cachedResult, expectedResult)
+    }
+
+    func testFetchSeniorOfficersWhenNotCachedReturnsPoliceOfficers() async throws {
+        let expectedResult = PoliceOfficer.mocks
+        let policeForceID = "leicestershire"
+        apiClient.response = expectedResult
+
+        let result = try await service.seniorOfficers(inPoliceForce: policeForceID)
+
+        XCTAssertEqual(result, expectedResult)
+
+        XCTAssertEqual(apiClient.lastPath, PoliceForcesEndpoint.seniorOfficers(policeForceID: policeForceID).path)
+    }
+
+    func testFetchSeniorOfficersWhenCachedReturnsCachedPoliceOfficers() async throws {
+        let expectedResult = PoliceOfficer.mocks
+        let policeForceID = "leicestershire"
+        let cacheKey = PoliceForceSeniorOfficersCachingKey(policeForceID: policeForceID)
+        await cache.set(expectedResult, for: cacheKey)
+
+        let result = try await service.seniorOfficers(inPoliceForce: policeForceID)
+
+        XCTAssertEqual(result, expectedResult)
+
+        XCTAssertNil(apiClient.lastPath)
+    }
+
+    func testFetchSeniorOfficersWhenNotCachedAndReturnsPoliceOfficersShouldCacheResult() async throws {
+        let expectedResult = PoliceOfficer.mocks
+        let policeForceID = "leicestershire"
+        let cacheKey = PoliceForceSeniorOfficersCachingKey(policeForceID: policeForceID)
+        apiClient.response = expectedResult
+        _ = try await service.seniorOfficers(inPoliceForce: policeForceID)
+
+        let cachedResult = await cache.object(for: cacheKey, type: [PoliceOfficer].self)
+
+        XCTAssertEqual(cachedResult, expectedResult)
     }
 
 }

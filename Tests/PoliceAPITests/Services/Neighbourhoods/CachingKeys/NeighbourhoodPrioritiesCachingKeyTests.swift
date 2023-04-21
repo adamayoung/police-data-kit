@@ -9,7 +9,7 @@ final class NeighbourhoodPrioritiesCachingKeyTests: XCTestCase {
 
         let cacheKey = NeighbourhoodPrioritiesCachingKey(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID)
 
-        XCTAssertEqual(cacheKey.keyValue, "neighbourhood-priorities-\(neighbourhoodID)-\(policeForceID)")
+        XCTAssertEqual(cacheKey.keyValue, "neighbourhood-\(neighbourhoodID)-\(policeForceID)-priorities")
     }
 
 }

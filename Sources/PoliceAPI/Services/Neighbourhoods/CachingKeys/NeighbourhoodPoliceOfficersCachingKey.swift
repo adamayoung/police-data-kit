@@ -6,7 +6,7 @@ struct NeighbourhoodPoliceOfficersCachingKey: CachingKey {
     let policeForceID: PoliceForce.ID
 
     var keyValue: String {
-        "neighbourhood-police-officers-\(neighbourhoodID)-\(policeForceID)"
+        "neighbourhood-\(neighbourhoodID)-\(policeForceID)-police-officers"
     }
 
     init(neighbourhoodID: Neighbourhood.ID, policeForceID: PoliceForce.ID) {

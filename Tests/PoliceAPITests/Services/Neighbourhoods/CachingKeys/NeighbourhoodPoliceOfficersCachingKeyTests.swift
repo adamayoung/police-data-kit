@@ -11,7 +11,7 @@ final class NeighbourhoodPoliceOfficersCachingKeyTests: XCTestCase {
             neighbourhoodID: neighbourhoodID, policeForceID: policeForceID
         )
 
-        XCTAssertEqual(cacheKey.keyValue, "neighbourhood-police-officers-\(neighbourhoodID)-\(policeForceID)")
+        XCTAssertEqual(cacheKey.keyValue, "neighbourhood-\(neighbourhoodID)-\(policeForceID)-police-officers")
     }
 
 }

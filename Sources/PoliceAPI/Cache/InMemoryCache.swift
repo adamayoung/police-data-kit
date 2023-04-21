@@ -7,7 +7,7 @@ final actor InMemoryCache: NSObject, Cache {
     private let defaultExpiresIn: TimeInterval
     private let logger: Logger
 
-    init(name: String, defaultExpiresIn: TimeInterval = 300, countLimit: Int = 0) {
+    init(name: String, defaultExpiresIn: TimeInterval = 60 * 60 * 12, countLimit: Int = 0) {
         self.cache = NSCache()
         self.cache.name = name
         self.cache.countLimit = countLimit
