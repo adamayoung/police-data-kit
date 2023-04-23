@@ -20,7 +20,7 @@ public protocol PoliceForceService {
     ///   - id: Police Force identifier.
     ///
     /// - Returns: The matching Police Force.
-    func policeForce(withID id: PoliceForce.ID) async throws -> PoliceForce
+    func policeForce(withID id: PoliceForce.ID) async throws -> PoliceForce?
 
     /// Returns the Senior Police Officers in a Police Force.
     ///
@@ -30,6 +30,6 @@ public protocol PoliceForceService {
     ///   - id: Police Force identifier.
     ///
     /// - Returns: A list of Senior Police Officers.
-    func seniorOfficers(inPoliceForce policeForceID: PoliceForce.ID) async throws -> [PoliceOfficer]
+    func seniorOfficers(inPoliceForce policeForceID: PoliceForce.ID) async throws -> [PoliceOfficer]?
 
 }

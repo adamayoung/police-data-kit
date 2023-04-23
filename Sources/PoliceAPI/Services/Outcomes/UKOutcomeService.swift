@@ -62,13 +62,20 @@ final class UKOutcomeService: OutcomeService {
         return outcomes
     }
 
-    func caseHistory(forCrime crimeID: String) async throws -> CaseHistory {
+    func caseHistory(forCrime crimeID: String) async throws -> CaseHistory? {
         Self.logger.trace("fetching Case History for crime \(crimeID, privacy: .public)")
 
         let caseHistory: CaseHistory
         do {
             caseHistory = try await apiClient.get(endpoint: OutcomesEndpoint.caseHistory(crimeID: crimeID))
         } catch let error {
+            switch error as? PoliceDataError {
+            case .notFound:
+                return nil
+            default:
+                break
+            }
+
             // swiftlint:disable:next line_length
             Self.logger.error("failed fetching Case History for crime \(crimeID, privacy: .public): \(error.localizedDescription, privacy: .public)")
             throw error

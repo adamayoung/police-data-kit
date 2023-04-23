@@ -34,7 +34,7 @@ final class UKPoliceForceService: PoliceForceService {
         return policeForces
     }
 
-    func policeForce(withID id: PoliceForce.ID) async throws -> PoliceForce {
+    func policeForce(withID id: PoliceForce.ID) async throws -> PoliceForce? {
         Self.logger.trace("fetching Police Force \(id, privacy: .public)")
 
         let cacheKey = PoliceForceCachingKey(id: id)
@@ -46,6 +46,13 @@ final class UKPoliceForceService: PoliceForceService {
         do {
             policeForce = try await apiClient.get(endpoint: PoliceForcesEndpoint.details(id: id))
         } catch let error {
+            switch error as? PoliceDataError {
+            case .notFound:
+                return nil
+            default:
+                break
+            }
+
             // swiftlint:disable:next line_length
             Self.logger.error("failed fetching Police Force \(id, privacy: .public): \(error.localizedDescription, privacy: .public)")
             throw error
@@ -56,7 +63,7 @@ final class UKPoliceForceService: PoliceForceService {
         return policeForce
     }
 
-    func seniorOfficers(inPoliceForce policeForceID: PoliceForce.ID) async throws -> [PoliceOfficer] {
+    func seniorOfficers(inPoliceForce policeForceID: PoliceForce.ID) async throws -> [PoliceOfficer]? {
         Self.logger.trace("fetching Senior Officers in Police Force \(policeForceID, privacy: .public)")
 
         let cacheKey = PoliceForceSeniorOfficersCachingKey(policeForceID: policeForceID)
@@ -65,12 +72,18 @@ final class UKPoliceForceService: PoliceForceService {
         }
 
         let policeOfficers: [PoliceOfficer]
-
         do {
             policeOfficers = try await apiClient.get(
                 endpoint: PoliceForcesEndpoint.seniorOfficers(policeForceID: policeForceID)
             )
         } catch let error {
+            switch error as? PoliceDataError {
+            case .notFound:
+                return nil
+            default:
+                break
+            }
+
             // swiftlint:disable:next line_length
             Self.logger.error("failed fetching Senior Officers in Police Force \(policeForceID, privacy: .public): \(error.localizedDescription, privacy: .public)")
             throw error

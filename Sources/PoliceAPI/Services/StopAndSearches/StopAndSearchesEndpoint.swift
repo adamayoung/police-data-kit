@@ -2,11 +2,11 @@ import Foundation
 
 enum StopAndSearchesEndpoint {
 
-    case stopAndSearchesByAreaAtSpecificPoint(coordinate: Coordinate, date: Date? = nil)
-    case stopAndSearchesByAreaInArea(boundary: Boundary, date: Date? = nil)
-    case stopAndSearchesAtLocation(streetID: Int, date: Date? = nil)
-    case stopAndSearchesWithNoLocation(policeForceID: PoliceForce.ID, date: Date? = nil)
-    case stopAndSearchesByPoliceForce(policeForceID: PoliceForce.ID, date: Date? = nil)
+    case stopAndSearchesByAreaAtSpecificPoint(coordinate: Coordinate, date: Date)
+    case stopAndSearchesByAreaInArea(boundary: Boundary, date: Date)
+    case stopAndSearchesAtLocation(streetID: Int, date: Date)
+    case stopAndSearchesWithNoLocation(policeForceID: PoliceForce.ID, date: Date)
+    case stopAndSearchesByPoliceForce(policeForceID: PoliceForce.ID, date: Date)
 
 }
 

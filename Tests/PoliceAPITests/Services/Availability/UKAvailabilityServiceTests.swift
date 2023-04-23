@@ -23,7 +23,7 @@ final class UKAvailabilityTests: XCTestCase {
 
     func testAvailableDataSetsWhenNotCachedReturnsDataSets() async throws {
         let expectedResult = DataSet.mocks
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.availableDataSets()
 
@@ -47,7 +47,7 @@ final class UKAvailabilityTests: XCTestCase {
     func testAvailableDataSetsWhenNotCachedAndReturnsDataSetsShouldCacheResult() async throws {
         let expectedResult = DataSet.mocks
         let cacheKey = AvailableDataSetsCachingKey()
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
         _ = try await service.availableDataSets()
 
         let cachedResult = await cache.object(for: cacheKey, type: [DataSet].self)

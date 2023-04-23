@@ -22,7 +22,7 @@ final class UKCrimeServiceTests: XCTestCase {
         let coordinate = Coordinate.mock
         let date = Date()
         let expectedResult = Crime.mocks
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.streetLevelCrimes(atCoordinate: coordinate, date: date)
 
@@ -35,7 +35,7 @@ final class UKCrimeServiceTests: XCTestCase {
     func testStreetLevelCrimesAtCoordinateWhenNoDateReturnsCrimes() async throws {
         let coordinate = Coordinate.mock
         let expectedResult = Crime.mocks
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.streetLevelCrimes(atCoordinate: coordinate)
 
@@ -48,7 +48,7 @@ final class UKCrimeServiceTests: XCTestCase {
         let boundary = Boundary.mock
         let date = Date()
         let expectedResult = Crime.mocks
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.streetLevelCrimes(inArea: boundary, date: date)
 
@@ -61,7 +61,7 @@ final class UKCrimeServiceTests: XCTestCase {
     func testStreetLevelCrimesInAreaWhenNoDateReturnsCrimes() async throws {
         let boundary = Boundary.mock
         let expectedResult = Crime.mocks
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.streetLevelCrimes(inArea: boundary)
 
@@ -74,7 +74,7 @@ final class UKCrimeServiceTests: XCTestCase {
         let expectedResult = Crime.mocks
         let streetID = expectedResult[0].location.street.id
         let date = Date()
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.crimes(forStreet: streetID, date: date)
 
@@ -87,7 +87,7 @@ final class UKCrimeServiceTests: XCTestCase {
     func testCrimesForStreetWhenNoDateReturnsCrimes() async throws {
         let expectedResult = Crime.mocks
         let streetID = expectedResult[0].location.street.id
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.crimes(forStreet: streetID)
 
@@ -100,7 +100,7 @@ final class UKCrimeServiceTests: XCTestCase {
         let coordinate = Coordinate.mock
         let date = Date()
         let expectedResult = Crime.mocks
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.crimes(atCoordinate: coordinate, date: date)
 
@@ -113,7 +113,7 @@ final class UKCrimeServiceTests: XCTestCase {
     func testCrimesAtCoordinateWhenNoDateReturnsCrimes() async throws {
         let coordinate = Coordinate.mock
         let expectedResult = Crime.mocks
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.crimes(atCoordinate: coordinate)
 
@@ -127,7 +127,7 @@ final class UKCrimeServiceTests: XCTestCase {
         let policeForceID = PoliceForce.mock.id
         let date = Date()
         let expectedResult = Crime.mocks
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.crimesWithNoLocation(forCategory: categoryID, inPoliceForce: policeForceID,
                                                             date: date)
@@ -142,7 +142,7 @@ final class UKCrimeServiceTests: XCTestCase {
     func testCrimesWithNoLocationWhenNoCategoryOrDateReturnsCrimes() async throws {
         let policeForceID = PoliceForce.mock.id
         let expectedResult = Crime.mocks
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.crimesWithNoLocation(inPoliceForce: policeForceID)
 
@@ -155,7 +155,7 @@ final class UKCrimeServiceTests: XCTestCase {
     func testCrimeCategoriesReturnsCrimeCategories() async throws {
         let expectedResult = CrimeCategory.mocks
         let date = Date()
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.crimeCategories(forDate: date)
 

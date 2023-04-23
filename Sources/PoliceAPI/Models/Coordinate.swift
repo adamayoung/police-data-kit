@@ -4,16 +4,9 @@ import Foundation
 public struct Coordinate: Decodable, Equatable, CustomStringConvertible {
 
     /// Latitude.
-    public var latitude: Double {
-        Double(latitudeString) ?? 0
-    }
+    public var latitude: Double
     /// Longitude.
-    public var longitude: Double {
-        Double(longitudeString) ?? 0
-    }
-
-    private let latitudeString: String
-    private let longitudeString: String
+    public var longitude: Double
 
     /// Creates a new `Coordinate`.
     ///
@@ -21,8 +14,8 @@ public struct Coordinate: Decodable, Equatable, CustomStringConvertible {
     ///   - latitude: Latitude.
     ///   - longitude: Longitude.
     public init(latitude: Double, longitude: Double) {
-        self.latitudeString = String(latitude)
-        self.longitudeString = String(longitude)
+        self.latitude = latitude
+        self.longitude = longitude
     }
 
     public var description: String {
@@ -34,8 +27,26 @@ public struct Coordinate: Decodable, Equatable, CustomStringConvertible {
 extension Coordinate {
 
     private enum CodingKeys: String, CodingKey {
-        case latitudeString = "latitude"
-        case longitudeString = "longitude"
+        case latitude
+        case longitude
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let latitudeString = try container.decodeIfPresent(String.self, forKey: .latitude)
+        let longitudeString = try container.decodeIfPresent(String.self, forKey: .longitude)
+
+        guard
+            let latitude = Double(latitudeString ?? ""),
+            let longitude = Double(longitudeString ?? "")
+        else {
+            self.latitude = 0
+            self.longitude = 0
+            return
+        }
+
+        self.latitude = latitude
+        self.longitude = longitude
     }
 
 }

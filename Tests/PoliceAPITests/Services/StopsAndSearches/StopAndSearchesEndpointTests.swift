@@ -16,17 +16,6 @@ final class StopAndSearchesEndpointTests: XCTestCase {
         XCTAssertEqual(path, expectedPath)
     }
 
-    func testStopAndSearchesByAreaAtSpecificPointEndpointWhenNoDateReturnsURL() {
-        let coordinate = Coordinate.mock
-        let expectedPath = URL(
-            string: "/stops-street?lat=\(coordinate.latitude)&lng=\(coordinate.longitude)"
-        )!
-
-        let path = StopAndSearchesEndpoint.stopAndSearchesByAreaAtSpecificPoint(coordinate: coordinate).path
-
-        XCTAssertEqual(path, expectedPath)
-    }
-
     func testStopAndSearchesByAreaInAreaEndpointReturnsURL() {
         let boundary = Boundary.mock
         let poly = boundary.map { "\($0.latitude),\($0.longitude)" }.joined(separator: ":")
@@ -35,16 +24,6 @@ final class StopAndSearchesEndpointTests: XCTestCase {
         let expectedPath = URL(string: "/stops-street?poly=\(poly)&date=\(dateString)")!
 
         let path = StopAndSearchesEndpoint.stopAndSearchesByAreaInArea(boundary: boundary, date: date).path
-
-        XCTAssertEqual(path, expectedPath)
-    }
-
-    func testStopAndSearchesByAreaInAreaEndpointWhenNoDateReturnsURL() {
-        let boundary = Boundary.mock
-        let poly = boundary.map { "\($0.latitude),\($0.longitude)" }.joined(separator: ":")
-        let expectedPath = URL(string: "/stops-street?poly=\(poly)")!
-
-        let path = StopAndSearchesEndpoint.stopAndSearchesByAreaInArea(boundary: boundary).path
 
         XCTAssertEqual(path, expectedPath)
     }
@@ -60,15 +39,6 @@ final class StopAndSearchesEndpointTests: XCTestCase {
         XCTAssertEqual(path, expectedPath)
     }
 
-    func testStopAndSearchesAtLocationEndpointWhenNoDateReturnsURL() {
-        let streetID = 883407
-        let expectedPath = URL(string: "/stops-at-location?location_id=\(streetID)")!
-
-        let path = StopAndSearchesEndpoint.stopAndSearchesAtLocation(streetID: streetID).path
-
-        XCTAssertEqual(path, expectedPath)
-    }
-
     func testStopAndSearchesWithNoLocationEndpointReturnsURL() {
         let policeForceID = "cleveland"
         let dateString = "2017-01"
@@ -80,15 +50,6 @@ final class StopAndSearchesEndpointTests: XCTestCase {
         XCTAssertEqual(path, expectedPath)
     }
 
-    func testStopAndSearchesWithNoLocationEndpointWhenNoDateReturnsURL() {
-        let policeForceID = "cleveland"
-        let expectedPath = URL(string: "/stops-no-location?force=\(policeForceID)")!
-
-        let path = StopAndSearchesEndpoint.stopAndSearchesWithNoLocation(policeForceID: policeForceID).path
-
-        XCTAssertEqual(path, expectedPath)
-    }
-
     func testStopAndSearchesByForceReturnsURL() {
         let policeForceID = "avon-and-somerset"
         let dateString = "2017-01"
@@ -96,15 +57,6 @@ final class StopAndSearchesEndpointTests: XCTestCase {
         let expectedPath = URL(string: "/stops-force?force=\(policeForceID)&date=\(dateString)")!
 
         let path = StopAndSearchesEndpoint.stopAndSearchesByPoliceForce(policeForceID: policeForceID, date: date).path
-
-        XCTAssertEqual(path, expectedPath)
-    }
-
-    func testStopAndSearchesByForceWhenNoDateReturnsURL() {
-        let policeForceID = "avon-and-somerset"
-        let expectedPath = URL(string: "/stops-force?force=\(policeForceID)")!
-
-        let path = StopAndSearchesEndpoint.stopAndSearchesByPoliceForce(policeForceID: policeForceID).path
 
         XCTAssertEqual(path, expectedPath)
     }

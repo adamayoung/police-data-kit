@@ -15,7 +15,7 @@ public protocol StopAndSearchService {
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
     /// - Returns: A list of stop and searches.
-    func stopAndSearches(atCoordinate coordinate: Coordinate, date: Date?) async throws -> [StopAndSearch]
+    func stopAndSearches(atCoordinate coordinate: Coordinate, date: Date) async throws -> [StopAndSearch]
 
     /// Returns stop and searches at street-level within a custom area.
     ///
@@ -27,7 +27,7 @@ public protocol StopAndSearchService {
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
     /// - Returns: A list of stop and searches.
-    func stopAndSearches(inArea boundary: Boundary, date: Date?) async throws -> [StopAndSearch]
+    func stopAndSearches(inArea boundary: Boundary, date: Date) async throws -> [StopAndSearch]
 
     /// Returns stop and searches at a particular location.
     ///
@@ -39,7 +39,7 @@ public protocol StopAndSearchService {
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
     /// - Returns: A list of stop and searches.
-    func stopAndSearches(atLocation streetID: Int, date: Date?) async throws -> [StopAndSearch]
+    func stopAndSearches(atLocation streetID: Int, date: Date) async throws -> [StopAndSearch]
 
     /// Returns stop and searches that could not be mapped to a location.
     ///
@@ -52,7 +52,7 @@ public protocol StopAndSearchService {
     ///
     /// - Returns: A list of stop and searches.
     func stopAndSearchesWithNoLocation(forPoliceForce policeForceID: PoliceForce.ID,
-                                       date: Date?) async throws -> [StopAndSearch]
+                                       date: Date) async throws -> [StopAndSearch]
 
     /// Returns stop and searches reported by a particular force.
     ///
@@ -64,31 +64,31 @@ public protocol StopAndSearchService {
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
     /// - Returns: A list of stop and searches.
-    func stopAndSearches(forPoliceForce policeForceID: PoliceForce.ID, date: Date?) async throws -> [StopAndSearch]
+    func stopAndSearches(forPoliceForce policeForceID: PoliceForce.ID, date: Date) async throws -> [StopAndSearch]
 
 }
 
 extension StopAndSearchService {
 
-    func stopAndSearches(atCoordinate coordinate: Coordinate, date: Date? = nil) async throws -> [StopAndSearch] {
+    func stopAndSearches(atCoordinate coordinate: Coordinate, date: Date = Date()) async throws -> [StopAndSearch] {
         try await stopAndSearches(atCoordinate: coordinate, date: date)
     }
 
-    func stopAndSearches(inArea boundary: Boundary, date: Date? = nil) async throws -> [StopAndSearch] {
+    func stopAndSearches(inArea boundary: Boundary, date: Date = Date()) async throws -> [StopAndSearch] {
         try await stopAndSearches(inArea: boundary, date: date)
     }
 
-    func stopAndSearches(atLocation streetID: Int, date: Date? = nil) async throws -> [StopAndSearch] {
+    func stopAndSearches(atLocation streetID: Int, date: Date = Date()) async throws -> [StopAndSearch] {
         try await stopAndSearches(atLocation: streetID, date: date)
     }
 
     func stopAndSearchesWithNoLocation(forPoliceForce policeForceID: PoliceForce.ID,
-                                       date: Date? = nil) async throws -> [StopAndSearch] {
+                                       date: Date = Date()) async throws -> [StopAndSearch] {
         try await stopAndSearchesWithNoLocation(forPoliceForce: policeForceID, date: date)
     }
 
     func stopAndSearches(forPoliceForce policeForceID: PoliceForce.ID,
-                         date: Date? = nil) async throws -> [StopAndSearch] {
+                         date: Date = Date()) async throws -> [StopAndSearch] {
         try await stopAndSearches(forPoliceForce: policeForceID, date: date)
     }
 
