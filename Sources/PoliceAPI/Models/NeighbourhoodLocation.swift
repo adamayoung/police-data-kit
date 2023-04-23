@@ -30,16 +30,16 @@ public struct NeighbourhoodLocation: Decodable, Equatable {
     private let latitude: String?
     private let longitude: String?
 
-    /// Creates a a new `NeighbourhoodLocation`.
+    /// Creates a new `NeighbourhoodLocation`.
     ///
     /// - Parameters:
-    ///     - name: Name.
-    ///     - type: Type of location.
-    ///     - description: Description.
-    ///     - address: Location address.
-    ///     - postcode: Postcode
-    ///     - latitiude: Location coordinate latitude.
-    ///     - longitude: Location coordinate longitude.
+    ///   - name: Name.
+    ///   - type: Type of location.
+    ///   - description: Description.
+    ///   - address: Location address.
+    ///   - postcode: Postcode
+    ///   - latitiude: Location coordinate latitude.
+    ///   - longitude: Location coordinate longitude.
     public init(
         name: String? = nil,
         type: String? = nil,

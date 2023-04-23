@@ -8,11 +8,11 @@ public struct OutcomeStatus: Decodable, Equatable {
     /// Date of the outcome.
     public let date: Date
 
-    /// Creates a a new `OutcomeStatus`.
+    /// Creates a new `OutcomeStatus`.
     ///
     /// - Parameters:
-    ///     - category: Category of the outcome.
-    ///     - date: Date of the outcome.
+    ///   - category: Category of the outcome.
+    ///   - date: Date of the outcome.
     public init(category: String, date: Date) {
         self.category = category
         self.date = date

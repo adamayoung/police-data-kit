@@ -19,14 +19,19 @@ public struct NeighbourhoodPriority: Decodable, Equatable {
     private let issueString: String
     private let actionString: String?
 
-    /// Creates a a new `NeighbourhoodPriority`.
+    /// Creates a new `NeighbourhoodPriority`.
     ///
     /// - Parameters:
-    ///     - issue: An issue raised with the police.
-    ///     - issueDate: When the priority was agreed upon.
-    ///     - action: Action taken to address the priority.
-    ///     - actionDate: When action was last taken.
-    public init(issue: String, issueDate: Date, action: String? = nil, actionDate: Date? = nil) {
+    ///   - issue: An issue raised with the police.
+    ///   - issueDate: When the priority was agreed upon.
+    ///   - action: Action taken to address the priority.
+    ///   - actionDate: When action was last taken.
+    public init(
+        issue: String,
+        issueDate: Date,
+        action: String? = nil,
+        actionDate: Date? = nil
+    ) {
         self.issueString = issue
         self.issueDate = issueDate
         self.actionString = action

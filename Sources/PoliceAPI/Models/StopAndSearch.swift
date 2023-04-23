@@ -34,27 +34,39 @@ public struct StopAndSearch: Decodable, Equatable {
     /// - Note: Some forces only provide dates for their stop and searches, so you might see a disproportionate number of incidents occuring at midnight.
     public let date: Date
 
-    /// Creates a a new `StopAndSearch`.
+    /// Creates a new `StopAndSearch`.
     ///
     /// - Parameters:
-    ///     - type: Type of stop and search.
-    ///     - didInvolvePerson: Whether a person was searched in this incident.
-    ///     - gender: Gender of person stropped, if applicable and provided.
-    ///     - ageRange: The age range of the person stopped at the time the stop occurred.
-    ///     - selfDefinedEthnicity: The self-defined ethnicity of the person stopped.
-    ///     - officerDefinedEthnicity: The officer-defined ethnicity of the person stopped.
-    ///     - legislation: The power used to carry out the stop and search.
-    ///     - objectOfSearch: The reason the stop and search was carried out.
-    ///     - removalOfMoreThanOuterClothing: Whether the person searched had more than their outer clothing removed
-    ///     - operationName: The name of the operation this stop and search was part of.
-    ///     - location: Approximate location of the incident.
-    ///     - outcome: The outcome of the stop.
-    ///     - outcomeLinkedToObjectOfSearch: When the stop and search took place.
-    ///     - date: When the stop and search took place.
-    public init(type: StopAndSearchType, didInvolvePerson: Bool, gender: Gender? = nil, ageRange: String? = nil,
-                selfDefinedEthnicity: String? = nil, officerDefinedEthnicity: String? = nil, legislation: String,
-                objectOfSearch: String, removalOfMoreThanOuterClothing: Bool? = nil, operationName: String? = nil,
-                location: Location, outcome: String? = nil, outcomeLinkedToObjectOfSearch: Bool? = nil, date: Date) {
+    ///   - type: Type of stop and search.
+    ///   - didInvolvePerson: Whether a person was searched in this incident.
+    ///   - gender: Gender of person stropped, if applicable and provided.
+    ///   - ageRange: The age range of the person stopped at the time the stop occurred.
+    ///   - selfDefinedEthnicity: The self-defined ethnicity of the person stopped.
+    ///   - officerDefinedEthnicity: The officer-defined ethnicity of the person stopped.
+    ///   - legislation: The power used to carry out the stop and search.
+    ///   - objectOfSearch: The reason the stop and search was carried out.
+    ///   - removalOfMoreThanOuterClothing: Whether the person searched had more than their outer clothing removed
+    ///   - operationName: The name of the operation this stop and search was part of.
+    ///   - location: Approximate location of the incident.
+    ///   - outcome: The outcome of the stop.
+    ///   - outcomeLinkedToObjectOfSearch: When the stop and search took place.
+    ///   - date: When the stop and search took place.
+    public init(
+        type: StopAndSearchType,
+        didInvolvePerson: Bool,
+        gender: Gender? = nil,
+        ageRange: String? = nil,
+        selfDefinedEthnicity: String? = nil,
+        officerDefinedEthnicity: String? = nil,
+        legislation: String,
+        objectOfSearch: String,
+        removalOfMoreThanOuterClothing: Bool? = nil,
+        operationName: String? = nil,
+        location: Location,
+        outcome: String? = nil,
+        outcomeLinkedToObjectOfSearch: Bool? = nil,
+        date: Date
+    ) {
         self.type = type
         self.didInvolvePerson = didInvolvePerson
         self.gender = gender

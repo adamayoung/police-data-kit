@@ -14,12 +14,12 @@ public struct Link: Decodable, Equatable {
 
     private let urlString: String
 
-    /// Creates a a new `Link`.
+    /// Creates a new `Link`.
     ///
     /// - Parameters:
-    ///     - title: Title of the link.
-    ///     - description: Description of the link.
-    ///     - url: URL.
+    ///   - title: Title of the link.
+    ///   - description: Description of the link.
+    ///   - url: URL.
     public init(title: String, description: String? = nil, url: URL? = nil) {
         self.title = title
         self.description = description

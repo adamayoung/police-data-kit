@@ -10,12 +10,12 @@ public struct CaseHistoryOutcome: Decodable, Equatable {
     /// Category of the outcome.
     public let category: OutcomeCategory
 
-    /// Creates a a new `CaseHistoryOutcome`.
+    /// Creates a new `CaseHistoryOutcome`.
     ///
     /// - Parameters:
-    ///     - personID: An identifier for the suspect/offender, where available.
-    ///     - date: Month of the crime.
-    ///     - category: Category of the outcome.
+    ///   - personID: An identifier for the suspect/offender, where available.
+    ///   - date: Month of the crime.
+    ///   - category: Category of the outcome.
     public init(personID: String? = nil, date: Date, category: OutcomeCategory) {
         self.personID = personID
         self.date = date

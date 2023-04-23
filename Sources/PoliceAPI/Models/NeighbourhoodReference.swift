@@ -10,11 +10,11 @@ public struct NeighbourhoodReference: Identifiable, Decodable, Equatable {
     /// Name for the neighbourhood.
     public let name: String
 
-    /// Creates a a new `NeighbourhoodReference`.
+    /// Creates a new `NeighbourhoodReference`.
     ///
     /// - Parameters:
-    ///     - id: Police Force specific team identifier.
-    ///     - name: Name for the neighbourhood.
+    ///   - id: Police Force specific team identifier.
+    ///   - name: Name for the neighbourhood.
     public init(id: String, name: String) {
         self.id = id
         self.name = name

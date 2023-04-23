@@ -12,14 +12,19 @@ public struct Outcome: Decodable, Equatable {
     /// Crime information.
     public let crime: OutcomeCrime
 
-    /// Creates a a new `Outcome`.
+    /// Creates a new `Outcome`.
     ///
     /// - Parameters:
-    ///     - personID: An identifier for the suspect/offender, where available.
-    ///     - date: Date of the crime.
-    ///     - category: Category of the outcome.
-    ///     - crime: Crime information.
-    public init(personID: String? = nil, date: Date, category: OutcomeCategory, crime: OutcomeCrime) {
+    ///   - personID: An identifier for the suspect/offender, where available.
+    ///   - date: Date of the crime.
+    ///   - category: Category of the outcome.
+    ///   - crime: Crime information.
+    public init(
+        personID: String? = nil,
+        date: Date,
+        category: OutcomeCategory,
+        crime: OutcomeCrime
+    ) {
         self.personID = personID
         self.date = date
         self.category = category

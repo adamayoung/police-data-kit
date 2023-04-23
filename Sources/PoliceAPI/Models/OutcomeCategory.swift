@@ -9,11 +9,11 @@ public struct OutcomeCategory: Identifiable, Decodable, Equatable {
     /// Name of the category.
     public let name: String
 
-    /// Creates a a new `OutcomeCategory`.
+    /// Creates a new `OutcomeCategory`.
     ///
     /// - Parameters:
-    ///     - id: Category code.
-    ///     - name: Name of the category.
+    ///   - id: Category code.
+    ///   - name: Name of the category.
     public init(id: String, name: String) {
         self.id = id
         self.name = name

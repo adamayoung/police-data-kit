@@ -17,7 +17,7 @@ public protocol PoliceForceService {
     /// - Note: [Police API | Specific force](https://data.police.uk/docs/method/force/)
     ///
     /// - Parameters:
-    ///     - id: Police Force identifier.
+    ///   - id: Police Force identifier.
     ///
     /// - Returns: The matching Police Force.
     func policeForce(withID id: PoliceForce.ID) async throws -> PoliceForce
@@ -27,7 +27,7 @@ public protocol PoliceForceService {
     /// - Note: [Police API | Senior officers](https://data.police.uk/docs/method/senior-officers/)
     ///
     /// - Parameters:
-    ///     - id: Police Force identifier.
+    ///   - id: Police Force identifier.
     ///
     /// - Returns: A list of Senior Police Officers.
     func seniorOfficers(inPoliceForce policeForceID: PoliceForce.ID) async throws -> [PoliceOfficer]

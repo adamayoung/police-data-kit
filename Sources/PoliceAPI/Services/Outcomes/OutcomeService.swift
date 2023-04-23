@@ -9,8 +9,8 @@ public protocol OutcomeService {
     /// - Note: Outcomes are not available for the Police Service of Northern Ireland.
     ///
     /// - Parameters:
-    ///     - streetID: A street ID.
-    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///   - streetID: A street ID.
+    ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
     /// - Returns: A list of street level crime outcomes.
     func streetLevelOutcomes(forStreet streetID: Int, date: Date?) async throws -> [Outcome]
@@ -21,8 +21,8 @@ public protocol OutcomeService {
     /// - Note: Outcomes are not available for the Police Service of Northern Ireland.
     ///
     /// - Parameters:
-    ///     - coordinate: A coordinate.
-    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///   - coordinate: A coordinate.
+    ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
     /// - Returns: A list of street level crime outcomes.
     func streetLevelOutcomes(atCoordinate coordinate: Coordinate, date: Date?) async throws -> [Outcome]
@@ -33,8 +33,8 @@ public protocol OutcomeService {
     /// - Note: Outcomes are not available for the Police Service of Northern Ireland.
     ///
     /// - Parameters:
-    ///     - coordinates: Coordinates which define the boundary of the custom area.
-    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///   - coordinates: Coordinates which define the boundary of the custom area.
+    ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
     /// - Returns: A list of street level crime outcomes.
     func streetLevelOutcomes(inArea boundary: Boundary, date: Date?) async throws -> [Outcome]
@@ -45,7 +45,7 @@ public protocol OutcomeService {
     /// - Note: Outcomes are not available for the Police Service of Northern Ireland.
     ///
     /// - Parameters:
-    ///     - crimeID: The crimeID of a crime, not the id.
+    ///   - crimeID: The crimeID of a crime, not the id.
     ///
     /// - Returns: The case history for a crime.
     func caseHistory(forCrime crimeID: String) async throws -> CaseHistory

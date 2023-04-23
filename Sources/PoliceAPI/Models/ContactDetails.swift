@@ -34,28 +34,41 @@ public struct ContactDetails: Decodable, Equatable {
     /// RSS URL.
     public let rss: URL?
 
-    /// Creates a a new `ContactDetails`.
+    /// Creates a new `ContactDetails`.
     ///
     /// - Parameters:
-    ///     - email: Email address.
-    ///     - telephone: Telephone number.
-    ///     - mobile: Mobile number.
-    ///     - fax: Fax number.
-    ///     - web: Website address.
-    ///     - address: Facebook profile URL.
-    ///     - facebook: Facebook profile URL.
-    ///     - twitter: Twitter profile URL.
-    ///     - youtube: YouTube profile URL.
-    ///     - myspace: Myspace profile URL.
-    ///     - bebo: Bebo profile URL.
-    ///     - flickr: Flickr profile URL.
-    ///     - forum: Forum URL.
-    ///     - blog: Blog URL.
-    ///     - rss: RSS URL.
-    public init(email: String? = nil, telephone: String? = nil, mobile: String? = nil, fax: String? = nil,
-                web: URL? = nil, address: String? = nil, facebook: URL? = nil, twitter: URL? = nil,
-                youtube: URL? = nil, myspace: URL? = nil, bebo: URL? = nil, flickr: URL? = nil, forum: URL? = nil,
-                blog: URL? = nil, rss: URL? = nil) {
+    ///   - email: Email address.
+    ///   - telephone: Telephone number.
+    ///   - mobile: Mobile number.
+    ///   - fax: Fax number.
+    ///   - web: Website address.
+    ///   - address: Facebook profile URL.
+    ///   - facebook: Facebook profile URL.
+    ///   - twitter: Twitter profile URL.
+    ///   - youtube: YouTube profile URL.
+    ///   - myspace: Myspace profile URL.
+    ///   - bebo: Bebo profile URL.
+    ///   - flickr: Flickr profile URL.
+    ///   - forum: Forum URL.
+    ///   - blog: Blog URL.
+    ///   - rss: RSS URL.
+    public init(
+        email: String? = nil,
+        telephone: String? = nil,
+        mobile: String? = nil,
+        fax: String? = nil,
+        web: URL? = nil,
+        address: String? = nil,
+        facebook: URL? = nil,
+        twitter: URL? = nil,
+        youtube: URL? = nil,
+        myspace: URL? = nil,
+        bebo: URL? = nil,
+        flickr: URL? = nil,
+        forum: URL? = nil,
+        blog: URL? = nil,
+        rss: URL? = nil
+    ) {
         self.email = email
         self.telephone = telephone
         self.mobile = mobile

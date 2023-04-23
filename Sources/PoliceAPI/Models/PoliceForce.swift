@@ -16,17 +16,23 @@ public struct PoliceForce: Identifiable, Decodable, Equatable {
     /// Engagement methods - Ways to keep informed.
     public let engagementMethods: [EngagementMethod]
 
-    /// Creates a a new `PoliceForce`.
+    /// Creates a new `PoliceForce`.
     ///
     /// - Parameters:
-    ///     - id: Unique force identifier.
-    ///     - name: Force name.
-    ///     - description: Description.
-    ///     - telephone: Telephone number.
-    ///     - url: Police Force website URL.
-    ///     - engagementMethods: Engagement methods - Ways to keep informed.
-    public init(id: String, name: String, description: String? = nil, telephone: String, url: URL,
-                engagementMethods: [EngagementMethod] = []) {
+    ///   - id: Unique force identifier.
+    ///   - name: Force name.
+    ///   - description: Description.
+    ///   - telephone: Telephone number.
+    ///   - url: Police Force website URL.
+    ///   - engagementMethods: Engagement methods - Ways to keep informed.
+    public init(
+        id: String,
+        name: String,
+        description: String? = nil,
+        telephone: String,
+        url: URL,
+        engagementMethods: [EngagementMethod] = []
+    ) {
         self.id = id
         self.name = name
         self.description = description

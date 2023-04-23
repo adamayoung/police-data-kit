@@ -19,11 +19,11 @@ public struct Location: Decodable, Equatable {
     private let latitude: String
     private let longitude: String
 
-    /// Creates a a new `Location`.
+    /// Creates a new `Location`.
     ///
     /// - Parameters:
-    ///     - street: An approximate street for the location.
-    ///     - coordinate: Location coordinate.
+    ///   - street: An approximate street for the location.
+    ///   - coordinate: Location coordinate.
     public init(street: Street, coordinate: Coordinate) {
         self.street = street
         self.latitude = String(coordinate.latitude)
@@ -42,11 +42,11 @@ extension Location {
         /// Name of the location.
         public let name: String
 
-        /// Creates a a new `Street`.
+        /// Creates a new `Street`.
         ///
         /// - Parameters:
-        ///     - id: Unique identifier for the street.
-        ///     - name: Name of the approximate location.
+        ///   - id: Unique identifier for the street.
+        ///   - name: Name of the approximate location.
         public init(id: Int, name: String) {
             self.id = id
             self.name = name

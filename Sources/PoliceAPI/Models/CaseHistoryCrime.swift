@@ -26,19 +26,27 @@ public struct CaseHistoryCrime: Decodable, Equatable {
     /// Date (truncated to the year and month) of the crime.
     public let date: Date
 
-    /// Creates a a new `CaseHistoryCrime`.
+    /// Creates a new `CaseHistoryCrime`.
     ///
     /// - Parameters:
-    ///     - id: Identifier of the crime.
-    ///     - crimeID: 64-character unique identifier for the crime.
-    ///     - context: Extra information about the crime.
-    ///     - categoryID: Crime category identifier.
-    ///     - location: Approximate location of the incident.
-    ///     - locationType: The type of the location
-    ///     - locationSubtype: For Bristish Transport Police locations, the type of location at which this crime was recorded.
-    ///     - date: Date of the crime.
-    public init(id: Int, crimeID: String, context: String? = nil, categoryID: String, location: Location? = nil,
-                locationType: CrimeLocationType? = nil, locationSubtype: String? = nil, date: Date) {
+    ///   - id: Identifier of the crime.
+    ///   - crimeID: 64-character unique identifier for the crime.
+    ///   - context: Extra information about the crime.
+    ///   - categoryID: Crime category identifier.
+    ///   - location: Approximate location of the incident.
+    ///   - locationType: The type of the location
+    ///   - locationSubtype: For Bristish Transport Police locations, the type of location at which this crime was recorded.
+    ///   - date: Date of the crime.
+    public init(
+        id: Int,
+        crimeID: String,
+        context: String? = nil,
+        categoryID: String,
+        location: Location? = nil,
+        locationType: CrimeLocationType? = nil,
+        locationSubtype: String? = nil,
+        date: Date
+    ) {
         self.id = id
         self.crimeID = crimeID
         self.context = context
