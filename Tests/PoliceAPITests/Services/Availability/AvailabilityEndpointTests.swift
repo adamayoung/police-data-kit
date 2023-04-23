@@ -3,8 +3,8 @@ import XCTest
 
 final class AvailabilityEndpointTests: XCTestCase {
 
-    func testDataSetsEndpointReturnsURL() {
-        let expectedPath = URL(string: "/crimes-street-dates")!
+    func testDataSetsEndpointReturnsURL() throws {
+        let expectedPath = try XCTUnwrap(URL(string: "/crimes-street-dates"))
 
         let path = AvailabilityEndpoint.dataSets.path
 

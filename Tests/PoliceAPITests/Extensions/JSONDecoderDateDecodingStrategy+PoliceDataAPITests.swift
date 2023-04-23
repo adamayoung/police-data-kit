@@ -17,11 +17,11 @@ final class JSONDecoderDateDecodingStrategyPoliceDataAPITestsTests: XCTestCase {
     }
 
     func testDecodingDateTimeDateReturnsDate() throws {
-        let data = """
+        let data = try XCTUnwrap("""
             {
                 "date": "2021-05-24T11:28:00"
             }
-        """.data(using: .utf8)!
+        """.data(using: .utf8))
         let expectedResult = Date(timeIntervalSince1970: 1621855680)
 
         let container = try decoder.decode(Container.self, from: data)
@@ -31,11 +31,11 @@ final class JSONDecoderDateDecodingStrategyPoliceDataAPITestsTests: XCTestCase {
     }
 
     func testDecodingDateTimeWithTimeZoneOffsetDateReturnsDate() throws {
-        let data = """
+        let data = try XCTUnwrap("""
             {
                 "date": "2021-05-24T11:28:00-07:00"
             }
-        """.data(using: .utf8)!
+        """.data(using: .utf8))
         let expectedResult = Date(timeIntervalSince1970: 1621880880)
 
         let container = try decoder.decode(Container.self, from: data)
@@ -45,11 +45,11 @@ final class JSONDecoderDateDecodingStrategyPoliceDataAPITestsTests: XCTestCase {
     }
 
     func testDecodingYearMonthDateReturnsDate() throws {
-        let data = """
+        let data = try XCTUnwrap("""
             {
                 "date": "2021-05"
             }
-        """.data(using: .utf8)!
+        """.data(using: .utf8))
         let expectedResult = Date(timeIntervalSince1970: 1619827200)
 
         let container = try decoder.decode(Container.self, from: data)
@@ -58,12 +58,12 @@ final class JSONDecoderDateDecodingStrategyPoliceDataAPITestsTests: XCTestCase {
         XCTAssertEqual(result, expectedResult)
     }
 
-    func testDecodingWhenInvalidDateThrowsDecodingError() {
-        let data = """
+    func testDecodingWhenInvalidDateThrowsDecodingError() throws {
+        let data = try XCTUnwrap("""
             {
                 "date": "11111"
             }
-        """.data(using: .utf8)!
+        """.data(using: .utf8))
 
         XCTAssertThrowsError(try decoder.decode(Container.self, from: data))
     }

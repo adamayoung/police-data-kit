@@ -9,16 +9,16 @@ final class DataSetTests: XCTestCase {
         XCTAssertEqual(result, .mock)
     }
 
-    func testSortReturnsSortedDataSets() {
+    func testSortReturnsSortedDataSets() throws {
         let dataSet1 = DataSet(
-            date: DateFormatter.yearMonth.date(from: "2019-05")!,
+            date: try XCTUnwrap(DateFormatter.yearMonth.date(from: "2019-05")),
             stopAndSearch: [
                 "bedfordshire",
                 "cleveland"
             ]
         )
         let dataSet2 = DataSet(
-            date: DateFormatter.yearMonth.date(from: "2021-03")!,
+            date: try XCTUnwrap(DateFormatter.yearMonth.date(from: "2021-03")),
             stopAndSearch: [
                 "city-of-london",
                 "leicestershire"
