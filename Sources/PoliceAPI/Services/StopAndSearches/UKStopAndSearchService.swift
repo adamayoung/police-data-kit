@@ -6,12 +6,14 @@ final class UKStopAndSearchService: StopAndSearchService {
     private static let logger = Logger(subsystem: Logger.subsystem, category: "StopAndSearchService")
 
     private let apiClient: any APIClient
+    private let cache: any Cache
 
-    init(apiClient: some APIClient) {
+    init(apiClient: some APIClient, cache: some Cache) {
         self.apiClient = apiClient
+        self.cache = cache
     }
 
-    func stopAndSearches(atCoordinate coordinate: Coordinate, date: Date?) async throws -> [StopAndSearch] {
+    func stopAndSearches(atCoordinate coordinate: Coordinate, date: Date) async throws -> [StopAndSearch] {
         Self.logger.trace("fetching Stop and Searches at \(coordinate, privacy: .public)")
 
         let stopAndSearches: [StopAndSearch]
@@ -30,7 +32,7 @@ final class UKStopAndSearchService: StopAndSearchService {
         return stopAndSearches
     }
 
-    func stopAndSearches(inArea boundary: Boundary, date: Date?) async throws -> [StopAndSearch] {
+    func stopAndSearches(inArea boundary: Boundary, date: Date) async throws -> [StopAndSearch] {
         Self.logger.trace("fetching Stop and Searches in area")
 
         let stopAndSearches: [StopAndSearch]
@@ -47,8 +49,13 @@ final class UKStopAndSearchService: StopAndSearchService {
         return stopAndSearches
     }
 
-    func stopAndSearches(atLocation streetID: Int, date: Date?) async throws -> [StopAndSearch] {
+    func stopAndSearches(atLocation streetID: Int, date: Date) async throws -> [StopAndSearch] {
         Self.logger.trace("fetching Stop and Searches at location \(streetID, privacy: .public)")
+
+        let cacheKey = StopAndSearchesAtLocationCachingKey(streetID: streetID, date: date)
+        if let cachedStopAndSearches = await cache.object(for: cacheKey, type: [StopAndSearch].self) {
+            return cachedStopAndSearches
+        }
 
         let stopAndSearches: [StopAndSearch]
         do {
@@ -61,13 +68,20 @@ final class UKStopAndSearchService: StopAndSearchService {
             throw error
         }
 
+        await cache.set(stopAndSearches, for: cacheKey)
+
         return stopAndSearches
     }
 
     func stopAndSearchesWithNoLocation(forPoliceForce policeForceID: String,
-                                       date: Date?) async throws -> [StopAndSearch] {
+                                       date: Date) async throws -> [StopAndSearch] {
         // swiftlint:disable:next line_length
         Self.logger.trace("fetching Stop and Searches with no location for Police Force \(policeForceID, privacy: .public)")
+
+        let cacheKey = StopAndSearchesWithNoLocationCachingKey(policeForceID: policeForceID, date: date)
+        if let cachedStopAndSearches = await cache.object(for: cacheKey, type: [StopAndSearch].self) {
+            return cachedStopAndSearches
+        }
 
         let stopAndSearches: [StopAndSearch]
         do {
@@ -82,11 +96,18 @@ final class UKStopAndSearchService: StopAndSearchService {
             throw error
         }
 
+        await cache.set(stopAndSearches, for: cacheKey)
+
         return stopAndSearches
     }
 
-    func stopAndSearches(forPoliceForce policeForceID: String, date: Date?) async throws -> [StopAndSearch] {
+    func stopAndSearches(forPoliceForce policeForceID: String, date: Date) async throws -> [StopAndSearch] {
         Self.logger.trace("fetching Stop and Searches for Police Force \(policeForceID, privacy: .public)")
+
+        let cacheKey = StopAndSearchesForPoliceForceCachingKey(policeForceID: policeForceID, date: date)
+        if let cachedStopAndSearches = await cache.object(for: cacheKey, type: [StopAndSearch].self) {
+            return cachedStopAndSearches
+        }
 
         let stopAndSearches: [StopAndSearch]
         do {
@@ -98,6 +119,8 @@ final class UKStopAndSearchService: StopAndSearchService {
             Self.logger.error("failed fetching Stop and Searches for Police Force \(policeForceID, privacy: .public): \(error.localizedDescription, privacy: .public)")
             throw error
         }
+
+        await cache.set(stopAndSearches, for: cacheKey)
 
         return stopAndSearches
     }

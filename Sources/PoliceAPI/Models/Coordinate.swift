@@ -27,8 +27,8 @@ public struct Coordinate: Decodable, Equatable, CustomStringConvertible {
 extension Coordinate {
 
     private enum CodingKeys: String, CodingKey {
-        case latitude = "latitude"
-        case longitude = "longitude"
+        case latitude
+        case longitude
     }
 
     public init(from decoder: Decoder) throws {

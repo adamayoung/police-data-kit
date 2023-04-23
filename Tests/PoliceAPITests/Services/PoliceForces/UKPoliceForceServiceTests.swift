@@ -67,6 +67,15 @@ final class UKPoliceForceServiceTests: XCTestCase {
         XCTAssertEqual(apiClient.lastPath, PoliceForcesEndpoint.details(id: id).path)
     }
 
+    func testPoliceForceWhenNotCachedAndNotFoundReturnsNil() async throws {
+        let id = "leicestershire"
+        apiClient.response = .failure(PoliceDataError.notFound)
+
+        let result = try await service.policeForce(withID: id)
+
+        XCTAssertNil(result)
+    }
+
     func testPoliceForceWhenCachedReturnsCachedPoliceForce() async throws {
         let expectedResult = PoliceForce.mock
         let id = expectedResult.id
@@ -102,6 +111,15 @@ final class UKPoliceForceServiceTests: XCTestCase {
         XCTAssertEqual(result, expectedResult)
 
         XCTAssertEqual(apiClient.lastPath, PoliceForcesEndpoint.seniorOfficers(policeForceID: policeForceID).path)
+    }
+
+    func testFetchSeniorOfficersWhenNotCachedAndPoliceForceNotFoundReturnsNil() async throws {
+        let policeForceID = "leicestershire"
+        apiClient.response = .failure(PoliceDataError.notFound)
+
+        let result = try await service.seniorOfficers(inPoliceForce: policeForceID)
+
+        XCTAssertNil(result)
     }
 
     func testFetchSeniorOfficersWhenCachedReturnsCachedPoliceOfficers() async throws {

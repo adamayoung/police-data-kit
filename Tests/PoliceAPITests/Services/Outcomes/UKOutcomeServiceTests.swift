@@ -97,7 +97,7 @@ final class UKOutcomeServiceTests: XCTestCase {
         XCTAssertEqual(apiClient.lastPath, OutcomesEndpoint.streetLevelOutcomesInArea(boundary: boundary) .path)
     }
 
-    func testFetchCaseHistoryReturnCaseHistory() async throws {
+    func testFetchCaseHistoryReturnsCaseHistory() async throws {
         let expectedResult = CaseHistory.mock
         let crimeID = expectedResult.crime.crimeID
         apiClient.response = .success(expectedResult)
@@ -107,6 +107,15 @@ final class UKOutcomeServiceTests: XCTestCase {
         XCTAssertEqual(result, expectedResult)
 
         XCTAssertEqual(apiClient.lastPath, OutcomesEndpoint.caseHistory(crimeID: crimeID).path)
+    }
+
+    func testFetchCaseHistoryWHenNotFoundReturnsNil() async throws {
+        let crimeID = "123ABC"
+        apiClient.response = .failure(PoliceDataError.notFound)
+
+        let result = try await service.caseHistory(forCrime: crimeID)
+
+        XCTAssertNil(result)
     }
 
 }
