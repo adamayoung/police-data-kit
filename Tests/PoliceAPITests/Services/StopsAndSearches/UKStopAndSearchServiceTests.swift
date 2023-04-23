@@ -22,7 +22,7 @@ final class UKStopAndSearchServiceTests: XCTestCase {
         let coordinate = Coordinate.mock
         let date = Date()
         let expectedResult = StopAndSearch.mocks
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.stopAndSearches(atCoordinate: coordinate, date: date)
 
@@ -36,7 +36,7 @@ final class UKStopAndSearchServiceTests: XCTestCase {
     func testStopAndSearchesAtCoordinateWhenNoDateReturnsStopAndSearches() async throws {
         let coordinate = Coordinate.mock
         let expectedResult = StopAndSearch.mocks
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.stopAndSearches(atCoordinate: coordinate)
 
@@ -50,7 +50,7 @@ final class UKStopAndSearchServiceTests: XCTestCase {
         let boundary = Boundary.mock
         let date = Date()
         let expectedResult = StopAndSearch.mocks
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.stopAndSearches(inArea: boundary, date: date)
 
@@ -63,7 +63,7 @@ final class UKStopAndSearchServiceTests: XCTestCase {
     func testStopAndSearchesInAreaWhenNoDateReturnsStopAndSearches() async throws {
         let boundary = Boundary.mock
         let expectedResult = StopAndSearch.mocks
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.stopAndSearches(inArea: boundary)
 
@@ -77,7 +77,7 @@ final class UKStopAndSearchServiceTests: XCTestCase {
         let streetID = 123456
         let date = Date()
         let expectedResult = StopAndSearch.mocks
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.stopAndSearches(atLocation: streetID, date: date)
 
@@ -90,7 +90,7 @@ final class UKStopAndSearchServiceTests: XCTestCase {
     func testStopAndSearchesAtLocationWhenNoDateReturnsStopAndSearches() async throws {
         let streetID = 123456
         let expectedResult = StopAndSearch.mocks
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.stopAndSearches(atLocation: streetID)
 
@@ -104,7 +104,7 @@ final class UKStopAndSearchServiceTests: XCTestCase {
         let policeForceID = "cleveland"
         let date = Date()
         let expectedResult = StopAndSearch.mocks
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.stopAndSearchesWithNoLocation(forPoliceForce: policeForceID, date: date)
 
@@ -118,7 +118,7 @@ final class UKStopAndSearchServiceTests: XCTestCase {
     func testStopAndSearchesWithNoLocationWhenNoDateReturnsStopAndSearches() async throws {
         let policeForceID = "cleveland"
         let expectedResult = StopAndSearch.mocks
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.stopAndSearchesWithNoLocation(forPoliceForce: policeForceID)
 
@@ -132,7 +132,7 @@ final class UKStopAndSearchServiceTests: XCTestCase {
         let policeForceID = "avon-and-somerset"
         let date = Date()
         let expectedResult = StopAndSearch.mocks
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.stopAndSearches(forPoliceForce: policeForceID, date: date)
 
@@ -146,7 +146,7 @@ final class UKStopAndSearchServiceTests: XCTestCase {
     func testStopAndSearchesForPoliceForceWhenNoDateReturnsStopAndSearches() async throws {
         let policeForceID = "avon-and-somerset"
         let expectedResult = StopAndSearch.mocks
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.stopAndSearches(forPoliceForce: policeForceID)
 

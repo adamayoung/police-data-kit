@@ -23,7 +23,7 @@ public protocol NeighbourhoodService {
     ///
     /// - Returns: The matching Neighbourhood.
     func neighbourhood(withID id: Neighbourhood.ID,
-                       inPoliceForce policeForceID: PoliceForce.ID) async throws -> Neighbourhood
+                       inPoliceForce policeForceID: PoliceForce.ID) async throws -> Neighbourhood?
 
     /// Returns a list of coordinates that make up the boundary of a neighbourhood.
     ///
@@ -35,7 +35,7 @@ public protocol NeighbourhoodService {
     ///
     /// - Returns: A list of coordinates that make up the boundary of the matching neighbourhood.
     func boundary(forNeighbourhood neighbourhoodID: Neighbourhood.ID,
-                  inPoliceForce policeForceID: PoliceForce.ID) async throws -> Boundary
+                  inPoliceForce policeForceID: PoliceForce.ID) async throws -> Boundary?
 
     /// Returns a list of Police Officers who are members of the neighbourhood team for a neighbourhood.
     ///
@@ -69,6 +69,6 @@ public protocol NeighbourhoodService {
     ///   - coordinate: A coordinate.
     ///
     /// - Returns: The neighbourhood policing team for a location.
-    func neighbourhoodPolicingTeam(atCoordinate coordinate: Coordinate) async throws -> NeighbourhoodPolicingTeam
+    func neighbourhoodPolicingTeam(atCoordinate coordinate: Coordinate) async throws -> NeighbourhoodPolicingTeam?
 
 }

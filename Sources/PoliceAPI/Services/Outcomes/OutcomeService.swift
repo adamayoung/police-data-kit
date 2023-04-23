@@ -48,7 +48,7 @@ public protocol OutcomeService {
     ///   - crimeID: The crimeID of a crime, not the id.
     ///
     /// - Returns: The case history for a crime.
-    func caseHistory(forCrime crimeID: String) async throws -> CaseHistory
+    func caseHistory(forCrime crimeID: String) async throws -> CaseHistory?
 
 }
 

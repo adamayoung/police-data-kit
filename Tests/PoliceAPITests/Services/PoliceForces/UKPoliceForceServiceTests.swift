@@ -23,7 +23,7 @@ final class UKPoliceForceServiceTests: XCTestCase {
 
     func testPoliceForcesWhenNotCachedReturnsPoliceForceReferences() async throws {
         let expectedResult = PoliceForceReference.mocks
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.policeForces()
 
@@ -47,7 +47,7 @@ final class UKPoliceForceServiceTests: XCTestCase {
     func testPoliceForcesWhenNotCachedAndReturnsPoliceForceReferencesShouldCacheResult() async throws {
         let expectedResult = PoliceForceReference.mocks
         let cacheKey = PoliceForcesCachingKey()
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
         _ = try await service.policeForces()
 
         let cachedResult = await cache.object(for: cacheKey, type: [PoliceForceReference].self)
@@ -58,7 +58,7 @@ final class UKPoliceForceServiceTests: XCTestCase {
     func testPoliceForceWhenNotCachedReturnsPoliceForce() async throws {
         let expectedResult = PoliceForce.mock
         let id = expectedResult.id
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.policeForce(withID: id)
 
@@ -84,7 +84,7 @@ final class UKPoliceForceServiceTests: XCTestCase {
         let expectedResult = PoliceForce.mock
         let id = expectedResult.id
         let cacheKey = PoliceForceCachingKey(id: id)
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
         _ = try await service.policeForce(withID: id)
 
         let cachedResult = await cache.object(for: cacheKey, type: PoliceForce.self)
@@ -95,7 +95,7 @@ final class UKPoliceForceServiceTests: XCTestCase {
     func testFetchSeniorOfficersWhenNotCachedReturnsPoliceOfficers() async throws {
         let expectedResult = PoliceOfficer.mocks
         let policeForceID = "leicestershire"
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.seniorOfficers(inPoliceForce: policeForceID)
 
@@ -121,7 +121,7 @@ final class UKPoliceForceServiceTests: XCTestCase {
         let expectedResult = PoliceOfficer.mocks
         let policeForceID = "leicestershire"
         let cacheKey = PoliceForceSeniorOfficersCachingKey(policeForceID: policeForceID)
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
         _ = try await service.seniorOfficers(inPoliceForce: policeForceID)
 
         let cachedResult = await cache.object(for: cacheKey, type: [PoliceOfficer].self)

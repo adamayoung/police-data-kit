@@ -22,7 +22,7 @@ final class UKOutcomeServiceTests: XCTestCase {
         let expectedResult = Outcome.mocks
         let streetID = expectedResult[0].crime.location.street.id
         let date = Date()
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.streetLevelOutcomes(forStreet: streetID, date: date)
 
@@ -35,7 +35,7 @@ final class UKOutcomeServiceTests: XCTestCase {
     func testStreetLevelOutcomesForStreetWhenNoDateReturnsOutcomes() async throws {
         let expectedResult = Outcome.mocks
         let streetID = expectedResult[0].crime.location.street.id
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.streetLevelOutcomes(forStreet: streetID)
 
@@ -48,7 +48,7 @@ final class UKOutcomeServiceTests: XCTestCase {
         let coordinate = Coordinate.mock
         let expectedResult = Outcome.mocks
         let date = Date()
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.streetLevelOutcomes(atCoordinate: coordinate, date: date)
 
@@ -61,7 +61,7 @@ final class UKOutcomeServiceTests: XCTestCase {
     func testStreetLevelOutcomesAtCoordinateWhenNoDateReturnsOutcomes() async throws {
         let coordinate = Coordinate.mock
         let expectedResult = Outcome.mocks
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.streetLevelOutcomes(atCoordinate: coordinate)
 
@@ -75,7 +75,7 @@ final class UKOutcomeServiceTests: XCTestCase {
         let boundary = Boundary.mock
         let expectedResult = Outcome.mocks
         let date = Date()
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.streetLevelOutcomes(inArea: boundary, date: date)
 
@@ -88,7 +88,7 @@ final class UKOutcomeServiceTests: XCTestCase {
     func testStreetLevelOutcomesInAreaWhenNoDateReturnsOutcomes() async throws {
         let boundary = Boundary.mock
         let expectedResult = Outcome.mocks
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.streetLevelOutcomes(inArea: boundary)
 
@@ -100,7 +100,7 @@ final class UKOutcomeServiceTests: XCTestCase {
     func testFetchCaseHistoryReturnCaseHistory() async throws {
         let expectedResult = CaseHistory.mock
         let crimeID = expectedResult.crime.crimeID
-        apiClient.response = expectedResult
+        apiClient.response = .success(expectedResult)
 
         let result = try await service.caseHistory(forCrime: crimeID)
 

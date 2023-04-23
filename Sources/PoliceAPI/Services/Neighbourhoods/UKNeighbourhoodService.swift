@@ -38,7 +38,7 @@ final class UKNeighbourhoodService: NeighbourhoodService {
         return neighbourhoods
     }
 
-    func neighbourhood(withID id: String, inPoliceForce policeForceID: String) async throws -> Neighbourhood {
+    func neighbourhood(withID id: String, inPoliceForce policeForceID: String) async throws -> Neighbourhood? {
         // swiftlint:disable:next line_length
         Self.logger.trace("fetching Neighbourhood \(id, privacy: .public) in Police Force \(policeForceID, privacy: .public)")
 
@@ -54,6 +54,14 @@ final class UKNeighbourhoodService: NeighbourhoodService {
                 endpoint: NeighbourhoodsEndpoint.details(id: id, policeForceID: policeForceID)
             )
         } catch let error {
+            switch error as? PoliceDataError {
+            case .notFound:
+                return nil
+
+            default:
+                break
+            }
+
             // swiftlint:disable:next line_length
             Self.logger.error("failed fetching Neighbourhood \(id, privacy: .public) in Police Force \(policeForceID, privacy: .public): \(error.localizedDescription, privacy: .public)")
             throw error
@@ -65,7 +73,7 @@ final class UKNeighbourhoodService: NeighbourhoodService {
     }
 
     func boundary(forNeighbourhood neighbourhoodID: Neighbourhood.ID,
-                  inPoliceForce policeForceID: PoliceForce.ID) async throws -> Boundary {
+                  inPoliceForce policeForceID: PoliceForce.ID) async throws -> Boundary? {
         // swiftlint:disable:next line_length
         Self.logger.trace("fetching Boundary for Neighbourhood \(neighbourhoodID, privacy: .public) in Police Force \(policeForceID, privacy: .public)")
 
@@ -82,6 +90,14 @@ final class UKNeighbourhoodService: NeighbourhoodService {
                 )
             )
         } catch let error {
+            switch error as? PoliceDataError {
+            case .notFound:
+                return nil
+
+            default:
+                break
+            }
+
             // swiftlint:disable:next line_length
             Self.logger.error("failed fetching Boundary for Neighbourhood \(neighbourhoodID, privacy: .public) in Police Force \(policeForceID, privacy: .public): \(error.localizedDescription, privacy: .public)")
             throw error
@@ -152,7 +168,7 @@ final class UKNeighbourhoodService: NeighbourhoodService {
         return priorities
     }
 
-    func neighbourhoodPolicingTeam(atCoordinate coordinate: Coordinate) async throws -> NeighbourhoodPolicingTeam {
+    func neighbourhoodPolicingTeam(atCoordinate coordinate: Coordinate) async throws -> NeighbourhoodPolicingTeam? {
         Self.logger.trace("fetching Neighbourhood Policing Team at coordinate \(coordinate, privacy: .public)")
 
         let policingTeam: NeighbourhoodPolicingTeam
@@ -161,6 +177,13 @@ final class UKNeighbourhoodService: NeighbourhoodService {
                 endpoint: NeighbourhoodsEndpoint.locateNeighbourhood(coordinate: coordinate)
             )
         } catch let error {
+            switch error as? PoliceDataError {
+            case .notFound:
+                return nil
+            default:
+                break
+            }
+
             // swiftlint:disable:next line_length
             Self.logger.error("failed fetching Neighbourhood Policing Team at coordinate \(coordinate, privacy: .public): \(error.localizedDescription, privacy: .public)")
             throw error

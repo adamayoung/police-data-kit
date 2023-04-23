@@ -12,48 +12,48 @@ final class NeighbourhoodTests: XCTestCase {
     func testPopulationReturnsPopulation() throws {
         let expectedResult = Neighbourhood.mock.population
 
-        let result = try JSONDecoder.policeDataAPI.decode(Neighbourhood.self, fromResource: "neighbourhood").population
+        let result = try JSONDecoder.policeDataAPI.decode(Neighbourhood.self, fromResource: "neighbourhood")
 
-        XCTAssertEqual(result, expectedResult)
+        XCTAssertEqual(result.population, expectedResult)
     }
 
     func testPopulationWhenInvalidNumberReturnsZero() throws {
         let result = try JSONDecoder.policeDataAPI
-            .decode(Neighbourhood.self, fromResource: "neighbourhood-invalid-population").population
+            .decode(Neighbourhood.self, fromResource: "neighbourhood-invalid-population")
 
-        XCTAssertEqual(result, 0)
+        XCTAssertEqual(result.population, 0)
     }
 
     func testNameDoesNotContainHTMLEntities() throws {
         let expectedResult = Neighbourhood.mockWithAmpersandInName.name
 
         let result = try JSONDecoder.policeDataAPI
-            .decode(Neighbourhood.self, fromResource: "neighbourhood-html-in-name").name
+            .decode(Neighbourhood.self, fromResource: "neighbourhood-html-in-name")
 
-        XCTAssertEqual(result, expectedResult)
+        XCTAssertEqual(result.name, expectedResult)
     }
 
     func testDescriptionDoesNotContainHTMLEntities() throws {
         let expectedResult = Neighbourhood.mockWithAmpersandInName.description
 
         let result = try JSONDecoder.policeDataAPI
-            .decode(Neighbourhood.self, fromResource: "neighbourhood-html-in-name").description
+            .decode(Neighbourhood.self, fromResource: "neighbourhood-html-in-name")
 
-        XCTAssertEqual(result, expectedResult)
+        XCTAssertEqual(result.description, expectedResult)
     }
 
     func testPoliceForceWebsiteWhenEmpty() throws {
         let result = try JSONDecoder.policeDataAPI
-            .decode(Neighbourhood.self, fromResource: "neighbourhood-empty-force-url").policeForceWebsite
+            .decode(Neighbourhood.self, fromResource: "neighbourhood-empty-force-url")
 
-        XCTAssertNil(result)
+        XCTAssertNil(result.policeForceWebsite)
     }
 
     func testPoliceForceWebsiteWhenNull() throws {
         let result = try JSONDecoder.policeDataAPI
-            .decode(Neighbourhood.self, fromResource: "neighbourhood-null-force-url").policeForceWebsite
+            .decode(Neighbourhood.self, fromResource: "neighbourhood-null-force-url")
 
-        XCTAssertNil(result)
+        XCTAssertNil(result.policeForceWebsite)
     }
 
 }
