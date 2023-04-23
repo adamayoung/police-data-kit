@@ -2,9 +2,9 @@ import Foundation
 
 enum OutcomesEndpoint {
 
-    case streetLevelOutcomesForStreet(streetID: Int, date: Date? = nil)
-    case streetLevelOutcomesAtSpecificPoint(coordinate: Coordinate, date: Date? = nil)
-    case streetLevelOutcomesInArea(boundary: Boundary, date: Date? = nil)
+    case streetLevelOutcomesForStreet(streetID: Int, date: Date)
+    case streetLevelOutcomesAtSpecificPoint(coordinate: Coordinate, date: Date)
+    case streetLevelOutcomesInArea(boundary: Boundary, date: Date)
     case caseHistory(crimeID: String)
 
 }

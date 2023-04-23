@@ -3,8 +3,8 @@ import XCTest
 
 final class URLPoliceDataAPITests: XCTestCase {
 
-    func testPoliceDataAPIBaseURLReturnsURL() {
-        let expectedResult = URL(string: "https://data.police.uk/api")!
+    func testPoliceDataAPIBaseURLReturnsURL() throws {
+        let expectedResult = try XCTUnwrap(URL(string: "https://data.police.uk/api"))
 
         let result = URL.policeDataAPIBaseURL
 

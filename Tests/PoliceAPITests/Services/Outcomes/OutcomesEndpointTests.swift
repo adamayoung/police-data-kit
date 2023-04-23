@@ -3,75 +3,44 @@ import XCTest
 
 final class OutcomesEndpointTests: XCTestCase {
 
-    func testStreetLevelOutcomesForStreetEndpointReturnsURL() {
+    func testStreetLevelOutcomesForStreetEndpointReturnsURL() throws {
         let streetID = 12345
-        let dateString = "2021-03"
-        let date = DateFormatter.yearMonth.date(from: dateString)!
-        let expectedPath = URL(string: "/outcomes-at-location?location_id=\(streetID)&date=\(dateString)")!
+        let date = Date(timeIntervalSince1970: 0)
+        let expectedPath = try XCTUnwrap(URL(string: "/outcomes-at-location?location_id=\(streetID)&date=1970-01"))
 
         let path = OutcomesEndpoint.streetLevelOutcomesForStreet(streetID: streetID, date: date).path
 
         XCTAssertEqual(path, expectedPath)
     }
 
-    func testStreetLevelOutcomesForStreetEndpointWhenNoDateReturnsURL() {
-        let streetID = 12345
-        let expectedPath = URL(string: "/outcomes-at-location?location_id=\(streetID)")!
-
-        let path = OutcomesEndpoint.streetLevelOutcomesForStreet(streetID: streetID).path
-
-        XCTAssertEqual(path, expectedPath)
-    }
-
-    func testStreetLevelOutcomesAtSpecificPointEndpointReturnsURL() {
+    func testStreetLevelOutcomesAtSpecificPointEndpointReturnsURL() throws {
         let coordinate = Coordinate.mock
-        let dateString = "2021-04"
-        let date = DateFormatter.yearMonth.date(from: dateString)!
-        let expectedPath = URL(
-            string: "/outcomes-at-location?lat=\(coordinate.latitude)&lng=\(coordinate.longitude)&date=\(dateString)"
-        )!
+        let date = Date(timeIntervalSince1970: 0)
+        let expectedPath = try XCTUnwrap(URL(
+            string: "/outcomes-at-location?lat=\(coordinate.latitude)&lng=\(coordinate.longitude)&date=1970-01"
+        ))
 
         let path = OutcomesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate, date: date).path
 
         XCTAssertEqual(path, expectedPath)
     }
 
-    func testStreetLevelOutcomesAtSpecificPointEndpointWhenNoDateReturnsURL() {
-        let coordinate = Coordinate.mock
-        let expectedPath = URL(string: "/outcomes-at-location?lat=\(coordinate.latitude)&lng=\(coordinate.longitude)")!
-
-        let path = OutcomesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate).path
-
-        XCTAssertEqual(path, expectedPath)
-    }
-
-    func testStreetLevelOutcomesInAreaEndpointReturnsURL() {
+    func testStreetLevelOutcomesInAreaEndpointReturnsURL() throws {
         let boundary = Boundary.mock
         let coordinatePairs = boundary.map { "\($0.latitude),\($0.longitude)" }
-        let dateString = "2021-04"
-        let date = DateFormatter.yearMonth.date(from: dateString)!
-        let expectedPath = URL(
-            string: "/outcomes-at-location?poly=\(coordinatePairs.joined(separator: ":"))&date=\(dateString)"
-        )!
+        let date = Date(timeIntervalSince1970: 0)
+        let expectedPath = try XCTUnwrap(URL(
+            string: "/outcomes-at-location?poly=\(coordinatePairs.joined(separator: ":"))&date=1970-01"
+        ))
 
         let path = OutcomesEndpoint.streetLevelOutcomesInArea(boundary: boundary, date: date).path
 
         XCTAssertEqual(path, expectedPath)
     }
 
-    func testStreetLevelOutcomesInAreaEndpointWhenNoDateReturnsURL() {
-        let boundary = Boundary.mock
-        let coordinatePairs = boundary.map { "\($0.latitude),\($0.longitude)" }
-        let expectedPath = URL(string: "/outcomes-at-location?poly=\(coordinatePairs.joined(separator: ":"))")!
-
-        let path = OutcomesEndpoint.streetLevelOutcomesInArea(boundary: boundary).path
-
-        XCTAssertEqual(path, expectedPath)
-    }
-
     func testCaseHistoryReturnsURL() throws {
         let crimeID = CaseHistory.mock.crime.crimeID
-        let expectedPath = URL(string: "/outcomes-for-crime/\(crimeID)")!
+        let expectedPath = try XCTUnwrap(URL(string: "/outcomes-for-crime/\(crimeID)"))
 
         let path = OutcomesEndpoint.caseHistory(crimeID: crimeID).path
 

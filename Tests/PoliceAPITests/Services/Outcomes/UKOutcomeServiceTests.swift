@@ -5,20 +5,23 @@ final class UKOutcomeServiceTests: XCTestCase {
 
     var service: UKOutcomeService!
     var apiClient: MockAPIClient!
+    var cache: MockCache!
 
     override func setUp() {
         super.setUp()
         apiClient = MockAPIClient()
-        service = UKOutcomeService(apiClient: apiClient)
+        cache = MockCache()
+        service = UKOutcomeService(apiClient: apiClient, cache: cache)
     }
 
     override func tearDown() {
-        apiClient = nil
         service = nil
+        cache = nil
+        apiClient = nil
         super.tearDown()
     }
 
-    func testStreetLevelOutcomesForStreetReturnsOutcomes() async throws {
+    func testStreetLevelOutcomesForStreetWhenNotCachedReturnsOutcomes() async throws {
         let expectedResult = Outcome.mocks
         let streetID = expectedResult[0].crime.location.street.id
         let date = Date()
@@ -28,8 +31,10 @@ final class UKOutcomeServiceTests: XCTestCase {
 
         XCTAssertEqual(result, expectedResult)
 
-        XCTAssertEqual(apiClient.lastPath,
-                       OutcomesEndpoint.streetLevelOutcomesForStreet(streetID: streetID, date: date).path)
+        XCTAssertEqual(
+            apiClient.lastPath,
+            OutcomesEndpoint.streetLevelOutcomesForStreet(streetID: streetID, date: date).path
+        )
     }
 
     func testStreetLevelOutcomesForStreetWhenNoDateReturnsOutcomes() async throws {
@@ -41,10 +46,40 @@ final class UKOutcomeServiceTests: XCTestCase {
 
         XCTAssertEqual(result, expectedResult)
 
-        XCTAssertEqual(apiClient.lastPath, OutcomesEndpoint.streetLevelOutcomesForStreet(streetID: streetID).path)
+        XCTAssertEqual(
+            apiClient.lastPath,
+            OutcomesEndpoint.streetLevelOutcomesForStreet(streetID: streetID, date: Date()).path
+        )
     }
 
-    func testStreetLevelOutcomesAtCoordinateReturnsOutcomes() async throws {
+    func testStreetLevelOutcomesForStreetWhenCachedReturnsCachedOutcomes() async throws {
+        let expectedResult = Outcome.mocks
+        let streetID = expectedResult[0].crime.location.street.id
+        let date = Date()
+        let cacheKey = OutcomesAtStreetLevelForStreetCachingKey(streetID: streetID, date: date)
+        await cache.set(expectedResult, for: cacheKey)
+
+        let result = try await service.streetLevelOutcomes(forStreet: streetID, date: date)
+
+        XCTAssertEqual(result, expectedResult)
+
+        XCTAssertNil(apiClient.lastPath)
+    }
+
+    func testStreetLevelOutcomesForStreetWhenNotCachedAndReturnsOutcomesShouldCacheResult() async throws {
+        let expectedResult = Outcome.mocks
+        let streetID = expectedResult[0].crime.location.street.id
+        let date = Date()
+        let cacheKey = OutcomesAtStreetLevelForStreetCachingKey(streetID: streetID, date: date)
+        apiClient.response = .success(expectedResult)
+        _ = try await service.streetLevelOutcomes(forStreet: streetID, date: date)
+
+        let cachedResult = await cache.object(for: cacheKey, type: [Outcome].self)
+
+        XCTAssertEqual(cachedResult, expectedResult)
+    }
+
+    func testStreetLevelOutcomesAtCoordinateWhenNotCachedReturnsOutcomes() async throws {
         let coordinate = Coordinate.mock
         let expectedResult = Outcome.mocks
         let date = Date()
@@ -54,8 +89,10 @@ final class UKOutcomeServiceTests: XCTestCase {
 
         XCTAssertEqual(result, expectedResult)
 
-        XCTAssertEqual(apiClient.lastPath,
-                       OutcomesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate, date: date) .path)
+        XCTAssertEqual(
+            apiClient.lastPath,
+            OutcomesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate, date: date).path
+        )
     }
 
     func testStreetLevelOutcomesAtCoordinateWhenNoDateReturnsOutcomes() async throws {
@@ -67,8 +104,10 @@ final class UKOutcomeServiceTests: XCTestCase {
 
         XCTAssertEqual(result, expectedResult)
 
-        XCTAssertEqual(apiClient.lastPath,
-                       OutcomesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate) .path)
+        XCTAssertEqual(
+            apiClient.lastPath,
+            OutcomesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate, date: Date()).path
+        )
     }
 
     func testStreetLevelOutcomesInAreaReturnsOutcomes() async throws {
@@ -81,8 +120,10 @@ final class UKOutcomeServiceTests: XCTestCase {
 
         XCTAssertEqual(result, expectedResult)
 
-        XCTAssertEqual(apiClient.lastPath,
-                       OutcomesEndpoint.streetLevelOutcomesInArea(boundary: boundary, date: date) .path)
+        XCTAssertEqual(
+            apiClient.lastPath,
+            OutcomesEndpoint.streetLevelOutcomesInArea(boundary: boundary, date: date).path
+        )
     }
 
     func testStreetLevelOutcomesInAreaWhenNoDateReturnsOutcomes() async throws {
@@ -94,10 +135,13 @@ final class UKOutcomeServiceTests: XCTestCase {
 
         XCTAssertEqual(result, expectedResult)
 
-        XCTAssertEqual(apiClient.lastPath, OutcomesEndpoint.streetLevelOutcomesInArea(boundary: boundary) .path)
+        XCTAssertEqual(
+            apiClient.lastPath,
+            OutcomesEndpoint.streetLevelOutcomesInArea(boundary: boundary, date: Date()).path
+        )
     }
 
-    func testFetchCaseHistoryReturnsCaseHistory() async throws {
+    func testFetchCaseHistoryNotCachedReturnsCaseHistory() async throws {
         let expectedResult = CaseHistory.mock
         let crimeID = expectedResult.crime.crimeID
         apiClient.response = .success(expectedResult)
@@ -109,13 +153,38 @@ final class UKOutcomeServiceTests: XCTestCase {
         XCTAssertEqual(apiClient.lastPath, OutcomesEndpoint.caseHistory(crimeID: crimeID).path)
     }
 
-    func testFetchCaseHistoryWHenNotFoundReturnsNil() async throws {
+    func testFetchCaseHistoryWhenNotFoundReturnsNil() async throws {
         let crimeID = "123ABC"
         apiClient.response = .failure(PoliceDataError.notFound)
 
         let result = try await service.caseHistory(forCrime: crimeID)
 
         XCTAssertNil(result)
+    }
+
+    func testFetchCaseHistoryWhenCachedReturnsCachedCaseHistory() async throws {
+        let expectedResult = CaseHistory.mock
+        let crimeID = expectedResult.crime.crimeID
+        let cacheKey = OutcomesForCrimeCachingKey(crimeID: crimeID)
+        await cache.set(expectedResult, for: cacheKey)
+
+        let result = try await service.caseHistory(forCrime: crimeID)
+
+        XCTAssertEqual(result, expectedResult)
+
+        XCTAssertNil(apiClient.lastPath)
+    }
+
+    func testFetchCaseHistoryWhenNotCachedAndReturnsCaseHistoryShouldCacheResult() async throws {
+        let expectedResult = CaseHistory.mock
+        let crimeID = expectedResult.crime.crimeID
+        let cacheKey = OutcomesForCrimeCachingKey(crimeID: crimeID)
+        apiClient.response = .success(expectedResult)
+        _ = try await service.caseHistory(forCrime: crimeID)
+
+        let cachedResult = await cache.object(for: cacheKey, type: CaseHistory.self)
+
+        XCTAssertEqual(cachedResult, expectedResult)
     }
 
 }

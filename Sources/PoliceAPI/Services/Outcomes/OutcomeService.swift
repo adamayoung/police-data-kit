@@ -13,7 +13,7 @@ public protocol OutcomeService {
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
     /// - Returns: A list of street level crime outcomes.
-    func streetLevelOutcomes(forStreet streetID: Int, date: Date?) async throws -> [Outcome]
+    func streetLevelOutcomes(forStreet streetID: Int, date: Date) async throws -> [Outcome]
 
     /// Returns a list of crime outcomes within a 1 mile radius of a single point.
     ///
@@ -25,7 +25,7 @@ public protocol OutcomeService {
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
     /// - Returns: A list of street level crime outcomes.
-    func streetLevelOutcomes(atCoordinate coordinate: Coordinate, date: Date?) async throws -> [Outcome]
+    func streetLevelOutcomes(atCoordinate coordinate: Coordinate, date: Date) async throws -> [Outcome]
 
     /// Returns a list of crime outcomes within a custom area.
     ///
@@ -37,7 +37,7 @@ public protocol OutcomeService {
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
     /// - Returns: A list of street level crime outcomes.
-    func streetLevelOutcomes(inArea boundary: Boundary, date: Date?) async throws -> [Outcome]
+    func streetLevelOutcomes(inArea boundary: Boundary, date: Date) async throws -> [Outcome]
 
     /// Returns the case history for a crime.
     ///
@@ -54,15 +54,15 @@ public protocol OutcomeService {
 
 extension OutcomeService {
 
-    func streetLevelOutcomes(forStreet streetID: Int, date: Date? = nil) async throws -> [Outcome] {
+    func streetLevelOutcomes(forStreet streetID: Int, date: Date = Date()) async throws -> [Outcome] {
         try await streetLevelOutcomes(forStreet: streetID, date: date)
     }
 
-    func streetLevelOutcomes(atCoordinate coordinate: Coordinate, date: Date? = nil) async throws -> [Outcome] {
+    func streetLevelOutcomes(atCoordinate coordinate: Coordinate, date: Date = Date()) async throws -> [Outcome] {
         try await streetLevelOutcomes(atCoordinate: coordinate, date: date)
     }
 
-    func streetLevelOutcomes(inArea boundary: Boundary, date: Date? = nil) async throws -> [Outcome] {
+    func streetLevelOutcomes(inArea boundary: Boundary, date: Date = Date()) async throws -> [Outcome] {
         try await streetLevelOutcomes(inArea: boundary, date: date)
     }
 
