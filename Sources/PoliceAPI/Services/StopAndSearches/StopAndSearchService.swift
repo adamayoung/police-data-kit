@@ -11,8 +11,8 @@ public protocol StopAndSearchService {
     /// - Note: The stop and searches returned in the API, like the crimes, are only an approximation of where the actual stop and searches occurred, they are not the exact locations. See the [about page](https://data.police.uk/about/#location-anonymisation) for more information about location anonymisation.
     ///
     /// - Parameters:
-    ///     - coordinate: A coordinate.
-    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///   - coordinate: A coordinate.
+    ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
     /// - Returns: A list of stop and searches.
     func stopAndSearches(atCoordinate coordinate: Coordinate, date: Date?) async throws -> [StopAndSearch]
@@ -23,8 +23,8 @@ public protocol StopAndSearchService {
     /// - Note: The stop and searches returned in the API, like the crimes, are only an approximation of where the actual stop and searches occurred, they are not the exact locations. See the [about page](https://data.police.uk/about/#location-anonymisation) for more information about location anonymisation.
     ///
     /// - Parameters:
-    ///     - coordinates: Coordinates which define the boundary of the custom area.
-    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///   - coordinates: Coordinates which define the boundary of the custom area.
+    ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
     /// - Returns: A list of stop and searches.
     func stopAndSearches(inArea boundary: Boundary, date: Date?) async throws -> [StopAndSearch]
@@ -35,8 +35,8 @@ public protocol StopAndSearchService {
     /// - Note: The stop and searches returned in the API, like the crimes, are only an approximation of where the actual stop and searches occurred, they are not the exact locations. See the [about page](https://data.police.uk/about/#location-anonymisation) for more information about location anonymisation.
     ///
     /// - Parameters:
-    ///     - streetID: A street ID.
-    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///   - streetID: A street ID.
+    ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
     /// - Returns: A list of stop and searches.
     func stopAndSearches(atLocation streetID: Int, date: Date?) async throws -> [StopAndSearch]
@@ -47,8 +47,8 @@ public protocol StopAndSearchService {
     /// - Note: The stop and searches returned in the API, like the crimes, are only an approximation of where the actual stop and searches occurred, they are not the exact locations. See the [about page](https://data.police.uk/about/#location-anonymisation) for more information about location anonymisation.
     ///
     /// - Parameters:
-    ///     - policeForceID: Police Force identifier.
-    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///   - policeForceID: Police Force identifier.
+    ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
     /// - Returns: A list of stop and searches.
     func stopAndSearchesWithNoLocation(forPoliceForce policeForceID: PoliceForce.ID,
@@ -60,8 +60,8 @@ public protocol StopAndSearchService {
     /// - Note: The stop and searches returned in the API, like the crimes, are only an approximation of where the actual stop and searches occurred, they are not the exact locations. See the [about page](https://data.police.uk/about/#location-anonymisation) for more information about location anonymisation.
     ///
     /// - Parameters:
-    ///     - policeForceID: Police Force identifier.
-    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///   - policeForceID: Police Force identifier.
+    ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
     /// - Returns: A list of stop and searches.
     func stopAndSearches(forPoliceForce policeForceID: PoliceForce.ID, date: Date?) async throws -> [StopAndSearch]

@@ -8,11 +8,11 @@ public struct CaseHistory: Decodable, Equatable {
     /// Outcomes of the crime.
     public let outcomes: [CaseHistoryOutcome]
 
-    /// Creates a a new `CaseHistory`.
+    /// Creates a new `CaseHistory`.
     ///
     /// - Parameters:
-    ///     - crime: Crime information.
-    ///     - outcomes: Outcomes of the crime.
+    ///   - crime: Crime information.
+    ///   - outcomes: Outcomes of the crime.
     public init(crime: CaseHistoryCrime, outcomes: [CaseHistoryOutcome]) {
         self.crime = crime
         self.outcomes = outcomes

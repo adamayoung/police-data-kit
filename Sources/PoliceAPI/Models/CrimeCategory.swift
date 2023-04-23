@@ -3,6 +3,7 @@ import Foundation
 /// A crime category.
 public struct CrimeCategory: Identifiable, Decodable, Equatable {
 
+    /// Default crime category.
     public static let defaultID = "all-crimes"
 
     /// Unique identifier.
@@ -10,11 +11,11 @@ public struct CrimeCategory: Identifiable, Decodable, Equatable {
     /// Name of the crime category.
     public let name: String
 
-    /// Creates a a new `CrimeCategory`.
+    /// Creates a new `CrimeCategory`.
     ///
     /// - Parameters:
-    ///     - id: Unique identifier.
-    ///     - name: Name of the crime category.
+    ///   - id: Unique identifier.
+    ///   - name: Name of the crime category.
     public init(id: String, name: String) {
         self.id = id
         self.name = name

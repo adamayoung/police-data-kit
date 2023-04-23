@@ -12,14 +12,19 @@ public struct PoliceOfficer: Decodable, Equatable {
     /// Contact details for the Officer.
     public let contactDetails: ContactDetails
 
-    /// Creates a a new `ContactDetails`.
+    /// Creates a new `ContactDetails`.
     ///
     /// - Parameters:
-    ///     - name: Name of the person.
-    ///     - rank: Police Force rank.
-    ///     - bio: Officer biography.
-    ///     - contactDetails: Contact details for the Officer.
-    public init(name: String, rank: String, bio: String? = nil, contactDetails: ContactDetails) {
+    ///   - name: Name of the person.
+    ///   - rank: Police Force rank.
+    ///   - bio: Officer biography.
+    ///   - contactDetails: Contact details for the Officer.
+    public init(
+        name: String,
+        rank: String,
+        bio: String? = nil,
+        contactDetails: ContactDetails
+    ) {
         self.name = name
         self.rank = rank
         self.bio = bio

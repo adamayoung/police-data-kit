@@ -20,17 +20,17 @@ final actor InMemoryCache: NSObject, Cache {
         let cacheKey = keyValue(for: key)
 
         guard let item = cache.object(forKey: cacheKey) else {
-            logger.debug("MISS \(key.description)")
+            logger.trace("MISS \(key.description)")
             return nil
         }
 
         guard !item.isExpired else {
-            logger.debug("EXPIRED \(key.description)")
+            logger.trace("EXPIRED \(key.description)")
             cache.removeObject(forKey: cacheKey)
             return nil
         }
 
-        logger.debug("HIT \(key.description)")
+        logger.trace("HIT \(key.description)")
         return item.object as? ObjectType
     }
 
@@ -39,13 +39,13 @@ final actor InMemoryCache: NSObject, Cache {
 
         guard let object else {
             cache.removeObject(forKey: cacheKey)
-            logger.debug("REMOVE \(key.description)")
+            logger.trace("REMOVE \(key.description)")
             return
         }
 
         let item = CacheItem(key: key.description, object: object, expiresIn: expiresIn ?? defaultExpiresIn)
         cache.setObject(item, forKey: cacheKey)
-        logger.debug("ADD \(key.description)")
+        logger.trace("ADD \(key.description)")
     }
 
     func removeAll() async {

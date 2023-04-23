@@ -28,21 +28,29 @@ public struct Crime: Identifiable, Decodable, Equatable {
     /// The category and date of the latest recorded outcome for the crime.
     public let outcomeStatus: OutcomeStatus?
 
-    /// Creates a a new `Crime`.
+    /// Creates a new `Crime`.
     ///
     /// - Parameters:
-    ///     - id: Identifier of the crime
-    ///     - crimeID: 64-character unique identifier for the crime.
-    ///     - context: Extra information about the crime.
-    ///     - categoryID: Crime category identifier.
-    ///     - location: Approximate location of the incident.
-    ///     - locationType: The type of the location
-    ///     - locationSubtype: For Bristish Transport Police locations, the type of location at which this crime was recorded.
-    ///     - date: Date of the crime.
-    ///     - outcomeStatus: The category and date of the latest recorded outcome for the crime.
-    public init(id: Int, crimeID: String, context: String? = nil, categoryID: String, location: Location,
-                locationType: CrimeLocationType, locationSubtype: String? = nil, date: Date,
-                outcomeStatus: OutcomeStatus? = nil) {
+    ///   - id: Identifier of the crime
+    ///   - crimeID: 64-character unique identifier for the crime.
+    ///   - context: Extra information about the crime.
+    ///   - categoryID: Crime category identifier.
+    ///   - location: Approximate location of the incident.
+    ///   - locationType: The type of the location
+    ///   - locationSubtype: For Bristish Transport Police locations, the type of location at which this crime was recorded.
+    ///   - date: Date of the crime.
+    ///   - outcomeStatus: The category and date of the latest recorded outcome for the crime.
+    public init(
+        id: Int,
+        crimeID: String,
+        context: String? = nil,
+        categoryID: String,
+        location: Location,
+        locationType: CrimeLocationType,
+        locationSubtype: String? = nil,
+        date: Date,
+        outcomeStatus: OutcomeStatus? = nil
+    ) {
         self.id = id
         self.crimeID = crimeID
         self.context = context

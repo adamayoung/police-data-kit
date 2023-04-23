@@ -14,12 +14,12 @@ public struct EngagementMethod: Decodable, Equatable {
 
     private let urlString: String
 
-    /// Creates a a new `EngagementMethod`.
+    /// Creates a new `EngagementMethod`.
     ///
     /// - Parameters:
-    ///     - title: Engagement method type.
-    ///     - description: Engagement method description.
-    ///     - url: Engagement method website URL.
+    ///   - title: Engagement method type.
+    ///   - description: Engagement method description.
+    ///   - url: Engagement method website URL.
     public init(title: String, description: String? = nil, url: URL? = nil) {
         self.title = title
         self.description = description

@@ -15,11 +15,11 @@ public struct Coordinate: Decodable, Equatable, CustomStringConvertible {
     private let latitudeString: String
     private let longitudeString: String
 
-    /// Creates a a new `Coordinate`.
+    /// Creates a new `Coordinate`.
     ///
     /// - Parameters:
-    ///     - latitude: Latitude.
-    ///     - longitude: Longitude.
+    ///   - latitude: Latitude.
+    ///   - longitude: Longitude.
     public init(latitude: Double, longitude: Double) {
         self.latitudeString = String(latitude)
         self.longitudeString = String(longitude)

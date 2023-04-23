@@ -10,8 +10,8 @@ public protocol CrimeService {
     /// - Note: Since only the British Transport Police provide data for Scotland, crime levels may appear much lower than they really are.
     ///
     /// - Parameters:
-    ///     - coordinate: A coordinate.
-    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///   - coordinate: A coordinate.
+    ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
     /// - Returns: A list of street level crimes.
     func streetLevelCrimes(atCoordinate coordinate: Coordinate, date: Date?) async throws -> [Crime]
@@ -23,8 +23,8 @@ public protocol CrimeService {
     /// - Note: Since only the British Transport Police provide data for Scotland, crime levels may appear much lower than they really are.
     ///
     /// - Parameters:
-    ///     - coordinates: Coordinates which define the boundary of the custom area.
-    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///   - coordinates: Coordinates which define the boundary of the custom area.
+    ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
     /// - Returns: A list of street level crimes.
     func streetLevelCrimes(inArea boundary: Boundary, date: Date?) async throws -> [Crime]
@@ -35,8 +35,8 @@ public protocol CrimeService {
     /// - Note: Since only the British Transport Police provide data for Scotland, crime levels may appear much lower than they really are.
     ///
     /// - Parameters:
-    ///     - streetID: A street ID.
-    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///   - streetID: A street ID.
+    ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
     /// - Returns: A list of crimes.
     func crimes(forStreet streetID: Int, date: Date?) async throws -> [Crime]
@@ -48,8 +48,8 @@ public protocol CrimeService {
     /// - Note: Since only the British Transport Police provide data for Scotland, crime levels may appear much lower than they really are.
     ///
     /// - Parameters:
-    ///     - coordinate: A coordinate.
-    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///   - coordinate: A coordinate.
+    ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
     /// - Returns: A list of crimes.
     func crimes(atCoordinate coordinate: Coordinate, date: Date?) async throws -> [Crime]
@@ -59,9 +59,9 @@ public protocol CrimeService {
     /// - Note: [Police API | Crimes with no location](https://data.police.uk/docs/method/crimes-no-location/)
     ///
     /// - Parameters:
-    ///     - categoryID: The category of the crimes. All crimes with be shown by default.
-    ///     - policeForceID: Police Force identifier.
-    ///     - date: Limit results to a specific month. The latest month will be shown by default.
+    ///   - categoryID: The category of the crimes. All crimes with be shown by default.
+    ///   - policeForceID: Police Force identifier.
+    ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
     /// - Returns: A list of crimes.
     func crimesWithNoLocation(forCategory categoryID: CrimeCategory.ID, inPoliceForce policeForceID: PoliceForce.ID,
@@ -72,9 +72,11 @@ public protocol CrimeService {
     /// - Note: [Police API | Crime categories](https://data.police.uk/docs/method/crime-categories/)
     ///
     /// - Parameters:
-    ///     - date: Date to fetch crime categories for. Fetches for the month.
-    ///     - completion: Completion handler.
-    ///     - result: A list of crime categories
+    ///   - date: Date to fetch crime categories for. Fetches for the month.
+    ///   - completion: Completion handler.
+    ///   - result: A list of crime categories
+    ///
+    /// - Returns: A list of crime categories.
     func crimeCategories(forDate date: Date) async throws -> [CrimeCategory]
 
 }

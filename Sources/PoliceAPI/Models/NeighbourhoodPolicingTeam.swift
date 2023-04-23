@@ -8,11 +8,11 @@ public struct NeighbourhoodPolicingTeam: Decodable, Equatable {
     /// Force specific team identifier.
     public let neighbourhood: String
 
-    /// Creates a a new `NeighbourhoodPolicingTeam`.
+    /// Creates a new `NeighbourhoodPolicingTeam`.
     ///
     /// - Parameters:
-    ///     - force: Unique force identifier.
-    ///     - neighbourhood: Force specific team identifier.
+    ///   - force: Unique force identifier.
+    ///   - neighbourhood: Force specific team identifier.
     public init(force: String, neighbourhood: String) {
         self.force = force
         self.neighbourhood = neighbourhood
