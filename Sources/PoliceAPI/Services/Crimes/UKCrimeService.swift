@@ -11,7 +11,7 @@ final class UKCrimeService: CrimeService {
         self.apiClient = apiClient
     }
 
-    func streetLevelCrimes(atCoordinate coordinate: Coordinate, date: Date?) async throws -> [Crime] {
+    func streetLevelCrimes(atCoordinate coordinate: Coordinate, date: Date) async throws -> [Crime] {
         Self.logger.trace("fetching street level Crimes at coordinate \(coordinate, privacy: .public)")
 
         let crimes: [Crime]
@@ -28,7 +28,7 @@ final class UKCrimeService: CrimeService {
         return crimes
     }
 
-    func streetLevelCrimes(inArea boundary: Boundary, date: Date?) async throws -> [Crime] {
+    func streetLevelCrimes(inArea boundary: Boundary, date: Date) async throws -> [Crime] {
         Self.logger.trace("fetching street level Crimes in area")
 
         let crimes: [Crime]
@@ -45,7 +45,7 @@ final class UKCrimeService: CrimeService {
         return crimes
     }
 
-    func crimes(forStreet streetID: Int, date: Date?) async throws -> [Crime] {
+    func crimes(forStreet streetID: Int, date: Date) async throws -> [Crime] {
         Self.logger.trace("fetching Crimes for street \(streetID, privacy: .public)")
 
         let crimes: [Crime]
@@ -62,7 +62,7 @@ final class UKCrimeService: CrimeService {
         return crimes
     }
 
-    func crimes(atCoordinate coordinate: Coordinate, date: Date?) async throws -> [Crime] {
+    func crimes(atCoordinate coordinate: Coordinate, date: Date) async throws -> [Crime] {
         Self.logger.trace("fetching Crimes at coordinate \(coordinate, privacy: .public)")
 
         let crimes: [Crime]
@@ -80,7 +80,7 @@ final class UKCrimeService: CrimeService {
     }
 
     func crimesWithNoLocation(forCategory categoryID: CrimeCategory.ID, inPoliceForce policeForceID: PoliceForce.ID,
-                              date: Date?) async throws -> [Crime] {
+                              date: Date) async throws -> [Crime] {
         // swiftlint:disable:next line_length
         Self.logger.trace("fetching Crimes with no location for category \(categoryID, privacy: .public) in Police Force \(policeForceID, privacy: .public)")
 

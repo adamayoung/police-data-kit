@@ -14,7 +14,7 @@ public protocol CrimeService {
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
     /// - Returns: A list of street level crimes.
-    func streetLevelCrimes(atCoordinate coordinate: Coordinate, date: Date?) async throws -> [Crime]
+    func streetLevelCrimes(atCoordinate coordinate: Coordinate, date: Date) async throws -> [Crime]
 
     /// Returns a list of crimes within a custom area.
     ///
@@ -27,7 +27,7 @@ public protocol CrimeService {
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
     /// - Returns: A list of street level crimes.
-    func streetLevelCrimes(inArea boundary: Boundary, date: Date?) async throws -> [Crime]
+    func streetLevelCrimes(inArea boundary: Boundary, date: Date) async throws -> [Crime]
 
     /// Returns just the crimes which occurred at the specified location, rather than those within a radius.
     ///
@@ -39,7 +39,7 @@ public protocol CrimeService {
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
     /// - Returns: A list of crimes.
-    func crimes(forStreet streetID: Int, date: Date?) async throws -> [Crime]
+    func crimes(forStreet streetID: Int, date: Date) async throws -> [Crime]
 
     /// Returns just the crimes which occurred at the specified location, rather than those within a radius by finding the nearest location of the coordinate and
     /// the crimes which occurred there.
@@ -52,7 +52,7 @@ public protocol CrimeService {
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
     /// - Returns: A list of crimes.
-    func crimes(atCoordinate coordinate: Coordinate, date: Date?) async throws -> [Crime]
+    func crimes(atCoordinate coordinate: Coordinate, date: Date) async throws -> [Crime]
 
     /// Returns a list of crimes that could not be mapped to a location.
     ///
@@ -65,7 +65,7 @@ public protocol CrimeService {
     ///
     /// - Returns: A list of crimes.
     func crimesWithNoLocation(forCategory categoryID: CrimeCategory.ID, inPoliceForce policeForceID: PoliceForce.ID,
-                              date: Date?) async throws -> [Crime]
+                              date: Date) async throws -> [Crime]
 
     /// Fetches a list of valid crime categories for a given data set date.
     ///
@@ -83,28 +83,29 @@ public protocol CrimeService {
 
 extension CrimeService {
 
-    func streetLevelCrimes(atCoordinate coordinate: Coordinate, date: Date? = nil) async throws -> [Crime] {
+    func streetLevelCrimes(atCoordinate coordinate: Coordinate, date: Date = Date()) async throws -> [Crime] {
         try await streetLevelCrimes(atCoordinate: coordinate, date: date)
     }
 
-    func streetLevelCrimes(inArea boundary: Boundary, date: Date? = nil) async throws -> [Crime] {
+    func streetLevelCrimes(inArea boundary: Boundary, date: Date = Date()) async throws -> [Crime] {
         try await streetLevelCrimes(inArea: boundary, date: date)
     }
 
-    func crimes(forStreet streetID: Int, date: Date? = nil) async throws -> [Crime] {
+    func crimes(forStreet streetID: Int, date: Date = Date()) async throws -> [Crime] {
         try await crimes(forStreet: streetID, date: date)
     }
 
-    func crimes(atCoordinate coordinate: Coordinate, date: Date? = nil) async throws -> [Crime] {
+    func crimes(atCoordinate coordinate: Coordinate, date: Date = Date()) async throws -> [Crime] {
         try await crimes(atCoordinate: coordinate, date: date)
     }
 
     func crimesWithNoLocation(forCategory categoryID: String = CrimeCategory.defaultID,
-                              inPoliceForce policeForceID: PoliceForce.ID, date: Date? = nil) async throws -> [Crime] {
+                              inPoliceForce policeForceID: PoliceForce.ID,
+                              date: Date = Date()) async throws -> [Crime] {
         try await crimesWithNoLocation(forCategory: categoryID, inPoliceForce: policeForceID, date: date)
     }
 
-    func crimeCategories(forDate date: Date = .init()) async throws -> [CrimeCategory] {
+    func crimeCategories(forDate date: Date = Date()) async throws -> [CrimeCategory] {
         try await crimeCategories(forDate: date)
     }
 

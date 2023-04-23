@@ -2,11 +2,11 @@ import Foundation
 
 enum CrimesEndpoint {
 
-    case streetLevelCrimesAtSpecificPoint(coordinate: Coordinate, date: Date? = nil)
-    case streetLevelCrimesInArea(boundary: Boundary, date: Date? = nil)
-    case crimesAtLocationForStreet(streetID: Int, date: Date? = nil)
-    case crimesAtLocationAtSpecificPoint(coordinate: Coordinate, date: Date? = nil)
-    case crimesWithNoLocation(categoryID: CrimeCategory.ID, policeForceID: PoliceForce.ID, date: Date? = nil)
+    case streetLevelCrimesAtSpecificPoint(coordinate: Coordinate, date: Date)
+    case streetLevelCrimesInArea(boundary: Boundary, date: Date)
+    case crimesAtLocationForStreet(streetID: Int, date: Date)
+    case crimesAtLocationAtSpecificPoint(coordinate: Coordinate, date: Date)
+    case crimesWithNoLocation(categoryID: CrimeCategory.ID, policeForceID: PoliceForce.ID, date: Date)
     case categories(date: Date)
 
 }

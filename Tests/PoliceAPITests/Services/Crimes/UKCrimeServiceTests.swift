@@ -28,8 +28,10 @@ final class UKCrimeServiceTests: XCTestCase {
 
         XCTAssertEqual(result, expectedResult)
 
-        XCTAssertEqual(apiClient.lastPath,
-                       CrimesEndpoint.streetLevelCrimesAtSpecificPoint(coordinate: coordinate, date: date).path)
+        XCTAssertEqual(
+            apiClient.lastPath,
+            CrimesEndpoint.streetLevelCrimesAtSpecificPoint(coordinate: coordinate, date: date).path
+        )
     }
 
     func testStreetLevelCrimesAtCoordinateWhenNoDateReturnsCrimes() async throws {
@@ -41,7 +43,10 @@ final class UKCrimeServiceTests: XCTestCase {
 
         XCTAssertEqual(result, expectedResult)
 
-        XCTAssertEqual(apiClient.lastPath, CrimesEndpoint.streetLevelCrimesAtSpecificPoint(coordinate: coordinate).path)
+        XCTAssertEqual(
+            apiClient.lastPath,
+            CrimesEndpoint.streetLevelCrimesAtSpecificPoint(coordinate: coordinate, date: Date()).path
+        )
     }
 
     func testStreetLevelCrimesInAreaReturnsCrimes() async throws {
@@ -54,8 +59,10 @@ final class UKCrimeServiceTests: XCTestCase {
 
         XCTAssertEqual(result, expectedResult)
 
-        XCTAssertEqual(apiClient.lastPath,
-                       CrimesEndpoint.streetLevelCrimesInArea(boundary: boundary, date: date).path)
+        XCTAssertEqual(
+            apiClient.lastPath,
+            CrimesEndpoint.streetLevelCrimesInArea(boundary: boundary, date: date).path
+        )
     }
 
     func testStreetLevelCrimesInAreaWhenNoDateReturnsCrimes() async throws {
@@ -67,7 +74,10 @@ final class UKCrimeServiceTests: XCTestCase {
 
         XCTAssertEqual(result, expectedResult)
 
-        XCTAssertEqual(apiClient.lastPath, CrimesEndpoint.streetLevelCrimesInArea(boundary: boundary).path)
+        XCTAssertEqual(
+            apiClient.lastPath,
+            CrimesEndpoint.streetLevelCrimesInArea(boundary: boundary, date: Date()).path
+        )
     }
 
     func testCrimesForStreetReturnsCrimes() async throws {
@@ -80,8 +90,10 @@ final class UKCrimeServiceTests: XCTestCase {
 
         XCTAssertEqual(result, expectedResult)
 
-        XCTAssertEqual(apiClient.lastPath,
-                       CrimesEndpoint.crimesAtLocationForStreet(streetID: streetID, date: date).path)
+        XCTAssertEqual(
+            apiClient.lastPath,
+            CrimesEndpoint.crimesAtLocationForStreet(streetID: streetID, date: date).path
+        )
     }
 
     func testCrimesForStreetWhenNoDateReturnsCrimes() async throws {
@@ -93,7 +105,10 @@ final class UKCrimeServiceTests: XCTestCase {
 
         XCTAssertEqual(result, expectedResult)
 
-        XCTAssertEqual(apiClient.lastPath, CrimesEndpoint.crimesAtLocationForStreet(streetID: streetID).path)
+        XCTAssertEqual(
+            apiClient.lastPath,
+            CrimesEndpoint.crimesAtLocationForStreet(streetID: streetID, date: Date()).path
+        )
     }
 
     func testCrimesAtCoordinateReturnsCrimes() async throws {
@@ -106,8 +121,10 @@ final class UKCrimeServiceTests: XCTestCase {
 
         XCTAssertEqual(result, expectedResult)
 
-        XCTAssertEqual(apiClient.lastPath,
-                       CrimesEndpoint.crimesAtLocationAtSpecificPoint(coordinate: coordinate, date: date).path)
+        XCTAssertEqual(
+            apiClient.lastPath,
+            CrimesEndpoint.crimesAtLocationAtSpecificPoint(coordinate: coordinate, date: date).path
+        )
     }
 
     func testCrimesAtCoordinateWhenNoDateReturnsCrimes() async throws {
@@ -119,7 +136,10 @@ final class UKCrimeServiceTests: XCTestCase {
 
         XCTAssertEqual(result, expectedResult)
 
-        XCTAssertEqual(apiClient.lastPath, CrimesEndpoint.crimesAtLocationAtSpecificPoint(coordinate: coordinate).path)
+        XCTAssertEqual(
+            apiClient.lastPath,
+            CrimesEndpoint.crimesAtLocationAtSpecificPoint(coordinate: coordinate, date: Date()).path
+        )
     }
 
     func testCrimesWithNoLocationReturnsCrimes() async throws {
@@ -134,9 +154,10 @@ final class UKCrimeServiceTests: XCTestCase {
 
         XCTAssertEqual(result, expectedResult)
 
-        XCTAssertEqual(apiClient.lastPath,
-                       CrimesEndpoint.crimesWithNoLocation(categoryID: categoryID, policeForceID: policeForceID,
-                                                           date: date).path)
+        XCTAssertEqual(
+            apiClient.lastPath,
+            CrimesEndpoint.crimesWithNoLocation(categoryID: categoryID, policeForceID: policeForceID, date: date).path
+        )
     }
 
     func testCrimesWithNoLocationWhenNoCategoryOrDateReturnsCrimes() async throws {
@@ -148,8 +169,11 @@ final class UKCrimeServiceTests: XCTestCase {
 
         XCTAssertEqual(result, expectedResult)
 
-        XCTAssertEqual(apiClient.lastPath, CrimesEndpoint.crimesWithNoLocation(categoryID: CrimeCategory.defaultID,
-                                                                               policeForceID: policeForceID).path)
+        XCTAssertEqual(
+            apiClient.lastPath,
+            CrimesEndpoint.crimesWithNoLocation(categoryID: CrimeCategory.defaultID, policeForceID: policeForceID,
+                                                date: Date()).path
+        )
     }
 
     func testCrimeCategoriesReturnsCrimeCategories() async throws {
