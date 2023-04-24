@@ -30,7 +30,6 @@ final class UKOutcomeServiceTests: XCTestCase {
         let result = try await service.streetLevelOutcomes(forStreet: streetID, date: date)
 
         XCTAssertEqual(result, expectedResult)
-
         XCTAssertEqual(
             apiClient.lastPath,
             OutcomesEndpoint.streetLevelOutcomesForStreet(streetID: streetID, date: date).path
@@ -45,7 +44,6 @@ final class UKOutcomeServiceTests: XCTestCase {
         let result = try await service.streetLevelOutcomes(forStreet: streetID)
 
         XCTAssertEqual(result, expectedResult)
-
         XCTAssertEqual(
             apiClient.lastPath,
             OutcomesEndpoint.streetLevelOutcomesForStreet(streetID: streetID, date: Date()).path
@@ -62,7 +60,6 @@ final class UKOutcomeServiceTests: XCTestCase {
         let result = try await service.streetLevelOutcomes(forStreet: streetID, date: date)
 
         XCTAssertEqual(result, expectedResult)
-
         XCTAssertNil(apiClient.lastPath)
     }
 
@@ -88,7 +85,6 @@ final class UKOutcomeServiceTests: XCTestCase {
         let result = try await service.streetLevelOutcomes(atCoordinate: coordinate, date: date)
 
         XCTAssertEqual(result, expectedResult)
-
         XCTAssertEqual(
             apiClient.lastPath,
             OutcomesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate, date: date).path
@@ -103,7 +99,6 @@ final class UKOutcomeServiceTests: XCTestCase {
         let result = try await service.streetLevelOutcomes(atCoordinate: coordinate)
 
         XCTAssertEqual(result, expectedResult)
-
         XCTAssertEqual(
             apiClient.lastPath,
             OutcomesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate, date: Date()).path
@@ -119,7 +114,6 @@ final class UKOutcomeServiceTests: XCTestCase {
         let result = try await service.streetLevelOutcomes(inArea: boundary, date: date)
 
         XCTAssertEqual(result, expectedResult)
-
         XCTAssertEqual(
             apiClient.lastPath,
             OutcomesEndpoint.streetLevelOutcomesInArea(boundary: boundary, date: date).path
@@ -134,7 +128,6 @@ final class UKOutcomeServiceTests: XCTestCase {
         let result = try await service.streetLevelOutcomes(inArea: boundary)
 
         XCTAssertEqual(result, expectedResult)
-
         XCTAssertEqual(
             apiClient.lastPath,
             OutcomesEndpoint.streetLevelOutcomesInArea(boundary: boundary, date: Date()).path
@@ -149,7 +142,6 @@ final class UKOutcomeServiceTests: XCTestCase {
         let result = try await service.caseHistory(forCrime: crimeID)
 
         XCTAssertEqual(result, expectedResult)
-
         XCTAssertEqual(apiClient.lastPath, OutcomesEndpoint.caseHistory(crimeID: crimeID).path)
     }
 
@@ -171,7 +163,6 @@ final class UKOutcomeServiceTests: XCTestCase {
         let result = try await service.caseHistory(forCrime: crimeID)
 
         XCTAssertEqual(result, expectedResult)
-
         XCTAssertNil(apiClient.lastPath)
     }
 

@@ -28,7 +28,6 @@ final class UKPoliceForceServiceTests: XCTestCase {
         let result = try await service.policeForces()
 
         XCTAssertEqual(result, expectedResult)
-
         XCTAssertEqual(apiClient.lastPath, PoliceForcesEndpoint.list.path)
     }
 
@@ -40,7 +39,6 @@ final class UKPoliceForceServiceTests: XCTestCase {
         let result = try await service.policeForces()
 
         XCTAssertEqual(result, expectedResult)
-
         XCTAssertNil(apiClient.lastPath)
     }
 
@@ -63,7 +61,6 @@ final class UKPoliceForceServiceTests: XCTestCase {
         let result = try await service.policeForce(withID: id)
 
         XCTAssertEqual(result, expectedResult)
-
         XCTAssertEqual(apiClient.lastPath, PoliceForcesEndpoint.details(id: id).path)
     }
 
@@ -85,11 +82,10 @@ final class UKPoliceForceServiceTests: XCTestCase {
         let result = try await service.policeForce(withID: id)
 
         XCTAssertEqual(result, expectedResult)
-
         XCTAssertNil(apiClient.lastPath)
     }
 
-    func testPoliceForceWhenNotCachedAndReturnsCachedPoliceForceShouldCacheResult() async throws {
+    func testPoliceForceWhenNotCachedAndReturnsPoliceForceShouldCacheResult() async throws {
         let expectedResult = PoliceForce.mock
         let id = expectedResult.id
         let cacheKey = PoliceForceCachingKey(id: id)
@@ -109,7 +105,6 @@ final class UKPoliceForceServiceTests: XCTestCase {
         let result = try await service.seniorOfficers(inPoliceForce: policeForceID)
 
         XCTAssertEqual(result, expectedResult)
-
         XCTAssertEqual(apiClient.lastPath, PoliceForcesEndpoint.seniorOfficers(policeForceID: policeForceID).path)
     }
 
@@ -131,7 +126,6 @@ final class UKPoliceForceServiceTests: XCTestCase {
         let result = try await service.seniorOfficers(inPoliceForce: policeForceID)
 
         XCTAssertEqual(result, expectedResult)
-
         XCTAssertNil(apiClient.lastPath)
     }
 

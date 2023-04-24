@@ -28,7 +28,6 @@ final class UKAvailabilityTests: XCTestCase {
         let result = try await service.availableDataSets()
 
         XCTAssertEqual(result, expectedResult)
-
         XCTAssertEqual(apiClient.lastPath, AvailabilityEndpoint.dataSets.path)
     }
 
@@ -40,7 +39,6 @@ final class UKAvailabilityTests: XCTestCase {
         let result = try await service.availableDataSets()
 
         XCTAssertEqual(result, expectedResult)
-
         XCTAssertNil(apiClient.lastPath)
     }
 
