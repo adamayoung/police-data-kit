@@ -29,7 +29,6 @@ final class UKNeighbourhoodServiceTests: XCTestCase {
         let result = try await service.neighbourhoods(inPoliceForce: policeForceID)
 
         XCTAssertEqual(result, expectedResult)
-
         XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.list(policeForceID: policeForceID).path)
     }
 
@@ -42,7 +41,6 @@ final class UKNeighbourhoodServiceTests: XCTestCase {
         let result = try await service.neighbourhoods(inPoliceForce: policeForceID)
 
         XCTAssertEqual(result, expectedResult)
-
         XCTAssertNil(apiClient.lastPath)
     }
 
@@ -67,7 +65,6 @@ final class UKNeighbourhoodServiceTests: XCTestCase {
         let result = try await service.neighbourhood(withID: id, inPoliceForce: policeForceID)
 
         XCTAssertEqual(result, expectedResult)
-
         XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.details(id: id, policeForceID: policeForceID).path)
     }
 
@@ -91,7 +88,6 @@ final class UKNeighbourhoodServiceTests: XCTestCase {
         let result = try await service.neighbourhood(withID: id, inPoliceForce: policeForceID)
 
         XCTAssertEqual(result, expectedResult)
-
         XCTAssertNil(apiClient.lastPath)
     }
 
@@ -117,9 +113,10 @@ final class UKNeighbourhoodServiceTests: XCTestCase {
         let result = try await service.boundary(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
         XCTAssertEqual(result, expectedResult)
-
-        XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.boundary(neighbourhoodID: neighbourhoodID,
-                                                                           policeForceID: policeForceID).path)
+        XCTAssertEqual(
+            apiClient.lastPath,
+            NeighbourhoodsEndpoint.boundary(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID).path
+        )
     }
 
     func testBoundaryWhenNotCachedAndNotFoundReturnsNil() async throws {
@@ -142,7 +139,6 @@ final class UKNeighbourhoodServiceTests: XCTestCase {
         let result = try await service.boundary(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
         XCTAssertEqual(result, expectedResult)
-
         XCTAssertNil(apiClient.lastPath)
     }
 
@@ -168,9 +164,10 @@ final class UKNeighbourhoodServiceTests: XCTestCase {
         let result = try await service.policeOfficers(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
         XCTAssertEqual(result, expectedResult)
-
-        XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.policeOfficers(neighbourhoodID: neighbourhoodID,
-                                                                                 policeForceID: policeForceID).path)
+        XCTAssertEqual(
+            apiClient.lastPath,
+            NeighbourhoodsEndpoint.policeOfficers(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID).path
+        )
     }
 
     func testPoliceOfficersWhenCachedReturnsCachedPoliceOfficers() async throws {
@@ -185,7 +182,6 @@ final class UKNeighbourhoodServiceTests: XCTestCase {
         let result = try await service.policeOfficers(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
         XCTAssertEqual(result, expectedResult)
-
         XCTAssertNil(apiClient.lastPath)
     }
 
@@ -213,9 +209,10 @@ final class UKNeighbourhoodServiceTests: XCTestCase {
         let result = try await service.priorities(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
         XCTAssertEqual(result, expectedResult)
-
-        XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.priorities(neighbourhoodID: neighbourhoodID,
-                                                                             policeForceID: policeForceID).path)
+        XCTAssertEqual(
+            apiClient.lastPath,
+            NeighbourhoodsEndpoint.priorities(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID).path
+        )
     }
 
     func testPrioritiesWhenCachedReturnsCachedNeighbourhoodPriorities() async throws {
@@ -230,7 +227,6 @@ final class UKNeighbourhoodServiceTests: XCTestCase {
         let result = try await service.priorities(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
         XCTAssertEqual(result, expectedResult)
-
         XCTAssertNil(apiClient.lastPath)
     }
 
@@ -257,7 +253,6 @@ final class UKNeighbourhoodServiceTests: XCTestCase {
         let result = try await service.neighbourhoodPolicingTeam(atCoordinate: coordinate)
 
         XCTAssertEqual(result, expectedResult)
-
         XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.locateNeighbourhood(coordinate: coordinate).path)
     }
 
