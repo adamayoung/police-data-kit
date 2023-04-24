@@ -7,10 +7,12 @@ final class UKNeighbourhoodService: NeighbourhoodService {
 
     private let apiClient: any APIClient
     private let cache: any Cache
+    private let availableDataRegion: CoordinateRegion
 
-    init(apiClient: some APIClient, cache: some Cache) {
+    init(apiClient: some APIClient, cache: some Cache, availableDataRegion: CoordinateRegion) {
         self.apiClient = apiClient
         self.cache = cache
+        self.availableDataRegion = availableDataRegion
     }
 
     func neighbourhoods(inPoliceForce policeForceID: PoliceForce.ID) async throws -> [NeighbourhoodReference] {
@@ -170,6 +172,10 @@ final class UKNeighbourhoodService: NeighbourhoodService {
 
     func neighbourhoodPolicingTeam(atCoordinate coordinate: Coordinate) async throws -> NeighbourhoodPolicingTeam? {
         Self.logger.trace("fetching Neighbourhood Policing Team at coordinate \(coordinate, privacy: .public)")
+
+        guard availableDataRegion.contains(coordinate: coordinate) else {
+            return nil
+        }
 
         let policingTeam: NeighbourhoodPolicingTeam
         do {

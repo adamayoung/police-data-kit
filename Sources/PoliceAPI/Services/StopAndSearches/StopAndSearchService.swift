@@ -15,7 +15,7 @@ public protocol StopAndSearchService {
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
     /// - Returns: A list of stop and searches.
-    func stopAndSearches(atCoordinate coordinate: Coordinate, date: Date) async throws -> [StopAndSearch]
+    func stopAndSearches(atCoordinate coordinate: Coordinate, date: Date) async throws -> [StopAndSearch]?
 
     /// Returns stop and searches at street-level within a custom area.
     ///
@@ -70,26 +70,24 @@ public protocol StopAndSearchService {
 
 extension StopAndSearchService {
 
-    func stopAndSearches(atCoordinate coordinate: Coordinate, date: Date = Date()) async throws -> [StopAndSearch] {
-        try await stopAndSearches(atCoordinate: coordinate, date: date)
+    func stopAndSearches(atCoordinate coordinate: Coordinate) async throws -> [StopAndSearch]? {
+        try await stopAndSearches(atCoordinate: coordinate, date: Date())
     }
 
-    func stopAndSearches(inArea boundary: Boundary, date: Date = Date()) async throws -> [StopAndSearch] {
-        try await stopAndSearches(inArea: boundary, date: date)
+    func stopAndSearches(inArea boundary: Boundary) async throws -> [StopAndSearch] {
+        try await stopAndSearches(inArea: boundary, date: Date())
     }
 
-    func stopAndSearches(atLocation streetID: Int, date: Date = Date()) async throws -> [StopAndSearch] {
-        try await stopAndSearches(atLocation: streetID, date: date)
+    func stopAndSearches(atLocation streetID: Int) async throws -> [StopAndSearch] {
+        try await stopAndSearches(atLocation: streetID, date: Date())
     }
 
-    func stopAndSearchesWithNoLocation(forPoliceForce policeForceID: PoliceForce.ID,
-                                       date: Date = Date()) async throws -> [StopAndSearch] {
-        try await stopAndSearchesWithNoLocation(forPoliceForce: policeForceID, date: date)
+    func stopAndSearchesWithNoLocation(forPoliceForce policeForceID: PoliceForce.ID) async throws -> [StopAndSearch] {
+        try await stopAndSearchesWithNoLocation(forPoliceForce: policeForceID, date: Date())
     }
 
-    func stopAndSearches(forPoliceForce policeForceID: PoliceForce.ID,
-                         date: Date = Date()) async throws -> [StopAndSearch] {
-        try await stopAndSearches(forPoliceForce: policeForceID, date: date)
+    func stopAndSearches(forPoliceForce policeForceID: PoliceForce.ID) async throws -> [StopAndSearch] {
+        try await stopAndSearches(forPoliceForce: policeForceID, date: Date())
     }
 
 }

@@ -7,14 +7,20 @@ final class UKStopAndSearchService: StopAndSearchService {
 
     private let apiClient: any APIClient
     private let cache: any Cache
+    private let availableDataRegion: CoordinateRegion
 
-    init(apiClient: some APIClient, cache: some Cache) {
+    init(apiClient: some APIClient, cache: some Cache, availableDataRegion: CoordinateRegion) {
         self.apiClient = apiClient
         self.cache = cache
+        self.availableDataRegion = availableDataRegion
     }
 
-    func stopAndSearches(atCoordinate coordinate: Coordinate, date: Date) async throws -> [StopAndSearch] {
+    func stopAndSearches(atCoordinate coordinate: Coordinate, date: Date) async throws -> [StopAndSearch]? {
         Self.logger.trace("fetching Stop and Searches at \(coordinate, privacy: .public)")
+
+        guard availableDataRegion.contains(coordinate: coordinate) else {
+            return nil
+        }
 
         let stopAndSearches: [StopAndSearch]
         do {

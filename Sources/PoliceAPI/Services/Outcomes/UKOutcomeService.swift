@@ -7,10 +7,12 @@ final class UKOutcomeService: OutcomeService {
 
     private let apiClient: any APIClient
     private let cache: any Cache
+    private let availableDataRegion: CoordinateRegion
 
-    init(apiClient: some APIClient, cache: some Cache) {
+    init(apiClient: some APIClient, cache: some Cache, availableDataRegion: CoordinateRegion) {
         self.apiClient = apiClient
         self.cache = cache
+        self.availableDataRegion = availableDataRegion
     }
 
     func streetLevelOutcomes(forStreet streetID: Int, date: Date) async throws -> [Outcome] {
@@ -37,8 +39,12 @@ final class UKOutcomeService: OutcomeService {
         return outcomes
     }
 
-    func streetLevelOutcomes(atCoordinate coordinate: Coordinate, date: Date) async throws -> [Outcome] {
+    func streetLevelOutcomes(atCoordinate coordinate: Coordinate, date: Date) async throws -> [Outcome]? {
         Self.logger.trace("fetching street level Outcomes at coordinate \(coordinate, privacy: .public)")
+
+        guard availableDataRegion.contains(coordinate: coordinate) else {
+            return nil
+        }
 
         let outcomes: [Outcome]
         do {
