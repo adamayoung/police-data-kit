@@ -1,5 +1,5 @@
-import PoliceAPI
 import Foundation
+import PoliceAPI
 
 extension CoordinateRegion {
 

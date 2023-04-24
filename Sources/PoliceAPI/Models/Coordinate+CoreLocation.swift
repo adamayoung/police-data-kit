@@ -1,6 +1,6 @@
 #if canImport(CoreLocation)
-import Foundation
 import CoreLocation
+import Foundation
 
 extension Coordinate {
 
