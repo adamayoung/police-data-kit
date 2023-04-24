@@ -1,34 +1,18 @@
 import Foundation
-#if canImport(MapKit)
-import MapKit
-#endif
 
 extension CoordinateRegion {
 
-    public func contains(coordinate: Coordinate, margin: Double = 0.01) -> Bool {
+    public func contains(coordinate: Coordinate) -> Bool {
         let northWestCoordinate = self.northWestCoordinate
         let southEastRightCoordinate = self.southEastRightCoordinate
 
-        return coordinate.latitude >= northWestCoordinate.latitude - margin
-            && coordinate.longitude >= northWestCoordinate.longitude - margin
-            && coordinate.latitude <= southEastRightCoordinate.latitude + margin
-            && coordinate.longitude <= southEastRightCoordinate.longitude + margin
+        return coordinate.latitude >= northWestCoordinate.latitude
+            && coordinate.longitude >= northWestCoordinate.longitude
+            && coordinate.latitude <= southEastRightCoordinate.latitude
+            && coordinate.longitude <= southEastRightCoordinate.longitude
     }
 
 }
-
-#if canImport(MapKit)
-extension MKCoordinateRegion {
-
-    public func contains(coordinate clCoordinate: CLLocationCoordinate2D, margin: Double = 0.01) -> Bool {
-        let region = self.policeAPICoordinateRegion
-        let coordinate = clCoordinate.policeAPICoordinate
-
-        return region.contains(coordinate: coordinate)
-    }
-
-}
-#endif
 
 extension CoordinateRegion {
 
