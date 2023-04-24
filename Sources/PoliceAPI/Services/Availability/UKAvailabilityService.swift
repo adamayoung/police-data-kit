@@ -34,4 +34,8 @@ final class UKAvailabilityService: AvailabilityService {
         return dataSets
     }
 
+    func availableDataRegion() -> CoordinateRegion {
+        CoordinateRegion.availableDataRegion
+    }
+
 }

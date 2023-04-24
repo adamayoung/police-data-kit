@@ -25,7 +25,7 @@ public protocol OutcomeService {
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
     /// - Returns: A list of street level crime outcomes.
-    func streetLevelOutcomes(atCoordinate coordinate: Coordinate, date: Date) async throws -> [Outcome]
+    func streetLevelOutcomes(atCoordinate coordinate: Coordinate, date: Date) async throws -> [Outcome]?
 
     /// Returns a list of crime outcomes within a custom area.
     ///
@@ -54,16 +54,16 @@ public protocol OutcomeService {
 
 extension OutcomeService {
 
-    func streetLevelOutcomes(forStreet streetID: Int, date: Date = Date()) async throws -> [Outcome] {
-        try await streetLevelOutcomes(forStreet: streetID, date: date)
+    func streetLevelOutcomes(forStreet streetID: Int) async throws -> [Outcome] {
+        try await streetLevelOutcomes(forStreet: streetID, date: Date())
     }
 
-    func streetLevelOutcomes(atCoordinate coordinate: Coordinate, date: Date = Date()) async throws -> [Outcome] {
-        try await streetLevelOutcomes(atCoordinate: coordinate, date: date)
+    func streetLevelOutcomes(atCoordinate coordinate: Coordinate) async throws -> [Outcome]? {
+        try await streetLevelOutcomes(atCoordinate: coordinate, date: Date())
     }
 
-    func streetLevelOutcomes(inArea boundary: Boundary, date: Date = Date()) async throws -> [Outcome] {
-        try await streetLevelOutcomes(inArea: boundary, date: date)
+    func streetLevelOutcomes(inArea boundary: Boundary) async throws -> [Outcome] {
+        try await streetLevelOutcomes(inArea: boundary, date: Date())
     }
 
 }

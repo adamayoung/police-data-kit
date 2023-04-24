@@ -6,16 +6,19 @@ final class UKNeighbourhoodServiceTests: XCTestCase {
     var service: UKNeighbourhoodService!
     var apiClient: MockAPIClient!
     var cache: MockCache!
+    var availableDataRegion: CoordinateRegion!
 
     override func setUp() {
         super.setUp()
         apiClient = MockAPIClient()
         cache = MockCache()
-        service = UKNeighbourhoodService(apiClient: apiClient, cache: cache)
+        availableDataRegion = .test
+        service = UKNeighbourhoodService(apiClient: apiClient, cache: cache, availableDataRegion: availableDataRegion)
     }
 
     override func tearDown() {
         service = nil
+        availableDataRegion = nil
         cache = nil
         apiClient = nil
         super.tearDown()
@@ -263,6 +266,17 @@ final class UKNeighbourhoodServiceTests: XCTestCase {
         let result = try await service.neighbourhoodPolicingTeam(atCoordinate: coordinate)
 
         XCTAssertNil(result)
+    }
+
+    func testNeighbourhoodPolicingTeamAtCoordinateWhenCoordinateOutsideOfAvailableDataRegionReturnsNil() async throws {
+        let coordinate = Coordinate.outsideAvailableDataRegion
+        let expectedResult = NeighbourhoodPolicingTeam.mock
+        apiClient.response = .success(expectedResult)
+
+        let result = try await service.neighbourhoodPolicingTeam(atCoordinate: coordinate)
+
+        XCTAssertNil(result)
+        XCTAssertNil(apiClient.lastPath)
     }
 
 }

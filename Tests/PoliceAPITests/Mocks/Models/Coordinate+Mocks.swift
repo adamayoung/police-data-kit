@@ -10,4 +10,11 @@ extension Coordinate {
         )
     }
 
+    static var outsideAvailableDataRegion: Coordinate {
+        Coordinate(
+            latitude: 32.6389,
+            longitude: 4.13619
+        )
+    }
+
 }

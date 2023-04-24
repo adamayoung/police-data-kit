@@ -26,13 +26,16 @@ public final class UKPoliceAPI {
         let serialiser = Serialiser(decoder: .policeDataAPI)
         let apiClient = PoliceDataAPIClient(baseURL: baseURL, urlSession: urlSession, serialiser: serialiser)
         let cache = InMemoryCache(name: "PoliceAPICache")
+        let availableDataRegion = CoordinateRegion.availableDataRegion
 
         self.init(
             policeForceService: UKPoliceForceService(apiClient: apiClient, cache: cache),
-            neighbourhoodService: UKNeighbourhoodService(apiClient: apiClient, cache: cache),
-            crimeService: UKCrimeService(apiClient: apiClient, cache: cache),
-            outcomes: UKOutcomeService(apiClient: apiClient, cache: cache),
-            stopAndSearches: UKStopAndSearchService(apiClient: apiClient, cache: cache),
+            neighbourhoodService: UKNeighbourhoodService(apiClient: apiClient, cache: cache,
+                                                         availableDataRegion: availableDataRegion),
+            crimeService: UKCrimeService(apiClient: apiClient, cache: cache, availableDataRegion: availableDataRegion),
+            outcomes: UKOutcomeService(apiClient: apiClient, cache: cache, availableDataRegion: availableDataRegion),
+            stopAndSearches: UKStopAndSearchService(apiClient: apiClient, cache: cache,
+                                                    availableDataRegion: availableDataRegion),
             availability: UKAvailabilityService(apiClient: apiClient, cache: cache)
         )
     }

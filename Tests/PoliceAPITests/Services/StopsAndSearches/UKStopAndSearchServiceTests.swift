@@ -6,16 +6,19 @@ final class UKStopAndSearchServiceTests: XCTestCase {
     var service: UKStopAndSearchService!
     var apiClient: MockAPIClient!
     var cache: MockCache!
+    var availableDataRegion: CoordinateRegion!
 
     override func setUp() {
         super.setUp()
         apiClient = MockAPIClient()
         cache = MockCache()
-        service = UKStopAndSearchService(apiClient: apiClient, cache: cache)
+        availableDataRegion = .test
+        service = UKStopAndSearchService(apiClient: apiClient, cache: cache, availableDataRegion: availableDataRegion)
     }
 
     override func tearDown() {
         service = nil
+        availableDataRegion = nil
         cache = nil
         apiClient = nil
         super.tearDown()
@@ -48,6 +51,18 @@ final class UKStopAndSearchServiceTests: XCTestCase {
             apiClient.lastPath,
             StopAndSearchesEndpoint.stopAndSearchesByAreaAtSpecificPoint(coordinate: coordinate, date: Date()).path
         )
+    }
+
+    func testStopAndSearchesAtCoordinateWhenCoordinateOutsideOfAvailableDataRegionReturnsNil() async throws {
+        let coordinate = Coordinate.outsideAvailableDataRegion
+        let date = Date()
+        let expectedResult = StopAndSearch.mocks
+        apiClient.response = .success(expectedResult)
+
+        let result = try await service.stopAndSearches(atCoordinate: coordinate, date: date)
+
+        XCTAssertNil(result)
+        XCTAssertNil(apiClient.lastPath)
     }
 
     func testStopAndSearchesInAreaReturnsStopAndSearches() async throws {

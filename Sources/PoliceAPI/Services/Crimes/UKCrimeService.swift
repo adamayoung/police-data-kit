@@ -7,14 +7,20 @@ final class UKCrimeService: CrimeService {
 
     private let apiClient: any APIClient
     private let cache: any Cache
+    private let availableDataRegion: CoordinateRegion
 
-    init(apiClient: some APIClient, cache: some Cache) {
+    init(apiClient: some APIClient, cache: some Cache, availableDataRegion: CoordinateRegion) {
         self.apiClient = apiClient
         self.cache = cache
+        self.availableDataRegion = availableDataRegion
     }
 
-    func streetLevelCrimes(atCoordinate coordinate: Coordinate, date: Date) async throws -> [Crime] {
+    func streetLevelCrimes(atCoordinate coordinate: Coordinate, date: Date) async throws -> [Crime]? {
         Self.logger.trace("fetching street level Crimes at coordinate \(coordinate, privacy: .public)")
+
+        guard availableDataRegion.contains(coordinate: coordinate) else {
+            return nil
+        }
 
         let crimes: [Crime]
         do {
@@ -30,7 +36,7 @@ final class UKCrimeService: CrimeService {
         return crimes
     }
 
-    func streetLevelCrimes(inArea boundary: Boundary, date: Date) async throws -> [Crime] {
+    func streetLevelCrimes(inArea boundary: Boundary, date: Date) async throws -> [Crime]? {
         Self.logger.trace("fetching street level Crimes in area")
 
         let crimes: [Crime]
@@ -71,8 +77,12 @@ final class UKCrimeService: CrimeService {
         return crimes
     }
 
-    func crimes(atCoordinate coordinate: Coordinate, date: Date) async throws -> [Crime] {
+    func crimes(atCoordinate coordinate: Coordinate, date: Date) async throws -> [Crime]? {
         Self.logger.trace("fetching Crimes at coordinate \(coordinate, privacy: .public)")
+
+        guard availableDataRegion.contains(coordinate: coordinate) else {
+            return nil
+        }
 
         let crimes: [Crime]
         do {

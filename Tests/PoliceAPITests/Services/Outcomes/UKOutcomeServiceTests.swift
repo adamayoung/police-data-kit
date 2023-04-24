@@ -6,16 +6,19 @@ final class UKOutcomeServiceTests: XCTestCase {
     var service: UKOutcomeService!
     var apiClient: MockAPIClient!
     var cache: MockCache!
+    var availableDataRegion: CoordinateRegion!
 
     override func setUp() {
         super.setUp()
         apiClient = MockAPIClient()
         cache = MockCache()
-        service = UKOutcomeService(apiClient: apiClient, cache: cache)
+        availableDataRegion = .test
+        service = UKOutcomeService(apiClient: apiClient, cache: cache, availableDataRegion: availableDataRegion)
     }
 
     override func tearDown() {
         service = nil
+        availableDataRegion = nil
         cache = nil
         apiClient = nil
         super.tearDown()
@@ -76,7 +79,7 @@ final class UKOutcomeServiceTests: XCTestCase {
         XCTAssertEqual(cachedResult, expectedResult)
     }
 
-    func testStreetLevelOutcomesAtCoordinateWhenNotCachedReturnsOutcomes() async throws {
+    func testStreetLevelOutcomesAtCoordinateReturnsOutcomes() async throws {
         let coordinate = Coordinate.mock
         let expectedResult = Outcome.mocks
         let date = Date()
@@ -103,6 +106,18 @@ final class UKOutcomeServiceTests: XCTestCase {
             apiClient.lastPath,
             OutcomesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate, date: Date()).path
         )
+    }
+
+    func testStreetLevelOutcomesAtCoordinateWhenCoordinateOutsideOfAvailableDataRegionReturnsNil() async throws {
+        let coordinate = Coordinate.outsideAvailableDataRegion
+        let expectedResult = Outcome.mocks
+        let date = Date()
+        apiClient.response = .success(expectedResult)
+
+        let result = try await service.streetLevelOutcomes(atCoordinate: coordinate, date: date)
+
+        XCTAssertNil(result)
+        XCTAssertNil(apiClient.lastPath)
     }
 
     func testStreetLevelOutcomesInAreaReturnsOutcomes() async throws {

@@ -33,6 +33,7 @@ identifier_name:
     - rss
     - url
     - web
+    - uk
 
 file_length:
   warning: 500

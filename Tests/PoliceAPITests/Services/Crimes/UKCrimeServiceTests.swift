@@ -6,16 +6,19 @@ final class UKCrimeServiceTests: XCTestCase {
     var service: UKCrimeService!
     var apiClient: MockAPIClient!
     var cache: MockCache!
+    var availableDataRegion: CoordinateRegion!
 
     override func setUp() {
         super.setUp()
         apiClient = MockAPIClient()
         cache = MockCache()
-        service = UKCrimeService(apiClient: apiClient, cache: cache)
+        availableDataRegion = .test
+        service = UKCrimeService(apiClient: apiClient, cache: cache, availableDataRegion: availableDataRegion)
     }
 
     override func tearDown() {
         service = nil
+        availableDataRegion = nil
         cache = nil
         apiClient = nil
         super.tearDown()
@@ -34,6 +37,18 @@ final class UKCrimeServiceTests: XCTestCase {
             apiClient.lastPath,
             CrimesEndpoint.streetLevelCrimesAtSpecificPoint(coordinate: coordinate, date: date).path
         )
+    }
+
+    func testStreetLevelCrimesAtCoordinateWhenCoordinateOutsideOfAvailableDataRegionReturnsNil() async throws {
+        let coordinate = Coordinate.outsideAvailableDataRegion
+        let date = Date()
+        let expectedResult = Crime.mocks
+        apiClient.response = .success(expectedResult)
+
+        let result = try await service.streetLevelCrimes(atCoordinate: coordinate, date: date)
+
+        XCTAssertNil(result)
+        XCTAssertNil(apiClient.lastPath)
     }
 
     func testStreetLevelCrimesAtCoordinateWhenNoDateReturnsCrimes() async throws {
@@ -147,6 +162,18 @@ final class UKCrimeServiceTests: XCTestCase {
             apiClient.lastPath,
             CrimesEndpoint.crimesAtLocationAtSpecificPoint(coordinate: coordinate, date: date).path
         )
+    }
+
+    func testCrimesAtCoordinateWhenCoordinateOutsideOfAvailableDataRegionReturnsNil() async throws {
+        let coordinate = Coordinate.outsideAvailableDataRegion
+        let date = Date()
+        let expectedResult = Crime.mocks
+        apiClient.response = .success(expectedResult)
+
+        let result = try await service.crimes(atCoordinate: coordinate, date: date)
+
+        XCTAssertNil(result)
+        XCTAssertNil(apiClient.lastPath)
     }
 
     func testCrimesAtCoordinateWhenNoDateReturnsCrimes() async throws {

@@ -10,4 +10,9 @@ public protocol AvailabilityService {
     /// - Returns: A list of available data sets.
     func availableDataSets() async throws -> [DataSet]
 
+    /// Returns the region of data availability - UK.
+    ///
+    /// - Returns: Region defining the area which data is available for
+    func availableDataRegion() -> CoordinateRegion
+
 }
