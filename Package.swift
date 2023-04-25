@@ -7,7 +7,10 @@ let package = Package(
     name: "PoliceAPI",
 
     platforms: [
-        .macOS(.v12), .iOS(.v15), .tvOS(.v15), .watchOS(.v8)
+        .macOS(.v12),
+        .iOS(.v15),
+        .tvOS(.v15),
+        .watchOS(.v8)
     ],
 
     products: [
@@ -25,61 +28,42 @@ let package = Package(
     targets: [
         .target(
             name: "PoliceAPI",
-            dependencies: [
-                "PoliceAPIDomain",
-                "PoliceAPIData",
-                "Networking",
-                "Caching"
+            dependencies: ["SwiftSoup"],
+            plugins: [
+                .plugin(name: "SwiftLintPlugin")
             ]
         ),
         .testTarget(
             name: "PoliceAPITests",
-            dependencies: ["PoliceAPI"]
-        ),
-
-        .target(
-            name: "PoliceAPIDomain"
-        ),
-        .testTarget(
-            name: "PoliceAPIDomainTests",
-            dependencies: ["PoliceAPIDomain"]
-        ),
-
-        .target(
-            name: "PoliceAPIData",
-            dependencies: [
-                "PoliceAPIDomain",
-                "SwiftSoup"
-            ]
-        ),
-        .testTarget(
-            name: "PoliceAPIDataTests",
-            dependencies: ["PoliceAPIData"],
+            dependencies: ["PoliceAPI"],
             resources: [
                 .process("Resources")
+            ],
+            plugins: [
+                .plugin(name: "SwiftLintPlugin")
             ]
         ),
 
-        .target(
-            name: "Networking",
-            dependencies: [
-                "PoliceAPIData"
-            ]
+        .plugin(
+            name: "SwiftLintPlugin",
+            capability: .buildTool(),
+            dependencies: ["SwiftLintBinary"]
         ),
-        .testTarget(
-            name: "NetworkingTests",
-            dependencies: ["Networking"]
+        .plugin(
+            name: "SwiftLint",
+            capability: .command(
+                intent: .custom(
+                    verb: "swiftlint",
+                    description: "SwiftLint."
+                )
+            ),
+            dependencies: ["SwiftLintBinary"]
         ),
 
-        .target(
-            name: "Caching",
-            dependencies: [
-                "PoliceAPIData"
-            ]
-        ),
-        .testTarget(
-            name: "CachingTests",
-            dependencies: ["Caching"]
+        .binaryTarget(
+            name: "SwiftLintBinary",
+            url: "https://github.com/realm/SwiftLint/releases/download/0.51.0/SwiftLintBinary-macos.artifactbundle.zip",
+            checksum: "9fbfdf1c2a248469cfbe17a158c5fbf96ac1b606fbcfef4b800993e7accf43ae"
         )
     ]
 )
