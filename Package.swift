@@ -25,14 +25,61 @@ let package = Package(
     targets: [
         .target(
             name: "PoliceAPI",
-            dependencies: ["SwiftSoup"]
+            dependencies: [
+                "PoliceAPIDomain",
+                "PoliceAPIData",
+                "Networking",
+                "Caching"
+            ]
         ),
         .testTarget(
             name: "PoliceAPITests",
-            dependencies: ["PoliceAPI"],
+            dependencies: ["PoliceAPI"]
+        ),
+
+        .target(
+            name: "PoliceAPIDomain"
+        ),
+        .testTarget(
+            name: "PoliceAPIDomainTests",
+            dependencies: ["PoliceAPIDomain"]
+        ),
+
+        .target(
+            name: "PoliceAPIData",
+            dependencies: [
+                "PoliceAPIDomain",
+                "SwiftSoup"
+            ]
+        ),
+        .testTarget(
+            name: "PoliceAPIDataTests",
+            dependencies: ["PoliceAPIData"],
             resources: [
                 .process("Resources")
             ]
+        ),
+
+        .target(
+            name: "Networking",
+            dependencies: [
+                "PoliceAPIData"
+            ]
+        ),
+        .testTarget(
+            name: "NetworkingTests",
+            dependencies: ["Networking"]
+        ),
+
+        .target(
+            name: "Caching",
+            dependencies: [
+                "PoliceAPIData"
+            ]
+        ),
+        .testTarget(
+            name: "CachingTests",
+            dependencies: ["Caching"]
         )
     ]
 )

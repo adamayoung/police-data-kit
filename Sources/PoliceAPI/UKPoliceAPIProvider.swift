@@ -1,6 +1,9 @@
+import Caching
 import Foundation
+import Networking
+import PoliceAPIData
+import PoliceAPIDomain
 
-/// UK Police Force Data.
 public final class UKPoliceAPIProvider {
 
     public init() { }
@@ -9,7 +12,7 @@ public final class UKPoliceAPIProvider {
 
 extension UKPoliceAPIProvider: AvailabilityRepositoryProviding {
 
-    var availabilityRepository: AvailabilityRepository {
+    public var availabilityRepository: AvailabilityRepository {
         UKAvailabilityRepository(apiClient: Self.apiClient, cache: Self.cache)
     }
 
@@ -17,39 +20,31 @@ extension UKPoliceAPIProvider: AvailabilityRepositoryProviding {
 
 extension UKPoliceAPIProvider: CrimeRepositoryProviding {
 
-    var crimeRepository: CrimeRepository {
-        UKCrimeRepository(apiClient: Self.apiClient, cache: Self.cache, availableDataRegion: .availableDataRegion)
+    public var crimeRepository: CrimeRepository {
+        UKCrimeRepository(apiClient: Self.apiClient, cache: Self.cache)
     }
 
 }
 
 extension UKPoliceAPIProvider: NeighbourhoodRepositoryProviding {
 
-    var neighbourhoodRepository: NeighbourhoodRepository {
-        UKNeighbourhoodRepository(
-            apiClient: Self.apiClient,
-            cache: Self.cache,
-            availableDataRegion: .availableDataRegion
-        )
+    public var neighbourhoodRepository: NeighbourhoodRepository {
+        UKNeighbourhoodRepository(apiClient: Self.apiClient, cache: Self.cache)
     }
 
 }
 
 extension UKPoliceAPIProvider: OutcomeRepositoryProviding {
 
-    var outcomeRepository: OutcomeRepository {
-        UKOutcomeRepository(
-            apiClient: Self.apiClient,
-            cache: Self.cache,
-            availableDataRegion: .availableDataRegion
-        )
+    public var outcomeRepository: OutcomeRepository {
+        UKOutcomeRepository(apiClient: Self.apiClient, cache: Self.cache)
     }
 
 }
 
 extension UKPoliceAPIProvider: PoliceForceRepositoryProviding {
 
-    var policeForceRepository: PoliceForceRepository {
+    public var policeForceRepository: PoliceForceRepository {
         UKPoliceForceRepository(apiClient: Self.apiClient, cache: Self.cache)
     }
 
@@ -57,12 +52,8 @@ extension UKPoliceAPIProvider: PoliceForceRepositoryProviding {
 
 extension UKPoliceAPIProvider: StopAndSearchRepositoryProviding {
 
-    var stopAndSearchRepository: StopAndSearchRepository {
-        UKStopAndSearchRepository(
-            apiClient: Self.apiClient,
-            cache: Self.cache,
-            availableDataRegion: .availableDataRegion
-        )
+    public var stopAndSearchRepository: StopAndSearchRepository {
+        UKStopAndSearchRepository(apiClient: Self.apiClient, cache: Self.cache)
     }
 
 }
