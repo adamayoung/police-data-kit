@@ -1,15 +1,15 @@
 import Foundation
-import PoliceAPI
+@testable import PoliceAPI
 
-extension Location {
+extension LocationDataModel {
 
-    static var mock: Location {
-        Location(
+    static var mock: LocationDataModel {
+        LocationDataModel(
             street: Street(
                 id: 883425,
                 name: "On or near Peacock Lane"
             ),
-            coordinate: Coordinate(latitude: 52.633888, longitude: -1.138924)
+            coordinate: CoordinateDataModel(latitude: 52.633888, longitude: -1.138924)
         )
     }
 

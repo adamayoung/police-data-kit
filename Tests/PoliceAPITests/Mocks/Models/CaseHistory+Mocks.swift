@@ -1,11 +1,11 @@
 import Foundation
 @testable import PoliceAPI
 
-extension CaseHistory {
+extension CaseHistoryDataModel {
 
-    static var mock: CaseHistory {
-        CaseHistory(
-            crime: CaseHistoryCrime(
+    static var mock: CaseHistoryDataModel {
+        CaseHistoryDataModel(
+            crime: CaseHistoryCrimeDataModel(
                 id: 82067369,
                 crimeID: "46688f40815e3a4cb7fcf69550492d8bffa4ed267652e676e49e23d00955c486",
                 context: "",
@@ -16,18 +16,18 @@ extension CaseHistory {
                 date: DateFormatter.yearMonth.date(from: "2020-03")!
             ),
             outcomes: [
-                CaseHistoryOutcome(
+                CaseHistoryOutcomeDataModel(
                     personID: nil,
                     date: DateFormatter.yearMonth.date(from: "2020-03")!,
-                    category: OutcomeCategory(
+                    category: OutcomeCategoryDataModel(
                         id: "under-investigation",
                         name: "Under investigation"
                     )
                 ),
-                CaseHistoryOutcome(
+                CaseHistoryOutcomeDataModel(
                     personID: nil,
                     date: DateFormatter.yearMonth.date(from: "2020-03")!,
-                    category: OutcomeCategory(
+                    category: OutcomeCategoryDataModel(
                         id: "no-further-action",
                         name: "Investigation complete; no suspect identified"
                     )

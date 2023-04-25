@@ -1,10 +1,10 @@
 import Foundation
-import PoliceAPI
+@testable import PoliceAPI
 
-extension NeighbourhoodPolicingTeam {
+extension NeighbourhoodPolicingTeamDataModel {
 
-    static var mock: NeighbourhoodPolicingTeam {
-        NeighbourhoodPolicingTeam(
+    static var mock: NeighbourhoodPolicingTeamDataModel {
+        NeighbourhoodPolicingTeamDataModel(
             force: "metropolitan",
             neighbourhood: "00BKX6"
         )

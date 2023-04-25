@@ -1,23 +1,23 @@
 import Foundation
-import PoliceAPI
+@testable import PoliceAPI
 
-extension PoliceForceReference {
+extension PoliceForceReferenceDataModel {
 
-    static var mock: PoliceForceReference {
-        PoliceForceReference(
+    static var mock: PoliceForceReferenceDataModel {
+        PoliceForceReferenceDataModel(
             id: "avon-and-somerset",
             name: "Avon and Somerset Constabulary"
         )
     }
 
-    static var mocks: [PoliceForceReference] {
+    static var mocks: [PoliceForceReferenceDataModel] {
         [
             .mock,
-            PoliceForceReference(
+            PoliceForceReferenceDataModel(
                 id: "bedfordshire",
                 name: "Bedfordshire Police"
             ),
-            PoliceForceReference(
+            PoliceForceReferenceDataModel(
                 id: "cambridgeshire",
                 name: "Cambridgeshire Constabulary"
             )

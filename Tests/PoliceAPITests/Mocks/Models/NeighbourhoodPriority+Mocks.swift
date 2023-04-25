@@ -1,10 +1,10 @@
 import Foundation
 @testable import PoliceAPI
 
-extension NeighbourhoodPriority {
+extension NeighbourhoodPriorityDataModel {
 
-    static var mock: NeighbourhoodPriority {
-        NeighbourhoodPriority(
+    static var mock: NeighbourhoodPriorityDataModel {
+        NeighbourhoodPriorityDataModel(
             issue: "To reduce street drinking and drug use in and around Museum Square, Leicester.",
             issueDate: DateFormatter.dateTime.date(from: "2015-10-08T00:00:00")!,
             action: "Following the closure of a property on West Street, the number of incidents of Anti-Social "
@@ -16,15 +16,15 @@ extension NeighbourhoodPriority {
         )
     }
 
-    static var mockNoAction: NeighbourhoodPriority {
-        NeighbourhoodPriority(
+    static var mockNoAction: NeighbourhoodPriorityDataModel {
+        NeighbourhoodPriorityDataModel(
             issue: "To reduce the amount of Anti-Social Behaviour Humberstone Gate, Leicester.",
             issueDate: DateFormatter.dateTime.date(from: "2016-04-14T00:00:00")!
         )
     }
 
-    static var mockWithHTML: NeighbourhoodPriority {
-        NeighbourhoodPriority(
+    static var mockWithHTML: NeighbourhoodPriorityDataModel {
+        NeighbourhoodPriorityDataModel(
             issue: "Beggars and homeless persons are using private premises, stairwells, side alleys and doorways to "
                 + "beg and sleep. This can sometimes bring other issues such as drug or alcohol misuse, needles, "
                 + "General ASB and even harassment or distress to some residents / passers by. There is also an "
@@ -44,7 +44,7 @@ extension NeighbourhoodPriority {
         )
     }
 
-    static var mocks: [NeighbourhoodPriority] {
+    static var mocks: [NeighbourhoodPriorityDataModel] {
         [
             .mock,
             .mockNoAction,

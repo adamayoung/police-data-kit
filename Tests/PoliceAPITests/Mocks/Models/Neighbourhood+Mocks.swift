@@ -1,10 +1,10 @@
 import Foundation
-import PoliceAPI
+@testable import PoliceAPI
 
-extension Neighbourhood {
+extension NeighbourhoodDataModel {
 
-    static var mock: Neighbourhood {
-        Neighbourhood(
+    static var mock: NeighbourhoodDataModel {
+        NeighbourhoodDataModel(
             id: "NC04",
             name: "City Centre",
             description: "<p>The Castle neighbourhood is a diverse covering all of the City Centre. In addition it "
@@ -14,18 +14,18 @@ extension Neighbourhood {
                 + "neighbourhood.</p>",
             policeForceWebsite: URL(string: "http://www.leics.police.uk/local-policing/city-centre")!,
             population: 1000,
-            contactDetails: ContactDetails(
+            contactDetails: ContactDetailsDataModel(
                 email: "centralleicester.npa@leicestershire.pnn.police.uk",
                 telephone: "101",
                 facebook: URL(string: "http://www.facebook.com/leicspolice")!,
                 twitter: URL(string: "http://www.twitter.com/centralleicsNPA")!
             ),
-            centre: Coordinate(
+            centre: CoordinateDataModel(
                 latitude: 52.6389,
                 longitude: -1.13619
             ),
             locations: [
-                NeighbourhoodLocation(
+                NeighbourhoodLocationDataModel(
                     name: "Mansfield House",
                     type: "station",
                     address: "74 Belgrave Gate\n, Leicester",
@@ -33,7 +33,7 @@ extension Neighbourhood {
                 )
             ],
             links: [
-                Link(
+                LinkDataModel(
                     title: "Leicester City Council",
                     url: URL(string: "http://www.leicester.gov.uk/")
                 )
@@ -41,14 +41,14 @@ extension Neighbourhood {
         )
     }
 
-    static var mockWithAmpersandInName: Neighbourhood {
-        Neighbourhood(
+    static var mockWithAmpersandInName: NeighbourhoodDataModel {
+        NeighbourhoodDataModel(
             id: "AB12",
             name: "Banks & Hesketh",
             description: "Some & description",
             policeForceWebsite: URL(string: "http://www.leics.police.uk/local-policing/city-centre")!,
             population: 1000,
-            centre: Coordinate(
+            centre: CoordinateDataModel(
                 latitude: 52.6389,
                 longitude: -1.13619
             )

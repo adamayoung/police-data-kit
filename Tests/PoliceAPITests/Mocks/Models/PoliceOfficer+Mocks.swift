@@ -1,10 +1,10 @@
 import Foundation
-import PoliceAPI
+@testable import PoliceAPI
 
-extension PoliceOfficer {
+extension PoliceOfficerDataModel {
 
-    static var mock: PoliceOfficer {
-        PoliceOfficer(
+    static var mock: PoliceOfficerDataModel {
+        PoliceOfficerDataModel(
             name: "Roger Bannister",
             rank: "Assistant Chief Officer (Crime)",
             bio: "Roger joined Lincolnshire Police in 1988 having attended Queen Elizabeth Grammar School in "
@@ -19,19 +19,19 @@ extension PoliceOfficer {
                 + "Chief Constable (Crime) in June 2013.\nRoger is married and has six year old twin boys. His many "
                 + "hobbies include mountaineering (which has included trips to Scotland, the Alps and the Himalayas) "
                 + "skiing, running and open water swimming.",
-            contactDetails: ContactDetails(
+            contactDetails: ContactDetailsDataModel(
                 twitter: URL(string: "http://www.twitter.com/ACCCLeicsPolice")
             )
         )
     }
 
-    static var mocks: [PoliceOfficer] {
+    static var mocks: [PoliceOfficerDataModel] {
         [
             .mock,
-            PoliceOfficer(
+            PoliceOfficerDataModel(
                 name: "Dave Smith",
                 rank: "Chief Constable",
-                contactDetails: ContactDetails(
+                contactDetails: ContactDetailsDataModel(
                     email: "dave.smith@police.uk"
                 )
             )

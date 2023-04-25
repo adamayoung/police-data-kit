@@ -1,23 +1,23 @@
 import Foundation
-import PoliceAPI
+@testable import PoliceAPI
 
-extension CrimeCategory {
+extension CrimeCategoryDataModel {
 
-    static var mock: CrimeCategory {
-        CrimeCategory(
+    static var mock: CrimeCategoryDataModel {
+        CrimeCategoryDataModel(
             id: "anti-social-behaviour",
             name: "Anti-social behaviour"
         )
     }
 
-    static var mocks: [CrimeCategory] {
+    static var mocks: [CrimeCategoryDataModel] {
         [
             .mock,
-            CrimeCategory(
+            CrimeCategoryDataModel(
                 id: "bicycle-theft",
                 name: "Bicycle theft"
             ),
-            CrimeCategory(
+            CrimeCategoryDataModel(
                 id: "burglary",
                 name: "Burglary"
             )

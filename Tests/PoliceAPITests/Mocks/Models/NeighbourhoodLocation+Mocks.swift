@@ -1,10 +1,10 @@
 import Foundation
-import PoliceAPI
+@testable import PoliceAPI
 
-extension NeighbourhoodLocation {
+extension NeighbourhoodLocationDataModel {
 
-    static var mock: NeighbourhoodLocation {
-        NeighbourhoodLocation(
+    static var mock: NeighbourhoodLocationDataModel {
+        NeighbourhoodLocationDataModel(
             name: "Mansfield House",
             type: "station",
             address: "74 Belgrave Gate\n, Leicester",

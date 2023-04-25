@@ -85,7 +85,7 @@ final class URLQueryItemTests: XCTestCase {
     func testAppendingQueryItemWithCoordinateWhenURLContainsNoQueryItemsReturnsURLWithCoordinate() {
         let baseURL = URL(string: "https://some.domain.com")
         let queryItemName = "coord"
-        let coordinate = Coordinate.mock
+        let coordinate = CoordinateDataModel.mock
         let expectedResult = URL(
             string: "https://some.domain.com?\(queryItemName)=\(coordinate.latitude),\(coordinate.longitude)"
         )
@@ -98,7 +98,7 @@ final class URLQueryItemTests: XCTestCase {
     func testAppendingQueryItemWithCoordinateWhenURLContainsQueryItemsReturnsURLWithCoordinate() {
         let baseURL = URL(string: "https://some.domain.com?id=456")
         let queryItemName = "coord"
-        let coordinate = Coordinate.mock
+        let coordinate = CoordinateDataModel.mock
         let expectedResult = URL(
             string: "https://some.domain.com?id=456&\(queryItemName)=\(coordinate.latitude),\(coordinate.longitude)"
         )
@@ -111,7 +111,7 @@ final class URLQueryItemTests: XCTestCase {
     func testAppendingQueryItemWithCoordinatesWhenURLContainsNoQueryItemsReturnsURLWithCoordinates() {
         let baseURL = URL(string: "https://some.domain.com")
         let queryItemName = "poly"
-        let boundary = Boundary.mock
+        let boundary = BoundaryDataModel.mock
         let poly = boundary.map { "\($0.latitude),\($0.longitude)" }.joined(separator: ":")
         let expectedResult = URL(
             string: "https://some.domain.com?\(queryItemName)=\(poly)"
@@ -125,7 +125,7 @@ final class URLQueryItemTests: XCTestCase {
     func testAppendingQueryItemWithCoordinatesWhenURLContainsQueryItemsReturnsURLWithCoordinates() {
         let baseURL = URL(string: "https://some.domain.com?id=789")
         let queryItemName = "poly"
-        let boundary = Boundary.mock
+        let boundary = BoundaryDataModel.mock
         let poly = boundary.map { "\($0.latitude),\($0.longitude)" }.joined(separator: ":")
         let expectedResult = URL(
             string: "https://some.domain.com?id=789&\(queryItemName)=\(poly)"

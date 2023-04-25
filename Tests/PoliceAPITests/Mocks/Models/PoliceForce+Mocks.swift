@@ -1,10 +1,10 @@
 import Foundation
-import PoliceAPI
+@testable import PoliceAPI
 
-extension PoliceForce {
+extension PoliceForceDataModel {
 
-    static var mock: PoliceForce {
-        PoliceForce(
+    static var mock: PoliceForceDataModel {
+        PoliceForceDataModel(
             id: "leicestershire",
             name: "Leicestershire Constabulary",
             description: "h2.A police service for everyone\n\t\n\tLeicestershire Constabulary provides a policing "
@@ -27,27 +27,27 @@ extension PoliceForce {
             telephone: "0116 222 2222",
             url: URL(string: "http://www.leics.police.uk/")!,
             engagementMethods: [
-                EngagementMethod(
+                EngagementMethodDataModel(
                     title: "Facebook",
                     description: "Become friends with Leicestershire Constabulary",
                     url: URL(string: "http://www.facebook.com/pages/Leicester/Leicestershire-Police/76807881169")!
                 ),
-                EngagementMethod(
+                EngagementMethodDataModel(
                     title: "Twitter",
                     description: "Keep up to date with Leicestershire Constabulary on Twitter",
                     url: URL(string: "http://www.twitter.com/leicspolice")!
                 ),
-                EngagementMethod(
+                EngagementMethodDataModel(
                     title: "YouTube",
                     description: "See Leicestershire Constabulary's latest videos on YouTube",
                     url: URL(string: "http://www.youtube.com/leicspolice")!
                 ),
-                EngagementMethod(
+                EngagementMethodDataModel(
                     title: "RSS",
                     description: "Keep informed with Leicestershire Constabulary's RSS feed",
                     url: URL(string: "http://www.leics.police.uk/rss/")!
                 ),
-                EngagementMethod(
+                EngagementMethodDataModel(
                     title: "telephone",
                     description: "0116 222 2222"
                 )

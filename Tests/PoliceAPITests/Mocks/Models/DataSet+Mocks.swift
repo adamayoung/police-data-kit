@@ -1,10 +1,10 @@
 import Foundation
 @testable import PoliceAPI
 
-extension DataSet {
+extension DataSetDataModel {
 
-    static var mock: DataSet {
-        DataSet(
+    static var mock: DataSetDataModel {
+        DataSetDataModel(
             date: DateFormatter.yearMonth.date(from: "2015-06")!,
             stopAndSearch: [
                 "bedfordshire",
@@ -14,10 +14,10 @@ extension DataSet {
         )
     }
 
-    static var mocks: [DataSet] {
+    static var mocks: [DataSetDataModel] {
         [
             .mock,
-            DataSet(
+            DataSetDataModel(
                 date: DateFormatter.yearMonth.date(from: "2015-05")!,
                 stopAndSearch: [
                     "bedfordshire",

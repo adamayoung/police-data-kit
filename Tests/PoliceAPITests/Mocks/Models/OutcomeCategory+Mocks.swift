@@ -1,10 +1,10 @@
 import Foundation
-import PoliceAPI
+@testable import PoliceAPI
 
-extension OutcomeCategory {
+extension OutcomeCategoryDataModel {
 
-    static var mock: OutcomeCategory {
-        OutcomeCategory(
+    static var mock: OutcomeCategoryDataModel {
+        OutcomeCategoryDataModel(
             id: "no-further-action",
             name: "Investigation complete; no suspect identified"
         )

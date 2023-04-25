@@ -12,7 +12,7 @@ final actor InMemoryCache: NSObject, Cache {
         self.cache.name = name
         self.cache.countLimit = countLimit
         self.defaultExpiresIn = defaultExpiresIn
-        self.logger = Logger(subsystem: Logger.subsystem, category: "\(name)InMemoryCache")
+        self.logger = Logger(subsystem: Logger.cacheSubsystem, category: "\(name)InMemoryCache")
         super.init()
     }
 

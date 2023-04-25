@@ -1,10 +1,10 @@
 import Foundation
-import PoliceAPI
+@testable import PoliceAPI
 
-extension ContactDetails {
+extension ContactDetailsDataModel {
 
-    static var mock: ContactDetails {
-        ContactDetails(
+    static var mock: ContactDetailsDataModel {
+        ContactDetailsDataModel(
             email: "centralleicester.npa@leicestershire.pnn.police.uk",
             telephone: "101",
             mobile: "0123456789",
@@ -23,8 +23,8 @@ extension ContactDetails {
         )
     }
 
-    static var mockNone: ContactDetails {
-        ContactDetails()
+    static var mockNone: ContactDetailsDataModel {
+        ContactDetailsDataModel()
     }
 
 }

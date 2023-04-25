@@ -1,17 +1,17 @@
 import Foundation
-import PoliceAPI
+@testable import PoliceAPI
 
-extension Coordinate {
+extension CoordinateDataModel {
 
-    static var mock: Coordinate {
-        Coordinate(
+    static var mock: CoordinateDataModel {
+        CoordinateDataModel(
             latitude: 52.6389,
             longitude: -1.13619
         )
     }
 
-    static var outsideAvailableDataRegion: Coordinate {
-        Coordinate(
+    static var outsideAvailableDataRegion: CoordinateDataModel {
+        CoordinateDataModel(
             latitude: 32.6389,
             longitude: 4.13619
         )

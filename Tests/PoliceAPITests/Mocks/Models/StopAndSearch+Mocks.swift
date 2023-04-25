@@ -1,10 +1,10 @@
 import Foundation
 @testable import PoliceAPI
 
-extension StopAndSearch {
+extension StopAndSearchDataModel {
 
-    static var mock: StopAndSearch {
-        StopAndSearch(
+    static var mock: StopAndSearchDataModel {
+        StopAndSearchDataModel(
             type: .personSearch,
             didInvolvePerson: true,
             gender: .male,
@@ -15,12 +15,12 @@ extension StopAndSearch {
             objectOfSearch: "Offensive weapons",
             removalOfMoreThanOuterClothing: nil,
             operationName: nil,
-            location: Location(
-                street: Location.Street(
+            location: LocationDataModel(
+                street: LocationDataModel.Street(
                     id: 883415,
                     name: "On or near Shopping Area"
                 ),
-                coordinate: Coordinate(
+                coordinate: CoordinateDataModel(
                     latitude: 52.63625,
                     longitude: -1.133691
                 )
@@ -31,10 +31,10 @@ extension StopAndSearch {
         )
     }
 
-    static var mocks: [StopAndSearch] {
+    static var mocks: [StopAndSearchDataModel] {
         [
             .mock,
-            StopAndSearch(
+            StopAndSearchDataModel(
                 type: .vehicleSearch,
                 didInvolvePerson: false,
                 gender: .female,
@@ -45,8 +45,8 @@ extension StopAndSearch {
                 objectOfSearch: "Offensive language",
                 removalOfMoreThanOuterClothing: true,
                 operationName: nil,
-                location: Location(
-                    street: Location.Street(
+                location: LocationDataModel(
+                    street: LocationDataModel.Street(
                         id: 883415,
                         name: "On or near Shopping Area"
                     ),

@@ -1,0 +1,24 @@
+import Foundation
+
+/// A crime category.
+public struct CrimeCategory: Identifiable, Equatable {
+
+    /// Default crime category.
+    public static let defaultID = "all-crimes"
+
+    /// Unique identifier.
+    public let id: String
+    /// Name of the crime category.
+    public let name: String
+
+    /// Creates a new `CrimeCategory`.
+    ///
+    /// - Parameters:
+    ///   - id: Unique identifier.
+    ///   - name: Name of the crime category.
+    public init(id: String, name: String) {
+        self.id = id
+        self.name = name
+    }
+
+}

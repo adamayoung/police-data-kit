@@ -1,15 +1,15 @@
 import Foundation
-import PoliceAPI
+@testable import PoliceAPI
 
-extension CoordinateRegion {
+extension CoordinateRegionDataModel {
 
     static var test: Self {
         .init(
-            center: Coordinate(
+            center: CoordinateDataModel(
                 latitude: 54.4661645479556,
                 longitude: -3.1076525162671667
             ),
-            span: CoordinateSpan(
+            span: CoordinateSpanDataModel(
                 latitudeDelta: 13.0738,
                 longitudeDelta: 11.4748
             )

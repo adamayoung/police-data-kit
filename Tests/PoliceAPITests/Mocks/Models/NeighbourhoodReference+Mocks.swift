@@ -1,27 +1,27 @@
 import Foundation
-import PoliceAPI
+@testable import PoliceAPI
 
-extension NeighbourhoodReference {
+extension NeighbourhoodReferenceDataModel {
 
-    static var mock: NeighbourhoodReference {
-        NeighbourhoodReference(
+    static var mock: NeighbourhoodReferenceDataModel {
+        NeighbourhoodReferenceDataModel(
             id: "NC04",
             name: "City Centre"
         )
     }
 
-    static var mocks: [NeighbourhoodReference] {
+    static var mocks: [NeighbourhoodReferenceDataModel] {
         [
             .mock,
-            NeighbourhoodReference(
+            NeighbourhoodReferenceDataModel(
                 id: "NC66",
                 name: "Cultural Quarter"
             ),
-            NeighbourhoodReference(
+            NeighbourhoodReferenceDataModel(
                 id: "NC67",
                 name: "Riverside"
             ),
-            NeighbourhoodReference(
+            NeighbourhoodReferenceDataModel(
                 id: "NC68",
                 name: "Clarendon Park"
             )

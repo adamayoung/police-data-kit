@@ -1,9 +1,9 @@
 import Foundation
-import PoliceAPI
+@testable import PoliceAPI
 
-extension CrimeLocationType {
+extension CrimeLocationTypeDataModel {
 
-    static var mocks: [CrimeLocationType] {
+    static var mocks: [CrimeLocationTypeDataModel] {
         [
             .force,
             .btp
