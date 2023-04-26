@@ -8,7 +8,7 @@ public final class UKPoliceAPIProvider {
 
 extension UKPoliceAPIProvider: AvailabilityRepositoryProviding {
 
-    public var availabilityRepository: AvailabilityRepository {
+    public var availabilityRepository: any AvailabilityRepository {
         UKAvailabilityRepository(apiClient: Self.apiClient, cache: Self.cache)
     }
 
@@ -16,7 +16,7 @@ extension UKPoliceAPIProvider: AvailabilityRepositoryProviding {
 
 extension UKPoliceAPIProvider: CrimeRepositoryProviding {
 
-    public var crimeRepository: CrimeRepository {
+    public var crimeRepository: any CrimeRepository {
         UKCrimeRepository(apiClient: Self.apiClient, cache: Self.cache)
     }
 
@@ -24,7 +24,7 @@ extension UKPoliceAPIProvider: CrimeRepositoryProviding {
 
 extension UKPoliceAPIProvider: NeighbourhoodRepositoryProviding {
 
-    public var neighbourhoodRepository: NeighbourhoodRepository {
+    public var neighbourhoodRepository: any NeighbourhoodRepository {
         UKNeighbourhoodRepository(apiClient: Self.apiClient, cache: Self.cache)
     }
 
@@ -32,7 +32,7 @@ extension UKPoliceAPIProvider: NeighbourhoodRepositoryProviding {
 
 extension UKPoliceAPIProvider: OutcomeRepositoryProviding {
 
-    public var outcomeRepository: OutcomeRepository {
+    public var outcomeRepository: any OutcomeRepository {
         UKOutcomeRepository(apiClient: Self.apiClient, cache: Self.cache)
     }
 
@@ -40,7 +40,7 @@ extension UKPoliceAPIProvider: OutcomeRepositoryProviding {
 
 extension UKPoliceAPIProvider: PoliceForceRepositoryProviding {
 
-    public var policeForceRepository: PoliceForceRepository {
+    public var policeForceRepository: any PoliceForceRepository {
         UKPoliceForceRepository(apiClient: Self.apiClient, cache: Self.cache)
     }
 
@@ -48,7 +48,7 @@ extension UKPoliceAPIProvider: PoliceForceRepositoryProviding {
 
 extension UKPoliceAPIProvider: StopAndSearchRepositoryProviding {
 
-    public var stopAndSearchRepository: StopAndSearchRepository {
+    public var stopAndSearchRepository: any StopAndSearchRepository {
         UKStopAndSearchRepository(apiClient: Self.apiClient, cache: Self.cache)
     }
 

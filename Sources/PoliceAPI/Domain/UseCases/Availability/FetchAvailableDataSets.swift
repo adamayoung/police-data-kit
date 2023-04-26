@@ -2,13 +2,15 @@ import Foundation
 
 public final class FetchAvailableDataSets: FetchAvailableDataSetsUseCase {
 
-    private let availableDataSets: () async throws -> [DataSet]
+    typealias FetchAvailabileDataSets = () async throws -> [DataSet]
 
-    public convenience init(provider: AvailabilityRepositoryProviding) {
+    private let availableDataSets: FetchAvailabileDataSets
+
+    public convenience init(provider: some AvailabilityRepositoryProviding) {
         self.init(availableDataSets: provider.availabilityRepository.availableDataSets)
     }
 
-    init(availableDataSets: @escaping () async throws -> [DataSet]) {
+    init(availableDataSets: @escaping FetchAvailabileDataSets) {
         self.availableDataSets = availableDataSets
     }
 

@@ -2,13 +2,15 @@ import Foundation
 
 public final class FetchStreetLevelCrimesAtCoordinate: FetchStreetLevelCrimesAtCoordinateUseCase {
 
-    private let streetLevelCrimesAtCoordinate: (_ coordinate: Coordinate, _ date: Date) async throws -> [Crime]?
+    typealias FetchStreetLevelCrimesAtCoordinate = (_ coordinate: Coordinate, _ date: Date) async throws -> [Crime]?
 
-    public convenience init(provider: CrimeRepositoryProviding) {
+    private let streetLevelCrimesAtCoordinate: FetchStreetLevelCrimesAtCoordinate
+
+    public convenience init(provider: some CrimeRepositoryProviding) {
         self.init(streetLevelCrimesAtCoordinate: provider.crimeRepository.streetLevelCrimes(atCoordinate:date:))
     }
 
-    init(streetLevelCrimesAtCoordinate: @escaping (_ coordinate: Coordinate, _ date: Date) async throws -> [Crime]?) {
+    init(streetLevelCrimesAtCoordinate: @escaping FetchStreetLevelCrimesAtCoordinate) {
         self.streetLevelCrimesAtCoordinate = streetLevelCrimesAtCoordinate
     }
 
