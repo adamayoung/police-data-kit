@@ -1,3 +1,4 @@
+import CoreLocation
 import Foundation
 import os
 
@@ -19,7 +20,7 @@ final class UKStopAndSearchRepository: StopAndSearchRepository {
         self.availableDataRegion = availableDataRegion
     }
 
-    func stopAndSearches(atCoordinate coordinate: Coordinate, date: Date) async throws -> [StopAndSearch]? {
+    func stopAndSearches(at coordinate: CLLocationCoordinate2D, date: Date) async throws -> [StopAndSearch]? {
         Self.logger.trace("fetching Stop and Searches at \(coordinate, privacy: .public)")
 
         let coordinate = CoordinateDataModel(coordinate: coordinate)
@@ -46,10 +47,10 @@ final class UKStopAndSearchRepository: StopAndSearchRepository {
         return stopAndSearches
     }
 
-    func stopAndSearches(inArea boundary: Boundary, date: Date) async throws -> [StopAndSearch] {
+    func stopAndSearches(in coordinates: [CLLocationCoordinate2D], date: Date) async throws -> [StopAndSearch] {
         Self.logger.trace("fetching Stop and Searches in area")
 
-        let boundary = BoundaryDataModel(boundary: boundary)
+        let boundary = BoundaryDataModel(coordinates: coordinates)
 
         let dataModels: [StopAndSearchDataModel]
         do {

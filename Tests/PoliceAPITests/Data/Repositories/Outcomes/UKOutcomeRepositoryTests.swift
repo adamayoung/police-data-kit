@@ -1,3 +1,4 @@
+import CoreLocation
 @testable import PoliceAPI
 import XCTest
 
@@ -66,12 +67,12 @@ final class UKOutcomeRepositoryTests: XCTestCase {
     }
 
     func testStreetLevelOutcomesAtCoordinateReturnsOutcomes() async throws {
-        let coordinate = Coordinate(dataModel: .mock)
+        let coordinate = CLLocationCoordinate2D(dataModel: .mock)
         let expectedResult = OutcomeDataModel.mocks.map(Outcome.init)
         let date = Date()
         apiClient.response = .success(OutcomeDataModel.mocks)
 
-        let result = try await repository.streetLevelOutcomes(atCoordinate: coordinate, date: date)
+        let result = try await repository.streetLevelOutcomes(at: coordinate, date: date)
 
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(
@@ -81,23 +82,23 @@ final class UKOutcomeRepositoryTests: XCTestCase {
     }
 
     func testStreetLevelOutcomesAtCoordinateWhenCoordinateOutsideOfAvailableDataRegionReturnsNil() async throws {
-        let coordinate = Coordinate(dataModel: .outsideAvailableDataRegion)
+        let coordinate = CLLocationCoordinate2D(dataModel: .outsideAvailableDataRegion)
         let date = Date()
         apiClient.response = .success(OutcomeDataModel.mocks)
 
-        let result = try await repository.streetLevelOutcomes(atCoordinate: coordinate, date: date)
+        let result = try await repository.streetLevelOutcomes(at: coordinate, date: date)
 
         XCTAssertNil(result)
         XCTAssertNil(apiClient.lastPath)
     }
 
     func testStreetLevelOutcomesInAreaReturnsOutcomes() async throws {
-        let boundary = Boundary(dataModel: .mock)
+        let boundary = [CLLocationCoordinate2D](dataModel: .mock)
         let expectedResult = OutcomeDataModel.mocks.map(Outcome.init)
         let date = Date()
         apiClient.response = .success(OutcomeDataModel.mocks)
 
-        let result = try await repository.streetLevelOutcomes(inArea: boundary, date: date)
+        let result = try await repository.streetLevelOutcomes(in: boundary, date: date)
 
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(

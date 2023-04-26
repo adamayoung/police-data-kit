@@ -1,3 +1,4 @@
+import CoreLocation
 import Foundation
 import os
 
@@ -19,7 +20,7 @@ final class UKCrimeRepository: CrimeRepository {
         self.availableDataRegion = availableDataRegion
     }
 
-    func streetLevelCrimes(atCoordinate coordinate: Coordinate, date: Date) async throws -> [Crime]? {
+    func streetLevelCrimes(at coordinate: CLLocationCoordinate2D, date: Date) async throws -> [Crime]? {
         Self.logger.trace("fetching street level Crimes at coordinate \(coordinate, privacy: .public)")
 
         let coordinate = CoordinateDataModel(coordinate: coordinate)
@@ -44,10 +45,10 @@ final class UKCrimeRepository: CrimeRepository {
         return crimes
     }
 
-    func streetLevelCrimes(inArea boundary: Boundary, date: Date) async throws -> [Crime]? {
+    func streetLevelCrimes(in coordinates: [CLLocationCoordinate2D], date: Date) async throws -> [Crime]? {
         Self.logger.trace("fetching street level Crimes in area")
 
-        let boundary = BoundaryDataModel(boundary: boundary)
+        let boundary = BoundaryDataModel(coordinates: coordinates)
 
         let dataModels: [CrimeDataModel]
         do {
@@ -91,7 +92,7 @@ final class UKCrimeRepository: CrimeRepository {
         return crimes
     }
 
-    func crimes(atCoordinate coordinate: Coordinate, date: Date) async throws -> [Crime]? {
+    func crimes(at coordinate: CLLocationCoordinate2D, date: Date) async throws -> [Crime]? {
         Self.logger.trace("fetching Crimes at coordinate \(coordinate, privacy: .public)")
 
         let coordinate = CoordinateDataModel(coordinate: coordinate)

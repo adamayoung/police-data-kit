@@ -1,3 +1,4 @@
+import CoreLocation
 import Foundation
 
 /// A neighbourhood location.
@@ -7,7 +8,7 @@ public struct NeighbourhoodLocation: Equatable {
     public let name: String?
     /// Type of location.
     ///
-    /// - Note: e.g. 'station' (police station)
+    /// e.g. 'station' (police station)
     public let type: String?
     /// Description.
     public let description: String?
@@ -16,7 +17,7 @@ public struct NeighbourhoodLocation: Equatable {
     /// Postcode
     public let postcode: String?
     /// Location coordinate.
-    public var coordinate: Coordinate?
+    public var coordinate: CLLocationCoordinate2D?
 
     /// Creates a new `NeighbourhoodLocation`.
     ///
@@ -33,7 +34,7 @@ public struct NeighbourhoodLocation: Equatable {
         description: String? = nil,
         address: String,
         postcode: String? = nil,
-        coordinate: Coordinate? = nil
+        coordinate: CLLocationCoordinate2D? = nil
     ) {
         self.name = name
         self.type = type

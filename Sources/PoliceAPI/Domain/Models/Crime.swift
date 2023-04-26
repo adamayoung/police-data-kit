@@ -5,11 +5,11 @@ public struct Crime: Identifiable, Equatable {
 
     /// Identifier of the crime.
     ///
-    /// - Note: This ID only relates to the API, it is NOT a police identifier.
+    /// This ID only relates to the API, it is NOT a police identifier.
     public let id: Int
     /// 64-character unique identifier for the crime.
     ///
-    /// - Note: This is different to the existing 'id' attribute, which is not guaranteed to always stay the same for each crime.
+    /// This is different to the existing 'id' attribute, which is not guaranteed to always stay the same for each crime.
     public let crimeID: String
     /// Extra information about the crime.
     public let context: String?
@@ -17,7 +17,7 @@ public struct Crime: Identifiable, Equatable {
     public let categoryID: String
     /// Approximate location of the incident.
     ///
-    /// - Note: The latitude and longitude locations of Crime and ASB incidents published always represent the approximate location of a crime — not the exact place that it happened. [Police API | Location Anonymisation](https://data.police.uk/about/#location-anonymisation)
+    /// The latitude and longitude locations of Crime and ASB incidents published always represent the approximate location of a crime — not the exact place that it happened. [Police API | Location Anonymisation](https://data.police.uk/about/#location-anonymisation)
     public let location: Location
     /// The type of the location.
     public let locationType: CrimeLocationType

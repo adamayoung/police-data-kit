@@ -1,9 +1,10 @@
+import CoreLocation
 import Foundation
 
 extension BoundaryDataModel {
 
-    init(boundary: Boundary) {
-        let coordinates = boundary.map(CoordinateDataModel.init)
+    init(coordinates: [CLLocationCoordinate2D]) {
+        let coordinates = coordinates.map(CoordinateDataModel.init)
 
         self.init(coordinates)
     }

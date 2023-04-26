@@ -1,8 +1,9 @@
+import CoreLocation
 import Foundation
 
 extension CoordinateDataModel {
 
-    init(coordinate: Coordinate) {
+    init(coordinate: CLLocationCoordinate2D) {
         self.init(
             latitude: coordinate.latitude,
             longitude: coordinate.longitude

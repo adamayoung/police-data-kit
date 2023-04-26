@@ -1,3 +1,4 @@
+import CoreLocation
 @testable import PoliceAPI
 import XCTest
 
@@ -29,12 +30,12 @@ final class UKStopAndSearchRepositoryTests: XCTestCase {
     }
 
     func testStopAndSearchesAtCoordinateReturnsStopAndSearches() async throws {
-        let coordinate = Coordinate(dataModel: .mock)
+        let coordinate = CLLocationCoordinate2D(dataModel: .mock)
         let date = Date()
         let expectedResult = StopAndSearchDataModel.mocks.map(StopAndSearch.init)
         apiClient.response = .success(StopAndSearchDataModel.mocks)
 
-        let result = try await repository.stopAndSearches(atCoordinate: coordinate, date: date)
+        let result = try await repository.stopAndSearches(at: coordinate, date: date)
 
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(
@@ -44,23 +45,23 @@ final class UKStopAndSearchRepositoryTests: XCTestCase {
     }
 
     func testStopAndSearchesAtCoordinateWhenCoordinateOutsideOfAvailableDataRegionReturnsNil() async throws {
-        let coordinate = Coordinate(dataModel: .outsideAvailableDataRegion)
+        let coordinate = CLLocationCoordinate2D(dataModel: .outsideAvailableDataRegion)
         let date = Date()
         apiClient.response = .success(StopAndSearchDataModel.mocks)
 
-        let result = try await repository.stopAndSearches(atCoordinate: coordinate, date: date)
+        let result = try await repository.stopAndSearches(at: coordinate, date: date)
 
         XCTAssertNil(result)
         XCTAssertNil(apiClient.lastPath)
     }
 
     func testStopAndSearchesInAreaReturnsStopAndSearches() async throws {
-        let boundary = Boundary(dataModel: .mock)
+        let boundary = [CLLocationCoordinate2D](dataModel: .mock)
         let date = Date()
         let expectedResult = StopAndSearchDataModel.mocks.map(StopAndSearch.init)
         apiClient.response = .success(StopAndSearchDataModel.mocks)
 
-        let result = try await repository.stopAndSearches(inArea: boundary, date: date)
+        let result = try await repository.stopAndSearches(in: boundary, date: date)
 
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(

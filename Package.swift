@@ -37,7 +37,7 @@ let package = Package(
             name: "PoliceAPITests",
             dependencies: ["PoliceAPI"],
             resources: [
-                .process("Resources")
+                .process("Data/Resources")
             ],
             plugins: [
                 .plugin(name: "SwiftLintPlugin")

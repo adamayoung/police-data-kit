@@ -1,3 +1,4 @@
+import CoreLocation
 import Foundation
 import os
 
@@ -81,12 +82,12 @@ final class UKNeighbourhoodRepository: NeighbourhoodRepository {
     }
 
     func boundary(forNeighbourhood neighbourhoodID: Neighbourhood.ID,
-                  inPoliceForce policeForceID: PoliceForce.ID) async throws -> Boundary? {
+                  inPoliceForce policeForceID: PoliceForce.ID) async throws -> [CLLocationCoordinate2D]? {
         // swiftlint:disable:next line_length
         Self.logger.trace("fetching Boundary for Neighbourhood \(neighbourhoodID, privacy: .public) in Police Force \(policeForceID, privacy: .public)")
 
         let cacheKey = NeighbourhoodBoundaryCachingKey(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID)
-        if let cachedBoundary = await cache.object(for: cacheKey, type: Boundary.self) {
+        if let cachedBoundary = await cache.object(for: cacheKey, type: [CLLocationCoordinate2D].self) {
             return cachedBoundary
         }
 
@@ -111,7 +112,7 @@ final class UKNeighbourhoodRepository: NeighbourhoodRepository {
             throw error
         }
 
-        let boundary = Boundary(dataModel: dataModel)
+        let boundary = [CLLocationCoordinate2D](dataModel: dataModel)
 
         await cache.set(boundary, for: cacheKey)
 
@@ -182,7 +183,7 @@ final class UKNeighbourhoodRepository: NeighbourhoodRepository {
         return priorities
     }
 
-    func neighbourhoodPolicingTeam(atCoordinate coordinate: Coordinate) async throws -> NeighbourhoodPolicingTeam? {
+    func neighbourhoodPolicingTeam(at coordinate: CLLocationCoordinate2D) async throws -> NeighbourhoodPolicingTeam? {
         Self.logger.trace("fetching Neighbourhood Policing Team at coordinate \(coordinate, privacy: .public)")
 
         let coordinate = CoordinateDataModel(coordinate: coordinate)

@@ -8,7 +8,7 @@ public enum CrimeLocationType: CaseIterable, CustomStringConvertible {
 
     /// British Transport Police location.
     ///
-    /// - Note: British Transport Police locations fall within normal police force boundaries.
+    /// British Transport Police locations fall within normal police force boundaries.
     case britishTransportPolice
 
     public var description: String {

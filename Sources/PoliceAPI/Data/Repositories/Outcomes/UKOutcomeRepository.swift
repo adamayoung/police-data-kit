@@ -1,3 +1,4 @@
+import CoreLocation
 import Foundation
 import os
 
@@ -45,7 +46,7 @@ final class UKOutcomeRepository: OutcomeRepository {
         return outcomes
     }
 
-    func streetLevelOutcomes(atCoordinate coordinate: Coordinate, date: Date) async throws -> [Outcome]? {
+    func streetLevelOutcomes(at coordinate: CLLocationCoordinate2D, date: Date) async throws -> [Outcome]? {
         Self.logger.trace("fetching street level Outcomes at coordinate \(coordinate, privacy: .public)")
 
         let coordinate = CoordinateDataModel(coordinate: coordinate)
@@ -70,10 +71,10 @@ final class UKOutcomeRepository: OutcomeRepository {
         return outcomes
     }
 
-    func streetLevelOutcomes(inArea boundary: Boundary, date: Date) async throws -> [Outcome] {
+    func streetLevelOutcomes(in coordinates: [CLLocationCoordinate2D], date: Date) async throws -> [Outcome] {
         Self.logger.trace("fetching street level Outcomes in area")
 
-        let boundary = BoundaryDataModel(boundary: boundary)
+        let boundary = BoundaryDataModel(coordinates: coordinates)
 
         let dataModels: [OutcomeDataModel]
         do {

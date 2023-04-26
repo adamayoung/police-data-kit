@@ -31,7 +31,7 @@ struct StopAndSearchDataModel: Decodable, Equatable {
     let outcomeLinkedToObjectOfSearch: Bool?
     /// When the stop and search took place.
     ///
-    /// - Note: Some forces only provide dates for their stop and searches, so you might see a disproportionate number of incidents occuring at midnight.
+    /// Some forces only provide dates for their stop and searches, so you might see a disproportionate number of incidents occuring at midnight.
     let date: Date
 
     /// Creates a new `StopAndSearch`.

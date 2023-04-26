@@ -8,7 +8,7 @@ enum CrimeLocationTypeDataModel: String, Decodable, CaseIterable, CustomStringCo
 
     /// British Transport Police location.
     ///
-    /// - Note: British Transport Police locations fall within normal police force boundaries.
+    /// British Transport Police locations fall within normal police force boundaries.
     case btp = "BTP"
 
     var description: String {

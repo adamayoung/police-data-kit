@@ -1,3 +1,4 @@
+import CoreLocation
 import Foundation
 
 /// A Neighbourhood.
@@ -5,7 +6,7 @@ public struct Neighbourhood: Identifiable, Equatable {
 
     /// Police Force specific team identifier.
     ///
-    /// - Note: This identifier is not unique and may also be used by a different force.
+    /// This identifier is not unique and may also be used by a different force.
     public let id: String
     /// Name for the neighbourhood.
     public var name: String
@@ -21,8 +22,8 @@ public struct Neighbourhood: Identifiable, Equatable {
     public let contactDetails: ContactDetails
     /// Centre point locator for the neighbourhood.
     ///
-    /// - Note: This may not be exactly in the centre of the neighbourhood.
-    public let centre: Coordinate
+    /// This may not be exactly in the centre of the neighbourhood.
+    public let centre: CLLocationCoordinate2D
     /// Any associated locations with the neighbourhood.
     public let locations: [NeighbourhoodLocation]
     /// Links.
@@ -49,7 +50,7 @@ public struct Neighbourhood: Identifiable, Equatable {
         welcomeMessage: String? = nil,
         population: Int? = nil,
         contactDetails: ContactDetails = .init(),
-        centre: Coordinate,
+        centre: CLLocationCoordinate2D,
         locations: [NeighbourhoodLocation] = [],
         links: [Link] = []
     ) {

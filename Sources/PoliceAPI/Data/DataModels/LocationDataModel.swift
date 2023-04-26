@@ -5,7 +5,7 @@ struct LocationDataModel: Decodable, Equatable {
 
     /// An approximate street for the location.
     ///
-    /// - Note: This is only an approximation of where the crime happened.
+    /// This is only an approximation of where the crime happened.
     let street: Street
 
     /// Location coordinate.

@@ -7,7 +7,7 @@ struct NeighbourhoodLocationDataModel: Decodable, Equatable {
     let name: String?
     /// Type of location.
     ///
-    /// - Note: e.g. 'station' (police station)
+    /// e.g. 'station' (police station)
     let type: String?
     /// Description.
     let description: String?

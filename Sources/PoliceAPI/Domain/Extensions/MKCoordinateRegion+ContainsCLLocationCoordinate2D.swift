@@ -1,8 +1,9 @@
 import Foundation
+import MapKit
 
-extension CoordinateRegion {
+extension MKCoordinateRegion {
 
-    public func contains(coordinate: Coordinate) -> Bool {
+    public func contains(coordinate: CLLocationCoordinate2D) -> Bool {
         let northWestCoordinate = self.northWestCoordinate
         let southEastRightCoordinate = self.southEastRightCoordinate
 
@@ -14,17 +15,17 @@ extension CoordinateRegion {
 
 }
 
-extension CoordinateRegion {
+extension MKCoordinateRegion {
 
-    private var northWestCoordinate: Coordinate {
-        Coordinate(
-            latitude: center.latitude - (span.latitudeDelta / 2),
-            longitude: center.longitude - (span.longitudeDelta / 2)
+    private var northWestCoordinate: CLLocationCoordinate2D {
+        CLLocationCoordinate2D(
+            latitude: center.latitude - (span.latitudeDelta / 2.0),
+            longitude: center.longitude - (span.longitudeDelta / 2.0)
         )
     }
 
-    private var southEastRightCoordinate: Coordinate {
-        Coordinate(
+    private var southEastRightCoordinate: CLLocationCoordinate2D {
+        CLLocationCoordinate2D(
             latitude: center.latitude + (span.latitudeDelta / 2.0),
             longitude: center.longitude + (span.longitudeDelta / 2.0)
         )

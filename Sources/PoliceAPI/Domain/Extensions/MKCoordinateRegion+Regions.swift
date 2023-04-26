@@ -1,6 +1,7 @@
 import Foundation
+import MapKit
 
-extension CoordinateRegion {
+extension MKCoordinateRegion {
 
     public static var availableDataRegion: Self {
         .uk
@@ -8,11 +9,11 @@ extension CoordinateRegion {
 
     static var uk: Self {
         .init(
-            center: Coordinate(
+            center: CLLocationCoordinate2D(
                 latitude: 54.4661645479556,
                 longitude: -3.1076525162671667
             ),
-            span: CoordinateSpan(
+            span: MKCoordinateSpan(
                 latitudeDelta: 13.0738,
                 longitudeDelta: 11.4748
             )

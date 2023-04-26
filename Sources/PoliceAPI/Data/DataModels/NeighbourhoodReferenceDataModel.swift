@@ -5,7 +5,7 @@ struct NeighbourhoodReferenceDataModel: Identifiable, Decodable, Equatable {
 
     /// Police Force specific team identifier.
     ///
-    /// - Note: This identifier is not unique and may also be used by a different force.
+    /// This identifier is not unique and may also be used by a different force.
     let id: String
     /// Name for the neighbourhood.
     let name: String

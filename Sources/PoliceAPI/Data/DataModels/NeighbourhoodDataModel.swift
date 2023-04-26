@@ -5,7 +5,7 @@ struct NeighbourhoodDataModel: Identifiable, Decodable, Equatable {
 
     /// Police Force specific team identifier.
     ///
-    /// - Note: This identifier is not unique and may also be used by a different force.
+    /// This identifier is not unique and may also be used by a different force.
     let id: String
     /// Name for the neighbourhood.
     var name: String {
@@ -33,11 +33,11 @@ struct NeighbourhoodDataModel: Identifiable, Decodable, Equatable {
     let contactDetails: ContactDetailsDataModel
     /// Centre point locator for the neighbourhood.
     ///
-    /// - Note: This may not be exactly in the centre of the neighbourhood.
+    /// This may not be exactly in the centre of the neighbourhood.
     let centre: CoordinateDataModel
     /// Any associated locations with the neighbourhood.
     ///
-    /// - Note: e.g. police stations
+    /// e.g. police stations
     let locations: [NeighbourhoodLocationDataModel]
     /// Links.
     let links: [LinkDataModel]
