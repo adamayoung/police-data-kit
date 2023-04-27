@@ -20,7 +20,7 @@ jobs:
     name: Deploy
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}documentation/police-api
+      url: ${{ steps.deployment.outputs.page_url }}documentation/police-data-kit
     runs-on: macos-12
     steps:
       - name: Checkout
@@ -32,10 +32,10 @@ jobs:
       - name: Build documentation
         run: |
           swift package --allow-writing-to-directory docs \
-          generate-documentation --target PoliceAPI \
+          generate-documentation --target PoliceDataKit \
           --disable-indexing \
           --transform-for-static-hosting \
-          --hosting-base-path police-api \
+          --hosting-base-path police-data-kit \
           --output-path docs
 
       - name: Upload documentation

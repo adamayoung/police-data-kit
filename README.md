@@ -1,6 +1,6 @@
 # Police Data Kit
 
-![CI](https://github.com/adamayoung/police-api-kit/workflows/CI/badge.svg)
+[![CI](https://github.com/adamayoung/police-data-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/adamayoung/police-data-kit/actions/workflows/ci.yml) [![Documentation](https://github.com/adamayoung/police-data-kit/actions/workflows/documentation.yml/badge.svg)](https://github.com/adamayoung/police-data-kit/actions/workflows/documentation.yml)
 
 A Swift Package for retrieving open data about crime and policing in England, Wales and Northern Ireland.
 
@@ -93,6 +93,7 @@ let stopAndSearchService = StopAndSearchService()
 ```swift
 import CoreLocation
 import Foundation
+import PoliceDataKit
 
 let crimeService = CrimeService()
 
@@ -105,6 +106,7 @@ let crimes = try await crimeService.streetLevelCrimes(at: londonCoordinate)
 
 ```swift
 import Foundation
+import PoliceDataKit
 
 let policeForceService = PoliceForceService()
 
