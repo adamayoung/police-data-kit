@@ -48,7 +48,7 @@ public final class CrimeService {
     ///
     /// - Returns: The street level crimes in a 1 mile radius of the specifed coordinate and date.
     ///
-    func streetLevelCrimes(at coordinate: CLLocationCoordinate2D, date: Date = Date()) async throws -> [Crime]? {
+    func streetLevelCrimes(at coordinate: CLLocationCoordinate2D, date: Date = Date()) async throws -> [Crime] {
         let crimes = try await crimeRepository.streetLevelCrimes(at: coordinate, date: date)
 
         return crimes

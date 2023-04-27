@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "PoliceAPI",
+    name: "PoliceDataKit",
 
     defaultLocalization: "en",
 
@@ -17,8 +17,8 @@ let package = Package(
 
     products: [
         .library(
-            name: "PoliceAPI",
-            targets: ["PoliceAPI"]
+            name: "PoliceDataKit",
+            targets: ["PoliceDataKit"]
         )
     ],
 
@@ -29,7 +29,7 @@ let package = Package(
 
     targets: [
         .target(
-            name: "PoliceAPI",
+            name: "PoliceDataKit",
             dependencies: ["SwiftSoup"],
             resources: [
                 .process("Resources")
@@ -39,8 +39,8 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "PoliceAPITests",
-            dependencies: ["PoliceAPI"],
+            name: "PoliceDataKitTests",
+            dependencies: ["PoliceDataKit"],
             resources: [
                 .process("Data/Resources")
             ],

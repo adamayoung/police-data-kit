@@ -1,8 +1,8 @@
-# UK Police Data
+# Police Data Kit
 
-![CI](https://github.com/adamayoung/UKPoliceData/workflows/CI/badge.svg)
+![CI](https://github.com/adamayoung/police-api-kit/workflows/CI/badge.svg)
 
-A Swift Package for UK Police data which provides a rich data source for information about crime and policing in England, Wales and Northern Ireland.
+A Swift Package for retrieving open data about crime and policing in England, Wales and Northern Ireland.
 
 ## Requirements
 
@@ -12,7 +12,7 @@ A Swift Package for UK Police data which provides a rich data source for informa
 
 ### [Swift Package Manager](https://github.com/apple/swift-package-manager)
 
-Add the PoliceAPI package as a dependency to your `Package.swift` file, and add it as a dependency to your target.
+Add the PoliceDataKit package as a dependency to your `Package.swift` file, and add it as a dependency to your target.
 
 ```swift
 // swift-tools-version:5.7
@@ -23,40 +23,93 @@ let package = Package(
   name: "MyProject",
 
   dependencies: [
-    .package(url: "https://github.com/adamayoung/police-api.git", from: "3.0.0")
+    .package(url: "https://github.com/adamayoung/police-data-kit.git", from: "3.0.0")
   ],
 
   targets: [
-    .target(name: "MyProject", dependencies: [.product(name: "police-api", package: "PoliceAPI")])
+    .target(name: "MyProject", dependencies: [.product(name: "police-data-kit", package: "PoliceDataKit")])
   ]
 )
 ```
 
-## API Areas
+### Xcode project
+
+Add the PoliceDataKit package to your Project's Package dependencies.
+
+## Topics
 
 ### Availability
 
-Information about availability of data.
+Provides an interface for obtaining availability data sets from the UK Police Data API.
+
+```swift
+let availabilityService = AvailabilityService()
+```
 
 ### Crimes
 
-Information about a Crimes.
+Provides an interface for obtaining crime data from the UK Police Data API.
+
+```swift
+let crimeService = CrimeService()
+```
 
 ### Neighbourhoods
 
-Information about a Police Force Neighbourhoods.
+Provides an interface for obtaining neighbour data from the UK Police Data API.
+
+```swift
+let neighbourhoodService = NeighbourhoodService()
+```
 
 ### Outcomes
 
-Information about a Crime's Outcome.
+Provides an interface for obtaining outcome data from the UK Police Data API.
+
+```swift
+let outcomeService = OutcomeService()
+```
 
 ### Police Forces
 
-Information about Police Forces and their Senior Officers.
+Provides an interface for obtaining police force data from the UK Police Data API.
+
+```swift
+let policeForceService = PoliceForceService()
+```
 
 ### Stop and Searches
 
-Information about Stop and Searches.
+Provides an interface for obtaining stop and search data from the UK Police Data API.
+
+```swift
+let stopAndSearchService = StopAndSearchService()
+```
+
+## Examples
+
+### Fetch street level crimes in the centre of London
+
+```swift
+import CoreLocation
+import Foundation
+
+let crimeService = CrimeService()
+
+let londonCoordinate = CLLocationCoordinate2D(latitude: 51.5072, longitude: 0.1276)
+
+let crimes = try await crimeService.streetLevelCrimes(at: londonCoordinate)
+```
+
+### Fetch all Police Forces in England, Wales and Northern Ireland
+
+```swift
+import Foundation
+
+let policeForceService = PoliceForceService()
+
+let policeForces = try await policeForceService.policeForces()
+```
 
 ## References
 
