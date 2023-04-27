@@ -1,40 +1,57 @@
 import Foundation
 
-/// Contact details.
+///
+/// A model representing contact details.
+///
 public struct ContactDetails: Equatable {
 
     /// Email address.
     public let email: String?
+
     /// Telephone number.
     public let telephone: String?
+
     /// Mobile number.
     public let mobile: String?
+
     /// Fax number.
     public let fax: String?
+
     /// Website address.
     public let web: URL?
+
     /// Street address.
     public let address: String?
+
     /// Facebook profile URL.
     public let facebook: URL?
+
     /// Twitter profile URL.
     public let twitter: URL?
+
     /// YouTube profile URL.
     public let youtube: URL?
+
     /// Myspace profile URL.
     public let myspace: URL?
+
     /// Bebo profile URL.
     public let bebo: URL?
+
     /// Flickr profile URL.
     public let flickr: URL?
+
     /// Forum URL.
     public let forum: URL?
+
     /// Blog URL.
     public let blog: URL?
+
     /// RSS URL.
     public let rss: URL?
 
-    /// Creates a new `ContactDetails`.
+    ///
+    /// Creates a contact details  object.
     ///
     /// - Parameters:
     ///   - email: Email address.
@@ -52,6 +69,7 @@ public struct ContactDetails: Equatable {
     ///   - forum: Forum URL.
     ///   - blog: Blog URL.
     ///   - rss: RSS URL.
+    ///   
     public init(
         email: String? = nil,
         telephone: String? = nil,

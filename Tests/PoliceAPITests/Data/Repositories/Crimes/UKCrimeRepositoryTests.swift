@@ -144,13 +144,14 @@ final class UKCrimeRepositoryTests: XCTestCase {
     }
 
     func testCrimesWithNoLocationWhenNotCachedReturnsCrimes() async throws {
-        let categoryID = CrimeCategoryDataModel.mock.id
+        let category = CrimeCategory.antiSocialBehaviour
+        let categoryID = category.id
         let policeForceID = PoliceForceDataModel.mock.id
         let date = Date()
         let expectedResult = CrimeDataModel.mocks.map(Crime.init)
         apiClient.response = .success(CrimeDataModel.mocks)
 
-        let result = try await repository.crimesWithNoLocation(forCategory: categoryID, inPoliceForce: policeForceID,
+        let result = try await repository.crimesWithNoLocation(forCategory: category, inPoliceForce: policeForceID,
                                                                date: date)
 
         XCTAssertEqual(result, expectedResult)
@@ -161,7 +162,8 @@ final class UKCrimeRepositoryTests: XCTestCase {
     }
 
     func testCrimesWithNoLocationWhenCachedReturnsCachedCrimes() async throws {
-        let categoryID = CrimeCategoryDataModel.mock.id
+        let category = CrimeCategory.antiSocialBehaviour
+        let categoryID = category.id
         let policeForceID = PoliceForceDataModel.mock.id
         let date = Date()
         let expectedResult = CrimeDataModel.mocks.map(Crime.init)
@@ -169,7 +171,7 @@ final class UKCrimeRepositoryTests: XCTestCase {
                                                                               policeForceID: policeForceID, date: date)
         await cache.set(expectedResult, for: cacheKey)
 
-        let result = try await repository.crimesWithNoLocation(forCategory: categoryID, inPoliceForce: policeForceID,
+        let result = try await repository.crimesWithNoLocation(forCategory: category, inPoliceForce: policeForceID,
                                                             date: date)
 
         XCTAssertEqual(result, expectedResult)
@@ -177,14 +179,15 @@ final class UKCrimeRepositoryTests: XCTestCase {
     }
 
     func testCrimesWithNoLocationWhenNotCachedAndReturnsCrimesShouldCacheResult() async throws {
-        let categoryID = CrimeCategoryDataModel.mock.id
+        let category = CrimeCategory.antiSocialBehaviour
+        let categoryID = category.id
         let policeForceID = PoliceForceDataModel.mock.id
         let date = Date()
         let expectedResult = CrimeDataModel.mocks.map(Crime.init)
         let cacheKey = CrimesWithNoLocationForCategoryInPoliceForceCachingKey(categoryID: categoryID,
                                                                               policeForceID: policeForceID, date: date)
         apiClient.response = .success(CrimeDataModel.mocks)
-        _ = try await repository.crimesWithNoLocation(forCategory: categoryID, inPoliceForce: policeForceID, date: date)
+        _ = try await repository.crimesWithNoLocation(forCategory: category, inPoliceForce: policeForceID, date: date)
 
         let cachedResult = await cache.object(for: cacheKey, type: [Crime].self)
 

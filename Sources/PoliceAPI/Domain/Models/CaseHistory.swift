@@ -1,18 +1,23 @@
 import Foundation
 
-/// Case history for a crime.
+///
+/// A model representing case history of a crime.
+/// 
 public struct CaseHistory: Equatable {
 
     /// Crime information.
     public let crime: CaseHistoryCrime
+
     /// Outcomes of the crime.
     public let outcomes: [CaseHistoryOutcome]
 
-    /// Creates a new `CaseHistory`.
+    ///
+    /// Creates a case history object.
     ///
     /// - Parameters:
     ///   - crime: Crime information.
     ///   - outcomes: Outcomes of the crime.
+    ///
     public init(crime: CaseHistoryCrime, outcomes: [CaseHistoryOutcome]) {
         self.crime = crime
         self.outcomes = outcomes

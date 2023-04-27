@@ -128,7 +128,7 @@ public final class CrimeService {
     /// [https://data.police.uk/docs/method/crimes-no-location/](https://data.police.uk/docs/method/crimes-no-location/)
     ///
     /// - Parameters:
-    ///   - categoryID: The category of the crimes. All crimes with be shown by default.
+    ///   - category: The category of the crimes. All crimes with be shown by default.
     ///   - policeForceID: Police Force identifier.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
@@ -137,12 +137,12 @@ public final class CrimeService {
     /// - Returns: The crimes not mapped to a location.
     ///
     func crimesWithNoLocation(
-        forCategory categoryID: CrimeCategory.ID = CrimeCategory.defaultID,
+        forCategory category: CrimeCategory = CrimeCategory.default,
         inPoliceForce policeForceID: PoliceForce.ID,
         date: Date = Date()
     ) async throws -> [Crime] {
-        let crimes = try await crimeRepository.crimesWithNoLocation(forCategory: categoryID,
-                                                                    inPoliceForce: policeForceID, date: date)
+        let crimes = try await crimeRepository.crimesWithNoLocation(forCategory: category, inPoliceForce: policeForceID,
+                                                                    date: date)
 
         return crimes
     }

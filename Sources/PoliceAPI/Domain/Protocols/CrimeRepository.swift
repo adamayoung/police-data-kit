@@ -11,7 +11,7 @@ protocol CrimeRepository {
 
     func crimes(at coordinate: CLLocationCoordinate2D, date: Date) async throws -> [Crime]
 
-    func crimesWithNoLocation(forCategory categoryID: CrimeCategory.ID, inPoliceForce policeForceID: PoliceForce.ID,
+    func crimesWithNoLocation(forCategory category: CrimeCategory, inPoliceForce policeForceID: PoliceForce.ID,
                               date: Date) async throws -> [Crime]
 
     func crimeCategories(forDate date: Date) async throws -> [CrimeCategory]

@@ -109,12 +109,12 @@ final class UKCrimeRepository: CrimeRepository {
         return crimes
     }
 
-    func crimesWithNoLocation(forCategory categoryID: CrimeCategory.ID, inPoliceForce policeForceID: PoliceForce.ID,
+    func crimesWithNoLocation(forCategory category: CrimeCategory, inPoliceForce policeForceID: PoliceForce.ID,
                               date: Date) async throws -> [Crime] {
         // swiftlint:disable:next line_length
-        Self.logger.trace("fetching Crimes with no location for category \(categoryID, privacy: .public) in Police Force \(policeForceID, privacy: .public)")
+        Self.logger.trace("fetching Crimes with no location for category \(category.id, privacy: .public) in Police Force \(policeForceID, privacy: .public)")
 
-        let cacheKey = CrimesWithNoLocationForCategoryInPoliceForceCachingKey(categoryID: categoryID,
+        let cacheKey = CrimesWithNoLocationForCategoryInPoliceForceCachingKey(categoryID: category.id,
                                                                               policeForceID: policeForceID, date: date)
         if let cachedCrimes = await cache.object(for: cacheKey, type: [Crime].self) {
             return cachedCrimes
@@ -124,12 +124,12 @@ final class UKCrimeRepository: CrimeRepository {
         do {
             dataModels = try await apiClient.get(
                 endpoint: CrimesEndpoint.crimesWithNoLocation(
-                    categoryID: categoryID, policeForceID: policeForceID, date: date
+                    categoryID: category.id, policeForceID: policeForceID, date: date
                 )
             )
         } catch let error {
             // swiftlint:disable:next line_length
-            Self.logger.error("failed fetching Crimes with no location for category \(categoryID, privacy: .public) in Police Force \(policeForceID, privacy: .public): \(error.localizedDescription, privacy: .public)")
+            Self.logger.error("failed fetching Crimes with no location for category \(category.id, privacy: .public) in Police Force \(policeForceID, privacy: .public): \(error.localizedDescription, privacy: .public)")
             throw Self.mapToCrimeError(error)
         }
 

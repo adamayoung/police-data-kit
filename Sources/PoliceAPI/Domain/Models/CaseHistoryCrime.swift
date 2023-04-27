@@ -1,32 +1,45 @@
 import Foundation
 
-/// Crime for a case history.
-public struct CaseHistoryCrime: Equatable {
+///
+/// A model representing the crime of a case history.
+///
+public struct CaseHistoryCrime: Identifiable, Equatable {
 
     /// Identifier of the crime.
     ///
     /// This ID only relates to the API, it is NOT a police identifier.
     public let id: Int
+
     /// 64-character unique identifier for the crime.
     ///
     /// This is different to the existing 'id' attribute, which is not guaranteed to always stay the same for each crime.
     public let crimeID: String
+
     /// Extra information about the crime.
     public let context: String?
+
     /// Crime category identifier.
     public let categoryID: String
+
     /// Approximate location of the incident.
     ///
-    /// The latitude and longitude locations of Crime and ASB incidents published always represent the approximate location of a crime — not the exact place that it happened. [Police API | Location Anonymisation](https://data.police.uk/about/#location-anonymisation)
+    /// The latitude and longitude locations of Crime and ASB incidents published always represent the approximate location
+    /// of a crime — not the exact place that it happened.
+    ///
+    /// [https://data.police.uk/about/#location-anonymisation](https://data.police.uk/about/#location-anonymisation)
     public let location: Location?
+
     /// The type of the location.
     public let locationType: CrimeLocationType?
+
     /// For Bristish Transport Police locations, the type of location at which this crime was recorded.
     public let locationSubtype: String?
+
     /// Date (truncated to the year and month) of the crime.
     public let date: Date
 
-    /// Creates a new `CaseHistoryCrime`.
+    ///
+    /// Creates a case history crime object.
     ///
     /// - Parameters:
     ///   - id: Identifier of the crime.
@@ -37,6 +50,7 @@ public struct CaseHistoryCrime: Equatable {
     ///   - locationType: The type of the location
     ///   - locationSubtype: For Bristish Transport Police locations, the type of location at which this crime was recorded.
     ///   - date: Date of the crime.
+    /// 
     public init(
         id: Int,
         crimeID: String,

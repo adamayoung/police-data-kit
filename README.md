@@ -23,7 +23,7 @@ let package = Package(
   name: "MyProject",
 
   dependencies: [
-    .package(url: "https://github.com/adamayoung/police-api.git", from: "2.0.0")
+    .package(url: "https://github.com/adamayoung/police-api.git", from: "3.0.0")
   ],
 
   targets: [
