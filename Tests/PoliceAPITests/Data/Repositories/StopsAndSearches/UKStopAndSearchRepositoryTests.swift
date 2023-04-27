@@ -45,7 +45,7 @@ final class UKStopAndSearchRepositoryTests: XCTestCase {
     }
 
     func testStopAndSearchesAtCoordsWhenOutsideDataRegionThrowsLocationOutsideOfDataSetRegionError() async throws {
-        let coordinate = CLLocationCoordinate2D(dataModel: .outsideAvailableDataRegion)
+        let coordinate = CLLocationCoordinate2D.outsideAvailableDataRegion
         let date = Date()
         apiClient.response = .success(StopAndSearchDataModel.mocks)
 

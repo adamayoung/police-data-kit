@@ -3,7 +3,7 @@ import Foundation
 
 extension OutcomeCrimeDataModel {
 
-    static var mock: OutcomeCrimeDataModel {
+    static var mock: Self {
         OutcomeCrimeDataModel(
             id: 86783916,
             crimeID: "c69de56fd2fcd523ab65b588811caf53e7ff3a577b2bfd2f731173f5f95af99d",

@@ -3,7 +3,7 @@ import Foundation
 
 extension LocationDataModel {
 
-    static var mock: LocationDataModel {
+    static var mock: Self {
         LocationDataModel(
             street: StreetDataModel(
                 id: 883425,

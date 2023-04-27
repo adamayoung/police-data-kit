@@ -3,7 +3,7 @@ import Foundation
 
 extension LinkDataModel {
 
-    static var mock: LinkDataModel {
+    static var mock: Self {
         LinkDataModel(
             title: "Leicester City Council",
             description: "Leicester City Council description",
@@ -11,14 +11,14 @@ extension LinkDataModel {
         )
     }
 
-    static var mockNoDescription: LinkDataModel {
+    static var mockNoDescription: Self {
         LinkDataModel(
             title: "Leicester City Council",
             url: "http://www.leicester.gov.uk/"
         )
     }
 
-    static var mockNilURL: LinkDataModel {
+    static var mockNilURL: Self {
         LinkDataModel(
             title: "YourCommunityAlerts.co.uk",
             description: "Your Community Alerts",

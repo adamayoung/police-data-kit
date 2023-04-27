@@ -3,7 +3,7 @@ import Foundation
 
 extension PoliceForceReferenceDataModel {
 
-    static var mock: PoliceForceReferenceDataModel {
+    static var mock: Self {
         PoliceForceReferenceDataModel(
             id: "avon-and-somerset",
             name: "Avon and Somerset Constabulary"

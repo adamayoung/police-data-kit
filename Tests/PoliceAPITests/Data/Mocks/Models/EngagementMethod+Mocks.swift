@@ -3,7 +3,7 @@ import Foundation
 
 extension EngagementMethodDataModel {
 
-    static var mock: EngagementMethodDataModel {
+    static var mock: Self {
         EngagementMethodDataModel(
             title: "Facebook",
             description: "Become friends with Leicestershire Constabulary",
@@ -11,7 +11,7 @@ extension EngagementMethodDataModel {
         )
     }
 
-    static var mockNoURL: EngagementMethodDataModel {
+    static var mockNoURL: Self {
         EngagementMethodDataModel(
             title: "telephone",
             description: "101"

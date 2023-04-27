@@ -3,14 +3,14 @@ import Foundation
 
 extension CrimeCategoryDataModel {
 
-    static var mock: CrimeCategoryDataModel {
+    static var mock: Self {
         CrimeCategoryDataModel(
             id: "anti-social-behaviour",
             name: "Anti-social behaviour"
         )
     }
 
-    static var mocks: [CrimeCategoryDataModel] {
+    static var mocks: [Self] {
         [
             .mock,
             CrimeCategoryDataModel(

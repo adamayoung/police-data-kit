@@ -3,14 +3,14 @@ import Foundation
 
 extension NeighbourhoodReferenceDataModel {
 
-    static var mock: NeighbourhoodReferenceDataModel {
+    static var mock: Self {
         NeighbourhoodReferenceDataModel(
             id: "NC04",
             name: "City Centre"
         )
     }
 
-    static var mocks: [NeighbourhoodReferenceDataModel] {
+    static var mocks: [Self] {
         [
             .mock,
             NeighbourhoodReferenceDataModel(

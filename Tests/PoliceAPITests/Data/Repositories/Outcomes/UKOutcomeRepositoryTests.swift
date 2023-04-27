@@ -82,7 +82,7 @@ final class UKOutcomeRepositoryTests: XCTestCase {
     }
 
     func testStreetLevelOutcomesAtCoordsWhenNotInAvailableDataRegionThrowsError() async throws {
-        let coordinate = CLLocationCoordinate2D(dataModel: .outsideAvailableDataRegion)
+        let coordinate = CLLocationCoordinate2D.outsideAvailableDataRegion
         let date = Date()
         apiClient.response = .success(OutcomeDataModel.mocks)
 

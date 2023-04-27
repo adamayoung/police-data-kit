@@ -291,7 +291,7 @@ final class UKNeighbourhoodRepositoryTests: XCTestCase {
     }
 
     func testNeighbourhoodPolicingTeamAtCoordsWhenNotInAvailableDataRegionThrowsError() async throws {
-        let coordinate = CLLocationCoordinate2D(dataModel: .outsideAvailableDataRegion)
+        let coordinate = CLLocationCoordinate2D.outsideAvailableDataRegion
         let expectedResult = NeighbourhoodPolicingTeamDataModel.mock
         apiClient.response = .success(expectedResult)
 

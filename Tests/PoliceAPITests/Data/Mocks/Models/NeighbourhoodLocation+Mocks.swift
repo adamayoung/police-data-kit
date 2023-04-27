@@ -3,7 +3,7 @@ import Foundation
 
 extension NeighbourhoodLocationDataModel {
 
-    static var mock: NeighbourhoodLocationDataModel {
+    static var mock: Self {
         NeighbourhoodLocationDataModel(
             name: "Mansfield House",
             type: "station",

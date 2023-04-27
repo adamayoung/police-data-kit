@@ -7,4 +7,8 @@ extension CLLocationCoordinate2D {
         CLLocationCoordinate2D(latitude: 52.6389, longitude: -1.13619)
     }
 
+    static var outsideAvailableDataRegion: Self {
+        CLLocationCoordinate2D(latitude: 32.6389, longitude: 4.13619)
+    }
+
 }

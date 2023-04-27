@@ -3,7 +3,7 @@ import Foundation
 
 extension NeighbourhoodPriorityDataModel {
 
-    static var mock: NeighbourhoodPriorityDataModel {
+    static var mock: Self {
         NeighbourhoodPriorityDataModel(
             issue: "To reduce street drinking and drug use in and around Museum Square, Leicester.",
             issueDate: DateFormatter.dateTime.date(from: "2015-10-08T00:00:00")!,
@@ -16,14 +16,14 @@ extension NeighbourhoodPriorityDataModel {
         )
     }
 
-    static var mockNoAction: NeighbourhoodPriorityDataModel {
+    static var mockNoAction: Self {
         NeighbourhoodPriorityDataModel(
             issue: "To reduce the amount of Anti-Social Behaviour Humberstone Gate, Leicester.",
             issueDate: DateFormatter.dateTime.date(from: "2016-04-14T00:00:00")!
         )
     }
 
-    static var mockWithHTML: NeighbourhoodPriorityDataModel {
+    static var mockWithHTML: Self {
         NeighbourhoodPriorityDataModel(
             issue: "Beggars and homeless persons are using private premises, stairwells, side alleys and doorways to "
                 + "beg and sleep. This can sometimes bring other issues such as drug or alcohol misuse, needles, "
@@ -44,7 +44,7 @@ extension NeighbourhoodPriorityDataModel {
         )
     }
 
-    static var mocks: [NeighbourhoodPriorityDataModel] {
+    static var mocks: [Self] {
         [
             .mock,
             .mockNoAction,

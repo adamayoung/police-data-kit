@@ -3,7 +3,7 @@ import Foundation
 
 extension ContactDetailsDataModel {
 
-    static var mock: ContactDetailsDataModel {
+    static var mock: Self {
         ContactDetailsDataModel(
             email: "centralleicester.npa@leicestershire.pnn.police.uk",
             telephone: "101",
@@ -23,7 +23,7 @@ extension ContactDetailsDataModel {
         )
     }
 
-    static var mockNone: ContactDetailsDataModel {
+    static var mockNone: Self {
         ContactDetailsDataModel()
     }
 

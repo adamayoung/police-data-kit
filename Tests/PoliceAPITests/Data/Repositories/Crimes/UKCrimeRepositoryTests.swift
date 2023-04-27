@@ -41,7 +41,7 @@ final class UKCrimeRepositoryTests: XCTestCase {
     }
 
     func testStreetLevelCrimesAtCoordsWhenOutsideDataRegionThrowsLocationOutsideOfDataSetRegionError() async throws {
-        let coordinate = CLLocationCoordinate2D(dataModel: .outsideAvailableDataRegion)
+        let coordinate = CLLocationCoordinate2D.outsideAvailableDataRegion
         let date = Date()
         apiClient.response = .success(CrimeDataModel.mocks)
 
@@ -128,7 +128,7 @@ final class UKCrimeRepositoryTests: XCTestCase {
     }
 
     func testCrimesAtCoordsWhenNotInAvailableDataRegionThrowsLocationOutsideOfDataSetRegionError() async throws {
-        let coordinate = CLLocationCoordinate2D(dataModel: .outsideAvailableDataRegion)
+        let coordinate = CLLocationCoordinate2D.outsideAvailableDataRegion
         let date = Date()
         apiClient.response = .success(CrimeDataModel.mocks)
 

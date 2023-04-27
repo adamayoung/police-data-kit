@@ -3,7 +3,7 @@ import Foundation
 
 extension PoliceForceDataModel {
 
-    static var mock: PoliceForceDataModel {
+    static var mock: Self {
         PoliceForceDataModel(
             id: "leicestershire",
             name: "Leicestershire Constabulary",
@@ -27,27 +27,27 @@ extension PoliceForceDataModel {
             telephone: "0116 222 2222",
             url: URL(string: "http://www.leics.police.uk/")!,
             engagementMethods: [
-                .init(
+                EngagementMethodDataModel(
                     title: "Facebook",
                     description: "Become friends with Leicestershire Constabulary",
                     url: "http://www.facebook.com/pages/Leicester/Leicestershire-Police/76807881169"
                 ),
-                .init(
+                EngagementMethodDataModel(
                     title: "Twitter",
                     description: "Keep up to date with Leicestershire Constabulary on Twitter",
                     url: "http://www.twitter.com/leicspolice"
                 ),
-                .init(
+                EngagementMethodDataModel(
                     title: "YouTube",
                     description: "See Leicestershire Constabulary's latest videos on YouTube",
                     url: "http://www.youtube.com/leicspolice"
                 ),
-                .init(
+                EngagementMethodDataModel(
                     title: "RSS",
                     description: "Keep informed with Leicestershire Constabulary's RSS feed",
                     url: "http://www.leics.police.uk/rss/"
                 ),
-                .init(
+                EngagementMethodDataModel(
                     title: "telephone",
                     description: "0116 222 2222",
                     url: ""

@@ -3,7 +3,7 @@ import Foundation
 
 extension CrimeLocationTypeDataModel {
 
-    static var mocks: [CrimeLocationTypeDataModel] {
+    static var mocks: [Self] {
         [
             .force,
             .britishTransportPolice

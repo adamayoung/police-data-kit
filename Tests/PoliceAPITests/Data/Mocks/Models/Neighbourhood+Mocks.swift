@@ -3,7 +3,7 @@ import Foundation
 
 extension NeighbourhoodDataModel {
 
-    static var mock: NeighbourhoodDataModel {
+    static var mock: Self {
         NeighbourhoodDataModel(
             id: "NC04",
             name: "City Centre",
@@ -41,7 +41,7 @@ extension NeighbourhoodDataModel {
         )
     }
 
-    static var mockWithAmpersandInName: NeighbourhoodDataModel {
+    static var mockWithAmpersandInName: Self {
         NeighbourhoodDataModel(
             id: "AB12",
             name: "Banks & Hesketh",

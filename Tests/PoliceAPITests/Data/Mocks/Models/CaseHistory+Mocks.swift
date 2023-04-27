@@ -3,7 +3,7 @@ import Foundation
 
 extension CaseHistoryDataModel {
 
-    static var mock: CaseHistoryDataModel {
+    static var mock: Self {
         CaseHistoryDataModel(
             crime: CaseHistoryCrimeDataModel(
                 id: 82067369,

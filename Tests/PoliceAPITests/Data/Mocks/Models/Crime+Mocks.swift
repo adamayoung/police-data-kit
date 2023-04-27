@@ -3,7 +3,7 @@ import Foundation
 
 extension CrimeDataModel {
 
-    static var mock: CrimeDataModel {
+    static var mock: Self {
         CrimeDataModel(
             id: 81012437,
             crimeID: "0e51b9ceb4aedef3f9679481aa11262a6c5ea90a68d0dd0e0002a0b521c445e0",
@@ -27,7 +27,7 @@ extension CrimeDataModel {
         )
     }
 
-    static var mocks: [CrimeDataModel] {
+    static var mocks: [Self] {
         [
             .mock,
             CrimeDataModel(

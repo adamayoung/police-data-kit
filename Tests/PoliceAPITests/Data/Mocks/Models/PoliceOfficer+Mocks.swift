@@ -3,7 +3,7 @@ import Foundation
 
 extension PoliceOfficerDataModel {
 
-    static var mock: PoliceOfficerDataModel {
+    static var mock: Self {
         PoliceOfficerDataModel(
             name: "Roger Bannister",
             rank: "Assistant Chief Officer (Crime)",
@@ -25,7 +25,7 @@ extension PoliceOfficerDataModel {
         )
     }
 
-    static var mocks: [PoliceOfficerDataModel] {
+    static var mocks: [Self] {
         [
             .mock,
             PoliceOfficerDataModel(

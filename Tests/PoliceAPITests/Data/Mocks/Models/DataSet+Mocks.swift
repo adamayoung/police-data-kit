@@ -3,7 +3,7 @@ import Foundation
 
 extension DataSetDataModel {
 
-    static var mock: DataSetDataModel {
+    static var mock: Self {
         DataSetDataModel(
             date: DateFormatter.yearMonth.date(from: "2015-06")!,
             stopAndSearch: [
@@ -14,7 +14,7 @@ extension DataSetDataModel {
         )
     }
 
-    static var mocks: [DataSetDataModel] {
+    static var mocks: [Self] {
         [
             .mock,
             DataSetDataModel(

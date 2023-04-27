@@ -3,7 +3,7 @@ import Foundation
 
 extension BoundaryDataModel {
 
-    static var mock: BoundaryDataModel {
+    static var mock: Self {
         [
             CoordinateDataModel(
                 latitude: "52.6394052587",

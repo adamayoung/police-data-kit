@@ -15,8 +15,8 @@ extension StopAndSearchDataModel {
             objectOfSearch: "Offensive weapons",
             removalOfMoreThanOuterClothing: nil,
             operationName: nil,
-            location: .init(
-                street: .init(
+            location: LocationDataModel(
+                street: StreetDataModel(
                     id: 883415,
                     name: "On or near Shopping Area"
                 ),
@@ -43,8 +43,8 @@ extension StopAndSearchDataModel {
                 objectOfSearch: "Offensive language",
                 removalOfMoreThanOuterClothing: true,
                 operationName: nil,
-                location: .init(
-                    street: .init(
+                location: LocationDataModel(
+                    street: StreetDataModel(
                         id: 883415,
                         name: "On or near Shopping Area"
                     ),
