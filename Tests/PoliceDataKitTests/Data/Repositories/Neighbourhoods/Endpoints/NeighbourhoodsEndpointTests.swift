@@ -1,5 +1,5 @@
 import CoreLocation
-@testable import PoliceAPI
+@testable import PoliceDataKit
 import XCTest
 
 final class NeighbourhoodsEndpointTests: XCTestCase {

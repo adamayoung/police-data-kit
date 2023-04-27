@@ -22,7 +22,7 @@ public final class OutcomeService {
     /// `OutcomeService`, use `shared`.
     ///
     public convenience init() {
-        self.init(outcomeRepository: PoliceAPIFactory.outcomeRepository())
+        self.init(outcomeRepository: PoliceDataKitFactory.outcomeRepository())
     }
 
     init(outcomeRepository: some OutcomeRepository) {

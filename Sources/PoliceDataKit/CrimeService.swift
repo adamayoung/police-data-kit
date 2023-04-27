@@ -22,7 +22,7 @@ public final class CrimeService {
     /// `CrimeService`, use `shared`.
     ///
     public convenience init() {
-        self.init(crimeRepository: PoliceAPIFactory.crimeRepository())
+        self.init(crimeRepository: PoliceDataKitFactory.crimeRepository())
     }
 
     init(crimeRepository: some CrimeRepository) {

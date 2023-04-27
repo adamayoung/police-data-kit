@@ -26,7 +26,7 @@ public final class StopAndSearchService {
     /// `StopAndSearchService`, use `shared`.
     ///
     public convenience init() {
-        self.init(stopAndSearchRepository: PoliceAPIFactory.stopAndSearchRepository())
+        self.init(stopAndSearchRepository: PoliceDataKitFactory.stopAndSearchRepository())
     }
 
     init(stopAndSearchRepository: some StopAndSearchRepository) {

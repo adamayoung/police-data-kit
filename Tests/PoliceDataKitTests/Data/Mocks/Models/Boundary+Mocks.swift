@@ -1,5 +1,5 @@
 import Foundation
-@testable import PoliceAPI
+@testable import PoliceDataKit
 
 extension BoundaryDataModel {
 

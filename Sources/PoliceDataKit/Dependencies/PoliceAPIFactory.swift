@@ -1,6 +1,6 @@
 import Foundation
 
-final class PoliceAPIFactory {
+final class PoliceDataKitFactory {
 
     private init() { }
 
@@ -30,7 +30,7 @@ final class PoliceAPIFactory {
 
 }
 
-extension PoliceAPIFactory {
+extension PoliceDataKitFactory {
 
     private static let apiClient: some APIClient = {
         PoliceDataAPIClient(
@@ -45,7 +45,7 @@ extension PoliceAPIFactory {
     }
 
     private static let cache: some Cache = {
-        InMemoryCache(name: "PoliceAPICache")
+        InMemoryCache(name: "PoliceDataKitCache")
     }()
 
 }

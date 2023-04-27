@@ -22,7 +22,7 @@ public final class PoliceForceService {
     /// `PoliceForceService`, use `shared`.
     ///
     public convenience init() {
-        self.init(policeForceRepository: PoliceAPIFactory.policeForceRepository())
+        self.init(policeForceRepository: PoliceDataKitFactory.policeForceRepository())
     }
 
     init(policeForceRepository: some PoliceForceRepository) {

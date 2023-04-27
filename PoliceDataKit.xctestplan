@@ -17,14 +17,17 @@
           "name" : "PoliceAPI"
         }
       ]
-    }
+    },
+    "language" : "en-GB",
+    "region" : "GB",
+    "testExecutionOrdering" : "random"
   },
   "testTargets" : [
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "PoliceAPITests",
-        "name" : "PoliceAPITests"
+        "identifier" : "PoliceDataKitTests",
+        "name" : "PoliceDataKitTests"
       }
     }
   ],

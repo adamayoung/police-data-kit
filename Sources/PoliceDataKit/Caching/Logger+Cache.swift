@@ -3,6 +3,6 @@ import os
 
 extension Logger {
 
-    static let cacheSubsystem = "uk.co.adam-young.PoliceAPI.Cache"
+    static let cacheSubsystem = "uk.co.adam-young.PoliceDataKit.Cache"
 
 }

@@ -22,7 +22,7 @@ public final class NeighbourhoodService {
     /// `NeighbourhoodService`, use `shared`.
     ///
     public convenience init() {
-        self.init(neighbourhoodRepository: PoliceAPIFactory.neighbourhoodRepository())
+        self.init(neighbourhoodRepository: PoliceDataKitFactory.neighbourhoodRepository())
     }
 
     init(neighbourhoodRepository: some NeighbourhoodRepository) {

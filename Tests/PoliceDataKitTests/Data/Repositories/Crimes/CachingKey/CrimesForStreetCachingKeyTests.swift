@@ -1,4 +1,4 @@
-@testable import PoliceAPI
+@testable import PoliceDataKit
 import XCTest
 
 final class CrimesForStreetCachingKeyTests: XCTestCase {

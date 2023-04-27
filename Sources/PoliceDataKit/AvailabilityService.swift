@@ -21,7 +21,7 @@ public final class AvailabilityService {
     /// `AvailabilityService`, use `shared`.
     ///
     public convenience init() {
-        self.init(availabilityRepository: PoliceAPIFactory.availabilityRepository())
+        self.init(availabilityRepository: PoliceDataKitFactory.availabilityRepository())
     }
 
     init(availabilityRepository: some AvailabilityRepository) {
