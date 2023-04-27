@@ -1,4 +1,4 @@
-import CoreLocation
+import MapKit
 @testable import PoliceAPI
 import XCTest
 
@@ -7,7 +7,7 @@ final class UKOutcomeRepositoryTests: XCTestCase {
     var repository: UKOutcomeRepository!
     var apiClient: MockAPIClient!
     var cache: MockCache!
-    var availableDataRegion: CoordinateRegionDataModel!
+    var availableDataRegion: MKCoordinateRegion!
 
     override func setUp() {
         super.setUp()
@@ -67,7 +67,7 @@ final class UKOutcomeRepositoryTests: XCTestCase {
     }
 
     func testStreetLevelOutcomesAtCoordinateReturnsOutcomes() async throws {
-        let coordinate = CLLocationCoordinate2D(dataModel: .mock)
+        let coordinate = CLLocationCoordinate2D.mock
         let expectedResult = OutcomeDataModel.mocks.map(Outcome.init)
         let date = Date()
         apiClient.response = .success(OutcomeDataModel.mocks)
@@ -77,18 +77,23 @@ final class UKOutcomeRepositoryTests: XCTestCase {
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(
             apiClient.lastPath,
-            OutcomesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: .mock, date: date).path
+            OutcomesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate, date: date).path
         )
     }
 
-    func testStreetLevelOutcomesAtCoordinateWhenCoordinateOutsideOfAvailableDataRegionReturnsNil() async throws {
+    func testStreetLevelOutcomesAtCoordsWhenNotInAvailableDataRegionThrowsError() async throws {
         let coordinate = CLLocationCoordinate2D(dataModel: .outsideAvailableDataRegion)
         let date = Date()
         apiClient.response = .success(OutcomeDataModel.mocks)
 
-        let result = try await repository.streetLevelOutcomes(at: coordinate, date: date)
+        var resultError: OutcomeError?
+        do {
+            _ = try await repository.streetLevelOutcomes(at: coordinate, date: date)
+        } catch let error as OutcomeError {
+            resultError = error
+        }
 
-        XCTAssertNil(result)
+        XCTAssertEqual(resultError, .locationOutsideOfDataSetRegion)
         XCTAssertNil(apiClient.lastPath)
     }
 
@@ -118,13 +123,18 @@ final class UKOutcomeRepositoryTests: XCTestCase {
         XCTAssertEqual(apiClient.lastPath, OutcomesEndpoint.caseHistory(crimeID: crimeID).path)
     }
 
-    func testFetchCaseHistoryWhenNotFoundReturnsNil() async throws {
+    func testFetchCaseHistoryWhenNotFoundThrowsNotFoundError() async throws {
         let crimeID = "123ABC"
-        apiClient.response = .failure(PoliceDataError.notFound)
+        apiClient.response = .failure(APIClientError.notFound)
 
-        let result = try await repository.caseHistory(forCrime: crimeID)
+        var resultError: OutcomeError?
+        do {
+            _ = try await repository.caseHistory(forCrime: crimeID)
+        } catch let error as OutcomeError {
+            resultError = error
+        }
 
-        XCTAssertNil(result)
+        XCTAssertEqual(resultError, .notFound)
     }
 
     func testFetchCaseHistoryWhenCachedReturnsCachedCaseHistory() async throws {

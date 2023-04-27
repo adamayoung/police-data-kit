@@ -10,20 +10,4 @@ final class CrimeLocationTypeDataModelTests: XCTestCase {
         XCTAssertEqual(result, CrimeLocationTypeDataModel.mocks)
     }
 
-    func testDescriptionReturnsForceDescription() {
-        let expectedResult = "Police Force"
-
-        let result = CrimeLocationTypeDataModel.force.description
-
-        XCTAssertEqual(result, expectedResult)
-    }
-
-    func testDescriptionReturnsBTPDescription() {
-        let expectedResult = "British Transport Police"
-
-        let result = CrimeLocationTypeDataModel.btp.description
-
-        XCTAssertEqual(result, expectedResult)
-    }
-
 }

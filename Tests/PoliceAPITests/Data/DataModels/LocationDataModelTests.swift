@@ -9,28 +9,18 @@ final class LocationDataModelTests: XCTestCase {
         XCTAssertEqual(result, .mock)
     }
 
-    func testCoordinateReturnsCoordinate() throws {
-        let expectedResult = LocationDataModel.mock.coordinate
+    func testLatitudeReturnsLatitude() throws {
+        let expectedResult = LocationDataModel.mock.latitude
 
-        let result = try JSONDecoder.policeDataAPI.decode(LocationDataModel.self, fromResource: "location").coordinate
-
-        XCTAssertEqual(result, expectedResult)
-    }
-
-    func testCoordinateWhenInvalidReturnsZeroCoordinate() throws {
-        let expectedResult = CoordinateDataModel(latitude: 0, longitude: 0)
-
-        let result = try JSONDecoder.policeDataAPI
-            .decode(LocationDataModel.self, fromResource: "location-invalid-coordinate").coordinate
+        let result = try JSONDecoder.policeDataAPI.decode(LocationDataModel.self, fromResource: "location").latitude
 
         XCTAssertEqual(result, expectedResult)
     }
 
-    func testStreetDescriptionReturnsString() {
-        let street = LocationDataModel.mock.street
-        let expectedResult = "(\(street.id)) \(street.name)"
+    func testLongitudeReturnsLongitude() throws {
+        let expectedResult = LocationDataModel.mock.longitude
 
-        let result = (street as CustomStringConvertible).description
+        let result = try JSONDecoder.policeDataAPI.decode(LocationDataModel.self, fromResource: "location").longitude
 
         XCTAssertEqual(result, expectedResult)
     }

@@ -17,14 +17,6 @@ final class CoordinateDataModelTests: XCTestCase {
         XCTAssertEqual(result, expectedResult)
     }
 
-    func testLatitudeWhenNotANumberReturnsZero() throws {
-        let result = try JSONDecoder.policeDataAPI
-            .decode(CoordinateDataModel.self, fromResource: "coordinate-invalid")
-            .latitude
-
-        XCTAssertEqual(result, 0)
-    }
-
     func testLongitudeReturnsValue() throws {
         let expectedResult = CoordinateDataModel.mock.longitude
 
@@ -33,14 +25,6 @@ final class CoordinateDataModelTests: XCTestCase {
             .longitude
 
         XCTAssertEqual(result, expectedResult)
-    }
-
-    func testLongitudeWhenNotANumberReturnsZero() throws {
-        let result = try JSONDecoder.policeDataAPI
-            .decode(CoordinateDataModel.self, fromResource: "coordinate-invalid")
-            .longitude
-
-        XCTAssertEqual(result, 0)
     }
 
     func testDescriptionReturnsString() {

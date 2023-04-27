@@ -11,7 +11,7 @@ final class MockAPIClient: APIClient {
 
         guard let result = try response?.get() as? Response else {
             XCTFail("Can't cast response to type \(String(describing: Response.self))")
-            throw PoliceDataError.unknown
+            throw APIClientError.unknown
         }
 
         return result

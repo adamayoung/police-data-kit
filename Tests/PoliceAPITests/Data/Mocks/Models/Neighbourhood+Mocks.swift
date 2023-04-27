@@ -12,8 +12,8 @@ extension NeighbourhoodDataModel {
                 + "Leicester Tigers rugby ground and the Clarendon Park and Riverside communities.</p>\n<p>The "
                 + "Highcross and Haymarket shopping centres and Leicester's famous Market are all covered by this "
                 + "neighbourhood.</p>",
-            policeForceWebsite: URL(string: "http://www.leics.police.uk/local-policing/city-centre")!,
-            population: 1000,
+            policeForceWebsite: "http://www.leics.police.uk/local-policing/city-centre",
+            population: "1000",
             contactDetails: ContactDetailsDataModel(
                 email: "centralleicester.npa@leicestershire.pnn.police.uk",
                 telephone: "101",
@@ -21,8 +21,8 @@ extension NeighbourhoodDataModel {
                 twitter: URL(string: "http://www.twitter.com/centralleicsNPA")!
             ),
             centre: CoordinateDataModel(
-                latitude: 52.6389,
-                longitude: -1.13619
+                latitude: "52.6389",
+                longitude: "-1.13619"
             ),
             locations: [
                 NeighbourhoodLocationDataModel(
@@ -35,7 +35,7 @@ extension NeighbourhoodDataModel {
             links: [
                 LinkDataModel(
                     title: "Leicester City Council",
-                    url: URL(string: "http://www.leicester.gov.uk/")
+                    url: "http://www.leicester.gov.uk/"
                 )
             ]
         )
@@ -46,11 +46,11 @@ extension NeighbourhoodDataModel {
             id: "AB12",
             name: "Banks & Hesketh",
             description: "Some & description",
-            policeForceWebsite: URL(string: "http://www.leics.police.uk/local-policing/city-centre")!,
-            population: 1000,
+            policeForceWebsite: "http://www.leics.police.uk/local-policing/city-centre",
+            population: "1000",
             centre: CoordinateDataModel(
-                latitude: 52.6389,
-                longitude: -1.13619
+                latitude: "52.6389",
+                longitude: "-1.13619"
             )
         )
     }

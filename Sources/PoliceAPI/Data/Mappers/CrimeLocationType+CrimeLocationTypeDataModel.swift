@@ -7,7 +7,7 @@ extension CrimeLocationType {
         case .force:
             self = .force
 
-        case .btp:
+        case .britishTransportPolice:
             self = .britishTransportPolice
         }
     }

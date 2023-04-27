@@ -4,9 +4,7 @@ import Foundation
 extension Array<CLLocationCoordinate2D> {
 
     init(dataModel: BoundaryDataModel) {
-        let coordinates = dataModel.map(CLLocationCoordinate2D.init)
-
-        self.init(coordinates)
+        self.init(dataModel.map(CLLocationCoordinate2D.init))
     }
 
 }

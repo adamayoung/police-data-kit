@@ -1,4 +1,4 @@
-import CoreLocation
+import MapKit
 @testable import PoliceAPI
 import XCTest
 
@@ -7,7 +7,7 @@ final class UKStopAndSearchRepositoryTests: XCTestCase {
     var repository: UKStopAndSearchRepository!
     var apiClient: MockAPIClient!
     var cache: MockCache!
-    var availableDataRegion: CoordinateRegionDataModel!
+    var availableDataRegion: MKCoordinateRegion!
 
     override func setUp() {
         super.setUp()
@@ -30,7 +30,7 @@ final class UKStopAndSearchRepositoryTests: XCTestCase {
     }
 
     func testStopAndSearchesAtCoordinateReturnsStopAndSearches() async throws {
-        let coordinate = CLLocationCoordinate2D(dataModel: .mock)
+        let coordinate = CLLocationCoordinate2D.mock
         let date = Date()
         let expectedResult = StopAndSearchDataModel.mocks.map(StopAndSearch.init)
         apiClient.response = .success(StopAndSearchDataModel.mocks)
@@ -44,14 +44,19 @@ final class UKStopAndSearchRepositoryTests: XCTestCase {
         )
     }
 
-    func testStopAndSearchesAtCoordinateWhenCoordinateOutsideOfAvailableDataRegionReturnsNil() async throws {
+    func testStopAndSearchesAtCoordsWhenOutsideDataRegionThrowsLocationOutsideOfDataSetRegionError() async throws {
         let coordinate = CLLocationCoordinate2D(dataModel: .outsideAvailableDataRegion)
         let date = Date()
         apiClient.response = .success(StopAndSearchDataModel.mocks)
 
-        let result = try await repository.stopAndSearches(at: coordinate, date: date)
+        var resultError: StopAndSearchError?
+        do {
+            _ = try await repository.stopAndSearches(at: coordinate, date: date)
+        } catch let error as StopAndSearchError {
+            resultError = error
+        }
 
-        XCTAssertNil(result)
+        XCTAssertEqual(resultError, .locationOutsideOfDataSetRegion)
         XCTAssertNil(apiClient.lastPath)
     }
 

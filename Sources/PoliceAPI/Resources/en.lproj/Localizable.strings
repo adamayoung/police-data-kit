@@ -1,0 +1,8 @@
+/* 
+  Localizable.strings
+*/
+
+"NOT_FOUND" = "Not found";
+"LOCATION_OUTSIDE_OF_DATA_SET_REGION" = "Location outside of data set region";
+"NETWORK_ERROR" = "Network error";
+"UNKNOWN_ERROR" = "Unknown error";

@@ -1,3 +1,4 @@
+import CoreLocation
 import Foundation
 
 enum NeighbourhoodsEndpoint {
@@ -7,7 +8,7 @@ enum NeighbourhoodsEndpoint {
     case boundary(neighbourhoodID: NeighbourhoodDataModel.ID, policeForceID: PoliceForceDataModel.ID)
     case policeOfficers(neighbourhoodID: NeighbourhoodDataModel.ID, policeForceID: PoliceForceDataModel.ID)
     case priorities(neighbourhoodID: NeighbourhoodDataModel.ID, policeForceID: PoliceForceDataModel.ID)
-    case locateNeighbourhood(coordinate: CoordinateDataModel)
+    case locateNeighbourhood(coordinate: CLLocationCoordinate2D)
 
 }
 

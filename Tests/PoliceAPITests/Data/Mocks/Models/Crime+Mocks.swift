@@ -10,14 +10,12 @@ extension CrimeDataModel {
             context: "",
             categoryID: "violent-crime",
             location: LocationDataModel(
-                street: LocationDataModel.Street(
+                street: StreetDataModel(
                     id: 883345,
                     name: "On or near Marquis Street"
                 ),
-                coordinate: CoordinateDataModel(
-                    latitude: 52.629909,
-                    longitude: -1.132073
-                )
+                latitude: "52.629909",
+                longitude: "-1.132073"
             ),
             locationType: .force,
             locationSubtype: "",
@@ -38,14 +36,12 @@ extension CrimeDataModel {
                 context: "",
                 categoryID: "criminal-damage-arson",
                 location: LocationDataModel(
-                    street: LocationDataModel.Street(
+                    street: StreetDataModel(
                         id: 886204,
                         name: "On or near Ostlers Drive"
                     ),
-                    coordinate: CoordinateDataModel(
-                        latitude: 52.679277,
-                        longitude: -0.740683
-                    )
+                    latitude: "52.679277",
+                    longitude: "-0.740683"
                 ),
                 locationType: .force,
                 locationSubtype: "",

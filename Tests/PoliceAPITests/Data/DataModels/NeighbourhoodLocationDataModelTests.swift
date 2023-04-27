@@ -17,45 +17,22 @@ final class NeighbourhoodLocationDataModelTests: XCTestCase {
         XCTAssertNil(result.type)
     }
 
-    func testInitWhenLatitudeIsNilSetsCoordinateAsNil() {
-        let result = NeighbourhoodLocationDataModel(type: "test", address: "123 Kafe Street", postcode: "AB12 3CD",
-                                                    longitude: 1)
-
-        XCTAssertNil(result.coordinate)
-    }
-
-    func testInitWhenLongitudeIsNilSetsCoordinateAsNil() {
-        let result = NeighbourhoodLocationDataModel(type: "test", address: "123 Kafe Street", postcode: "AB12 3CD",
-                                                    latitude: 1)
-
-        XCTAssertNil(result.coordinate)
-    }
-
-    func testCoordinateReturnsCoordinate() throws {
-        let expectedResult = NeighbourhoodLocationDataModel.mock.coordinate
+    func testLatitudeReturnsLatitude() throws {
+        let expectedResult = NeighbourhoodLocationDataModel.mock.latitude
 
         let result = try JSONDecoder.policeDataAPI
-            .decode(NeighbourhoodLocationDataModel.self, fromResource: "neighbourhood-location").coordinate
+            .decode(NeighbourhoodLocationDataModel.self, fromResource: "neighbourhood-location").latitude
 
         XCTAssertEqual(result, expectedResult)
     }
 
-    func testCoordinateWhenInvalidLatitudeAndLongitudeReturnsZeros() throws {
-        let expectedResult = CoordinateDataModel(latitude: 0, longitude: 0)
+    func testLongitudeReturnsLongitude() throws {
+        let expectedResult = NeighbourhoodLocationDataModel.mock.longitude
 
         let result = try JSONDecoder.policeDataAPI
-            .decode(NeighbourhoodLocationDataModel.self, fromResource: "neighbourhood-location-invalid-coordinates")
-            .coordinate
+            .decode(NeighbourhoodLocationDataModel.self, fromResource: "neighbourhood-location").longitude
 
         XCTAssertEqual(result, expectedResult)
-    }
-
-    func testCoordinateWhenLatitudeAndLongitudeIsNilReturnsNil() throws {
-        let result = try JSONDecoder.policeDataAPI
-            .decode(NeighbourhoodLocationDataModel.self, fromResource: "neighbourhood-location-null-coordinates")
-            .coordinate
-
-        XCTAssertNil(result)
     }
 
 }

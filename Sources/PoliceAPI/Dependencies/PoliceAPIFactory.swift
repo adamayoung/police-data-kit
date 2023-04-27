@@ -9,15 +9,15 @@ final class PoliceAPIFactory {
     }
 
     static func crimeRepository() -> some CrimeRepository {
-        UKCrimeRepository(apiClient: apiClient, cache: cache)
+        UKCrimeRepository(apiClient: apiClient, cache: cache, availableDataRegion: .availableDataRegion)
     }
 
     static func neighbourhoodRepository() -> some NeighbourhoodRepository {
-        UKNeighbourhoodRepository(apiClient: apiClient, cache: cache)
+        UKNeighbourhoodRepository(apiClient: apiClient, cache: cache, availableDataRegion: .availableDataRegion)
     }
 
     static func outcomeRepository() -> some OutcomeRepository {
-        UKOutcomeRepository(apiClient: apiClient, cache: cache)
+        UKOutcomeRepository(apiClient: apiClient, cache: cache, availableDataRegion: .availableDataRegion)
     }
 
     static func policeForceRepository() -> some PoliceForceRepository {
@@ -25,7 +25,7 @@ final class PoliceAPIFactory {
     }
 
     static func stopAndSearchRepository() -> some StopAndSearchRepository {
-        UKStopAndSearchRepository(apiClient: apiClient, cache: cache)
+        UKStopAndSearchRepository(apiClient: apiClient, cache: cache, availableDataRegion: .availableDataRegion)
     }
 
 }

@@ -15,15 +15,13 @@ extension StopAndSearchDataModel {
             objectOfSearch: "Offensive weapons",
             removalOfMoreThanOuterClothing: nil,
             operationName: nil,
-            location: LocationDataModel(
-                street: LocationDataModel.Street(
+            location: .init(
+                street: .init(
                     id: 883415,
                     name: "On or near Shopping Area"
                 ),
-                coordinate: CoordinateDataModel(
-                    latitude: 52.63625,
-                    longitude: -1.133691
-                )
+                latitude: "52.63625",
+                longitude: "-1.133691"
             ),
             outcome: "A no further action disposal",
             outcomeLinkedToObjectOfSearch: nil,
@@ -45,12 +43,13 @@ extension StopAndSearchDataModel {
                 objectOfSearch: "Offensive language",
                 removalOfMoreThanOuterClothing: true,
                 operationName: nil,
-                location: LocationDataModel(
-                    street: LocationDataModel.Street(
+                location: .init(
+                    street: .init(
                         id: 883415,
                         name: "On or near Shopping Area"
                     ),
-                    coordinate: .mock
+                    latitude: "52.63625",
+                    longitude: "-1.133691"
                 ),
                 outcome: "A no further action disposal",
                 outcomeLinkedToObjectOfSearch: nil,

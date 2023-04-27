@@ -1,9 +1,10 @@
+import CoreLocation
 import Foundation
 
 enum OutcomesEndpoint {
 
     case streetLevelOutcomesForStreet(streetID: Int, date: Date)
-    case streetLevelOutcomesAtSpecificPoint(coordinate: CoordinateDataModel, date: Date)
+    case streetLevelOutcomesAtSpecificPoint(coordinate: CLLocationCoordinate2D, date: Date)
     case streetLevelOutcomesInArea(boundary: BoundaryDataModel, date: Date)
     case caseHistory(crimeID: String)
 

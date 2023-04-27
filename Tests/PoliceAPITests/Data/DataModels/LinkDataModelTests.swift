@@ -15,12 +15,6 @@ final class LinkDataModelTests: XCTestCase {
         XCTAssertEqual(result, .mockNoDescription)
     }
 
-    func testDecodeWhenURLIsEmptyStringReturnsLink() throws {
-        let result = try JSONDecoder.policeDataAPI.decode(LinkDataModel.self, fromResource: "link-empty-url")
-
-        XCTAssertEqual(result, .mockNilURL)
-    }
-
     func testURLWhenURLIsEmptyReturnsNil() {
         let link = LinkDataModel(title: "Title", description: "Description", url: nil)
 

@@ -24,7 +24,7 @@ final class StopAndSearchTypeDataModelTests: XCTestCase {
     func testDescriptionWhenPersonSearchReturnDescription() {
         let expectedResult = "Person search"
 
-        let result = StopAndSearchTypeDataModel.personSearch.description
+        let result = StopAndSearchTypeDataModel.personSearch.rawValue
 
         XCTAssertEqual(result, expectedResult)
     }
@@ -32,7 +32,7 @@ final class StopAndSearchTypeDataModelTests: XCTestCase {
     func testDescriptionWhenVehicleSearchReturnDescription() {
         let expectedResult = "Vehicle search"
 
-        let result = StopAndSearchTypeDataModel.vehicleSearch.description
+        let result = StopAndSearchTypeDataModel.vehicleSearch.rawValue
 
         XCTAssertEqual(result, expectedResult)
     }
@@ -40,7 +40,7 @@ final class StopAndSearchTypeDataModelTests: XCTestCase {
     func testDescriptionWhenPersonAndVehicleSearchReturnDescription() {
         let expectedResult = "Person and Vehicle search"
 
-        let result = StopAndSearchTypeDataModel.personAndVehicleSearch.description
+        let result = StopAndSearchTypeDataModel.personAndVehicleSearch.rawValue
 
         XCTAssertEqual(result, expectedResult)
     }

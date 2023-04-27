@@ -6,7 +6,7 @@ extension CrimeLocationTypeDataModel {
     static var mocks: [CrimeLocationTypeDataModel] {
         [
             .force,
-            .btp
+            .britishTransportPolice
         ]
     }
 

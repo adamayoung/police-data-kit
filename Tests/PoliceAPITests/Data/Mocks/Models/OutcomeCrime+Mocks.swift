@@ -10,11 +10,12 @@ extension OutcomeCrimeDataModel {
             context: "",
             categoryID: "burglary",
             location: LocationDataModel(
-                street: LocationDataModel.Street(
+                street: StreetDataModel(
                     id: 884330,
                     name: "On or near Christow Street"
                 ),
-                coordinate: CoordinateDataModel(latitude: 52.640374, longitude: -1.122319)
+                latitude: "52.640374",
+                longitude: "-1.122319"
             ),
             locationType: .force,
             locationSubtype: "ROAD",

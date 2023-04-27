@@ -1,5 +1,5 @@
-import CoreLocation
 import Foundation
+import MapKit
 import os
 
 final class UKStopAndSearchRepository: StopAndSearchRepository {
@@ -8,25 +8,19 @@ final class UKStopAndSearchRepository: StopAndSearchRepository {
 
     private let apiClient: any APIClient
     private let cache: any Cache
-    private let availableDataRegion: CoordinateRegionDataModel
+    private let availableDataRegion: MKCoordinateRegion
 
-    convenience init(apiClient: some APIClient, cache: some Cache) {
-        self.init(apiClient: apiClient, cache: cache, availableDataRegion: .availableDataRegion)
-    }
-
-    init(apiClient: some APIClient, cache: some Cache, availableDataRegion: CoordinateRegionDataModel) {
+    init(apiClient: some APIClient, cache: some Cache, availableDataRegion: MKCoordinateRegion) {
         self.apiClient = apiClient
         self.cache = cache
         self.availableDataRegion = availableDataRegion
     }
 
-    func stopAndSearches(at coordinate: CLLocationCoordinate2D, date: Date) async throws -> [StopAndSearch]? {
+    func stopAndSearches(at coordinate: CLLocationCoordinate2D, date: Date) async throws -> [StopAndSearch] {
         Self.logger.trace("fetching Stop and Searches at \(coordinate, privacy: .public)")
 
-        let coordinate = CoordinateDataModel(coordinate: coordinate)
-
         guard availableDataRegion.contains(coordinate: coordinate) else {
-            return nil
+            throw StopAndSearchError.locationOutsideOfDataSetRegion
         }
 
         let dataModels: [StopAndSearchDataModel]
@@ -39,7 +33,7 @@ final class UKStopAndSearchRepository: StopAndSearchRepository {
         } catch let error {
             // swiftlint:disable:next line_length
             Self.logger.error("failed fetching Stop and Searches at \(coordinate, privacy: .public): \(error.localizedDescription, privacy: .public)")
-            throw error
+            throw Self.mapToStopAndSearchError(error)
         }
 
         let stopAndSearches = dataModels.map(StopAndSearch.init)
@@ -60,7 +54,7 @@ final class UKStopAndSearchRepository: StopAndSearchRepository {
         } catch let error {
             // swiftlint:disable:next line_length
             Self.logger.error("failed fetching Stop and Searches in area: \(error.localizedDescription, privacy: .public)")
-            throw error
+            throw Self.mapToStopAndSearchError(error)
         }
 
         let stopAndSearches = dataModels.map(StopAndSearch.init)
@@ -84,7 +78,7 @@ final class UKStopAndSearchRepository: StopAndSearchRepository {
         } catch let error {
             // swiftlint:disable:next line_length
             Self.logger.error("failed fetching Stop and Searches at location \(streetID, privacy: .public): \(error.localizedDescription, privacy: .public)")
-            throw error
+            throw Self.mapToStopAndSearchError(error)
         }
 
         let stopAndSearches = dataModels.map(StopAndSearch.init)
@@ -114,7 +108,7 @@ final class UKStopAndSearchRepository: StopAndSearchRepository {
         } catch let error {
             // swiftlint:disable:next line_length
             Self.logger.error("failed fetching Stop and Searches with no location for Police Force \(policeForceID, privacy: .public): \(error.localizedDescription, privacy: .public)")
-            throw error
+            throw Self.mapToStopAndSearchError(error)
         }
 
         let stopAndSearches = dataModels.map(StopAndSearch.init)
@@ -140,7 +134,7 @@ final class UKStopAndSearchRepository: StopAndSearchRepository {
         } catch let error {
             // swiftlint:disable:next line_length
             Self.logger.error("failed fetching Stop and Searches for Police Force \(policeForceID, privacy: .public): \(error.localizedDescription, privacy: .public)")
-            throw error
+            throw Self.mapToStopAndSearchError(error)
         }
 
         let stopAndSearches = dataModels.map(StopAndSearch.init)
@@ -148,6 +142,27 @@ final class UKStopAndSearchRepository: StopAndSearchRepository {
         await cache.set(stopAndSearches, for: cacheKey)
 
         return stopAndSearches
+    }
+
+}
+
+extension UKStopAndSearchRepository {
+
+    private static func mapToStopAndSearchError(_ error: Error) -> StopAndSearchError {
+        guard let error = error as? APIClientError else {
+            return .unknown
+        }
+
+        switch error {
+        case .network:
+            return .network(error)
+
+        case .notFound:
+            return .notFound
+
+        case .decode, .unknown:
+            return .unknown
+        }
     }
 
 }

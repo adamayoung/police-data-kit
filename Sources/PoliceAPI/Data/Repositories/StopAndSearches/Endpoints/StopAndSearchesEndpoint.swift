@@ -1,8 +1,9 @@
+import CoreLocation
 import Foundation
 
 enum StopAndSearchesEndpoint {
 
-    case stopAndSearchesByAreaAtSpecificPoint(coordinate: CoordinateDataModel, date: Date)
+    case stopAndSearchesByAreaAtSpecificPoint(coordinate: CLLocationCoordinate2D, date: Date)
     case stopAndSearchesByAreaInArea(boundary: BoundaryDataModel, date: Date)
     case stopAndSearchesAtLocation(streetID: Int, date: Date)
     case stopAndSearchesWithNoLocation(policeForceID: PoliceForceDataModel.ID, date: Date)

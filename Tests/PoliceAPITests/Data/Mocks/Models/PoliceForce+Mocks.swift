@@ -27,29 +27,30 @@ extension PoliceForceDataModel {
             telephone: "0116 222 2222",
             url: URL(string: "http://www.leics.police.uk/")!,
             engagementMethods: [
-                EngagementMethodDataModel(
+                .init(
                     title: "Facebook",
                     description: "Become friends with Leicestershire Constabulary",
-                    url: URL(string: "http://www.facebook.com/pages/Leicester/Leicestershire-Police/76807881169")!
+                    url: "http://www.facebook.com/pages/Leicester/Leicestershire-Police/76807881169"
                 ),
-                EngagementMethodDataModel(
+                .init(
                     title: "Twitter",
                     description: "Keep up to date with Leicestershire Constabulary on Twitter",
-                    url: URL(string: "http://www.twitter.com/leicspolice")!
+                    url: "http://www.twitter.com/leicspolice"
                 ),
-                EngagementMethodDataModel(
+                .init(
                     title: "YouTube",
                     description: "See Leicestershire Constabulary's latest videos on YouTube",
-                    url: URL(string: "http://www.youtube.com/leicspolice")!
+                    url: "http://www.youtube.com/leicspolice"
                 ),
-                EngagementMethodDataModel(
+                .init(
                     title: "RSS",
                     description: "Keep informed with Leicestershire Constabulary's RSS feed",
-                    url: URL(string: "http://www.leics.police.uk/rss/")!
+                    url: "http://www.leics.police.uk/rss/"
                 ),
-                EngagementMethodDataModel(
+                .init(
                     title: "telephone",
-                    description: "0116 222 2222"
+                    description: "0116 222 2222",
+                    url: ""
                 )
             ]
         )

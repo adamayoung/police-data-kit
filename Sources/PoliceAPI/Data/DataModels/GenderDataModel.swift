@@ -1,15 +1,8 @@
 import Foundation
 
-/// The gender of a person.
-enum GenderDataModel: String, Decodable, CaseIterable, CustomStringConvertible {
+enum GenderDataModel: String, Decodable {
 
-    /// Male.
     case male = "Male"
-    /// Female.
     case female = "Female"
-
-    var description: String {
-        rawValue
-    }
 
 }

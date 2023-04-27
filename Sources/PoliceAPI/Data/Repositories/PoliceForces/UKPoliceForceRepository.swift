@@ -26,7 +26,7 @@ final class UKPoliceForceRepository: PoliceForceRepository {
             dataModels = try await apiClient.get(endpoint: PoliceForcesEndpoint.list)
         } catch let error {
             Self.logger.error("failed fetching Police Forces: \(error.localizedDescription, privacy: .public)")
-            throw error
+            throw Self.mapToPoliceForceError(error)
         }
 
         let policeForces = dataModels.map(PoliceForceReference.init)
@@ -36,7 +36,7 @@ final class UKPoliceForceRepository: PoliceForceRepository {
         return policeForces
     }
 
-    func policeForce(withID id: PoliceForce.ID) async throws -> PoliceForce? {
+    func policeForce(withID id: PoliceForce.ID) async throws -> PoliceForce {
         Self.logger.trace("fetching Police Force \(id, privacy: .public)")
 
         let cacheKey = PoliceForceCachingKey(id: id)
@@ -48,16 +48,9 @@ final class UKPoliceForceRepository: PoliceForceRepository {
         do {
             dataModel = try await apiClient.get(endpoint: PoliceForcesEndpoint.details(id: id))
         } catch let error {
-            switch error as? PoliceDataError {
-            case .notFound:
-                return nil
-            default:
-                break
-            }
-
             // swiftlint:disable:next line_length
             Self.logger.error("failed fetching Police Force \(id, privacy: .public): \(error.localizedDescription, privacy: .public)")
-            throw error
+            throw Self.mapToPoliceForceError(error)
         }
 
         let policeForce = PoliceForce(dataModel: dataModel)
@@ -67,7 +60,7 @@ final class UKPoliceForceRepository: PoliceForceRepository {
         return policeForce
     }
 
-    func seniorOfficers(inPoliceForce policeForceID: PoliceForce.ID) async throws -> [PoliceOfficer]? {
+    func seniorOfficers(inPoliceForce policeForceID: PoliceForce.ID) async throws -> [PoliceOfficer] {
         Self.logger.trace("fetching Senior Officers in Police Force \(policeForceID, privacy: .public)")
 
         let cacheKey = PoliceForceSeniorOfficersCachingKey(policeForceID: policeForceID)
@@ -81,16 +74,9 @@ final class UKPoliceForceRepository: PoliceForceRepository {
                 endpoint: PoliceForcesEndpoint.seniorOfficers(policeForceID: policeForceID)
             )
         } catch let error {
-            switch error as? PoliceDataError {
-            case .notFound:
-                return nil
-            default:
-                break
-            }
-
             // swiftlint:disable:next line_length
             Self.logger.error("failed fetching Senior Officers in Police Force \(policeForceID, privacy: .public): \(error.localizedDescription, privacy: .public)")
-            throw error
+            throw Self.mapToPoliceForceError(error)
         }
 
         let policeOfficers = dataModels.map(PoliceOfficer.init)
@@ -98,6 +84,27 @@ final class UKPoliceForceRepository: PoliceForceRepository {
         await cache.set(policeOfficers, for: cacheKey)
 
         return policeOfficers
+    }
+
+}
+
+extension UKPoliceForceRepository {
+
+    private static func mapToPoliceForceError(_ error: Error) -> PoliceForceError {
+        guard let error = error as? APIClientError else {
+            return .unknown
+        }
+
+        switch error {
+        case .network:
+            return .network(error)
+
+        case .notFound:
+            return .notFound
+
+        case .decode, .unknown:
+            return .unknown
+        }
     }
 
 }

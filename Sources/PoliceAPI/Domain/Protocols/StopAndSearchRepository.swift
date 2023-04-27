@@ -3,7 +3,7 @@ import Foundation
 
 protocol StopAndSearchRepository {
 
-    func stopAndSearches(at coordinate: CLLocationCoordinate2D, date: Date) async throws -> [StopAndSearch]?
+    func stopAndSearches(at coordinate: CLLocationCoordinate2D, date: Date) async throws -> [StopAndSearch]
 
     func stopAndSearches(in coordinates: [CLLocationCoordinate2D], date: Date) async throws -> [StopAndSearch]
 

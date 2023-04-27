@@ -1,11 +1,12 @@
+import CoreLocation
 import Foundation
 
 enum CrimesEndpoint {
 
-    case streetLevelCrimesAtSpecificPoint(coordinate: CoordinateDataModel, date: Date)
+    case streetLevelCrimesAtSpecificPoint(coordinate: CLLocationCoordinate2D, date: Date)
     case streetLevelCrimesInArea(boundary: BoundaryDataModel, date: Date)
     case crimesAtLocationForStreet(streetID: Int, date: Date)
-    case crimesAtLocationAtSpecificPoint(coordinate: CoordinateDataModel, date: Date)
+    case crimesAtLocationAtSpecificPoint(coordinate: CLLocationCoordinate2D, date: Date)
     case crimesWithNoLocation(categoryID: CrimeCategoryDataModel.ID, policeForceID: PoliceForceDataModel.ID, date: Date)
     case categories(date: Date)
 

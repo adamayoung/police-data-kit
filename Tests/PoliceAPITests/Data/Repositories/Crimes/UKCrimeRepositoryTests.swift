@@ -1,4 +1,4 @@
-import CoreLocation
+import MapKit
 @testable import PoliceAPI
 import XCTest
 
@@ -7,7 +7,7 @@ final class UKCrimeRepositoryTests: XCTestCase {
     var repository: UKCrimeRepository!
     var apiClient: MockAPIClient!
     var cache: MockCache!
-    var availableDataRegion: CoordinateRegionDataModel!
+    var availableDataRegion: MKCoordinateRegion!
 
     override func setUp() {
         super.setUp()
@@ -26,7 +26,7 @@ final class UKCrimeRepositoryTests: XCTestCase {
     }
 
     func testStreetLevelCrimesAtCoordinateReturnsCrimes() async throws {
-        let coordinate = CLLocationCoordinate2D(dataModel: .mock)
+        let coordinate = CLLocationCoordinate2D.mock
         let date = Date()
         let expectedResult = CrimeDataModel.mocks.map(Crime.init)
         apiClient.response = .success(CrimeDataModel.mocks)
@@ -36,18 +36,23 @@ final class UKCrimeRepositoryTests: XCTestCase {
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(
             apiClient.lastPath,
-            CrimesEndpoint.streetLevelCrimesAtSpecificPoint(coordinate: .mock, date: date).path
+            CrimesEndpoint.streetLevelCrimesAtSpecificPoint(coordinate: coordinate, date: date).path
         )
     }
 
-    func testStreetLevelCrimesAtCoordinateWhenCoordinateOutsideOfAvailableDataRegionReturnsNil() async throws {
+    func testStreetLevelCrimesAtCoordsWhenOutsideDataRegionThrowsLocationOutsideOfDataSetRegionError() async throws {
         let coordinate = CLLocationCoordinate2D(dataModel: .outsideAvailableDataRegion)
         let date = Date()
         apiClient.response = .success(CrimeDataModel.mocks)
 
-        let result = try await repository.streetLevelCrimes(at: coordinate, date: date)
+        var resultError: CrimeError?
+        do {
+            _ = try await repository.streetLevelCrimes(at: coordinate, date: date)
+        } catch let error as CrimeError {
+            resultError = error
+        }
 
-        XCTAssertNil(result)
+        XCTAssertEqual(resultError, .locationOutsideOfDataSetRegion)
         XCTAssertNil(apiClient.lastPath)
     }
 
@@ -108,7 +113,7 @@ final class UKCrimeRepositoryTests: XCTestCase {
     }
 
     func testCrimesAtCoordinateReturnsCrimes() async throws {
-        let coordinate = CLLocationCoordinate2D(dataModel: .mock)
+        let coordinate = CLLocationCoordinate2D.mock
         let date = Date()
         let expectedResult = CrimeDataModel.mocks.map(Crime.init)
         apiClient.response = .success(CrimeDataModel.mocks)
@@ -118,18 +123,23 @@ final class UKCrimeRepositoryTests: XCTestCase {
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(
             apiClient.lastPath,
-            CrimesEndpoint.crimesAtLocationAtSpecificPoint(coordinate: .mock, date: date).path
+            CrimesEndpoint.crimesAtLocationAtSpecificPoint(coordinate: coordinate, date: date).path
         )
     }
 
-    func testCrimesAtCoordinateWhenCoordinateOutsideOfAvailableDataRegionReturnsNil() async throws {
+    func testCrimesAtCoordsWhenNotInAvailableDataRegionThrowsLocationOutsideOfDataSetRegionError() async throws {
         let coordinate = CLLocationCoordinate2D(dataModel: .outsideAvailableDataRegion)
         let date = Date()
         apiClient.response = .success(CrimeDataModel.mocks)
 
-        let result = try await repository.crimes(at: coordinate, date: date)
+        var resultError: CrimeError?
+        do {
+            _ = try await repository.crimes(at: coordinate, date: date)
+        } catch let error as CrimeError {
+            resultError = error
+        }
 
-        XCTAssertNil(result)
+        XCTAssertEqual(resultError, .locationOutsideOfDataSetRegion)
         XCTAssertNil(apiClient.lastPath)
     }
 

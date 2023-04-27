@@ -1,5 +1,5 @@
-import CoreLocation
 import Foundation
+import MapKit
 import os
 
 final class UKCrimeRepository: CrimeRepository {
@@ -8,25 +8,19 @@ final class UKCrimeRepository: CrimeRepository {
 
     private let apiClient: any APIClient
     private let cache: any Cache
-    private let availableDataRegion: CoordinateRegionDataModel
+    private let availableDataRegion: MKCoordinateRegion
 
-    convenience init(apiClient: some APIClient, cache: some Cache) {
-        self.init(apiClient: apiClient, cache: cache, availableDataRegion: .availableDataRegion)
-    }
-
-    init(apiClient: some APIClient, cache: some Cache, availableDataRegion: CoordinateRegionDataModel) {
+    init(apiClient: some APIClient, cache: some Cache, availableDataRegion: MKCoordinateRegion) {
         self.apiClient = apiClient
         self.cache = cache
         self.availableDataRegion = availableDataRegion
     }
 
-    func streetLevelCrimes(at coordinate: CLLocationCoordinate2D, date: Date) async throws -> [Crime]? {
+    func streetLevelCrimes(at coordinate: CLLocationCoordinate2D, date: Date) async throws -> [Crime] {
         Self.logger.trace("fetching street level Crimes at coordinate \(coordinate, privacy: .public)")
 
-        let coordinate = CoordinateDataModel(coordinate: coordinate)
-
         guard availableDataRegion.contains(coordinate: coordinate) else {
-            return nil
+            throw CrimeError.locationOutsideOfDataSetRegion
         }
 
         let dataModels: [CrimeDataModel]
@@ -37,7 +31,7 @@ final class UKCrimeRepository: CrimeRepository {
         } catch let error {
             // swiftlint:disable:next line_length
             Self.logger.error("failed fetching street level Crimes at coordinate \(coordinate, privacy: .public): \(error.localizedDescription, privacy: .public)")
-            throw error
+            throw Self.mapToCrimeError(error)
         }
 
         let crimes = dataModels.map(Crime.init)
@@ -45,7 +39,7 @@ final class UKCrimeRepository: CrimeRepository {
         return crimes
     }
 
-    func streetLevelCrimes(in coordinates: [CLLocationCoordinate2D], date: Date) async throws -> [Crime]? {
+    func streetLevelCrimes(in coordinates: [CLLocationCoordinate2D], date: Date) async throws -> [Crime] {
         Self.logger.trace("fetching street level Crimes in area")
 
         let boundary = BoundaryDataModel(coordinates: coordinates)
@@ -58,7 +52,7 @@ final class UKCrimeRepository: CrimeRepository {
         } catch let error {
             // swiftlint:disable:next line_length
             Self.logger.error("failed fetching street level Crimes in area: \(error.localizedDescription, privacy: .public)")
-            throw error
+            throw Self.mapToCrimeError(error)
         }
 
         let crimes = dataModels.map(Crime.init)
@@ -82,7 +76,7 @@ final class UKCrimeRepository: CrimeRepository {
         } catch let error {
             // swiftlint:disable:next line_length
             Self.logger.error("failed fetching Crimes for street \(streetID, privacy: .public): \(error.localizedDescription, privacy: .public)")
-            throw error
+            throw Self.mapToCrimeError(error)
         }
 
         let crimes = dataModels.map(Crime.init)
@@ -92,13 +86,11 @@ final class UKCrimeRepository: CrimeRepository {
         return crimes
     }
 
-    func crimes(at coordinate: CLLocationCoordinate2D, date: Date) async throws -> [Crime]? {
+    func crimes(at coordinate: CLLocationCoordinate2D, date: Date) async throws -> [Crime] {
         Self.logger.trace("fetching Crimes at coordinate \(coordinate, privacy: .public)")
 
-        let coordinate = CoordinateDataModel(coordinate: coordinate)
-
         guard availableDataRegion.contains(coordinate: coordinate) else {
-            return nil
+            throw CrimeError.locationOutsideOfDataSetRegion
         }
 
         let dataModels: [CrimeDataModel]
@@ -109,7 +101,7 @@ final class UKCrimeRepository: CrimeRepository {
         } catch let error {
             // swiftlint:disable:next line_length
             Self.logger.error("failed fetching Crimes at coordinate \(coordinate, privacy: .public): \(error.localizedDescription, privacy: .public)")
-            throw error
+            throw Self.mapToCrimeError(error)
         }
 
         let crimes = dataModels.map(Crime.init)
@@ -138,7 +130,7 @@ final class UKCrimeRepository: CrimeRepository {
         } catch let error {
             // swiftlint:disable:next line_length
             Self.logger.error("failed fetching Crimes with no location for category \(categoryID, privacy: .public) in Police Force \(policeForceID, privacy: .public): \(error.localizedDescription, privacy: .public)")
-            throw error
+            throw Self.mapToCrimeError(error)
         }
 
         let crimes = dataModels.map(Crime.init)
@@ -162,7 +154,7 @@ final class UKCrimeRepository: CrimeRepository {
         } catch let error {
             // swiftlint:disable:next line_length
             Self.logger.error("failed fetching Crime categories for date \(date, privacy: .public): \(error.localizedDescription, privacy: .public)")
-            throw error
+            throw Self.mapToCrimeError(error)
         }
 
         let categories = dataModels.map(CrimeCategory.init)
@@ -170,6 +162,27 @@ final class UKCrimeRepository: CrimeRepository {
         await cache.set(categories, for: cacheKey)
 
         return categories
+    }
+
+}
+
+extension UKCrimeRepository {
+
+    private static func mapToCrimeError(_ error: Error) -> CrimeError {
+        guard let error = error as? APIClientError else {
+            return .unknown
+        }
+
+        switch error {
+        case .network:
+            return .network(error)
+
+        case .notFound:
+            return .notFound
+
+        case .decode, .unknown:
+            return .unknown
+        }
     }
 
 }

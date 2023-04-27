@@ -4,9 +4,12 @@ import Foundation
 extension CLLocationCoordinate2D {
 
     init(dataModel: CoordinateDataModel) {
+        let latitude = Double(dataModel.latitude) ?? 0
+        let longitude = Double(dataModel.longitude) ?? 0
+
         self.init(
-            latitude: dataModel.latitude,
-            longitude: dataModel.longitude
+            latitude: latitude,
+            longitude: longitude
         )
     }
 

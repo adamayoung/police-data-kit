@@ -1,3 +1,4 @@
+import CoreLocation
 @testable import PoliceAPI
 import XCTest
 
@@ -85,7 +86,7 @@ final class URLQueryItemTests: XCTestCase {
     func testAppendingQueryItemWithCoordinateWhenURLContainsNoQueryItemsReturnsURLWithCoordinate() {
         let baseURL = URL(string: "https://some.domain.com")
         let queryItemName = "coord"
-        let coordinate = CoordinateDataModel.mock
+        let coordinate = CLLocationCoordinate2D(latitude: 52.6389, longitude: -1.13619)
         let expectedResult = URL(
             string: "https://some.domain.com?\(queryItemName)=\(coordinate.latitude),\(coordinate.longitude)"
         )
@@ -98,7 +99,7 @@ final class URLQueryItemTests: XCTestCase {
     func testAppendingQueryItemWithCoordinateWhenURLContainsQueryItemsReturnsURLWithCoordinate() {
         let baseURL = URL(string: "https://some.domain.com?id=456")
         let queryItemName = "coord"
-        let coordinate = CoordinateDataModel.mock
+        let coordinate = CLLocationCoordinate2D(latitude: 52.6389, longitude: -1.13619)
         let expectedResult = URL(
             string: "https://some.domain.com?id=456&\(queryItemName)=\(coordinate.latitude),\(coordinate.longitude)"
         )

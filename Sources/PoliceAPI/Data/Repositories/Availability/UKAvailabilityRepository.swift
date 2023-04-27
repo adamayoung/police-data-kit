@@ -25,15 +25,32 @@ final class UKAvailabilityRepository: AvailabilityRepository {
         do {
             dataModels = try await apiClient.get(endpoint: AvailabilityEndpoint.dataSets)
         } catch let error {
-            Self.logger.error("failed fetching available data sets")
-            throw error
+            Self.logger.error("failed fetching available data sets: \(error.localizedDescription)")
+            throw Self.mapToAvailabilityError(error)
         }
-
         let dataSets = dataModels.map(DataSet.init)
 
         await cache.set(dataSets, for: cacheKey)
 
         return dataSets
+    }
+
+}
+
+extension UKAvailabilityRepository {
+
+    private static func mapToAvailabilityError(_ error: Error) -> AvailabilityError {
+        guard let error = error as? APIClientError else {
+            return .unknown
+        }
+
+        switch error {
+        case .network:
+            return .network(error)
+
+        case .notFound, .decode, .unknown:
+            return .unknown
+        }
     }
 
 }

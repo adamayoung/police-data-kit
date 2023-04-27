@@ -1,5 +1,5 @@
-import CoreLocation
 import Foundation
+import MapKit
 import os
 
 final class UKOutcomeRepository: OutcomeRepository {
@@ -8,13 +8,9 @@ final class UKOutcomeRepository: OutcomeRepository {
 
     private let apiClient: any APIClient
     private let cache: any Cache
-    private let availableDataRegion: CoordinateRegionDataModel
+    private let availableDataRegion: MKCoordinateRegion
 
-    convenience init(apiClient: some APIClient, cache: some Cache) {
-        self.init(apiClient: apiClient, cache: cache, availableDataRegion: .availableDataRegion)
-    }
-
-    init(apiClient: some APIClient, cache: some Cache, availableDataRegion: CoordinateRegionDataModel) {
+    init(apiClient: some APIClient, cache: some Cache, availableDataRegion: MKCoordinateRegion) {
         self.apiClient = apiClient
         self.cache = cache
         self.availableDataRegion = availableDataRegion
@@ -36,7 +32,7 @@ final class UKOutcomeRepository: OutcomeRepository {
         } catch let error {
             // swiftlint:disable:next line_length
             Self.logger.error("failed fetching street level Outcomes for Street \(streetID, privacy: .public): \(error.localizedDescription, privacy: .public)")
-            throw error
+            throw Self.mapToOutcomeError(error)
         }
 
         let outcomes = dataModels.map(Outcome.init)
@@ -46,13 +42,11 @@ final class UKOutcomeRepository: OutcomeRepository {
         return outcomes
     }
 
-    func streetLevelOutcomes(at coordinate: CLLocationCoordinate2D, date: Date) async throws -> [Outcome]? {
+    func streetLevelOutcomes(at coordinate: CLLocationCoordinate2D, date: Date) async throws -> [Outcome] {
         Self.logger.trace("fetching street level Outcomes at coordinate \(coordinate, privacy: .public)")
 
-        let coordinate = CoordinateDataModel(coordinate: coordinate)
-
         guard availableDataRegion.contains(coordinate: coordinate) else {
-            return nil
+            throw OutcomeError.locationOutsideOfDataSetRegion
         }
 
         let dataModels: [OutcomeDataModel]
@@ -63,7 +57,7 @@ final class UKOutcomeRepository: OutcomeRepository {
         } catch let error {
             // swiftlint:disable:next line_length
             Self.logger.error("failed fetching street level Outcomes at coordinate \(coordinate, privacy: .public): \(error.localizedDescription, privacy: .public)")
-            throw error
+            throw Self.mapToOutcomeError(error)
         }
 
         let outcomes = dataModels.map(Outcome.init)
@@ -84,7 +78,7 @@ final class UKOutcomeRepository: OutcomeRepository {
         } catch let error {
             // swiftlint:disable:next line_length
             Self.logger.error("failed fetching street level Outcomes in area: \(error.localizedDescription, privacy: .public)")
-            throw error
+            throw Self.mapToOutcomeError(error)
         }
 
         let outcomes = dataModels.map(Outcome.init)
@@ -92,7 +86,7 @@ final class UKOutcomeRepository: OutcomeRepository {
         return outcomes
     }
 
-    func caseHistory(forCrime crimeID: String) async throws -> CaseHistory? {
+    func caseHistory(forCrime crimeID: String) async throws -> CaseHistory {
         Self.logger.trace("fetching Case History for crime \(crimeID, privacy: .public)")
 
         let cacheKey = OutcomesForCrimeCachingKey(crimeID: crimeID)
@@ -104,16 +98,9 @@ final class UKOutcomeRepository: OutcomeRepository {
         do {
             dataModel = try await apiClient.get(endpoint: OutcomesEndpoint.caseHistory(crimeID: crimeID))
         } catch let error {
-            switch error as? PoliceDataError {
-            case .notFound:
-                return nil
-            default:
-                break
-            }
-
             // swiftlint:disable:next line_length
             Self.logger.error("failed fetching Case History for crime \(crimeID, privacy: .public): \(error.localizedDescription, privacy: .public)")
-            throw error
+            throw Self.mapToOutcomeError(error)
         }
 
         let caseHistory = CaseHistory(dataModel: dataModel)
@@ -121,6 +108,27 @@ final class UKOutcomeRepository: OutcomeRepository {
         await cache.set(caseHistory, for: cacheKey)
 
         return caseHistory
+    }
+
+}
+
+extension UKOutcomeRepository {
+
+    private static func mapToOutcomeError(_ error: Error) -> OutcomeError {
+        guard let error = error as? APIClientError else {
+            return .unknown
+        }
+
+        switch error {
+        case .network:
+            return .network(error)
+
+        case .notFound:
+            return .notFound
+
+        case .decode, .unknown:
+            return .unknown
+        }
     }
 
 }

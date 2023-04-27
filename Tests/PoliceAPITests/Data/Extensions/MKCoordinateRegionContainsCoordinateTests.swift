@@ -1,15 +1,16 @@
+import MapKit
 @testable import PoliceAPI
 import XCTest
 
-final class CoordinateRegionDataModelContainsTests: XCTestCase {
+final class MKCoordinateRegionDataModelContainsTests: XCTestCase {
 
-    var region: CoordinateRegionDataModel!
+    var region: MKCoordinateRegion!
 
     override func setUp() {
         super.setUp()
-        region = CoordinateRegionDataModel(
-            center: CoordinateDataModel(latitude: 0, longitude: 0),
-            span: CoordinateSpanDataModel(latitudeDelta: 1, longitudeDelta: 1)
+        region = MKCoordinateRegion(
+            center: CLLocationCoordinate2D(latitude: 0, longitude: 0),
+            span: MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1)
         )
     }
 
@@ -19,7 +20,7 @@ final class CoordinateRegionDataModelContainsTests: XCTestCase {
     }
 
     func testContainsWhenCoordinateIsNorthOfRegionReturnsFalse() {
-        let coordinate = CoordinateDataModel(latitude: -2, longitude: 0)
+        let coordinate = CLLocationCoordinate2D(latitude: -2, longitude: 0)
 
         let result = region.contains(coordinate: coordinate)
 
@@ -27,7 +28,7 @@ final class CoordinateRegionDataModelContainsTests: XCTestCase {
     }
 
     func testContainsWhenCoordinateIsNorthEastOfRegionReturnsFalse() {
-        let coordinate = CoordinateDataModel(latitude: -2, longitude: 2)
+        let coordinate = CLLocationCoordinate2D(latitude: -2, longitude: 2)
 
         let result = region.contains(coordinate: coordinate)
 
@@ -35,7 +36,7 @@ final class CoordinateRegionDataModelContainsTests: XCTestCase {
     }
 
     func testContainsWhenCoordinateIsEastOfRegionReturnsFalse() {
-        let coordinate = CoordinateDataModel(latitude: 0, longitude: 2)
+        let coordinate = CLLocationCoordinate2D(latitude: 0, longitude: 2)
 
         let result = region.contains(coordinate: coordinate)
 
@@ -43,7 +44,7 @@ final class CoordinateRegionDataModelContainsTests: XCTestCase {
     }
 
     func testContainsWhenCoordinateIsSouthEastOfRegionReturnsFalse() {
-        let coordinate = CoordinateDataModel(latitude: 2, longitude: 2)
+        let coordinate = CLLocationCoordinate2D(latitude: 2, longitude: 2)
 
         let result = region.contains(coordinate: coordinate)
 
@@ -51,7 +52,7 @@ final class CoordinateRegionDataModelContainsTests: XCTestCase {
     }
 
     func testContainsWhenCoordinateIsSouthOfRegionReturnsFalse() {
-        let coordinate = CoordinateDataModel(latitude: 2, longitude: 0)
+        let coordinate = CLLocationCoordinate2D(latitude: 2, longitude: 0)
 
         let result = region.contains(coordinate: coordinate)
 
@@ -59,7 +60,7 @@ final class CoordinateRegionDataModelContainsTests: XCTestCase {
     }
 
     func testContainsWhenCoordinateIsSouthWestOfRegionReturnsFalse() {
-        let coordinate = CoordinateDataModel(latitude: 2, longitude: -2)
+        let coordinate = CLLocationCoordinate2D(latitude: 2, longitude: -2)
 
         let result = region.contains(coordinate: coordinate)
 
@@ -67,7 +68,7 @@ final class CoordinateRegionDataModelContainsTests: XCTestCase {
     }
 
     func testContainsWhenCoordinateIsWestOfRegionReturnsFalse() {
-        let coordinate = CoordinateDataModel(latitude: 0, longitude: -2)
+        let coordinate = CLLocationCoordinate2D(latitude: 0, longitude: -2)
 
         let result = region.contains(coordinate: coordinate)
 
@@ -75,7 +76,7 @@ final class CoordinateRegionDataModelContainsTests: XCTestCase {
     }
 
     func testContainsWhenCoordinateIsNorthWestOfRegionReturnsFalse() {
-        let coordinate = CoordinateDataModel(latitude: -2, longitude: -2)
+        let coordinate = CLLocationCoordinate2D(latitude: -2, longitude: -2)
 
         let result = region.contains(coordinate: coordinate)
 
@@ -83,7 +84,7 @@ final class CoordinateRegionDataModelContainsTests: XCTestCase {
     }
 
     func testContainsWhenCoordinateIsInCenterOfRegionReturnsTrue() {
-        let coordinate = CoordinateDataModel(latitude: 0, longitude: 0)
+        let coordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
 
         let result = region.contains(coordinate: coordinate)
 
@@ -91,7 +92,7 @@ final class CoordinateRegionDataModelContainsTests: XCTestCase {
     }
 
     func testContainsWhenCoordinateIsNorthInsideOfRegionReturnsTrue() {
-        let coordinate = CoordinateDataModel(latitude: -0.5, longitude: 0)
+        let coordinate = CLLocationCoordinate2D(latitude: -0.5, longitude: 0)
 
         let result = region.contains(coordinate: coordinate)
 
@@ -99,7 +100,7 @@ final class CoordinateRegionDataModelContainsTests: XCTestCase {
     }
 
     func testContainsWhenCoordinateIsNorthEastInsideOfRegionReturnsTrue() {
-        let coordinate = CoordinateDataModel(latitude: -0.5, longitude: 0.5)
+        let coordinate = CLLocationCoordinate2D(latitude: -0.5, longitude: 0.5)
 
         let result = region.contains(coordinate: coordinate)
 
@@ -107,7 +108,7 @@ final class CoordinateRegionDataModelContainsTests: XCTestCase {
     }
 
     func testContainsWhenCoordinateIsEastInsideOfRegionReturnsTrue() {
-        let coordinate = CoordinateDataModel(latitude: 0, longitude: 0.5)
+        let coordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0.5)
 
         let result = region.contains(coordinate: coordinate)
 
@@ -115,7 +116,7 @@ final class CoordinateRegionDataModelContainsTests: XCTestCase {
     }
 
     func testContainsWhenCoordinateIsSouthEastInsideOfRegionReturnsTrue() {
-        let coordinate = CoordinateDataModel(latitude: 0.5, longitude: 0.5)
+        let coordinate = CLLocationCoordinate2D(latitude: 0.5, longitude: 0.5)
 
         let result = region.contains(coordinate: coordinate)
 
@@ -123,7 +124,7 @@ final class CoordinateRegionDataModelContainsTests: XCTestCase {
     }
 
     func testContainsWhenCoordinateIsSouthInsideOfRegionReturnsTrue() {
-        let coordinate = CoordinateDataModel(latitude: 0.5, longitude: 0)
+        let coordinate = CLLocationCoordinate2D(latitude: 0.5, longitude: 0)
 
         let result = region.contains(coordinate: coordinate)
 
@@ -131,7 +132,7 @@ final class CoordinateRegionDataModelContainsTests: XCTestCase {
     }
 
     func testContainsWhenCoordinateIsSouthWestInsideOfRegionReturnsTrue() {
-        let coordinate = CoordinateDataModel(latitude: 0.5, longitude: -0.5)
+        let coordinate = CLLocationCoordinate2D(latitude: 0.5, longitude: -0.5)
 
         let result = region.contains(coordinate: coordinate)
 
@@ -139,7 +140,7 @@ final class CoordinateRegionDataModelContainsTests: XCTestCase {
     }
 
     func testContainsWhenCoordinateIsWestInsideOfRegionReturnsTrue() {
-        let coordinate = CoordinateDataModel(latitude: 0, longitude: -0.5)
+        let coordinate = CLLocationCoordinate2D(latitude: 0, longitude: -0.5)
 
         let result = region.contains(coordinate: coordinate)
 
@@ -147,7 +148,7 @@ final class CoordinateRegionDataModelContainsTests: XCTestCase {
     }
 
     func testContainsWhenCoordinateIsNorthWestInsideOfRegionReturnsTrue() {
-        let coordinate = CoordinateDataModel(latitude: -0.5, longitude: -0.5)
+        let coordinate = CLLocationCoordinate2D(latitude: -0.5, longitude: -0.5)
 
         let result = region.contains(coordinate: coordinate)
 

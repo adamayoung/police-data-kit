@@ -1,3 +1,4 @@
+import CoreLocation
 import Foundation
 
 extension URL {
@@ -19,7 +20,7 @@ extension URL {
         return appendingQueryItem(name: name, value: dateString)
     }
 
-    func appendingQueryItem(name: String, coordinate: CoordinateDataModel) -> Self {
+    func appendingQueryItem(name: String, coordinate: CLLocationCoordinate2D) -> Self {
         appendingQueryItem(name: name, value: "\(coordinate.latitude),\(coordinate.longitude)")
     }
 

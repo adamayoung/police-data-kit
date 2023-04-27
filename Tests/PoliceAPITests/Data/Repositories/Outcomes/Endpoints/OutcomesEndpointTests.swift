@@ -1,3 +1,4 @@
+import CoreLocation
 @testable import PoliceAPI
 import XCTest
 
@@ -14,7 +15,7 @@ final class OutcomesEndpointTests: XCTestCase {
     }
 
     func testStreetLevelOutcomesAtSpecificPointEndpointReturnsURL() throws {
-        let coordinate = CoordinateDataModel.mock
+        let coordinate = CLLocationCoordinate2D(latitude: 2.345, longitude: -1.234)
         let date = Date(timeIntervalSince1970: 0)
         let expectedPath = try XCTUnwrap(URL(
             string: "/outcomes-at-location?lat=\(coordinate.latitude)&lng=\(coordinate.longitude)&date=1970-01"

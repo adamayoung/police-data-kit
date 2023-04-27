@@ -1,20 +1,20 @@
-import CoreLocation
+import MapKit
 @testable import PoliceAPI
 import XCTest
 
 final class UKNeighbourhoodRepositoryTests: XCTestCase {
 
-    var service: UKNeighbourhoodRepository!
+    var repository: UKNeighbourhoodRepository!
     var apiClient: MockAPIClient!
     var cache: MockCache!
-    var availableDataRegion: CoordinateRegionDataModel!
+    var availableDataRegion: MKCoordinateRegion!
 
     override func setUp() {
         super.setUp()
         apiClient = MockAPIClient()
         cache = MockCache()
         availableDataRegion = .test
-        service = UKNeighbourhoodRepository(
+        repository = UKNeighbourhoodRepository(
             apiClient: apiClient,
             cache: cache,
             availableDataRegion: availableDataRegion
@@ -22,7 +22,7 @@ final class UKNeighbourhoodRepositoryTests: XCTestCase {
     }
 
     override func tearDown() {
-        service = nil
+        repository = nil
         availableDataRegion = nil
         cache = nil
         apiClient = nil
@@ -34,7 +34,7 @@ final class UKNeighbourhoodRepositoryTests: XCTestCase {
         let expectedResult = NeighbourhoodReferenceDataModel.mocks.map(NeighbourhoodReference.init)
         apiClient.response = .success(NeighbourhoodReferenceDataModel.mocks)
 
-        let result = try await service.neighbourhoods(inPoliceForce: policeForceID)
+        let result = try await repository.neighbourhoods(inPoliceForce: policeForceID)
 
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.list(policeForceID: policeForceID).path)
@@ -46,7 +46,7 @@ final class UKNeighbourhoodRepositoryTests: XCTestCase {
         let expectedResult = NeighbourhoodReferenceDataModel.mocks.map(NeighbourhoodReference.init)
         await cache.set(expectedResult, for: cacheKey)
 
-        let result = try await service.neighbourhoods(inPoliceForce: policeForceID)
+        let result = try await repository.neighbourhoods(inPoliceForce: policeForceID)
 
         XCTAssertEqual(result, expectedResult)
         XCTAssertNil(apiClient.lastPath)
@@ -57,7 +57,7 @@ final class UKNeighbourhoodRepositoryTests: XCTestCase {
         let cacheKey = NeighbourhoodsInPoliceForceCachingKey(policeForceID: policeForceID)
         let expectedResult = NeighbourhoodReferenceDataModel.mocks.map(NeighbourhoodReference.init)
         apiClient.response = .success(NeighbourhoodReferenceDataModel.mocks)
-        _ = try await service.neighbourhoods(inPoliceForce: policeForceID)
+        _ = try await repository.neighbourhoods(inPoliceForce: policeForceID)
 
         let cachedResult = await cache.object(for: cacheKey, type: [NeighbourhoodReference].self)
 
@@ -70,20 +70,25 @@ final class UKNeighbourhoodRepositoryTests: XCTestCase {
         let policeForceID = "leicestershire"
         apiClient.response = .success(NeighbourhoodDataModel.mock)
 
-        let result = try await service.neighbourhood(withID: id, inPoliceForce: policeForceID)
+        let result = try await repository.neighbourhood(withID: id, inPoliceForce: policeForceID)
 
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.details(id: id, policeForceID: policeForceID).path)
     }
 
-    func testNeighbourhoodWhenNotCachedAndNotFoundReturnsNil() async throws {
+    func testNeighbourhoodWhenNotCachedAndNotFoundThrowsNotFoundError() async throws {
         let id = "NC04"
         let policeForceID = "leicestershire"
-        apiClient.response = .failure(PoliceDataError.notFound)
+        apiClient.response = .failure(APIClientError.notFound)
 
-        let result = try await service.neighbourhood(withID: id, inPoliceForce: policeForceID)
+        var resultError: NeighbourhoodError?
+        do {
+            _ = try await repository.neighbourhood(withID: id, inPoliceForce: policeForceID)
+        } catch let error as NeighbourhoodError {
+            resultError = error
+        }
 
-        XCTAssertNil(result)
+        XCTAssertEqual(resultError, .notFound)
     }
 
     func testNeighbourhoodWhenCachedReturnsCachedNeighbourhood() async throws {
@@ -93,7 +98,7 @@ final class UKNeighbourhoodRepositoryTests: XCTestCase {
         let cacheKey = NeighbourhoodCachingKey(id: id, policeForceID: policeForceID)
         await cache.set(expectedResult, for: cacheKey)
 
-        let result = try await service.neighbourhood(withID: id, inPoliceForce: policeForceID)
+        let result = try await repository.neighbourhood(withID: id, inPoliceForce: policeForceID)
 
         XCTAssertEqual(result, expectedResult)
         XCTAssertNil(apiClient.lastPath)
@@ -105,7 +110,7 @@ final class UKNeighbourhoodRepositoryTests: XCTestCase {
         let policeForceID = "leicestershire"
         let cacheKey = NeighbourhoodCachingKey(id: id, policeForceID: policeForceID)
         apiClient.response = .success(NeighbourhoodDataModel.mock)
-        _ = try await service.neighbourhood(withID: id, inPoliceForce: policeForceID)
+        _ = try await repository.neighbourhood(withID: id, inPoliceForce: policeForceID)
 
         let cachedResult = await cache.object(for: cacheKey, type: Neighbourhood.self)
 
@@ -118,7 +123,7 @@ final class UKNeighbourhoodRepositoryTests: XCTestCase {
         let expectedResult = [CLLocationCoordinate2D](dataModel: .mock)
         apiClient.response = .success(BoundaryDataModel.mock)
 
-        let result = try await service.boundary(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
+        let result = try await repository.boundary(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(
@@ -127,14 +132,19 @@ final class UKNeighbourhoodRepositoryTests: XCTestCase {
         )
     }
 
-    func testBoundaryWhenNotCachedAndNotFoundReturnsNil() async throws {
+    func testBoundaryWhenNotCachedAndNotFoundThrowsNotFoundError() async throws {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
-        apiClient.response = .failure(PoliceDataError.notFound)
+        apiClient.response = .failure(APIClientError.notFound)
 
-        let result = try await service.boundary(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
+        var resultError: NeighbourhoodError?
+        do {
+            _ = try await repository.boundary(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
+        } catch let error as NeighbourhoodError {
+            resultError = error
+        }
 
-        XCTAssertNil(result)
+        XCTAssertEqual(resultError, .notFound)
     }
 
     func testBoundaryWhenCachedReturnsCachedBoundary() async throws {
@@ -144,7 +154,7 @@ final class UKNeighbourhoodRepositoryTests: XCTestCase {
         let cacheKey = NeighbourhoodBoundaryCachingKey(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID)
         await cache.set(expectedResult, for: cacheKey)
 
-        let result = try await service.boundary(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
+        let result = try await repository.boundary(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
         XCTAssertEqual(result, expectedResult)
         XCTAssertNil(apiClient.lastPath)
@@ -156,7 +166,7 @@ final class UKNeighbourhoodRepositoryTests: XCTestCase {
         let expectedResult = [CLLocationCoordinate2D](dataModel: .mock)
         let cacheKey = NeighbourhoodBoundaryCachingKey(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID)
         apiClient.response = .success(BoundaryDataModel.mock)
-        _ = try await service.boundary(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
+        _ = try await repository.boundary(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
         let cachedResult = await cache.object(for: cacheKey, type: [CLLocationCoordinate2D].self)
 
@@ -169,7 +179,8 @@ final class UKNeighbourhoodRepositoryTests: XCTestCase {
         let expectedResult = PoliceOfficerDataModel.mocks.map(PoliceOfficer.init)
         apiClient.response = .success(PoliceOfficerDataModel.mocks)
 
-        let result = try await service.policeOfficers(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
+        let result = try await repository.policeOfficers(forNeighbourhood: neighbourhoodID,
+                                                         inPoliceForce: policeForceID)
 
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(
@@ -187,7 +198,8 @@ final class UKNeighbourhoodRepositoryTests: XCTestCase {
         )
         await cache.set(expectedResult, for: cacheKey)
 
-        let result = try await service.policeOfficers(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
+        let result = try await repository.policeOfficers(forNeighbourhood: neighbourhoodID,
+                                                         inPoliceForce: policeForceID)
 
         XCTAssertEqual(result, expectedResult)
         XCTAssertNil(apiClient.lastPath)
@@ -201,7 +213,7 @@ final class UKNeighbourhoodRepositoryTests: XCTestCase {
             neighbourhoodID: neighbourhoodID, policeForceID: policeForceID
         )
         apiClient.response = .success(PoliceOfficerDataModel.mocks)
-        _ = try await service.policeOfficers(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
+        _ = try await repository.policeOfficers(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
         let cachedResult = await cache.object(for: cacheKey, type: [PoliceOfficer].self)
 
@@ -214,7 +226,7 @@ final class UKNeighbourhoodRepositoryTests: XCTestCase {
         let expectedResult = NeighbourhoodPriorityDataModel.mocks.map(NeighbourhoodPriority.init)
         apiClient.response = .success(NeighbourhoodPriorityDataModel.mocks)
 
-        let result = try await service.priorities(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
+        let result = try await repository.priorities(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(
@@ -232,7 +244,7 @@ final class UKNeighbourhoodRepositoryTests: XCTestCase {
         )
         await cache.set(expectedResult, for: cacheKey)
 
-        let result = try await service.priorities(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
+        let result = try await repository.priorities(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
         XCTAssertEqual(result, expectedResult)
         XCTAssertNil(apiClient.lastPath)
@@ -246,7 +258,7 @@ final class UKNeighbourhoodRepositoryTests: XCTestCase {
             neighbourhoodID: neighbourhoodID, policeForceID: policeForceID
         )
         apiClient.response = .success(NeighbourhoodPriorityDataModel.mocks)
-        _ = try await service.priorities(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
+        _ = try await repository.priorities(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
         let cachedResult = await cache.object(for: cacheKey, type: [NeighbourhoodPriority].self)
 
@@ -254,33 +266,43 @@ final class UKNeighbourhoodRepositoryTests: XCTestCase {
     }
 
     func testNeighbourhoodPolicingTeamAtCoordinateReturnsNeighbourhoodPolicingTeam() async throws {
-        let coordinate = CLLocationCoordinate2D(dataModel: .mock)
+        let coordinate = CLLocationCoordinate2D.mock
         let expectedResult = NeighbourhoodPolicingTeam(dataModel: .mock)
         apiClient.response = .success(NeighbourhoodPolicingTeamDataModel.mock)
 
-        let result = try await service.neighbourhoodPolicingTeam(at: coordinate)
+        let result = try await repository.neighbourhoodPolicingTeam(at: coordinate)
 
         XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.locateNeighbourhood(coordinate: .mock).path)
+        XCTAssertEqual(apiClient.lastPath, NeighbourhoodsEndpoint.locateNeighbourhood(coordinate: coordinate).path)
     }
 
-    func testNeighbourhoodPolicingTeamAtCoordinateWhenNotFoundReturnsNil() async throws {
-        let coordinate = CLLocationCoordinate2D(dataModel: .mock)
-        apiClient.response = .failure(PoliceDataError.notFound)
+    func testNeighbourhoodPolicingTeamAtCoordinateWhenNotFoundThrowsNotFoundError() async throws {
+        let coordinate = CLLocationCoordinate2D.mock
+        apiClient.response = .failure(APIClientError.notFound)
 
-        let result = try await service.neighbourhoodPolicingTeam(at: coordinate)
+        var resultError: NeighbourhoodError?
+        do {
+            _ = try await repository.neighbourhoodPolicingTeam(at: coordinate)
+        } catch let error as NeighbourhoodError {
+            resultError = error
+        }
 
-        XCTAssertNil(result)
+        XCTAssertEqual(resultError, .notFound)
     }
 
-    func testNeighbourhoodPolicingTeamAtCoordinateWhenCoordinateOutsideOfAvailableDataRegionReturnsNil() async throws {
+    func testNeighbourhoodPolicingTeamAtCoordsWhenNotInAvailableDataRegionThrowsError() async throws {
         let coordinate = CLLocationCoordinate2D(dataModel: .outsideAvailableDataRegion)
         let expectedResult = NeighbourhoodPolicingTeamDataModel.mock
         apiClient.response = .success(expectedResult)
 
-        let result = try await service.neighbourhoodPolicingTeam(at: coordinate)
+        var resultError: NeighbourhoodError?
+        do {
+            _ = try await repository.neighbourhoodPolicingTeam(at: coordinate)
+        } catch let error as NeighbourhoodError {
+            resultError = error
+        }
 
-        XCTAssertNil(result)
+        XCTAssertEqual(resultError, .locationOutsideOfDataSetRegion)
         XCTAssertNil(apiClient.lastPath)
     }
 

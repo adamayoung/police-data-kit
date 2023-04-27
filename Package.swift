@@ -6,6 +6,8 @@ import PackageDescription
 let package = Package(
     name: "PoliceAPI",
 
+    defaultLocalization: "en",
+
     platforms: [
         .macOS(.v12),
         .iOS(.v15),
@@ -29,6 +31,9 @@ let package = Package(
         .target(
             name: "PoliceAPI",
             dependencies: ["SwiftSoup"],
+            resources: [
+                .process("Resources")
+            ],
             plugins: [
                 .plugin(name: "SwiftLintPlugin")
             ]

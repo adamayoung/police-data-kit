@@ -1,5 +1,5 @@
-import CoreLocation
 import Foundation
+import MapKit
 import os
 
 final class UKNeighbourhoodRepository: NeighbourhoodRepository {
@@ -8,13 +8,9 @@ final class UKNeighbourhoodRepository: NeighbourhoodRepository {
 
     private let apiClient: any APIClient
     private let cache: any Cache
-    private let availableDataRegion: CoordinateRegionDataModel
+    private let availableDataRegion: MKCoordinateRegion
 
-    convenience init(apiClient: some APIClient, cache: some Cache) {
-        self.init(apiClient: apiClient, cache: cache, availableDataRegion: .availableDataRegion)
-    }
-
-    init(apiClient: some APIClient, cache: some Cache, availableDataRegion: CoordinateRegionDataModel) {
+    init(apiClient: some APIClient, cache: some Cache, availableDataRegion: MKCoordinateRegion) {
         self.apiClient = apiClient
         self.cache = cache
         self.availableDataRegion = availableDataRegion
@@ -36,7 +32,7 @@ final class UKNeighbourhoodRepository: NeighbourhoodRepository {
         } catch let error {
             // swiftlint:disable:next line_length
             Self.logger.error("failed fetching Neighbourhoods in Police Force \(policeForceID, privacy: .public): \(error.localizedDescription, privacy: .public)")
-            throw error
+            throw Self.mapToNeighbourhoodError(error)
         }
 
         let neighbourhoods = dataModels.map(NeighbourhoodReference.init)
@@ -46,7 +42,7 @@ final class UKNeighbourhoodRepository: NeighbourhoodRepository {
         return neighbourhoods
     }
 
-    func neighbourhood(withID id: String, inPoliceForce policeForceID: PoliceForce.ID) async throws -> Neighbourhood? {
+    func neighbourhood(withID id: String, inPoliceForce policeForceID: PoliceForce.ID) async throws -> Neighbourhood {
         // swiftlint:disable:next line_length
         Self.logger.trace("fetching Neighbourhood \(id, privacy: .public) in Police Force \(policeForceID, privacy: .public)")
 
@@ -61,17 +57,9 @@ final class UKNeighbourhoodRepository: NeighbourhoodRepository {
                 endpoint: NeighbourhoodsEndpoint.details(id: id, policeForceID: policeForceID)
             )
         } catch let error {
-            switch error as? PoliceDataError {
-            case .notFound:
-                return nil
-
-            default:
-                break
-            }
-
             // swiftlint:disable:next line_length
             Self.logger.error("failed fetching Neighbourhood \(id, privacy: .public) in Police Force \(policeForceID, privacy: .public): \(error.localizedDescription, privacy: .public)")
-            throw error
+            throw Self.mapToNeighbourhoodError(error)
         }
 
         let neighbourhood = Neighbourhood(dataModel: dataModel)
@@ -82,7 +70,7 @@ final class UKNeighbourhoodRepository: NeighbourhoodRepository {
     }
 
     func boundary(forNeighbourhood neighbourhoodID: Neighbourhood.ID,
-                  inPoliceForce policeForceID: PoliceForce.ID) async throws -> [CLLocationCoordinate2D]? {
+                  inPoliceForce policeForceID: PoliceForce.ID) async throws -> [CLLocationCoordinate2D] {
         // swiftlint:disable:next line_length
         Self.logger.trace("fetching Boundary for Neighbourhood \(neighbourhoodID, privacy: .public) in Police Force \(policeForceID, privacy: .public)")
 
@@ -99,17 +87,9 @@ final class UKNeighbourhoodRepository: NeighbourhoodRepository {
                 )
             )
         } catch let error {
-            switch error as? PoliceDataError {
-            case .notFound:
-                return nil
-
-            default:
-                break
-            }
-
             // swiftlint:disable:next line_length
             Self.logger.error("failed fetching Boundary for Neighbourhood \(neighbourhoodID, privacy: .public) in Police Force \(policeForceID, privacy: .public): \(error.localizedDescription, privacy: .public)")
-            throw error
+            throw Self.mapToNeighbourhoodError(error)
         }
 
         let boundary = [CLLocationCoordinate2D](dataModel: dataModel)
@@ -141,7 +121,7 @@ final class UKNeighbourhoodRepository: NeighbourhoodRepository {
         } catch let error {
             // swiftlint:disable:next line_length
             Self.logger.error("failed fetching Police Officers for Neighbourhood \(neighbourhoodID, privacy: .public) in Police Force \(policeForceID, privacy: .public): \(error.localizedDescription, privacy: .public)")
-            throw error
+            throw Self.mapToNeighbourhoodError(error)
         }
 
         let policeOfficers = dataModels.map(PoliceOfficer.init)
@@ -173,7 +153,7 @@ final class UKNeighbourhoodRepository: NeighbourhoodRepository {
         } catch let error {
             // swiftlint:disable:next line_length
             Self.logger.error("failed fetching Priorities for Neighbourhood \(neighbourhoodID, privacy: .public) in Police Force \(policeForceID, privacy: .public): \(error.localizedDescription, privacy: .public)")
-            throw error
+            throw Self.mapToNeighbourhoodError(error)
         }
 
         let priorities = dataModels.map(NeighbourhoodPriority.init)
@@ -183,13 +163,11 @@ final class UKNeighbourhoodRepository: NeighbourhoodRepository {
         return priorities
     }
 
-    func neighbourhoodPolicingTeam(at coordinate: CLLocationCoordinate2D) async throws -> NeighbourhoodPolicingTeam? {
+    func neighbourhoodPolicingTeam(at coordinate: CLLocationCoordinate2D) async throws -> NeighbourhoodPolicingTeam {
         Self.logger.trace("fetching Neighbourhood Policing Team at coordinate \(coordinate, privacy: .public)")
 
-        let coordinate = CoordinateDataModel(coordinate: coordinate)
-
         guard availableDataRegion.contains(coordinate: coordinate) else {
-            return nil
+            throw NeighbourhoodError.locationOutsideOfDataSetRegion
         }
 
         let dataModel: NeighbourhoodPolicingTeamDataModel
@@ -198,21 +176,35 @@ final class UKNeighbourhoodRepository: NeighbourhoodRepository {
                 endpoint: NeighbourhoodsEndpoint.locateNeighbourhood(coordinate: coordinate)
             )
         } catch let error {
-            switch error as? PoliceDataError {
-            case .notFound:
-                return nil
-            default:
-                break
-            }
-
             // swiftlint:disable:next line_length
             Self.logger.error("failed fetching Neighbourhood Policing Team at coordinate \(coordinate, privacy: .public): \(error.localizedDescription, privacy: .public)")
-            throw error
+            throw Self.mapToNeighbourhoodError(error)
         }
 
         let policingTeam = NeighbourhoodPolicingTeam(dataModel: dataModel)
 
         return policingTeam
+    }
+
+}
+
+extension UKNeighbourhoodRepository {
+
+    private static func mapToNeighbourhoodError(_ error: Error) -> NeighbourhoodError {
+        guard let error = error as? APIClientError else {
+            return .unknown
+        }
+
+        switch error {
+        case .network:
+            return .network(error)
+
+        case .notFound:
+            return .notFound
+
+        case .decode, .unknown:
+            return .unknown
+        }
     }
 
 }

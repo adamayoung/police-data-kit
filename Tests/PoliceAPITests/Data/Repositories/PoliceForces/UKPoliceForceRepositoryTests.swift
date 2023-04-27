@@ -64,13 +64,18 @@ final class UKPoliceForceRepositoryTests: XCTestCase {
         XCTAssertEqual(apiClient.lastPath, PoliceForcesEndpoint.details(id: id).path)
     }
 
-    func testPoliceForceWhenNotCachedAndNotFoundReturnsNil() async throws {
+    func testPoliceForceWhenNotCachedAndNotFoundThrowsNotFoundError() async throws {
         let id = "leicestershire"
-        apiClient.response = .failure(PoliceDataError.notFound)
+        apiClient.response = .failure(APIClientError.notFound)
 
-        let result = try await repository.policeForce(withID: id)
+        var resultError: PoliceForceError?
+        do {
+            _ = try await repository.policeForce(withID: id)
+        } catch let error as PoliceForceError {
+            resultError = error
+        }
 
-        XCTAssertNil(result)
+        XCTAssertEqual(resultError, .notFound)
     }
 
     func testPoliceForceWhenCachedReturnsCachedPoliceForce() async throws {
@@ -108,13 +113,18 @@ final class UKPoliceForceRepositoryTests: XCTestCase {
         XCTAssertEqual(apiClient.lastPath, PoliceForcesEndpoint.seniorOfficers(policeForceID: policeForceID).path)
     }
 
-    func testFetchSeniorOfficersWhenNotCachedAndPoliceForceNotFoundReturnsNil() async throws {
+    func testFetchSeniorOfficersWhenNotCachedAndPoliceForceNotFoundThrowsNotFoundError() async throws {
         let policeForceID = "leicestershire"
-        apiClient.response = .failure(PoliceDataError.notFound)
+        apiClient.response = .failure(APIClientError.notFound)
 
-        let result = try await repository.seniorOfficers(inPoliceForce: policeForceID)
+        var resultError: PoliceForceError?
+        do {
+            _ = try await repository.seniorOfficers(inPoliceForce: policeForceID)
+        } catch let error as PoliceForceError {
+            resultError = error
+        }
 
-        XCTAssertNil(result)
+        XCTAssertEqual(resultError, .notFound)
     }
 
     func testFetchSeniorOfficersWhenCachedReturnsCachedPoliceOfficers() async throws {

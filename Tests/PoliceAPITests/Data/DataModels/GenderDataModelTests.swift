@@ -18,7 +18,7 @@ final class GenderDataModelTests: XCTestCase {
     func testDescriptionWhenMaleReturnDescription() {
         let expectedResult = "Male"
 
-        let result = GenderDataModel.male.description
+        let result = GenderDataModel.male.rawValue
 
         XCTAssertEqual(result, expectedResult)
     }
@@ -26,7 +26,7 @@ final class GenderDataModelTests: XCTestCase {
     func testDescriptionWhenVehicleSearchReturnDescription() {
         let expectedResult = "Female"
 
-        let result = GenderDataModel.female.description
+        let result = GenderDataModel.female.rawValue
 
         XCTAssertEqual(result, expectedResult)
     }

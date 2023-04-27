@@ -20,7 +20,7 @@ final actor PoliceDataAPIClient: APIClient {
 
         do {
             (data, response) = try await urlSession.data(for: urlRequest)
-        } catch {
+        } catch let error {
             throw APIClientError.network(error)
         }
 

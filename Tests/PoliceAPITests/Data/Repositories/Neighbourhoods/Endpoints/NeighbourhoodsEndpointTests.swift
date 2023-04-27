@@ -1,3 +1,4 @@
+import CoreLocation
 @testable import PoliceAPI
 import XCTest
 
@@ -55,7 +56,7 @@ final class NeighbourhoodsEndpointTests: XCTestCase {
     }
 
     func testLocateNeighbourhoodReturnsURL() throws {
-        let coordinate = CoordinateDataModel.mock
+        let coordinate = CLLocationCoordinate2D(latitude: 2.345, longitude: -1.234)
         let expectedPath = try XCTUnwrap(URL(
             string: "/locate-neighbourhood?q=\(coordinate.latitude),\(coordinate.longitude)"
         ))
