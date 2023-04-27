@@ -13,8 +13,8 @@
       "targets" : [
         {
           "containerPath" : "container:",
-          "identifier" : "PoliceAPI",
-          "name" : "PoliceAPI"
+          "identifier" : "PoliceDataKit",
+          "name" : "PoliceDataKit"
         }
       ]
     },
