@@ -62,7 +62,7 @@ jobs:
 
   build-documentation:
     name: Build Documentation
-    runs-on: macos-12
+    runs-on: macos-13
     steps:
       - name: Checkout
         uses: actions/checkout@v3
