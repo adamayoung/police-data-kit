@@ -51,7 +51,7 @@ public struct ContactDetails: Equatable {
     public let rss: URL?
 
     ///
-    /// Creates a contact details  object.
+    /// Creates a contact details object.
     ///
     /// - Parameters:
     ///   - email: Email address.

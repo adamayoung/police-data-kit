@@ -1,5 +1,6 @@
 import CoreLocation
 import Foundation
+import os
 
 ///
 /// Provides an interface for obtaining crime data from the UK Police Data API.
@@ -12,6 +13,8 @@ public final class CrimeService {
     /// Use this object to interface to crime services in your application.
     ///
     public static let shared = CrimeService()
+
+    private static let logger = Logger(subsystem: Logger.domainSubsystem, category: "CrimeService")
 
     private let crimeRepository: any CrimeRepository
 
@@ -48,8 +51,20 @@ public final class CrimeService {
     ///
     /// - Returns: The street level crimes in a 1 mile radius of the specifed coordinate and date.
     ///
-    func streetLevelCrimes(at coordinate: CLLocationCoordinate2D, date: Date = Date()) async throws -> [Crime] {
-        let crimes = try await crimeRepository.streetLevelCrimes(at: coordinate, date: date)
+    public func streetLevelCrimes(at coordinate: CLLocationCoordinate2D, date: Date = Date()) async throws -> [Crime] {
+        Self.logger.info("Fetching street level crimes at \(coordinate, privacy: .public) on \(date, privacy: .public)...")
+
+        let crimes: [Crime]
+        do {
+            crimes = try await crimeRepository.streetLevelCrimes(at: coordinate, date: date)
+        } catch let error {
+            // swiftlint:disable:next line_length
+            Self.logger.error("Failed fetched street level crimes at \(coordinate, privacy: .public) on \(date, privacy: .public): \(error.localizedDescription, privacy: .public)")
+            throw error
+        }
+
+        // swiftlint:disable:next line_length
+        Self.logger.info("Fetched \(crimes.count, privacy: .public) street level crimes at \(coordinate, privacy: .public) on \(date, privacy: .public)")
 
         return crimes
     }
@@ -73,8 +88,21 @@ public final class CrimeService {
     ///
     /// - Returns: The street level crimes with the specified area and month..
     ///
-    func streetLevelCrimes(in coordinates: [CLLocationCoordinate2D], date: Date = Date()) async throws -> [Crime]? {
-        let crimes = try await crimeRepository.streetLevelCrimes(in: coordinates, date: date)
+    public func streetLevelCrimes(in coordinates: [CLLocationCoordinate2D],
+                                  date: Date = Date()) async throws -> [Crime] {
+        Self.logger.info("Fetching street level crimes in \(coordinates, privacy: .public) on \(date, privacy: .public)...")
+
+        let crimes: [Crime]
+        do {
+            crimes = try await crimeRepository.streetLevelCrimes(in: coordinates, date: date)
+        } catch let error {
+            // swiftlint:disable:next line_length
+            Self.logger.error("Failed fetched street level crimes in \(coordinates, privacy: .public) on \(date, privacy: .public): \(error.localizedDescription, privacy: .public)")
+            throw error
+        }
+
+        // swiftlint:disable:next line_length
+        Self.logger.info("Fetched \(crimes.count, privacy: .public) street level crimes in \(coordinates, privacy: .public) on \(date, privacy: .public)")
 
         return crimes
     }
@@ -94,8 +122,20 @@ public final class CrimeService {
     ///
     /// - Returns: The crimes at the specified street and date.
     /// 
-    func crimes(forStreet streetID: Int, date: Date = Date()) async throws -> [Crime] {
-        let crimes = try await crimeRepository.crimes(forStreet: streetID, date: date)
+    public func crimes(forStreet streetID: Int, date: Date = Date()) async throws -> [Crime] {
+        Self.logger.info("Fetching crimes for street \(streetID, privacy: .public) on \(date, privacy: .public)...")
+
+        let crimes: [Crime]
+        do {
+            crimes = try await crimeRepository.crimes(forStreet: streetID, date: date)
+        } catch let error {
+            // swiftlint:disable:next line_length
+            Self.logger.error("Failed fetching crimes for street \(streetID, privacy: .public) on \(date, privacy: .public): \(error.localizedDescription, privacy: .public)")
+            throw error
+        }
+
+        // swiftlint:disable:next line_length
+        Self.logger.info("Fetched \(crimes.count, privacy: .public) crimes for street \(streetID, privacy: .public) on \(date, privacy: .public)")
 
         return crimes
     }
@@ -116,8 +156,19 @@ public final class CrimeService {
     ///
     /// - Returns: The crimes for the street nearest to the specified coordinate and date.
     ///
-    func crimes(at coordinate: CLLocationCoordinate2D, date: Date = Date()) async throws -> [Crime]? {
-        let crimes = try await crimeRepository.crimes(at: coordinate, date: date)
+    public func crimes(at coordinate: CLLocationCoordinate2D, date: Date = Date()) async throws -> [Crime] {
+        Self.logger.info("Fetching crimes at \(coordinate, privacy: .public) on \(date, privacy: .public)...")
+
+        let crimes: [Crime]
+        do {
+            crimes = try await crimeRepository.crimes(at: coordinate, date: date)
+        } catch let error {
+            // swiftlint:disable:next line_length
+            Self.logger.error("Failed fetching crimes at \(coordinate, privacy: .public) on \(date, privacy: .public): \(error.localizedDescription, privacy: .public)")
+            throw error
+        }
+
+        Self.logger.info("Fetched \(crimes.count) crimes at \(coordinate, privacy: .public) on \(date, privacy: .public)...")
 
         return crimes
     }
@@ -136,7 +187,7 @@ public final class CrimeService {
     ///
     /// - Returns: The crimes not mapped to a location.
     ///
-    func crimesWithNoLocation(
+    public func crimesWithNoLocation(
         forCategory category: CrimeCategory = CrimeCategory.default,
         inPoliceForce policeForceID: PoliceForce.ID,
         date: Date = Date()
@@ -158,7 +209,7 @@ public final class CrimeService {
     /// 
     /// - Returns: The crime categories for the specified month.
     ///
-    func crimeCategories(forDate date: Date = Date()) async throws -> [CrimeCategory] {
+    public func crimeCategories(forDate date: Date = Date()) async throws -> [CrimeCategory] {
         let categories = try await crimeRepository.crimeCategories(forDate: date)
 
         return categories

@@ -1,22 +1,30 @@
 import Foundation
 
-/// A Police Force.
+///
+/// A model representing a police force.
+///
 public struct PoliceForce: Identifiable, Equatable {
 
-    /// Unique Police Force identifier.
+    /// Unique police force identifier.
     public let id: String
-    /// Police Force name.
+
+    /// Police force name.
     public let name: String
+
     /// Description.
     public let description: String?
+
     /// Telephone number.
     public let telephone: String
-    /// Police Force website URL.
+
+    /// Police force website URL.
     public let url: URL
+
     /// Engagement methods - Ways to keep informed.
     public let engagementMethods: [EngagementMethod]
 
-    /// Creates a new `PoliceForce`.
+    ///
+    /// Creates a police force object.
     ///
     /// - Parameters:
     ///   - id: Unique force identifier.
@@ -25,6 +33,7 @@ public struct PoliceForce: Identifiable, Equatable {
     ///   - telephone: Telephone number.
     ///   - url: Police Force website URL.
     ///   - engagementMethods: Engagement methods - Ways to keep informed.
+    /// 
     public init(
         id: String,
         name: String,

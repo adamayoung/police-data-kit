@@ -2,29 +2,33 @@
   Localizable.strings
 */
 
-//
-// Errors
-//
 "NOT_FOUND" = "Not found";
 "LOCATION_OUTSIDE_OF_DATA_SET_REGION" = "Location outside of data set region";
 "NETWORK_ERROR" = "Network error";
 "UNKNOWN_ERROR" = "Unknown error";
 
-//
-// Crime categories
-//
-"CRIME_CATEGORY_ALL_CRIME" = "All crime";
-"CRIME_CATEGORY_ANTI_SOCIAL_BEHAVIOUR" = "Anti-social behaviour";
-"CRIME_CATEGORY_BICYCLE_THEFT" = "Bicycle theft";
-"CRIME_CATEGORY_BURGLARY" = "Burglary";
-"CRIME_CATEGORY_CRIMINAL_DAMAGE_AND_ARSON" = "Criminal damage and arson";
-"CRIME_CATEGORY_DRUGS" = "Drugs";
-"CRIME_CATEGORY_OTHER_THEFT" = "Other theft";
-"CRIME_CATEGORY_POSSESSION_OF_WEAPONS" = "Possession of weapons";
-"CRIME_CATEGORY_PUBLIC_ORDER" = "Public order";
-"CRIME_CATEGORY_ROBBERY" = "Robbery";
-"CRIME_CATEGORY_SHOPLIFTING" = "Shoplifting";
-"CRIME_CATEGORY_THEFT_FROM_THE_PERSON" = "Theft from the person";
-"CRIME_CATEGORY_VEHICLE_CRIME" = "Vehicle crime";
-"CRIME_CATEGORY_VIOLENCE_OR_SEXUAL_OFFENCE" = "Violence or sexual offence";
-"CRIME_CATEGORY_OTHER_CRIME" = "Other crime";
+"ALL_CRIME" = "All crime";
+"ANTI_SOCIAL_BEHAVIOUR" = "Anti-social behaviour";
+"BICYCLE_THEFT" = "Bicycle theft";
+"BURGLARY" = "Burglary";
+"CRIMINAL_DAMAGE_AND_ARSON" = "Criminal damage and arson";
+"DRUGS" = "Drugs";
+"OTHER_THEFT" = "Other theft";
+"POSSESSION_OF_WEAPONS" = "Possession of weapons";
+"PUBLIC_ORDER" = "Public order";
+"ROBBERY" = "Robbery";
+"SHOPLIFTING" = "Shoplifting";
+"THEFT_FROM_THE_PERSON" = "Theft from the person";
+"VEHICLE_CRIME" = "Vehicle crime";
+"VIOLENCE_OR_SEXUAL_OFFENCE" = "Violence or sexual offence";
+"OTHER_CRIME" = "Other crime";
+
+"POLICE_FORCE" = "Police Force";
+"BRITISH_TRANSPORT_POLICE" = "British Transport Police";
+
+"MALE" = "Male";
+"FEMALE" = "Female";
+
+"PERSON_SEARCH" = "Person search";
+"VEHICLE_SEARCH" = "Vehicle search";
+"PERSON_AND_VEHICLE_SEARCH" = "Person and Vehicle search";

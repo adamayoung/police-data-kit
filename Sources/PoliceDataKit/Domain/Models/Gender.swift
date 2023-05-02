@@ -1,20 +1,24 @@
 import Foundation
 
+///
 /// The gender of a person.
-public enum Gender: CaseIterable, CustomStringConvertible {
+///
+public enum Gender: Equatable, CaseIterable {
 
     /// Male.
     case male
+
     /// Female.
     case female
 
-    public var description: String {
+    /// A localized name describing the gender.
+    public var localizedName: String {
         switch self {
         case .male:
-            return "Male"
+            return NSLocalizedString("MALE", bundle: .module, comment: "Male")
 
         case .female:
-            return "Female"
+            return NSLocalizedString("FEMALE", bundle: .module, comment: "Female")
         }
     }
 

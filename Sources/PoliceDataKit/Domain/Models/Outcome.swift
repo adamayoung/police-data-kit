@@ -1,24 +1,31 @@
 import Foundation
 
-/// An outcome of a crime.
+///
+/// A model representing an outcome of a crime.
+///
 public struct Outcome: Equatable {
 
     /// An identifier for the suspect/offender, where available.
     public let personID: String?
+
     /// Date (truncated to the year and month) of the crime.
     public let date: Date
+
     /// Category of the outcome.
     public let category: OutcomeCategory
+
     /// Crime information.
     public let crime: OutcomeCrime
 
-    /// Creates a new `Outcome`.
+    ///
+    /// Creates an outcome object.
     ///
     /// - Parameters:
     ///   - personID: An identifier for the suspect/offender, where available.
     ///   - date: Date of the crime.
     ///   - category: Category of the outcome.
     ///   - crime: Crime information.
+    ///  
     public init(
         personID: String? = nil,
         date: Date,

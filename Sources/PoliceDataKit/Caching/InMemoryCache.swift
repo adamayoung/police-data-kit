@@ -1,7 +1,7 @@
 import Foundation
 import os
 
-final actor InMemoryCache: NSObject, Cache {
+final actor InMemoryCache: Cache {
 
     private let cache: NSCache<NSString, CacheItem>
     private let defaultExpiresIn: TimeInterval
@@ -13,7 +13,6 @@ final actor InMemoryCache: NSObject, Cache {
         self.cache.countLimit = countLimit
         self.defaultExpiresIn = defaultExpiresIn
         self.logger = Logger(subsystem: Logger.cacheSubsystem, category: "\(name)InMemoryCache")
-        super.init()
     }
 
     func object<ObjectType: Any>(for key: some CustomStringConvertible, type: ObjectType.Type) async -> ObjectType? {

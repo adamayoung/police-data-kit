@@ -1,24 +1,31 @@
 import Foundation
 
-/// A Police Officer.
+///
+/// A model representing a police officer.
+///
 public struct PoliceOfficer: Equatable {
 
     /// Name of the person.
     public let name: String
+
     /// Police Force rank.
     public let rank: String
+
     /// Officer biography.
     public let bio: String?
+
     /// Contact details for the Officer.
     public let contactDetails: ContactDetails
 
-    /// Creates a new `ContactDetails`.
+    ///
+    /// Creates a police office object.
     ///
     /// - Parameters:
     ///   - name: Name of the person.
     ///   - rank: Police Force rank.
     ///   - bio: Officer biography.
     ///   - contactDetails: Contact details for the Officer.
+    ///
     public init(
         name: String,
         rank: String,

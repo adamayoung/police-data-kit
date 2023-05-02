@@ -1,7 +1,9 @@
 import Foundation
 
-/// The type of the location of a crime.
-public enum CrimeLocationType: CaseIterable, CustomStringConvertible {
+///
+/// The location type of a crime.
+///
+public enum CrimeLocationType: Equatable, CaseIterable {
 
     /// A normal police force location.
     case force
@@ -11,13 +13,14 @@ public enum CrimeLocationType: CaseIterable, CustomStringConvertible {
     /// British Transport Police locations fall within normal police force boundaries.
     case britishTransportPolice
 
-    public var description: String {
+    /// A localized name describing the crime location type.
+    public var localizedName: String {
         switch self {
         case .force:
-            return "Police Force"
+            return NSLocalizedString("POLICE_FORCE", bundle: .module, comment: "Police Force")
 
         case .britishTransportPolice:
-            return "British Transport Police"
+            return NSLocalizedString("BRITISH_TRANSPORT_POLICE", bundle: .module, comment: "British Transport Police")
         }
     }
 

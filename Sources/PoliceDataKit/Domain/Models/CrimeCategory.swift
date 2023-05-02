@@ -1,29 +1,60 @@
 import Foundation
 
 ///
-/// A model representing a crime category.
+/// A category of a crime.
 ///
 public enum CrimeCategory: Equatable {
 
+    /// Default crime category.
     public static let `default` = Self.allCrime
 
+    /// All crime.
     case allCrime
+
+    /// Anti-social behaviour.
     case antiSocialBehaviour
+
+    /// Bicycle theft.
     case bicycleTheft
+
+    /// Burglary.
     case burglary
+
+    /// Criminal damage or arson.
     case criminalDamageArson
+
+    /// Drugs.
     case drugs
+
+    /// Other theft.
     case otherTheft
+
+    /// Possession of weapons.
     case possessionOfWeapons
+
+    /// Public order.
     case publicOrder
+
+    /// Robbery.
     case robbery
+
+    /// Shoplifting.
     case shoplifting
+
+    /// Theft from the person.
     case theftFromThePerson
+
+    /// Vehcile crime.
     case vehicleCrime
+
+    /// Violent crime.
     case violentCrime
+
+    /// Other crime.
     case otherCrime
 
-    public var name: String {
+    /// A localized name describing the crime category.
+    public var localizedName: String {
         switch self {
         case .allCrime:
             return NSLocalizedString("CRIME_CATEGORY_ALL_CRIME", bundle: .module,

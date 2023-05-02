@@ -1,6 +1,6 @@
 import Foundation
 
-extension Location.Street {
+extension Street {
 
     init(dataModel: StreetDataModel) {
         self.init(

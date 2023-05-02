@@ -27,7 +27,7 @@ final actor PoliceDataAPIClient: APIClient {
         try validate(response: response)
         let result: Response
         do {
-            result = try await serialiser.decode(data)
+            result = try await serialiser.decode(Response.self, from: data)
         } catch let error {
             throw APIClientError.decode(error)
         }

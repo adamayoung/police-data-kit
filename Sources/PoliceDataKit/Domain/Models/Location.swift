@@ -1,52 +1,29 @@
 import CoreLocation
 import Foundation
 
-/// A crime's location.
+///
+/// A model representing a location.
+///
 public struct Location: Equatable {
 
     /// An approximate street for the location.
     ///
     /// This is only an approximation of where the crime happened.
     public let street: Street
+
     /// Location coordinate.
     public var coordinate: CLLocationCoordinate2D?
 
-    /// Creates a new `Location`.
+    ///
+    /// Creates a location object.
     ///
     /// - Parameters:
     ///   - street: An approximate street for the location.
     ///   - coordinate: Location coordinate.
+    ///  
     public init(street: Street, coordinate: CLLocationCoordinate2D) {
         self.street = street
         self.coordinate = coordinate
-    }
-
-}
-
-extension Location {
-
-    /// A street for a location.
-    public struct Street: Identifiable, Equatable, CustomStringConvertible {
-
-        /// Unique identifier for the street.
-        public let id: Int
-        /// Name of the location.
-        public let name: String
-
-        /// Creates a new `Street`.
-        ///
-        /// - Parameters:
-        ///   - id: Unique identifier for the street.
-        ///   - name: Name of the approximate location.
-        public init(id: Int, name: String) {
-            self.id = id
-            self.name = name
-        }
-
-        public var description: String {
-            "(\(id)) \(name)"
-        }
-
     }
 
 }

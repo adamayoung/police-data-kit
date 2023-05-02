@@ -1,25 +1,30 @@
 import Foundation
 
-/// Type of Stop and Search.
-public enum StopAndSearchType: CaseIterable, CustomStringConvertible {
+///
+/// The type of a stop and search.
+///
+public enum StopAndSearchType: Equatable, CaseIterable {
 
     /// Person search.
     case personSearch
+
     /// Vehicle search.
     case vehicleSearch
+
     /// Person and vehicle search.
     case personAndVehicleSearch
 
-    public var description: String {
+    /// A localized name describing the stop and search.
+    public var localizedName: String {
         switch self {
         case .personSearch:
-            return "Person search"
+            return NSLocalizedString("PERSON_SEARCH", bundle: .module, comment: "Person search")
 
         case .vehicleSearch:
-            return "Vehicle search"
+            return NSLocalizedString("VEHICLE_SEARCH", bundle: .module, comment: "Vehicle search")
 
         case .personAndVehicleSearch:
-            return "Person and Vehicle search"
+            return NSLocalizedString("PERSON_AND_VEHICLE_SEARCH", bundle: .module, comment: "Person and Vehicle search")
         }
     }
 

@@ -1,4 +1,5 @@
 import Foundation
+import os
 
 ///
 /// Provides an interface for obtaining availability data sets from the UK Police Data API.
@@ -11,6 +12,8 @@ public final class AvailabilityService {
     /// Use this object to interface to availability services in your application.
     /// 
     public static let shared = AvailabilityService()
+
+    private static let logger = Logger(subsystem: Logger.domainSubsystem, category: "AvailabilityService")
 
     private let availabilityRepository: any AvailabilityRepository
 
@@ -38,9 +41,21 @@ public final class AvailabilityService {
     /// - Returns: The available data sets.
     ///
     public func availableDataSets() async throws -> [DataSet] {
-        let dataSets = try await availabilityRepository.availableDataSets()
+        Self.logger.info("Fetching available data sets...")
 
-        return dataSets
+        let dataSets: [DataSet]
+        do {
+            dataSets = try await availabilityRepository.availableDataSets()
+        } catch let error {
+            Self.logger.error("Failed fetched available data sets: \(error.localizedDescription, privacy: .public)")
+            throw error
+        }
+
+        let sortedDataSets = dataSets.sorted { $0.date < $1.date }
+
+        Self.logger.info("Fetched \(dataSets.count) data sets")
+
+        return sortedDataSets
     }
 
 }

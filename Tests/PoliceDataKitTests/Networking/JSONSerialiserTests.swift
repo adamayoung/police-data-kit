@@ -19,7 +19,7 @@ final class JSONSerialiserTests: XCTestCase {
         let data = try XCTUnwrap("aaa".data(using: .utf8))
 
         do {
-            _ = try await serialiser.decode(data) as MockObject
+            _ = try await serialiser.decode(MockObject.self, from: data)
         } catch {
             XCTAssertTrue(true)
             return
@@ -32,7 +32,7 @@ final class JSONSerialiserTests: XCTestCase {
         let expectedResult = MockObject()
         let data = expectedResult.data
 
-        let result = try await serialiser.decode(data) as MockObject
+        let result = try await serialiser.decode(MockObject.self, from: data)
 
         XCTAssertEqual(result, expectedResult)
     }

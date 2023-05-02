@@ -1,33 +1,42 @@
 import CoreLocation
 import Foundation
 
-/// A neighbourhood location.
+///
+/// A model representing a neighbourhood location.
+///
 public struct NeighbourhoodLocation: Equatable {
 
     /// Name.
     public let name: String?
+
     /// Type of location.
     ///
     /// e.g. 'station' (police station)
     public let type: String?
+
     /// Description.
     public let description: String?
+
     /// Location address.
     public let address: String
-    /// Postcode
+
+    /// Postcode.
     public let postcode: String?
+
     /// Location coordinate.
     public var coordinate: CLLocationCoordinate2D?
 
-    /// Creates a new `NeighbourhoodLocation`.
+    ///
+    /// Creates a neighbourhood object.
     ///
     /// - Parameters:
     ///   - name: Name.
     ///   - type: Type of location.
     ///   - description: Description.
     ///   - address: Location address.
-    ///   - postcode: Postcode
+    ///   - postcode: Postcode.
     ///   - coordinate: Location coordinate.
+    ///
     public init(
         name: String? = nil,
         type: String? = nil,

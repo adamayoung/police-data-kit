@@ -8,7 +8,7 @@ actor JSONSerialiser: Serialiser {
         self.decoder = decoder
     }
 
-    func decode<T: Decodable>(_ data: Data) async throws -> T {
+    func decode<T: Decodable>(_ type: T.Type, from data: Data) async throws -> T {
         let result = try decoder.decode(T.self, from: data)
         return result
     }

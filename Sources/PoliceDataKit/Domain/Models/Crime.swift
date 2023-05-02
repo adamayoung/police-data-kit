@@ -42,7 +42,7 @@ public struct Crime: Identifiable, Equatable {
     public let outcomeStatus: OutcomeStatus?
 
     ///
-    /// Creates a new `Crime`.
+    /// Creates a crime object.
     ///
     /// - Parameters:
     ///   - id: Identifier of the crime

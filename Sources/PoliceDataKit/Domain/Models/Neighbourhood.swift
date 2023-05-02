@@ -1,35 +1,47 @@
 import CoreLocation
 import Foundation
 
-/// A Neighbourhood.
+///
+/// A model representing a neighbourhood.
+///
 public struct Neighbourhood: Identifiable, Equatable {
 
     /// Police Force specific team identifier.
     ///
     /// This identifier is not unique and may also be used by a different force.
     public let id: String
+
     /// Name for the neighbourhood.
     public var name: String
+
     /// Description.
     public var description: String?
+
     /// URL for the neighbourhood on the Force's website.
     public var policeForceWebsiteURL: URL?
+
     /// An introduction message for the neighbourhood.
     public let welcomeMessage: String?
+
     /// Population of the neighbourhood.
     public var population: Int?
+
     /// Ways to get in touch with the neighbourhood officers.
     public let contactDetails: ContactDetails
+
     /// Centre point locator for the neighbourhood.
     ///
     /// This may not be exactly in the centre of the neighbourhood.
     public let centre: CLLocationCoordinate2D
+
     /// Any associated locations with the neighbourhood.
     public let locations: [NeighbourhoodLocation]
+
     /// Links.
     public let links: [Link]
 
-    /// Creates a new `Neighbourhood`.
+    ///
+    /// Creates a neighbourhood object.
     ///
     /// - Parameters:
     ///   - id: Police Force specific team identifier.
@@ -42,6 +54,7 @@ public struct Neighbourhood: Identifiable, Equatable {
     ///   - centre: Centre point locator for the neighbourhood.
     ///   - locations: Any associated locations with the neighbourhood.
     ///   - links: Links.
+    ///
     public init(
         id: String,
         name: String,
@@ -49,7 +62,7 @@ public struct Neighbourhood: Identifiable, Equatable {
         policeForceWebsiteURL: URL? = nil,
         welcomeMessage: String? = nil,
         population: Int? = nil,
-        contactDetails: ContactDetails = .init(),
+        contactDetails: ContactDetails = ContactDetails(),
         centre: CLLocationCoordinate2D,
         locations: [NeighbourhoodLocation] = [],
         links: [Link] = []

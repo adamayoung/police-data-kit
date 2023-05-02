@@ -5,27 +5,49 @@ final class PoliceDataKitFactory {
     private init() { }
 
     static func availabilityRepository() -> some AvailabilityRepository {
-        UKAvailabilityRepository(apiClient: apiClient, cache: cache)
+        UKAvailabilityRepository(
+            apiClient: apiClient,
+            cache: cache
+        )
     }
 
     static func crimeRepository() -> some CrimeRepository {
-        UKCrimeRepository(apiClient: apiClient, cache: cache, availableDataRegion: .availableDataRegion)
+        UKCrimeRepository(
+            apiClient: apiClient,
+            cache: cache,
+            availableDataRegion: .availableDataRegion
+        )
     }
 
     static func neighbourhoodRepository() -> some NeighbourhoodRepository {
-        UKNeighbourhoodRepository(apiClient: apiClient, cache: cache, availableDataRegion: .availableDataRegion)
+        UKNeighbourhoodRepository(
+            apiClient: apiClient,
+            cache: cache,
+            availableDataRegion: .availableDataRegion
+        )
     }
 
     static func outcomeRepository() -> some OutcomeRepository {
-        UKOutcomeRepository(apiClient: apiClient, cache: cache, availableDataRegion: .availableDataRegion)
+        UKOutcomeRepository(
+            apiClient: apiClient,
+            cache: cache,
+            availableDataRegion: .availableDataRegion
+        )
     }
 
     static func policeForceRepository() -> some PoliceForceRepository {
-        UKPoliceForceRepository(apiClient: apiClient, cache: cache)
+        UKPoliceForceRepository(
+            apiClient: apiClient,
+            cache: cache
+        )
     }
 
     static func stopAndSearchRepository() -> some StopAndSearchRepository {
-        UKStopAndSearchRepository(apiClient: apiClient, cache: cache, availableDataRegion: .availableDataRegion)
+        UKStopAndSearchRepository(
+            apiClient: apiClient,
+            cache: cache,
+            availableDataRegion: .availableDataRegion
+        )
     }
 
 }
@@ -34,7 +56,7 @@ extension PoliceDataKitFactory {
 
     private static let apiClient: some APIClient = {
         PoliceDataAPIClient(
-            baseURL: .policeDataAPIBaseURL,
+            baseURL: policeDataBaseURL,
             urlSession: .shared,
             serialiser: serialiser
         )
@@ -47,5 +69,13 @@ extension PoliceDataKitFactory {
     private static let cache: some Cache = {
         InMemoryCache(name: "PoliceDataKitCache")
     }()
+
+}
+
+extension PoliceDataKitFactory {
+
+    private static var policeDataBaseURL: URL {
+        URL(string: "https://data.police.uk/api")!
+    }
 
 }

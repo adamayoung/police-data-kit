@@ -45,7 +45,7 @@ extension CrimeServiceTests {
                 crimeID: "A",
                 categoryID: "cat-1",
                 location: Location(
-                    street: Location.Street(
+                    street: Street(
                         id: 1,
                         name: "street-1"
                     ),
@@ -59,7 +59,7 @@ extension CrimeServiceTests {
                 crimeID: "B",
                 categoryID: "cat-2",
                 location: Location(
-                    street: Location.Street(
+                    street: Street(
                         id: 2,
                         name: "street-2"
                     ),
