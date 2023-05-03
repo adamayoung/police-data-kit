@@ -76,4 +76,4 @@ jobs:
             ${{ runner.os }}-spm-
 
       - name: Build
-        run: swift package generate-documentation
+        run: swift package generate-documentation --product PoliceDataKit

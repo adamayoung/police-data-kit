@@ -59,7 +59,7 @@ public final class CrimeService {
     ///
     /// - Returns: The street level crimes in a 1 mile radius of the specifed coordinate and date.
     ///
-    public func streetLevelCrimes(at coordinate: CLLocationCoordinate2D, date: Date) async throws -> [Crime] {
+    public func streetLevelCrimes(at coordinate: CLLocationCoordinate2D, date: Date = Date()) async throws -> [Crime] {
         Self.logger.trace("fetching street level Crimes at coordinate \(coordinate, privacy: .public)")
 
         guard availableDataRegion.contains(coordinate: coordinate) else {
@@ -99,7 +99,8 @@ public final class CrimeService {
     ///
     /// - Returns: The street level crimes with the specified area and month..
     ///
-    public func streetLevelCrimes(in coordinates: [CLLocationCoordinate2D], date: Date) async throws -> [Crime] {
+    public func streetLevelCrimes(in coordinates: [CLLocationCoordinate2D],
+                                  date: Date = Date()) async throws -> [Crime] {
         Self.logger.trace("fetching street level Crimes in area")
 
         let crimes: [Crime]
@@ -131,7 +132,7 @@ public final class CrimeService {
     ///
     /// - Returns: The crimes at the specified street and date.
     /// 
-    public func crimes(forStreet streetID: Int, date: Date) async throws -> [Crime] {
+    public func crimes(forStreet streetID: Int, date: Date = Date()) async throws -> [Crime] {
         Self.logger.trace("fetching Crimes for street \(streetID, privacy: .public)")
 
         let cacheKey = CrimesForStreetCachingKey(streetID: streetID, date: date)
@@ -171,7 +172,7 @@ public final class CrimeService {
     ///
     /// - Returns: The crimes for the street nearest to the specified coordinate and date.
     ///
-    public func crimes(at coordinate: CLLocationCoordinate2D, date: Date) async throws -> [Crime] {
+    public func crimes(at coordinate: CLLocationCoordinate2D, date: Date = Date()) async throws -> [Crime] {
         Self.logger.trace("fetching Crimes at coordinate \(coordinate, privacy: .public)")
 
         guard availableDataRegion.contains(coordinate: coordinate) else {
@@ -207,7 +208,7 @@ public final class CrimeService {
     /// - Returns: The crimes not mapped to a location.
     ///
     public func crimesWithNoLocation(forCategory category: CrimeCategory, inPoliceForce policeForceID: PoliceForce.ID,
-                                     date: Date) async throws -> [Crime] {
+                                     date: Date = Date()) async throws -> [Crime] {
         // swiftlint:disable:next line_length
         Self.logger.trace("fetching Crimes with no location for category \(category.id, privacy: .public) in Police Force \(policeForceID, privacy: .public)")
 
@@ -246,7 +247,7 @@ public final class CrimeService {
     ///
     /// - Returns: The crime categories for the specified month.
     ///
-    public func crimeCategories(forDate date: Date) async throws -> [CrimeCategory] {
+    public func crimeCategories(forDate date: Date = Date()) async throws -> [CrimeCategory] {
         Self.logger.trace("fetching Crime categories for date \(date, privacy: .public)")
 
         let cacheKey = CrimeCategoriesCachingKey(date: date)

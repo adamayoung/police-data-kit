@@ -55,7 +55,7 @@ public final class OutcomeService {
     ///
     /// - Returns: The outcomes of crimes for the specified street and date..
     ///
-    public func streetLevelOutcomes(forStreet streetID: Int, date: Date) async throws -> [Outcome] {
+    public func streetLevelOutcomes(forStreet streetID: Int, date: Date = Date()) async throws -> [Outcome] {
         Self.logger.trace("fetching street level Outcomes for Street \(streetID, privacy: .public)")
 
         let cacheKey = OutcomesAtStreetLevelForStreetCachingKey(streetID: streetID, date: date)
@@ -94,7 +94,8 @@ public final class OutcomeService {
     ///
     /// - Returns: The outcomes of crimes in a 1 mile radius of the specified coordinate and date.
     /// 
-    public func streetLevelOutcomes(at coordinate: CLLocationCoordinate2D, date: Date) async throws -> [Outcome] {
+    public func streetLevelOutcomes(at coordinate: CLLocationCoordinate2D,
+                                    date: Date = Date()) async throws -> [Outcome] {
         Self.logger.trace("fetching street level Outcomes at coordinate \(coordinate, privacy: .public)")
 
         guard availableDataRegion.contains(coordinate: coordinate) else {
@@ -130,7 +131,8 @@ public final class OutcomeService {
     ///
     /// - Returns: The outcomes of crimes within the specified area.
     ///
-    public func streetLevelOutcomes(in coordinates: [CLLocationCoordinate2D], date: Date) async throws -> [Outcome] {
+    public func streetLevelOutcomes(in coordinates: [CLLocationCoordinate2D],
+                                    date: Date = Date()) async throws -> [Outcome] {
         Self.logger.trace("fetching street level Outcomes in area")
 
         let outcomes: [Outcome]

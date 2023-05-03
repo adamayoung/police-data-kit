@@ -9,7 +9,7 @@ import os
 /// validation to check for mandatory fields and data formats. The location coordinates of the stop are anonymised
 /// and the age of the person stopped is changed to an age group (e.g. 18-24) before publication.
 ///
-final class StopAndSearchService {
+public final class StopAndSearchService {
 
     ///
     /// A single, shared stop and search service object.
@@ -61,7 +61,8 @@ final class StopAndSearchService {
     ///
     /// - Returns: A list of stop and searches.
     ///
-    public func stopAndSearches(at coordinate: CLLocationCoordinate2D, date: Date) async throws -> [StopAndSearch] {
+    public func stopAndSearches(at coordinate: CLLocationCoordinate2D,
+                                date: Date = Date()) async throws -> [StopAndSearch] {
         Self.logger.trace("fetching Stop and Searches at \(coordinate, privacy: .public)")
 
         guard availableDataRegion.contains(coordinate: coordinate) else {
@@ -101,7 +102,8 @@ final class StopAndSearchService {
     ///
     /// - Returns: A list of stop and searches.
     ///
-    public func stopAndSearches(in coordinates: [CLLocationCoordinate2D], date: Date) async throws -> [StopAndSearch] {
+    public func stopAndSearches(in coordinates: [CLLocationCoordinate2D],
+                                date: Date = Date()) async throws -> [StopAndSearch] {
         Self.logger.trace("fetching Stop and Searches in area")
 
         let stopAndSearches: [StopAndSearch]
@@ -135,7 +137,7 @@ final class StopAndSearchService {
     ///
     /// - Returns: A list of stop and searches.
     ///
-    public func stopAndSearches(atLocation streetID: Int, date: Date) async throws -> [StopAndSearch] {
+    public func stopAndSearches(atLocation streetID: Int, date: Date = Date()) async throws -> [StopAndSearch] {
         Self.logger.trace("fetching Stop and Searches at location \(streetID, privacy: .public)")
 
         let cacheKey = StopAndSearchesAtLocationCachingKey(streetID: streetID, date: date)
@@ -177,7 +179,7 @@ final class StopAndSearchService {
     /// - Returns: A list of stop and searches.
     ///
     public func stopAndSearchesWithNoLocation(forPoliceForce policeForceID: PoliceForce.ID,
-                                              date: Date) async throws -> [StopAndSearch] {
+                                              date: Date = Date()) async throws -> [StopAndSearch] {
         // swiftlint:disable:next line_length
         Self.logger.trace("fetching Stop and Searches with no location for Police Force \(policeForceID, privacy: .public)")
 
@@ -222,7 +224,7 @@ final class StopAndSearchService {
     /// - Returns: A list of stop and searches.
     /// 
     public func stopAndSearches(forPoliceForce policeForceID: PoliceForce.ID,
-                                date: Date) async throws -> [StopAndSearch] {
+                                date: Date = Date()) async throws -> [StopAndSearch] {
         Self.logger.trace("fetching Stop and Searches for Police Force \(policeForceID, privacy: .public)")
 
         let cacheKey = StopAndSearchesForPoliceForceCachingKey(policeForceID: policeForceID, date: date)

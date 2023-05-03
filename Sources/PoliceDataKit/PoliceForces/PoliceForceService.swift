@@ -4,7 +4,7 @@ import os
 ///
 /// Provides an interface for obtaining police force data from the UK Police Data API.
 ///
-final class PoliceForceService {
+public final class PoliceForceService {
 
     ///
     /// A single, shared police force service object.
