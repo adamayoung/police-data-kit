@@ -3,7 +3,7 @@ import MapKit
 import os
 
 ///
-/// Provides an interface for obtaining neighbourhood data from the UK Police Data API.
+/// Provides an interface for obtaining neighbourhood data from the UK Police API.
 ///
 public final class NeighbourhoodService {
 
@@ -47,7 +47,7 @@ public final class NeighbourhoodService {
     ///
     /// - Parameter policeForceID: Police force identifier.
     ///
-    /// - Throws: Neighbourhood data error `NeighbourhoodError`.
+    /// - Throws: Neighbourhood data error ``NeighbourhoodError``.
     ///
     /// - Returns: The neighbourhoods in the specified police force.
     ///
@@ -84,7 +84,7 @@ public final class NeighbourhoodService {
     ///   - id: Neighbourhood identifier.
     ///   - policeForceID: Police Force identifier.
     ///
-    /// - Throws: Neighbourhood data error `NeighbourhoodError`.
+    /// - Throws: Neighbourhood data error ``NeighbourhoodError``.
     ///
     /// - Returns: The neighbourhood matching the specified ID and police force.
     ///
@@ -123,7 +123,7 @@ public final class NeighbourhoodService {
     ///   - neighbourhoodID: Neighbourhood identifier.
     ///   - policeForceID: Police Force identifier.
     ///
-    /// - Throws: Neighbourhood data error `NeighbourhoodError`.
+    /// - Throws: Neighbourhood data error ``NeighbourhoodError``.
     ///
     /// - Returns: The coordinates that make up the boundary of the matching neighbourhood.
     ///
@@ -164,7 +164,7 @@ public final class NeighbourhoodService {
     ///   - neighbourhoodID: Neighbourhood identifier.
     ///   - policeForceID: Police Force identifier.
     ///
-    /// - Throws: Neighbourhood data error `NeighbourhoodError`.
+    /// - Throws: Neighbourhood data error ``NeighbourhoodError``.
     ///
     /// - Returns: Police officers who are members of the neighbourhood team for the specified neighbourhood and police force.
     ///
@@ -199,7 +199,7 @@ public final class NeighbourhoodService {
     }
 
     ///
-    /// Returns a list priorities for a neighbourhood.
+    /// Returns a list of priorities for a neighbourhood.
     ///
     /// [https://data.police.uk/docs/method/neighbourhood-priorities/](https://data.police.uk/docs/method/neighbourhood-priorities/)
     ///
@@ -207,7 +207,7 @@ public final class NeighbourhoodService {
     ///   - neighbourhoodID: Neighbourhood identifier.
     ///   - policeForceID: Police Force identifier.
     ///
-    /// - Throws: Neighbourhood data error `NeighbourhoodError`.
+    /// - Throws: Neighbourhood data error ``NeighbourhoodError``.
     ///
     /// - Returns: The neighbourhood priorities for the specified neighbourhood and police force.
     /// 
@@ -248,7 +248,7 @@ public final class NeighbourhoodService {
     ///
     /// - Parameter coordinate: A coordinate.
     ///
-    /// - Throws: Neighbourhood data error `NeighbourhoodError`.
+    /// - Throws: Neighbourhood data error ``NeighbourhoodError``.
     ///
     /// - Returns: The neighbourhood policing team the specificed location.
     ///

@@ -3,7 +3,20 @@ import MapKit
 import os
 
 ///
-/// Provides an interface for obtaining outcome data from the UK Police Data API.
+/// Provides an interface for obtaining outcome data from the UK Police API.
+///
+/// ## Topics
+/// 
+/// ### Creating an Outcome Service
+/// - ``init()``
+///
+/// ### Street Level Outcomes
+/// - ``streetLevelOutcomes(forStreet:date:)``
+/// - ``streetLevelOutcomes(at:date:)``
+/// - ``streetLevelOutcomes(in:date:)``
+///
+/// ### Case History
+/// - ``caseHistory(forCrime:)``
 ///
 public final class OutcomeService {
 
@@ -51,7 +64,7 @@ public final class OutcomeService {
     ///   - streetID: Street identifier.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Outcome data error `OutcomeError`.
+    /// - Throws: Outcome data error ``OutcomeError``.
     ///
     /// - Returns: The outcomes of crimes for the specified street and date..
     ///
@@ -90,7 +103,7 @@ public final class OutcomeService {
     ///   - coordinate: A coordinate.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Outcome data error `OutcomeError`.
+    /// - Throws: Outcome data error ``OutcomeError``.
     ///
     /// - Returns: The outcomes of crimes in a 1 mile radius of the specified coordinate and date.
     /// 
@@ -127,7 +140,7 @@ public final class OutcomeService {
     ///   - coordinates: Coordinates which define the boundary of the custom area.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    ///   - Throws: Outcome data error `OutcomeError`.
+    ///   - Throws: Outcome data error ``OutcomeError``.
     ///
     /// - Returns: The outcomes of crimes within the specified area.
     ///
@@ -158,7 +171,7 @@ public final class OutcomeService {
     ///
     /// - Parameter crimeID: The crimeID of a crime, not the id.
     ///
-    /// - Throws: Outcome data error `OutcomeError`.
+    /// - Throws: Outcome data error ``OutcomeError``.
     ///
     /// - Returns: The case history for the specified crime.
     ///

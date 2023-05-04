@@ -3,7 +3,7 @@ import MapKit
 import os
 
 ///
-/// Provides an interface for obtaining stop and search data from the UK Police Data API.
+/// Provides an interface for obtaining stop and search data from the UK Police API.
 ///
 /// The data published is provided by police forces on a monthly basis. The data submitted goes through
 /// validation to check for mandatory fields and data formats. The location coordinates of the stop are anonymised
@@ -57,7 +57,7 @@ public final class StopAndSearchService {
     ///   - coordinate: A coordinate.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Stop and Search data error `StopAndSearchError`.
+    /// - Throws: Stop and Search data error ``StopAndSearchError``.
     ///
     /// - Returns: A list of stop and searches.
     ///
@@ -98,7 +98,7 @@ public final class StopAndSearchService {
     ///   - coordinates: Coordinates which define the boundary of the custom area.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Stop and Search data error `StopAndSearchError`.
+    /// - Throws: Stop and Search data error ``StopAndSearchError``.
     ///
     /// - Returns: A list of stop and searches.
     ///
@@ -133,7 +133,7 @@ public final class StopAndSearchService {
     ///   - streetID: A street ID.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Stop and Search data error `StopAndSearchError`.
+    /// - Throws: Stop and Search data error ``StopAndSearchError``.
     ///
     /// - Returns: A list of stop and searches.
     ///
@@ -174,7 +174,7 @@ public final class StopAndSearchService {
     ///   - policeForceID: Police Force identifier.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Stop and Search data error `StopAndSearchError`.
+    /// - Throws: Stop and Search data error ``StopAndSearchError``.
     ///
     /// - Returns: A list of stop and searches.
     ///
@@ -219,7 +219,7 @@ public final class StopAndSearchService {
     ///   - policeForceID: Police Force identifier.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Stop and Search data error `StopAndSearchError`.
+    /// - Throws: Stop and Search data error ``StopAndSearchError``.
     ///
     /// - Returns: A list of stop and searches.
     /// 

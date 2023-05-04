@@ -3,7 +3,7 @@ import MapKit
 import os
 
 ///
-/// Provides an interface for obtaining crime data from the UK Police Data API.
+/// Provides an interface for obtaining crime data from the UK Police API.
 ///
 public final class CrimeService {
 
@@ -24,7 +24,7 @@ public final class CrimeService {
     /// Creates a crime service object.
     ///
     /// Use this method to create different `CrimeService` instances. If you only need one instance of
-    /// `CrimeService`, use `shared`.
+    /// `CrimeService`, use ``CrimeService/shared``.
     ///
     public convenience init() {
         self.init(
@@ -55,7 +55,7 @@ public final class CrimeService {
     ///   - coordinate: A coordinate.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Crime data error `CrimeError`.
+    /// - Throws: Crime data error ``CrimeError``.
     ///
     /// - Returns: The street level crimes in a 1 mile radius of the specifed coordinate and date.
     ///
@@ -95,7 +95,7 @@ public final class CrimeService {
     ///   - coordinates: Coordinates which define the boundary of the custom area.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Crime data error `CrimeError`.
+    /// - Throws: Crime data error ``CrimeError``.
     ///
     /// - Returns: The street level crimes with the specified area and month..
     ///
@@ -128,7 +128,7 @@ public final class CrimeService {
     ///   - streetID: The street identifier.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Crime data error `CrimeError`.
+    /// - Throws: Crime data error ``CrimeError``.
     ///
     /// - Returns: The crimes at the specified street and date.
     /// 
@@ -168,7 +168,7 @@ public final class CrimeService {
     ///   - coordinate: A coordinate.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Crime data error `CrimeError`.
+    /// - Throws: Crime data error ``CrimeError``.
     ///
     /// - Returns: The crimes for the street nearest to the specified coordinate and date.
     ///
@@ -203,16 +203,17 @@ public final class CrimeService {
     ///   - policeForceID: Police Force identifier.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Crime data error `CrimeError`.
+    /// - Throws: Crime data error ``CrimeError``.
     ///
     /// - Returns: The crimes not mapped to a location.
     ///
-    public func crimesWithNoLocation(forCategory category: CrimeCategory, inPoliceForce policeForceID: PoliceForce.ID,
+    public func crimesWithNoLocation(forCategory categoryID: CrimeCategory.ID = CrimeCategory.default.id,
+                                     inPoliceForce policeForceID: PoliceForce.ID,
                                      date: Date = Date()) async throws -> [Crime] {
         // swiftlint:disable:next line_length
-        Self.logger.trace("fetching Crimes with no location for category \(category.id, privacy: .public) in Police Force \(policeForceID, privacy: .public)")
+        Self.logger.trace("fetching Crimes with no location for category \(categoryID, privacy: .public) in Police Force \(policeForceID, privacy: .public)")
 
-        let cacheKey = CrimesWithNoLocationForCategoryInPoliceForceCachingKey(categoryID: category.id,
+        let cacheKey = CrimesWithNoLocationForCategoryInPoliceForceCachingKey(categoryID: categoryID,
                                                                               policeForceID: policeForceID, date: date)
         if let cachedCrimes = await cache.object(for: cacheKey, type: [Crime].self) {
             return cachedCrimes
@@ -222,12 +223,12 @@ public final class CrimeService {
         do {
             crimes = try await apiClient.get(
                 endpoint: CrimesEndpoint.crimesWithNoLocation(
-                    categoryID: category.id, policeForceID: policeForceID, date: date
+                    categoryID: categoryID, policeForceID: policeForceID, date: date
                 )
             )
         } catch let error {
             // swiftlint:disable:next line_length
-            Self.logger.error("failed fetching Crimes with no location for category \(category.id, privacy: .public) in Police Force \(policeForceID, privacy: .public): \(error.localizedDescription, privacy: .public)")
+            Self.logger.error("failed fetching Crimes with no location for category \(categoryID, privacy: .public) in Police Force \(policeForceID, privacy: .public): \(error.localizedDescription, privacy: .public)")
             throw Self.mapToCrimeError(error)
         }
 
@@ -243,7 +244,7 @@ public final class CrimeService {
     ///
     /// - Parameter date: Month to fetch crime categories for. The latest month will be shown by default.
     ///
-    /// - Throws: Crime data error `CrimeError`.
+    /// - Throws: Crime data error ``CrimeError``.
     ///
     /// - Returns: The crime categories for the specified month.
     ///

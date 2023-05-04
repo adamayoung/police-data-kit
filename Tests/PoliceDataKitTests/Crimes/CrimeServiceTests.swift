@@ -151,8 +151,8 @@ final class CrimeServiceTests: XCTestCase {
         let expectedResult = Crime.mocks
         apiClient.response = .success(Crime.mocks)
 
-        let result = try await service.crimesWithNoLocation(forCategory: category, inPoliceForce: policeForceID,
-                                                               date: date)
+        let result = try await service.crimesWithNoLocation(forCategory: categoryID, inPoliceForce: policeForceID,
+                                                            date: date)
 
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(
@@ -171,7 +171,7 @@ final class CrimeServiceTests: XCTestCase {
                                                                               policeForceID: policeForceID, date: date)
         await cache.set(expectedResult, for: cacheKey)
 
-        let result = try await service.crimesWithNoLocation(forCategory: category, inPoliceForce: policeForceID,
+        let result = try await service.crimesWithNoLocation(forCategory: categoryID, inPoliceForce: policeForceID,
                                                             date: date)
 
         XCTAssertEqual(result, expectedResult)
@@ -187,7 +187,7 @@ final class CrimeServiceTests: XCTestCase {
         let cacheKey = CrimesWithNoLocationForCategoryInPoliceForceCachingKey(categoryID: categoryID,
                                                                               policeForceID: policeForceID, date: date)
         apiClient.response = .success(Crime.mocks)
-        _ = try await service.crimesWithNoLocation(forCategory: category, inPoliceForce: policeForceID, date: date)
+        _ = try await service.crimesWithNoLocation(forCategory: categoryID, inPoliceForce: policeForceID, date: date)
 
         let cachedResult = await cache.object(for: cacheKey, type: [Crime].self)
 

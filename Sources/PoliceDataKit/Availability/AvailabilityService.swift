@@ -2,7 +2,7 @@ import Foundation
 import os
 
 ///
-/// Provides an interface for obtaining availability data sets from the UK Police Data API.
+/// Provides an interface for obtaining availability data sets from the UK Police API.
 ///
 public final class AvailabilityService {
 
@@ -41,7 +41,7 @@ public final class AvailabilityService {
     ///
     /// [https://data.police.uk/docs/method/crimes-street-dates/](https://data.police.uk/docs/method/crimes-street-dates/)
     ///
-    /// - Throws: Availability data error `AvailabilityError`.
+    /// - Throws: Availability data error ``AvailabilityError``.
     ///
     /// - Returns: The available data sets.
     ///

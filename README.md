@@ -36,83 +36,12 @@ let package = Package(
 
 Add the PoliceDataKit package to your Project's Package dependencies.
 
-## Topics
+## Documentation
 
-### Availability
-
-Provides an interface for obtaining availability data sets from the UK Police Data API.
-
-```swift
-let availabilityService = AvailabilityService()
-```
-
-### Crimes
-
-Provides an interface for obtaining crime data from the UK Police Data API.
-
-```swift
-let crimeService = CrimeService()
-```
-
-### Neighbourhoods
-
-Provides an interface for obtaining neighbour data from the UK Police Data API.
-
-```swift
-let neighbourhoodService = NeighbourhoodService()
-```
-
-### Outcomes
-
-Provides an interface for obtaining outcome data from the UK Police Data API.
-
-```swift
-let outcomeService = OutcomeService()
-```
-
-### Police Forces
-
-Provides an interface for obtaining police force data from the UK Police Data API.
-
-```swift
-let policeForceService = PoliceForceService()
-```
-
-### Stop and Searches
-
-Provides an interface for obtaining stop and search data from the UK Police Data API.
-
-```swift
-let stopAndSearchService = StopAndSearchService()
-```
-
-## Examples
-
-### Fetch street level crimes in the centre of London
-
-```swift
-import CoreLocation
-import Foundation
-import PoliceDataKit
-
-let crimeService = CrimeService()
-
-let londonCoordinate = CLLocationCoordinate2D(latitude: 51.5072, longitude: 0.1276)
-
-let crimes = try await crimeService.streetLevelCrimes(at: londonCoordinate)
-```
-
-### Fetch all Police Forces in England, Wales and Northern Ireland
-
-```swift
-import Foundation
-import PoliceDataKit
-
-let policeForceService = PoliceForceService()
-
-let policeForces = try await policeForceService.policeForces()
-```
+Documentation and examples of usage can be found at
+[https://adamayoung.github.io/police-data-kit/documentation/policedatakit/](https://adamayoung.github.io/police-data-kit/documentation/policedatakit/)
 
 ## References
 
-* [https://data.police.uk](https://data.police.uk)
+* [data.police.uk](https://data.police.uk)
+* [Documentation](https://adamayoung.github.io/police-data-kit/documentation/policedatakit/)

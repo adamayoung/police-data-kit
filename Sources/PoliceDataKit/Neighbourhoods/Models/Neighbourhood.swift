@@ -29,10 +29,10 @@ public struct Neighbourhood: Identifiable, Equatable, Codable {
     /// Ways to get in touch with the neighbourhood officers.
     public let contactDetails: ContactDetails
 
-    /// Centre point locator for the neighbourhood.
+    /// Center point locator for the neighbourhood.
     ///
-    /// This may not be exactly in the centre of the neighbourhood.
-    public let centre: CLLocationCoordinate2D
+    /// This may not be exactly in the center of the neighbourhood.
+    public let center: CLLocationCoordinate2D
 
     /// Any associated locations with the neighbourhood.
     public let locations: [NeighbourhoodLocation]
@@ -51,7 +51,7 @@ public struct Neighbourhood: Identifiable, Equatable, Codable {
     ///   - welcomeMessage: An introduction message for the neighbourhood.
     ///   - population: Population of the neighbourhood.
     ///   - contactDetails: Ways to get in touch with the neighbourhood officers.
-    ///   - centre: Centre point locator for the neighbourhood.
+    ///   - center: Center point locator for the neighbourhood.
     ///   - locations: Any associated locations with the neighbourhood.
     ///   - links: Links.
     ///
@@ -63,7 +63,7 @@ public struct Neighbourhood: Identifiable, Equatable, Codable {
         welcomeMessage: String? = nil,
         population: Int? = nil,
         contactDetails: ContactDetails = ContactDetails(),
-        centre: CLLocationCoordinate2D,
+        center: CLLocationCoordinate2D,
         locations: [NeighbourhoodLocation] = [],
         links: [Link] = []
     ) {
@@ -74,7 +74,7 @@ public struct Neighbourhood: Identifiable, Equatable, Codable {
         self.welcomeMessage = welcomeMessage
         self.population = population
         self.contactDetails = contactDetails
-        self.centre = centre
+        self.center = center
         self.locations = locations
         self.links = links
     }
@@ -91,7 +91,7 @@ extension Neighbourhood {
         case welcomeMessage
         case population
         case contactDetails
-        case centre
+        case center = "centre"
         case locations
         case links
     }
@@ -113,7 +113,7 @@ extension Neighbourhood {
             return population
         }()
         self.contactDetails = try container.decode(ContactDetails.self, forKey: .contactDetails)
-        self.centre = try container.decode(CLLocationCoordinate2D.self, forKey: .centre)
+        self.center = try container.decode(CLLocationCoordinate2D.self, forKey: .center)
         self.locations = try container.decode([NeighbourhoodLocation].self, forKey: .locations)
         self.links = try container.decode([Link].self, forKey: .links)
     }
@@ -134,7 +134,7 @@ extension Neighbourhood {
         }()
         try container.encodeIfPresent(populationString, forKey: .population)
         try container.encode(contactDetails, forKey: .contactDetails)
-        try container.encode(centre, forKey: .centre)
+        try container.encode(center, forKey: .center)
         try container.encode(locations, forKey: .locations)
         try container.encode(links, forKey: .links)
     }

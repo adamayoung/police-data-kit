@@ -1,5 +1,8 @@
 import Foundation
 
+///
+/// The gender of a person.
+///
 public enum Gender: String, CaseIterable, CustomStringConvertible, Codable {
 
     /// Male.

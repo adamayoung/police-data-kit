@@ -1,18 +1,20 @@
 # Getting Started with Availability
 
-Learn how to fetch availability data sets from the UK Police Data API.
+Learn how to fetch availability data sets from the UK Police API.
 
 ## Overview
 
-Availability data sets allows you find out what data is available from what Police Forces.
+Availability data sets allows you find out what data is available from what Police Force.
 
 ### Create the Service
 
 ```swift
+import PoliceDataKit
+
 let availabilityService = AvailabilityService()
 ```
 
-### Fetch the available data sets
+### Available data sets
 
 ```swift
 let dataSets = try await availabilityService.availableDataSets()

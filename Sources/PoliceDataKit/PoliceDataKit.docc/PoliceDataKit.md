@@ -4,19 +4,29 @@ Deliver open data about crime and policing in England, Wales and Northern Irelan
 
 ## Overview
 
-PoliceDataKit provides data relating to crime and policing in England, Wales and Northen Ireland. 
+PoliceDataKit provides data relating to crime and policing in England, Wales and Northen Ireland.
+
+The API provides a rich data source for information, including:
+
+* Neighbourhood team members
+* Upcoming events
+* Street-level crime and outcome data
+* Nearest police stations
+
+For the Police API documentation, see [https://data.police.uk](https://data.police.uk).
 
 ## Topics
 
 ### Availability
 
-- <doc:/AvailabilityGettingStarted>
+- <doc:/GettingStartedWithAvailability>
 - ``AvailabilityService``
 - ``DataSet``
 - ``AvailabilityError``
 
 ### Crimes
 
+- <doc:/GettingStartedWithCrimes>
 - ``CrimeService``
 - ``Crime``
 - ``CrimeCategory``
@@ -25,6 +35,7 @@ PoliceDataKit provides data relating to crime and policing in England, Wales and
 
 ### Neighbourhoods
 
+- <doc:/GettingStartedWithNeighbourhoods>
 - ``NeighbourhoodService``
 - ``Neighbourhood``
 - ``NeighbourhoodReference``
@@ -36,6 +47,7 @@ PoliceDataKit provides data relating to crime and policing in England, Wales and
 
 ### Outcomes
 
+- <doc:/GettingStartedWithOutcomes>
 - ``OutcomeService``
 - ``Outcome``
 - ``OutcomeCategory``
@@ -48,6 +60,7 @@ PoliceDataKit provides data relating to crime and policing in England, Wales and
 
 ### Police Forces
 
+- <doc:/GettingStartedWithPoliceForces>
 - ``PoliceForceService``
 - ``PoliceForce``
 - ``PoliceForceReference``
@@ -56,6 +69,7 @@ PoliceDataKit provides data relating to crime and policing in England, Wales and
 
 ### Stop and Searches
 
+- <doc:/GettingStartedWithStopAndSearches>
 - ``StopAndSearchService``
 - ``StopAndSearch``
 - ``StopAndSearchType``
@@ -68,3 +82,7 @@ PoliceDataKit provides data relating to crime and policing in England, Wales and
 - ``Location``
 - ``PoliceOfficer``
 - ``Street``
+
+### API Call Limits
+
+- <doc:/APICallLimits>

@@ -21,7 +21,7 @@ extension Neighbourhood {
                 facebook: URL(string: "http://www.facebook.com/leicspolice")!,
                 twitter: URL(string: "http://www.twitter.com/centralleicsNPA")!
             ),
-            centre: CLLocationCoordinate2D(latitude: 52.6389, longitude: -1.13619),
+            center: CLLocationCoordinate2D(latitude: 52.6389, longitude: -1.13619),
             locations: [
                 NeighbourhoodLocation(
                     name: "Mansfield House",
@@ -46,7 +46,7 @@ extension Neighbourhood {
             description: "Some & description",
             policeForceWebsiteURL: URL(string: "http://www.leics.police.uk/local-policing/city-centre"),
             population: 1000,
-            centre: CLLocationCoordinate2D(latitude: 52.6389, longitude: -1.13619)
+            center: CLLocationCoordinate2D(latitude: 52.6389, longitude: -1.13619)
         )
     }
 

@@ -2,7 +2,7 @@ import Foundation
 import os
 
 ///
-/// Provides an interface for obtaining police force data from the UK Police Data API.
+/// Provides an interface for obtaining police force data from the UK Police API.
 ///
 public final class PoliceForceService {
 
@@ -38,12 +38,13 @@ public final class PoliceForceService {
 
     ///
     /// Returns a list of all the police forces available except the British Transport Police, which is excluded from
-    /// the list returned. Unique force identifiers obtained here are used in requests for force-specific data via
-    /// other methods.
+    /// the list returned.
+    ///
+    /// Unique force identifiers obtained here are used in requests for force-specific data via other methods.
     ///
     /// [https://data.police.uk/docs/method/forces/](https://data.police.uk/docs/method/forces/)
     ///
-    /// - Throws: Police Force data error `PoliceForceError`.
+    /// - Throws: Police Force data error ``PoliceForceError``.
     ///
     /// - Returns: All Police Forces.
     ///
@@ -75,7 +76,7 @@ public final class PoliceForceService {
     ///
     /// - Parameter id: Police Force identifier.
     ///
-    /// - Throws: Police Force data error `PoliceForceError`.
+    /// - Throws: Police Force data error ``PoliceForceError``.
     ///
     /// - Returns: The Police Force specified.
     ///
@@ -108,9 +109,9 @@ public final class PoliceForceService {
     ///
     /// - Parameter id: Police Force identifier.
     ///
-    /// - Throws: Police Force data error `PoliceForceError`.
+    /// - Throws: Police Force data error ``PoliceForceError``.
     ///
-    /// - Returns: Senior Police Officers for the specified Police Force..
+    /// - Returns: Senior Police Officers for the specified Police Force.
     ///
     public func seniorOfficers(inPoliceForce policeForceID: PoliceForce.ID) async throws -> [PoliceOfficer] {
         Self.logger.trace("fetching Senior Officers in Police Force \(policeForceID, privacy: .public)")
