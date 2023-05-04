@@ -17,21 +17,14 @@ For the Police API documentation, see [https://data.police.uk](https://data.poli
 
 ## Topics
 
-### Availability
+### Police Forces
 
-- <doc:/GettingStartedWithAvailability>
-- ``AvailabilityService``
-- ``DataSet``
-- ``AvailabilityError``
-
-### Crimes
-
-- <doc:/GettingStartedWithCrimes>
-- ``CrimeService``
-- ``Crime``
-- ``CrimeCategory``
-- ``CrimeLocationType``
-- ``CrimeError``
+- <doc:/GettingStartedWithPoliceForces>
+- ``PoliceForceService``
+- ``PoliceForce``
+- ``PoliceForceReference``
+- ``EngagementMethod``
+- ``PoliceForceError``
 
 ### Neighbourhoods
 
@@ -44,6 +37,15 @@ For the Police API documentation, see [https://data.police.uk](https://data.poli
 - ``NeighbourhoodPriority``
 - ``Link``
 - ``NeighbourhoodError``
+
+### Crimes
+
+- <doc:/GettingStartedWithCrimes>
+- ``CrimeService``
+- ``Crime``
+- ``CrimeCategory``
+- ``CrimeLocationType``
+- ``CrimeError``
 
 ### Outcomes
 
@@ -58,15 +60,6 @@ For the Police API documentation, see [https://data.police.uk](https://data.poli
 - ``CaseHistoryOutcome``
 - ``OutcomeError``
 
-### Police Forces
-
-- <doc:/GettingStartedWithPoliceForces>
-- ``PoliceForceService``
-- ``PoliceForce``
-- ``PoliceForceReference``
-- ``EngagementMethod``
-- ``PoliceForceError``
-
 ### Stop and Searches
 
 - <doc:/GettingStartedWithStopAndSearches>
@@ -75,6 +68,13 @@ For the Police API documentation, see [https://data.police.uk](https://data.poli
 - ``StopAndSearchType``
 - ``Gender``
 - ``StopAndSearchError``
+
+### Availability
+
+- <doc:/GettingStartedWithAvailability>
+- ``AvailabilityService``
+- ``DataSet``
+- ``AvailabilityError``
 
 ### General
 

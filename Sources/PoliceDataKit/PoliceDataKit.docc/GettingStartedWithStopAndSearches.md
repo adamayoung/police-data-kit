@@ -6,8 +6,10 @@ Learn how to fetch stop and searches data from the UK Police API.
 
 <!--@START_MENU_TOKEN@-->Text<!--@END_MENU_TOKEN@-->
 
-## Topics
+### Create the Service
 
-### <!--@START_MENU_TOKEN@-->Group<!--@END_MENU_TOKEN@-->
+```swift
+import PoliceDataKit
 
-- <!--@START_MENU_TOKEN@-->``Symbol``<!--@END_MENU_TOKEN@-->
+let stopAndSearchService = StopAndSearchService()
+```
