@@ -17,8 +17,8 @@ env:
   DEVELOPER_DIR: /Applications/Xcode_14.3.app/Contents/Developer
 
 jobs:
-  build-test:
-    name: Build and Test
+  lint:
+    name: Lint
     runs-on: macos-13
     steps:
       - name: Checkout
@@ -35,11 +35,59 @@ jobs:
       - name: Lint
         run: swift package plugin swiftlint --strict --reporter github-actions-logging
 
+  build-test-macos:
+    name: Build and Test (macOS)
+    runs-on: macos-13
+    needs: lint
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Cache SPM
+        uses: actions/cache@v3
+        with:
+          path: .build
+          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-
+
       - name: Build
         run: swift build --build-tests
 
       - name: Test
         run: swift test --skip-build --parallel
+
+  build-test-ios:
+    name: Build and Test (iOS)
+    runs-on: macos-13
+    needs: lint
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Cache SPM
+        uses: actions/cache@v3
+        with:
+          path: .build
+          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-
+
+      - name: Build
+        run: |
+          set -o pipefail && \
+          xcodebuild build-for-testing \
+          -scheme PoliceDataKit \
+          -destination "platform=iOS Simulator;name=iPhone 14 Pro Max" \
+          | xcpretty
+
+      - name: Test
+        run: |
+          set -o pipefail && \
+          xcodebuild test-without-building \
+          -scheme PoliceDataKit \
+          -destination "platform=iOS Simulator;name=iPhone 14 Pro Max" \
+          | xcpretty
 
   codeScan:
     name: Code Scan
