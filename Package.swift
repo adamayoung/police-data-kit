@@ -26,7 +26,6 @@ let package = Package(
         .package(url: "https://github.com/scinfu/SwiftSoup.git", .upToNextMajor(from: "2.6.0")),
         .package(url: "https://github.com/apple/swift-docc-plugin.git", from: "1.2.0"),
         .package(url: "https://github.com/adamayoung/swiftlint-plugin.git", from: "0.51.0")
-
     ],
 
     targets: [
