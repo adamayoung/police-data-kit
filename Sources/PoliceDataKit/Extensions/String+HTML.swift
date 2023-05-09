@@ -1,18 +1,25 @@
 import Foundation
-import SwiftSoup
 
 extension String {
 
     var htmlStripped: String {
-        guard let document = try? SwiftSoup.parse(self) else {
-            return ""
+        guard let data = data(using: .unicode) else {
+            return self
         }
 
-        guard let text = try? document.text() else {
-            return ""
-        }
+        let attributed = try? NSAttributedString(
+            data: data,
+            options: [
+                .documentType: NSAttributedString.DocumentType.html
+            ],
+            documentAttributes: nil
+        )
 
-        return text
+        let value = (attributed?.string ?? self)
+            .replacingOccurrences(of: "\n", with: " ")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        return value
     }
 
 }
