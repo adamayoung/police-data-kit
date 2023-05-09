@@ -33,7 +33,7 @@ jobs:
             ${{ runner.os }}-spm-
       
       - name: Lint
-        run: swift package plugin swiftlint --strict --reporter github-actions-logging
+        run: swiftlint --strict --reporter github-actions-logging
 
       - name: Build
         run: swift build --build-tests
