@@ -26,4 +26,15 @@ final class NeighbourhoodTests: XCTestCase {
         XCTAssertNil(result.policeForceWebsiteURL)
     }
 
+    func testDecodedWithHTMLInName() throws {
+        let expectedResult = "Leake & Keyworth"
+
+        let result = try JSONDecoder.policeDataAPI.decode(
+            Neighbourhood.self,
+            fromResource: "neighbourhood-html-in-name"
+        )
+
+        XCTAssertEqual(result.name, expectedResult)
+    }
+
 }
