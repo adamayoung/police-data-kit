@@ -101,7 +101,13 @@ extension Neighbourhood {
         self.id = try container.decode(String.self, forKey: .id)
         self.name = try container.decode(String.self, forKey: .name)
         self.description = try container.decodeIfPresent(String.self, forKey: .description)
-        self.policeForceWebsiteURL = try container.decodeIfPresent(URL.self, forKey: .policeForceWebsiteURL)
+        self.policeForceWebsiteURL = try {
+            guard let urlString = try container.decodeIfPresent(String.self, forKey: .policeForceWebsiteURL) else {
+                return nil
+            }
+
+            return URL(string: urlString)
+        }()
         self.welcomeMessage = try container.decodeIfPresent(String.self, forKey: .welcomeMessage)
         self.population = try {
             let populationString = try container.decode(String.self, forKey: .population)

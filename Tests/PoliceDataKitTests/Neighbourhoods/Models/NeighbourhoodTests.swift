@@ -17,4 +17,13 @@ final class NeighbourhoodTests: XCTestCase {
         XCTAssertEqual(result.population, expectedResult)
     }
 
+    func testDecodeWithEmptyPoliceForceWebsiteURL() throws {
+        let result = try JSONDecoder.policeDataAPI.decode(
+            Neighbourhood.self,
+            fromResource: "neighbourhood-empty-force-url"
+        )
+
+        XCTAssertNil(result.policeForceWebsiteURL)
+    }
+
 }
