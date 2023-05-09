@@ -1,0 +1,34 @@
+/* 
+  Localizable.strings
+*/
+
+"NOT_FOUND" = "Not found";
+"LOCATION_OUTSIDE_OF_DATA_SET_REGION" = "Location outside of data set region";
+"NETWORK_ERROR" = "Network error";
+"UNKNOWN_ERROR" = "Unknown error";
+
+"ALL_CRIME" = "All crime";
+"ANTI_SOCIAL_BEHAVIOUR" = "Anti-social behaviour";
+"BICYCLE_THEFT" = "Bicycle theft";
+"BURGLARY" = "Burglary";
+"CRIMINAL_DAMAGE_AND_ARSON" = "Criminal damage and arson";
+"DRUGS" = "Drugs";
+"OTHER_THEFT" = "Other theft";
+"POSSESSION_OF_WEAPONS" = "Possession of weapons";
+"PUBLIC_ORDER" = "Public order";
+"ROBBERY" = "Robbery";
+"SHOPLIFTING" = "Shoplifting";
+"THEFT_FROM_THE_PERSON" = "Theft from the person";
+"VEHICLE_CRIME" = "Vehicle crime";
+"VIOLENCE_OR_SEXUAL_OFFENCE" = "Violence or sexual offence";
+"OTHER_CRIME" = "Other crime";
+
+"POLICE_FORCE" = "Police Force";
+"BRITISH_TRANSPORT_POLICE" = "British Transport Police";
+
+"MALE" = "Male";
+"FEMALE" = "Female";
+
+"PERSON_SEARCH" = "Person search";
+"VEHICLE_SEARCH" = "Vehicle search";
+"PERSON_AND_VEHICLE_SEARCH" = "Person and Vehicle search";

@@ -1,8 +1,8 @@
-# UK Police Data
+# PoliceDataKit
 
-![CI](https://github.com/adamayoung/UKPoliceData/workflows/CI/badge.svg)
+[![CI](https://github.com/adamayoung/police-data-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/adamayoung/police-data-kit/actions/workflows/ci.yml) [![Documentation](https://github.com/adamayoung/police-data-kit/actions/workflows/documentation.yml/badge.svg)](https://github.com/adamayoung/police-data-kit/actions/workflows/documentation.yml)
 
-A Swift Package for UK Police data which provides a rich data source for information about crime and policing in England, Wales and Northern Ireland.
+A Swift Package for retrieving open data about crime and policing in England, Wales and Northern Ireland.
 
 ## Requirements
 
@@ -12,7 +12,7 @@ A Swift Package for UK Police data which provides a rich data source for informa
 
 ### [Swift Package Manager](https://github.com/apple/swift-package-manager)
 
-Add the PoliceAPI package as a dependency to your `Package.swift` file, and add it as a dependency to your target.
+Add the PoliceDataKit package as a dependency to your `Package.swift` file, and add it as a dependency to your target.
 
 ```swift
 // swift-tools-version:5.7
@@ -23,41 +23,25 @@ let package = Package(
   name: "MyProject",
 
   dependencies: [
-    .package(url: "https://github.com/adamayoung/police-api.git", from: "2.0.0")
+    .package(url: "https://github.com/adamayoung/police-data-kit.git", from: "3.0.0")
   ],
 
   targets: [
-    .target(name: "MyProject", dependencies: [.product(name: "police-api", package: "PoliceAPI")])
+    .target(name: "MyProject", dependencies: [.product(name: "police-data-kit", package: "PoliceDataKit")])
   ]
 )
 ```
 
-## API Areas
+### Xcode project
 
-### Availability
+Add the PoliceDataKit package to your Project's Package dependencies.
 
-Information about availability of data.
+## Documentation
 
-### Crimes
-
-Information about a Crimes.
-
-### Neighbourhoods
-
-Information about a Police Force Neighbourhoods.
-
-### Outcomes
-
-Information about a Crime's Outcome.
-
-### Police Forces
-
-Information about Police Forces and their Senior Officers.
-
-### Stop and Searches
-
-Information about Stop and Searches.
+Documentation and examples of usage can be found at
+[https://adamayoung.github.io/police-data-kit/documentation/policedatakit/](https://adamayoung.github.io/police-data-kit/documentation/policedatakit/)
 
 ## References
 
-* [https://data.police.uk](https://data.police.uk)
+* [data.police.uk](https://data.police.uk)
+* [Documentation](https://adamayoung.github.io/police-data-kit/documentation/policedatakit/)

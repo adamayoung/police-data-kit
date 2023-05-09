@@ -15,27 +15,38 @@ concurrency:
   group: "documentation"
   cancel-in-progress: true
 
+env:
+  DEVELOPER_DIR: /Applications/Xcode_14.3.app/Contents/Developer
+
 jobs:
   deploy:
     name: Deploy
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}documentation/police-api
-    runs-on: macos-12
+      url: ${{ steps.deployment.outputs.page_url }}documentation/policedatakit
+    runs-on: macos-13
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
+
+      - name: Cache SPM
+        uses: actions/cache@v3
+        with:
+          path: .build
+          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-
       
       - name: Build documentation
         run: |
           swift package --allow-writing-to-directory docs \
-          generate-documentation --target PoliceAPI \
+          generate-documentation --target PoliceDataKit \
           --disable-indexing \
           --transform-for-static-hosting \
-          --hosting-base-path police-api \
+          --hosting-base-path police-data-kit \
           --output-path docs
 
       - name: Upload documentation

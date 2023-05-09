@@ -13,16 +13,33 @@ concurrency:
   group: "ci-${{ github.head_ref || github.run_id }}"
   cancel-in-progress: true
 
+env:
+  DEVELOPER_DIR: /Applications/Xcode_14.3.app/Contents/Developer
+
 jobs:
-  lint:
-    name: Lint
-    runs-on: macos-12
+  build-test:
+    name: Build and Test
+    runs-on: macos-13
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: swiftlint
-        run: swiftlint --strict --reporter github-actions-logging
+      - name: Cache SPM
+        uses: actions/cache@v3
+        with:
+          path: .build
+          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-
+      
+      - name: Lint
+        run: swift package plugin swiftlint --strict --reporter github-actions-logging
+
+      - name: Build
+        run: swift build --build-tests
+
+      - name: Test
+        run: swift test --skip-build --parallel
 
   codeScan:
     name: Code Scan
@@ -43,30 +60,9 @@ jobs:
         with:
           sarif_file: results.sarif
 
-  build-test:
-    name: Build and Test
-    runs-on: macos-12
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Cache SPM
-        uses: actions/cache@v3
-        with:
-          path: .build
-          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
-          restore-keys: |
-            ${{ runner.os }}-spm-
-
-      - name: Build
-        run: swift build --build-tests
-
-      - name: Test
-        run: swift test --skip-build --parallel
-
   build-documentation:
     name: Build Documentation
-    runs-on: macos-12
+    runs-on: macos-13
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -80,4 +76,4 @@ jobs:
             ${{ runner.os }}-spm-
 
       - name: Build
-        run: swift package generate-documentation
+        run: swift package generate-documentation --product PoliceDataKit
