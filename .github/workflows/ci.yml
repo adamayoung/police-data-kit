@@ -35,7 +35,7 @@ jobs:
       - name: Lint
         run: swift package plugin swiftlint --strict --reporter github-actions-logging
 
-  build-test-macos:
+  build-test:
     name: Build and Test (macOS)
     runs-on: macos-13
     steps:
@@ -56,9 +56,17 @@ jobs:
       - name: Test
         run: swift test --skip-build --parallel
 
-  build-test-ios:
-    name: Build and Test (iOS)
+  build-test-other:
+    name: Build and Test
     runs-on: macos-13
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: "iOS 16.4"
+            destination: "OS=16.4,name=iPhone 14 Pro Max"
+          - name: "watchOS 9.4"
+            destination: "OS=9.4,name=Apple Watch Series 8 (45mm)"
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -76,7 +84,7 @@ jobs:
           set -o pipefail && \
           xcodebuild build-for-testing \
           -scheme PoliceDataKit \
-          -destination "platform=iOS Simulator;name=iPhone 14 Pro Max" \
+          -destination "${{ matrix.destination }}" \
           | xcpretty
 
       - name: Test
@@ -84,7 +92,7 @@ jobs:
           set -o pipefail && \
           xcodebuild test-without-building \
           -scheme PoliceDataKit \
-          -destination "platform=iOS Simulator;name=iPhone 14 Pro Max" \
+          -destination "${{ matrix.destination }}" \
           | xcpretty
 
   codeScan:
