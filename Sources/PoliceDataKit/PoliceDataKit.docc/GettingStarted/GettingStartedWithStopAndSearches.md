@@ -4,7 +4,7 @@ Learn how to fetch stop and searches data from the UK Police API.
 
 ## Overview
 
-<!--@START_MENU_TOKEN@-->Text<!--@END_MENU_TOKEN@-->
+You can find information on Stop and Searches by location and street as well as Stop and Searches with no associated location.
 
 ### Create the Service
 

@@ -4,7 +4,7 @@ Learn how to fetch police force data from the UK Police API.
 
 ## Overview
 
-<!--@START_MENU_TOKEN@-->Text<!--@END_MENU_TOKEN@-->
+You can find information about Police Forces and Senior Officers for a People Force.
 
 ### Create the Service
 
