@@ -19,12 +19,21 @@
       }
     },
     {
+      "identity" : "swiftlint-plugin",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/adamayoung/swiftlint-plugin.git",
+      "state" : {
+        "revision" : "b30b79984a43b19c1dae11e5f08ab025ae357d21",
+        "version" : "0.51.0"
+      }
+    },
+    {
       "identity" : "swiftsoup",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/scinfu/SwiftSoup.git",
       "state" : {
-        "revision" : "f707b8680cddb96dc1855632340a572ef37bbb98",
-        "version" : "2.5.3"
+        "revision" : "0e96a20ffd37a515c5c963952d4335c89bed50a6",
+        "version" : "2.6.0"
       }
     }
   ],

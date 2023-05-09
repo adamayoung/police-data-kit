@@ -11,5 +11,5 @@ You can find outcomes of crimes at street level as well as the case history of a
 ```swift
 import PoliceDataKit
 
-let neighbourhoodService = NeighbourhoodService()
+let outcomeService = OutcomeService()
 ```
