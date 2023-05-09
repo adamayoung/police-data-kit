@@ -12,13 +12,17 @@ final class PoliceDataKitFactory {
         )
     }()
 
-    private static var serialiser: some Serialiser {
-        JSONSerialiser(decoder: .policeDataAPI)
-    }
-
     static let cache: some Cache = {
         InMemoryCache(name: "PoliceDataKitCache")
     }()
+
+}
+
+extension PoliceDataKitFactory {
+
+    private static var serialiser: some Serialiser {
+        JSONSerialiser(decoder: .policeDataAPI)
+    }
 
 }
 

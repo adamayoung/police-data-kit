@@ -5,7 +5,7 @@ import Foundation
 ///
 public enum PoliceForceError: LocalizedError, Equatable {
 
-    /// An error indicating a crime could not be found.
+    /// An error indicating a police force could not be found.
     case notFound
 
     /// An error indicating there was a network problem.

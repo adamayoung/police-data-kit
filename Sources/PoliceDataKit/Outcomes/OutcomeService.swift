@@ -5,19 +5,6 @@ import os
 ///
 /// Provides an interface for obtaining outcome data from the UK Police API.
 ///
-/// ## Topics
-/// 
-/// ### Creating an Outcome Service
-/// - ``init()``
-///
-/// ### Street Level Outcomes
-/// - ``streetLevelOutcomes(forStreet:date:)``
-/// - ``streetLevelOutcomes(at:date:)``
-/// - ``streetLevelOutcomes(in:date:)``
-///
-/// ### Case History
-/// - ``caseHistory(forCrime:)``
-///
 public final class OutcomeService {
 
     ///

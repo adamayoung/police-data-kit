@@ -5,7 +5,7 @@ import Foundation
 ///
 public enum StopAndSearchError: LocalizedError, Equatable {
 
-    /// An error indicating a crime could not be found.
+    /// An error indicating a stop and search could not be found.
     case notFound
 
     /// An error indicating the location that was specified is outside the region there is data for.
