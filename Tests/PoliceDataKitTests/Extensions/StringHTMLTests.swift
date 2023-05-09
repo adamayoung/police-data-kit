@@ -43,4 +43,13 @@ final class StringHTMLTests: XCTestCase {
         XCTAssertEqual(result, "")
     }
 
+    func testHTMLStrippedWhenContainsHTMLEntityReturnsConvertedString() {
+        let value = "Cops &amp; Robbers"
+        let expectedResult = "Cops & Robbers"
+
+        let result = value.htmlStripped
+
+        XCTAssertEqual(result, expectedResult)
+    }
+
 }

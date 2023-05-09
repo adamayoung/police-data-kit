@@ -99,7 +99,7 @@ extension Neighbourhood {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(String.self, forKey: .id)
-        self.name = try container.decode(String.self, forKey: .name)
+        self.name = try container.decode(String.self, forKey: .name).htmlStripped
         self.description = try container.decodeIfPresent(String.self, forKey: .description)
         self.policeForceWebsiteURL = try {
             guard let urlString = try container.decodeIfPresent(String.self, forKey: .policeForceWebsiteURL) else {
