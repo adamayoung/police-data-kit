@@ -23,12 +23,13 @@ final class AvailabilityServiceTests: XCTestCase {
 
     func testAvailableDataSetsWhenNotCachedReturnsDataSets() async throws {
         let expectedResult = DataSet.mocks
-        apiClient.response = .success(DataSet.mocks)
+        apiClient.add(response: .success(DataSet.mocks))
 
         let result = try await service.availableDataSets()
 
         XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.lastPath, AvailabilityEndpoint.dataSets.path)
+        XCTAssertEqual(apiClient.requestedURLs.count, 1)
+        XCTAssertEqual(apiClient.requestedURLs.last, AvailabilityEndpoint.dataSets.path)
     }
 
     func testAvailableDataSetsWhenCachedReturnsCachedDataSets() async throws {
@@ -39,13 +40,13 @@ final class AvailabilityServiceTests: XCTestCase {
         let result = try await service.availableDataSets()
 
         XCTAssertEqual(result, expectedResult)
-        XCTAssertNil(apiClient.lastPath)
+        XCTAssertEqual(apiClient.requestedURLs.count, 0)
     }
 
     func testAvailableDataSetsWhenNotCachedAndReturnsDataSetsShouldCacheResult() async throws {
         let expectedResult = DataSet.mocks
         let cacheKey = AvailableDataSetsCachingKey()
-        apiClient.response = .success(DataSet.mocks)
+        apiClient.add(response: .success(DataSet.mocks))
         _ = try await service.availableDataSets()
 
         let cachedResult = await cache.object(for: cacheKey, type: [DataSet].self)
