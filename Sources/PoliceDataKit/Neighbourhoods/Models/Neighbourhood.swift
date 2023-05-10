@@ -12,19 +12,19 @@ public struct Neighbourhood: Identifiable, Equatable, Codable {
     public let id: String
 
     /// Name for the neighbourhood.
-    public var name: String
+    public let name: String
 
     /// Description.
-    public var description: String?
+    public let description: String?
 
     /// URL for the neighbourhood on the Force's website.
-    public var policeForceWebsiteURL: URL?
+    public let policeForceWebsiteURL: URL?
 
     /// An introduction message for the neighbourhood.
     public let welcomeMessage: String?
 
     /// Population of the neighbourhood.
-    public var population: Int?
+    public let population: Int?
 
     /// Ways to get in touch with the neighbourhood officers.
     public let contactDetails: ContactDetails

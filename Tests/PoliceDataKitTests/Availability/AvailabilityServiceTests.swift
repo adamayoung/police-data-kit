@@ -44,7 +44,6 @@ final class AvailabilityServiceTests: XCTestCase {
 
     func testAvailableDataSetsWhenNotCachedAndReturnsDataSetsShouldCacheResult() async throws {
         let expectedResult = DataSet.mocks
-        let cacheKey = AvailableDataSetsCachingKey()
         apiClient.add(response: .success(DataSet.mocks))
         _ = try await service.availableDataSets()
 

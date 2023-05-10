@@ -12,7 +12,7 @@ public struct Location: Equatable, Codable {
     public let street: Street
 
     /// Location coordinate.
-    public var coordinate: CLLocationCoordinate2D?
+    public let coordinate: CLLocationCoordinate2D?
 
     ///
     /// Creates a location object.
