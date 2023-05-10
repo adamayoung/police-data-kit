@@ -29,6 +29,10 @@ final class NeighbourhoodServiceTests: XCTestCase {
         super.tearDown()
     }
 
+}
+
+extension NeighbourhoodServiceTests {
+
     func testNeighboursWhenNotCachedReturnsNeighbourhoodReferences() async throws {
         let policeForceID = "leicestershire"
         let expectedResult = NeighbourhoodReference.mocks
@@ -147,6 +151,10 @@ final class NeighbourhoodServiceTests: XCTestCase {
         )
     }
 
+}
+
+extension NeighbourhoodServiceTests {
+
     func testBoundaryWhenNotCachedReturnsBoundary() async throws {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
@@ -204,6 +212,10 @@ final class NeighbourhoodServiceTests: XCTestCase {
         XCTAssertEqual(cachedResult, expectedResult)
     }
 
+}
+
+extension NeighbourhoodServiceTests {
+
     func testPoliceOfficersWhenNotCachedReturnsPoliceOfficers() async throws {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
@@ -211,7 +223,7 @@ final class NeighbourhoodServiceTests: XCTestCase {
         apiClient.add(response: .success(PoliceOfficer.mocks))
 
         let result = try await service.policeOfficers(forNeighbourhood: neighbourhoodID,
-                                                         inPoliceForce: policeForceID)
+                                                      inPoliceForce: policeForceID)
 
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(apiClient.requestedURLs.count, 1)
@@ -231,7 +243,7 @@ final class NeighbourhoodServiceTests: XCTestCase {
         await cache.set(expectedResult, for: cacheKey)
 
         let result = try await service.policeOfficers(forNeighbourhood: neighbourhoodID,
-                                                         inPoliceForce: policeForceID)
+                                                      inPoliceForce: policeForceID)
 
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(apiClient.requestedURLs.count, 0)
@@ -251,6 +263,10 @@ final class NeighbourhoodServiceTests: XCTestCase {
 
         XCTAssertEqual(cachedResult, expectedResult)
     }
+
+}
+
+extension NeighbourhoodServiceTests {
 
     func testPrioritiesWhenNotCachedReturnsNeighbourhoodPriorities() async throws {
         let neighbourhoodID = "NC04"
@@ -297,6 +313,10 @@ final class NeighbourhoodServiceTests: XCTestCase {
 
         XCTAssertEqual(cachedResult, expectedResult)
     }
+
+}
+
+extension NeighbourhoodServiceTests {
 
     func testNeighbourhoodPolicingTeamAtCoordinateReturnsNeighbourhoodPolicingTeam() async throws {
         let coordinate = CLLocationCoordinate2D.mock
