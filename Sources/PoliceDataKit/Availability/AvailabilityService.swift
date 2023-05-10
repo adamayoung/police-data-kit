@@ -16,7 +16,7 @@ public final class AvailabilityService {
     private static let logger = Logger(subsystem: Logger.policeDataKit, category: "AvailabilityService")
 
     private let apiClient: any APIClient
-    private let cache: any Cache
+    private let cache: any AvailabilityCache
 
     ///
     /// Creates an availability service object.
@@ -27,11 +27,11 @@ public final class AvailabilityService {
     public convenience init() {
         self.init(
             apiClient: PoliceDataKitFactory.apiClient,
-            cache: PoliceDataKitFactory.cache
+            cache: PoliceDataKitFactory.availabilityCache
         )
     }
 
-    init(apiClient: some APIClient, cache: some Cache) {
+    init(apiClient: some APIClient, cache: some AvailabilityCache) {
         self.apiClient = apiClient
         self.cache = cache
     }
@@ -48,8 +48,7 @@ public final class AvailabilityService {
     public func availableDataSets() async throws -> [DataSet] {
         Self.logger.trace("fetching available data sets")
 
-        let cacheKey = AvailableDataSetsCachingKey()
-        if let cachedDataSets = await cache.object(for: cacheKey, type: [DataSet].self) {
+        if let cachedDataSets = await cache.availableDataSets() {
             return cachedDataSets
         }
 
@@ -61,7 +60,7 @@ public final class AvailabilityService {
             throw Self.mapToAvailabilityError(error)
         }
 
-        await cache.set(dataSets, for: cacheKey)
+        await cache.setAvailableDataSets(dataSets)
 
         return dataSets
     }

@@ -5,12 +5,12 @@ final class AvailabilityServiceTests: XCTestCase {
 
     var service: AvailabilityService!
     var apiClient: MockAPIClient!
-    var cache: MockCache!
+    var cache: AvailabilityMockCache!
 
     override func setUp() {
         super.setUp()
         apiClient = MockAPIClient()
-        cache = MockCache()
+        cache = AvailabilityMockCache()
         service = AvailabilityService(apiClient: apiClient, cache: cache)
     }
 
@@ -34,8 +34,7 @@ final class AvailabilityServiceTests: XCTestCase {
 
     func testAvailableDataSetsWhenCachedReturnsCachedDataSets() async throws {
         let expectedResult = DataSet.mocks
-        let cacheKey = AvailableDataSetsCachingKey()
-        await cache.set(expectedResult, for: cacheKey)
+        await cache.setAvailableDataSets(expectedResult)
 
         let result = try await service.availableDataSets()
 
@@ -49,7 +48,7 @@ final class AvailabilityServiceTests: XCTestCase {
         apiClient.add(response: .success(DataSet.mocks))
         _ = try await service.availableDataSets()
 
-        let cachedResult = await cache.object(for: cacheKey, type: [DataSet].self)
+        let cachedResult = await cache.availableDataSets()
 
         XCTAssertEqual(cachedResult, expectedResult)
     }
