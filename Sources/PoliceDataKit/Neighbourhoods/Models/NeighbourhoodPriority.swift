@@ -6,13 +6,13 @@ import Foundation
 public struct NeighbourhoodPriority: Equatable, Codable {
 
     /// An issue raised with the police.
-    public var issue: String
+    public let issue: String
 
     /// When the priority was agreed upon.
     public let issueDate: Date
 
     /// Action taken to address the priority.
-    public var action: String?
+    public let action: String?
 
     /// When action was last taken.
     public let actionDate: Date?

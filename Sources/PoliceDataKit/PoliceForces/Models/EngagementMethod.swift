@@ -12,7 +12,7 @@ public struct EngagementMethod: Equatable, Codable {
     public let description: String?
 
     /// Engagement method website URL.
-    public var url: URL?
+    public let url: URL?
 
     /// Creates a engagement method object.
     ///

@@ -24,7 +24,7 @@ public struct NeighbourhoodLocation: Equatable, Codable {
     public let postcode: String?
 
     /// Location coordinate.
-    public var coordinate: CLLocationCoordinate2D?
+    public let coordinate: CLLocationCoordinate2D?
 
     ///
     /// Creates a neighbourhood object.
