@@ -29,7 +29,7 @@ public final class OutcomeService {
     public convenience init() {
         self.init(
             apiClient: PoliceDataKitFactory.apiClient,
-            cache: PoliceDataKitFactory.cache,
+            cache: PoliceDataKitFactory.cacheStore,
             availableDataRegion: .availableDataRegion
         )
     }

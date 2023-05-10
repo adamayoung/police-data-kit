@@ -4,6 +4,10 @@ final class PoliceDataKitFactory {
 
     private init() { }
 
+}
+
+extension PoliceDataKitFactory {
+
     static let apiClient: some APIClient = {
         PoliceDataAPIClient(
             baseURL: policeDataBaseURL,
@@ -12,13 +16,17 @@ final class PoliceDataKitFactory {
         )
     }()
 
-    static let cache: some Cache = {
-        InMemoryCache(name: "PoliceDataKitCache")
-    }()
+    static var availabilityCache: some AvailabilityCache {
+        AvailabilityDefaultCache(cacheStore: cacheStore)
+    }
 
 }
 
 extension PoliceDataKitFactory {
+
+    static let cacheStore: some Cache = {
+        InMemoryCache(name: "PoliceDataKitCache")
+    }()
 
     private static var serialiser: some Serialiser {
         JSONSerialiser(decoder: .policeDataAPI)

@@ -27,7 +27,7 @@ public final class PoliceForceService {
     public convenience init() {
         self.init(
             apiClient: PoliceDataKitFactory.apiClient,
-            cache: PoliceDataKitFactory.cache
+            cache: PoliceDataKitFactory.cacheStore
         )
     }
 
