@@ -115,6 +115,28 @@ public final class NeighbourhoodService {
     }
 
     ///
+    /// Returns details of a neighbourhood at a specific coordinate.
+    ///
+    /// - Parameters:
+    ///   - coordinate: A coordinate.
+    ///
+    /// - Throws: Neighbourhood data error ``NeighbourhoodError``.
+    ///
+    /// - Returns: The neighbourhood at the specified coordinate.
+    ///
+    public func neighbourhood(at coordinate: CLLocationCoordinate2D) async throws -> Neighbourhood {
+        Self.logger.trace("fetching Neighbourhood at coordinate \(coordinate, privacy: .public)")
+
+        let neighbourhoodPolicingTeam = try await neighbourhoodPolicingTeam(at: coordinate)
+        let neighbourhood = try await neighbourhood(
+            withID: neighbourhoodPolicingTeam.neighbourhood,
+            inPoliceForce: neighbourhoodPolicingTeam.force
+        )
+
+        return neighbourhood
+    }
+
+    ///
     /// Returns a list of coordinates that make up the boundary of a neighbourhood.
     ///
     /// [https://data.police.uk/docs/method/neighbourhood-boundary/](https://data.police.uk/docs/method/neighbourhood-boundary/)

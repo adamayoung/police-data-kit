@@ -10,6 +10,7 @@
 
 - ``neighbourhoods(inPoliceForce:)``
 - ``neighbourhood(withID:inPoliceForce:)``
+- ``neighbourhood(at:)``
 
 ### Neighbourhood Boundaries
 

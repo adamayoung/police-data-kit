@@ -23,12 +23,13 @@ final class PoliceForceServiceTests: XCTestCase {
 
     func testPoliceForcesWhenNotCachedReturnsPoliceForceReferences() async throws {
         let expectedResult = PoliceForceReference.mocks
-        apiClient.response = .success(PoliceForceReference.mocks)
+        apiClient.add(response: .success(PoliceForceReference.mocks))
 
         let result = try await service.policeForces()
 
         XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.lastPath, PoliceForcesEndpoint.list.path)
+        XCTAssertEqual(apiClient.requestedURLs.count, 1)
+        XCTAssertEqual(apiClient.requestedURLs.last, PoliceForcesEndpoint.list.path)
     }
 
     func testPoliceForcesWhenCachedReturnsCachedPoliceForceReferences() async throws {
@@ -39,13 +40,13 @@ final class PoliceForceServiceTests: XCTestCase {
         let result = try await service.policeForces()
 
         XCTAssertEqual(result, expectedResult)
-        XCTAssertNil(apiClient.lastPath)
+        XCTAssertEqual(apiClient.requestedURLs.count, 0)
     }
 
     func testPoliceForcesWhenNotCachedAndReturnsPoliceForceReferencesShouldCacheResult() async throws {
         let expectedResult = PoliceForceReference.mocks
         let cacheKey = PoliceForcesCachingKey()
-        apiClient.response = .success(PoliceForceReference.mocks)
+        apiClient.add(response: .success(PoliceForceReference.mocks))
         _ = try await service.policeForces()
 
         let cachedResult = await cache.object(for: cacheKey, type: [PoliceForceReference].self)
@@ -56,17 +57,18 @@ final class PoliceForceServiceTests: XCTestCase {
     func testPoliceForceWhenNotCachedReturnsPoliceForce() async throws {
         let expectedResult = PoliceForce.mock
         let id = expectedResult.id
-        apiClient.response = .success(PoliceForce.mock)
+        apiClient.add(response: .success(PoliceForce.mock))
 
         let result = try await service.policeForce(withID: id)
 
         XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.lastPath, PoliceForcesEndpoint.details(id: id).path)
+        XCTAssertEqual(apiClient.requestedURLs.count, 1)
+        XCTAssertEqual(apiClient.requestedURLs.last, PoliceForcesEndpoint.details(id: id).path)
     }
 
     func testPoliceForceWhenNotCachedAndNotFoundThrowsNotFoundError() async throws {
         let id = "leicestershire"
-        apiClient.response = .failure(APIClientError.notFound)
+        apiClient.add(response: .failure(APIClientError.notFound))
 
         var resultError: PoliceForceError?
         do {
@@ -87,14 +89,14 @@ final class PoliceForceServiceTests: XCTestCase {
         let result = try await service.policeForce(withID: id)
 
         XCTAssertEqual(result, expectedResult)
-        XCTAssertNil(apiClient.lastPath)
+        XCTAssertEqual(apiClient.requestedURLs.count, 0)
     }
 
     func testPoliceForceWhenNotCachedAndReturnsPoliceForceShouldCacheResult() async throws {
         let expectedResult = PoliceForce.mock
         let id = expectedResult.id
         let cacheKey = PoliceForceCachingKey(id: id)
-        apiClient.response = .success(PoliceForce.mock)
+        apiClient.add(response: .success(PoliceForce.mock))
         _ = try await service.policeForce(withID: id)
 
         let cachedResult = await cache.object(for: cacheKey, type: PoliceForce.self)
@@ -105,17 +107,21 @@ final class PoliceForceServiceTests: XCTestCase {
     func testFetchSeniorOfficersWhenNotCachedReturnsPoliceOfficers() async throws {
         let expectedResult = PoliceOfficer.mocks
         let policeForceID = "leicestershire"
-        apiClient.response = .success(PoliceOfficer.mocks)
+        apiClient.add(response: .success(PoliceOfficer.mocks))
 
         let result = try await service.seniorOfficers(inPoliceForce: policeForceID)
 
         XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.lastPath, PoliceForcesEndpoint.seniorOfficers(policeForceID: policeForceID).path)
+        XCTAssertEqual(apiClient.requestedURLs.count, 1)
+        XCTAssertEqual(
+            apiClient.requestedURLs.last,
+            PoliceForcesEndpoint.seniorOfficers(policeForceID: policeForceID).path
+        )
     }
 
     func testFetchSeniorOfficersWhenNotCachedAndPoliceForceNotFoundThrowsNotFoundError() async throws {
         let policeForceID = "leicestershire"
-        apiClient.response = .failure(APIClientError.notFound)
+        apiClient.add(response: .failure(APIClientError.notFound))
 
         var resultError: PoliceForceError?
         do {
@@ -136,14 +142,14 @@ final class PoliceForceServiceTests: XCTestCase {
         let result = try await service.seniorOfficers(inPoliceForce: policeForceID)
 
         XCTAssertEqual(result, expectedResult)
-        XCTAssertNil(apiClient.lastPath)
+        XCTAssertEqual(apiClient.requestedURLs.count, 0)
     }
 
     func testFetchSeniorOfficersWhenNotCachedAndReturnsPoliceOfficersShouldCacheResult() async throws {
         let expectedResult = PoliceOfficer.mocks
         let policeForceID = "leicestershire"
         let cacheKey = PoliceForceSeniorOfficersCachingKey(policeForceID: policeForceID)
-        apiClient.response = .success(PoliceOfficer.mocks)
+        apiClient.add(response: .success(PoliceOfficer.mocks))
         _ = try await service.seniorOfficers(inPoliceForce: policeForceID)
 
         let cachedResult = await cache.object(for: cacheKey, type: [PoliceOfficer].self)

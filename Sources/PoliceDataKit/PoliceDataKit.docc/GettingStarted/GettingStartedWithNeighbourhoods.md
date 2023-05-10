@@ -40,6 +40,17 @@ let leicestershirePoliceForceID = "leicestershire"
 let neighbourhood = try await neighbourhoodService.neighbourhood(withID: leicesterCityCentreNeighbourhoodID, inPoliceForce: leicestershirePoliceForceID)
 ```
 
+A neighbourhood at a specific coordinate can also be found with ``NeighbourhoodService/neighbourhood(at:)``.
+
+For example, to find the neighbourhood for
+[Leeds City Centre](https://maps.apple.com/?address=7%20King%20Edward%20St,%20Leeds,%20LS1%206AX,%20England&auid=1817029011196917833&ll=53.797927,-1.541522&lsp=9902&q=Leeds%20City%20Centre):
+
+```swift
+let leedsCityCentreCoordinate = CLLocationCoordinate2D(latitude: 53.797927, longitude: -1.541522)
+
+let neighbourhood = try await neighbourhoodService.neighbourhood(at: leedsCityCentreCoordinate)
+```
+
 ### Fetching a Neighbourhood's Boundary
 
 The boundary (a collection of `CLLocationCoordinate2D`s) of a neighbourhood can be found with ``NeighbourhoodService/boundary(forNeighbourhood:inPoliceForce:)``.
