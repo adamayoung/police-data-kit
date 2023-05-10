@@ -1,5 +1,5 @@
-@testable import PoliceDataKit
 import Foundation
+@testable import PoliceDataKit
 
 final actor AvailabilityMockCache: AvailabilityCache {
 
