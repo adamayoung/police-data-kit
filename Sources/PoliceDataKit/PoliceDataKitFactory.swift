@@ -20,6 +20,10 @@ extension PoliceDataKitFactory {
         AvailabilityDefaultCache(cacheStore: cacheStore)
     }
 
+    static var crimeCache: some CrimeCache {
+        CrimeDefaultCache(cacheStore: cacheStore)
+    }
+
 }
 
 extension PoliceDataKitFactory {
