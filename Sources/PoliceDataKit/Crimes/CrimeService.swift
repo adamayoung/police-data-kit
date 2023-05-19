@@ -17,7 +17,7 @@ public final class CrimeService {
     private static let logger = Logger(subsystem: Logger.policeDataKit, category: "CrimeService")
 
     private let apiClient: any APIClient
-    private let cache: any Cache
+    private let cache: any CrimeCache
     private let availableDataRegion: MKCoordinateRegion
 
     ///
@@ -29,12 +29,12 @@ public final class CrimeService {
     public convenience init() {
         self.init(
             apiClient: PoliceDataKitFactory.apiClient,
-            cache: PoliceDataKitFactory.cacheStore,
+            cache: PoliceDataKitFactory.crimeCache,
             availableDataRegion: .availableDataRegion
         )
     }
 
-    init(apiClient: some APIClient, cache: some Cache, availableDataRegion: MKCoordinateRegion) {
+    init(apiClient: some APIClient, cache: some CrimeCache, availableDataRegion: MKCoordinateRegion) {
         self.apiClient = apiClient
         self.cache = cache
         self.availableDataRegion = availableDataRegion
@@ -135,8 +135,7 @@ public final class CrimeService {
     public func crimes(forStreet streetID: Int, date: Date = Date()) async throws -> [Crime] {
         Self.logger.trace("fetching Crimes for street \(streetID, privacy: .public)")
 
-        let cacheKey = CrimesForStreetCachingKey(streetID: streetID, date: date)
-        if let cachedCrimes = await cache.object(for: cacheKey, type: [Crime].self) {
+        if let cachedCrimes = await cache.crimes(forStreet: streetID, date: date) {
             return cachedCrimes
         }
 
@@ -151,7 +150,7 @@ public final class CrimeService {
             throw Self.mapToCrimeError(error)
         }
 
-        await cache.set(crimes, for: cacheKey)
+        await cache.setCrimes(crimes, forStreet: streetID, date: date)
 
         return crimes
     }
@@ -213,9 +212,8 @@ public final class CrimeService {
         // swiftlint:disable:next line_length
         Self.logger.trace("fetching Crimes with no location for category \(categoryID, privacy: .public) in Police Force \(policeForceID, privacy: .public)")
 
-        let cacheKey = CrimesWithNoLocationForCategoryInPoliceForceCachingKey(categoryID: categoryID,
-                                                                              policeForceID: policeForceID, date: date)
-        if let cachedCrimes = await cache.object(for: cacheKey, type: [Crime].self) {
+        if let cachedCrimes = await cache.crimesWithNoLocation(forCategory: categoryID, inPoliceForce: policeForceID,
+                                                               date: date) {
             return cachedCrimes
         }
 
@@ -232,7 +230,7 @@ public final class CrimeService {
             throw Self.mapToCrimeError(error)
         }
 
-        await cache.set(crimes, for: cacheKey)
+        await cache.setCrimesWithNoLocation(crimes, forCategory: categoryID, inPoliceForce: policeForceID, date: date)
 
         return crimes
     }
@@ -251,8 +249,7 @@ public final class CrimeService {
     public func crimeCategories(forDate date: Date = Date()) async throws -> [CrimeCategory] {
         Self.logger.trace("fetching Crime categories for date \(date, privacy: .public)")
 
-        let cacheKey = CrimeCategoriesCachingKey(date: date)
-        if let cachedCategories = await cache.object(for: cacheKey, type: [CrimeCategory].self) {
+        if let cachedCategories = await cache.crimeCategories(forDate: date) {
             return cachedCategories
         }
 
@@ -265,7 +262,7 @@ public final class CrimeService {
             throw Self.mapToCrimeError(error)
         }
 
-        await cache.set(crimeCategories, for: cacheKey)
+        await cache.setCrimeCategories(crimeCategories, forDate: date)
 
         return crimeCategories
     }

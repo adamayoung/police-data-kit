@@ -24,7 +24,7 @@ final class AvailabilityDefaultCacheTests: XCTestCase {
         XCTAssertNil(result)
     }
 
-    func testAvailableDataSetsWhenHotReturnsAvailableDataSets() async {
+    func testAvailableDataSetsWhenHitReturnsAvailableDataSets() async {
         let cacheKey = AvailableDataSetsCachingKey()
         let expectedResult = DataSet.mocks
         await cacheStore.set(expectedResult, for: cacheKey)

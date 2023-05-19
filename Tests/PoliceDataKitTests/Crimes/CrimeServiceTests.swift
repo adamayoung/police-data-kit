@@ -6,13 +6,13 @@ final class CrimeServiceTests: XCTestCase {
 
     var service: CrimeService!
     var apiClient: MockAPIClient!
-    var cache: MockCache!
+    var cache: CrimeMockCache!
     var availableDataRegion: MKCoordinateRegion!
 
     override func setUp() {
         super.setUp()
         apiClient = MockAPIClient()
-        cache = MockCache()
+        cache = CrimeMockCache()
         availableDataRegion = .test
         service = CrimeService(apiClient: apiClient, cache: cache, availableDataRegion: availableDataRegion)
     }
@@ -92,8 +92,7 @@ final class CrimeServiceTests: XCTestCase {
         let expectedResult = Crime.mocks
         let streetID = expectedResult[0].location.street.id
         let date = Date()
-        let cacheKey = CrimesForStreetCachingKey(streetID: streetID, date: date)
-        await cache.set(expectedResult, for: cacheKey)
+        await cache.setCrimes(expectedResult, forStreet: streetID, date: date)
 
         let result = try await service.crimes(forStreet: streetID, date: date)
 
@@ -105,11 +104,10 @@ final class CrimeServiceTests: XCTestCase {
         let expectedResult = Crime.mocks
         let streetID = expectedResult[0].location.street.id
         let date = Date()
-        let cacheKey = CrimesForStreetCachingKey(streetID: streetID, date: date)
         apiClient.add(response: .success(Crime.mocks))
         _ = try await service.crimes(forStreet: streetID, date: date)
 
-        let cachedResult = await cache.object(for: cacheKey, type: [Crime].self)
+        let cachedResult = await cache.crimes(forStreet: streetID, date: date)
 
         XCTAssertEqual(cachedResult, expectedResult)
     }
@@ -170,9 +168,8 @@ final class CrimeServiceTests: XCTestCase {
         let policeForceID = PoliceForce.mock.id
         let date = Date()
         let expectedResult = Crime.mocks
-        let cacheKey = CrimesWithNoLocationForCategoryInPoliceForceCachingKey(categoryID: categoryID,
-                                                                              policeForceID: policeForceID, date: date)
-        await cache.set(expectedResult, for: cacheKey)
+        await cache.setCrimesWithNoLocation(expectedResult, forCategory: categoryID, inPoliceForce: policeForceID,
+                                            date: date)
 
         let result = try await service.crimesWithNoLocation(forCategory: categoryID, inPoliceForce: policeForceID,
                                                             date: date)
@@ -187,12 +184,11 @@ final class CrimeServiceTests: XCTestCase {
         let policeForceID = PoliceForce.mock.id
         let date = Date()
         let expectedResult = Crime.mocks
-        let cacheKey = CrimesWithNoLocationForCategoryInPoliceForceCachingKey(categoryID: categoryID,
-                                                                              policeForceID: policeForceID, date: date)
         apiClient.add(response: .success(Crime.mocks))
         _ = try await service.crimesWithNoLocation(forCategory: categoryID, inPoliceForce: policeForceID, date: date)
 
-        let cachedResult = await cache.object(for: cacheKey, type: [Crime].self)
+        let cachedResult = await cache.crimesWithNoLocation(forCategory: categoryID, inPoliceForce: policeForceID,
+                                                            date: date)
 
         XCTAssertEqual(cachedResult, expectedResult)
     }
@@ -212,8 +208,7 @@ final class CrimeServiceTests: XCTestCase {
     func testCrimeCategoriesWhenCachedReturnsCachedCrimeCategories() async throws {
         let expectedResult = CrimeCategory.mocks
         let date = Date()
-        let cacheKey = CrimeCategoriesCachingKey(date: date)
-        await cache.set(expectedResult, for: cacheKey)
+        await cache.setCrimeCategories(expectedResult, forDate: date)
 
         let result = try await service.crimeCategories(forDate: date)
 
@@ -224,11 +219,10 @@ final class CrimeServiceTests: XCTestCase {
     func testCrimeCategoriesWhenNotCachedReturnsCrimeCategoriesShouldCacheResult() async throws {
         let expectedResult = CrimeCategory.mocks
         let date = Date()
-        let cacheKey = CrimeCategoriesCachingKey(date: date)
         apiClient.add(response: .success(CrimeCategory.mocks))
         _ = try await service.crimeCategories(forDate: date)
 
-        let cachedResult = await cache.object(for: cacheKey, type: [CrimeCategory].self)
+        let cachedResult = await cache.crimeCategories(forDate: date)
 
         XCTAssertEqual(cachedResult, expectedResult)
     }
