@@ -17,7 +17,7 @@ public final class OutcomeService {
     private static let logger = Logger(subsystem: Logger.policeDataKit, category: "OutcomeService")
 
     private let apiClient: any APIClient
-    private let cache: any Cache
+    private let cache: any OutcomeCache
     private let availableDataRegion: MKCoordinateRegion
 
     ///
@@ -29,12 +29,12 @@ public final class OutcomeService {
     public convenience init() {
         self.init(
             apiClient: PoliceDataKitFactory.apiClient,
-            cache: PoliceDataKitFactory.cacheStore,
+            cache: PoliceDataKitFactory.outcomeCache,
             availableDataRegion: .availableDataRegion
         )
     }
 
-    init(apiClient: some APIClient, cache: some Cache, availableDataRegion: MKCoordinateRegion) {
+    init(apiClient: some APIClient, cache: some OutcomeCache, availableDataRegion: MKCoordinateRegion) {
         self.apiClient = apiClient
         self.cache = cache
         self.availableDataRegion = availableDataRegion
@@ -58,8 +58,7 @@ public final class OutcomeService {
     public func streetLevelOutcomes(forStreet streetID: Int, date: Date = Date()) async throws -> [Outcome] {
         Self.logger.trace("fetching street level Outcomes for Street \(streetID, privacy: .public)")
 
-        let cacheKey = OutcomesAtStreetLevelForStreetCachingKey(streetID: streetID, date: date)
-        if let cachedOutcomes = await cache.object(for: cacheKey, type: [Outcome].self) {
+        if let cachedOutcomes = await cache.streetLevelOutcomes(forStreet: streetID, date: date) {
             return cachedOutcomes
         }
 
@@ -74,7 +73,7 @@ public final class OutcomeService {
             throw Self.mapToOutcomeError(error)
         }
 
-        await cache.set(outcomes, for: cacheKey)
+        await cache.setStreetLevelOutcomes(outcomes, forStreet: streetID, date: date)
 
         return outcomes
     }
@@ -165,8 +164,7 @@ public final class OutcomeService {
     public func caseHistory(forCrime crimeID: String) async throws -> CaseHistory {
         Self.logger.trace("fetching Case History for crime \(crimeID, privacy: .public)")
 
-        let cacheKey = OutcomesForCrimeCachingKey(crimeID: crimeID)
-        if let cachedCaseHistory = await cache.object(for: cacheKey, type: CaseHistory.self) {
+        if let cachedCaseHistory = await cache.caseHistory(forCrime: crimeID) {
             return cachedCaseHistory
         }
 
@@ -179,7 +177,7 @@ public final class OutcomeService {
             throw Self.mapToOutcomeError(error)
         }
 
-        await cache.set(caseHistory, for: cacheKey)
+        await cache.setCaseHistory(caseHistory, forCrime: crimeID)
 
         return caseHistory
     }
