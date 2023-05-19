@@ -1,4 +1,3 @@
-import CoreLocation
 @testable import PoliceDataKit
 import XCTest
 

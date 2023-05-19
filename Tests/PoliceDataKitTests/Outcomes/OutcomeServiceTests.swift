@@ -6,13 +6,13 @@ final class OutcomeServiceTests: XCTestCase {
 
     var service: OutcomeService!
     var apiClient: MockAPIClient!
-    var cache: MockCache!
+    var cache: OutcomeMockCache!
     var availableDataRegion: MKCoordinateRegion!
 
     override func setUp() {
         super.setUp()
         apiClient = MockAPIClient()
-        cache = MockCache()
+        cache = OutcomeMockCache()
         availableDataRegion = .test
         service = OutcomeService(apiClient: apiClient, cache: cache, availableDataRegion: availableDataRegion)
     }
@@ -45,8 +45,7 @@ final class OutcomeServiceTests: XCTestCase {
         let expectedResult = Outcome.mocks
         let streetID = expectedResult[0].crime.location.street.id
         let date = Date()
-        let cacheKey = OutcomesAtStreetLevelForStreetCachingKey(streetID: streetID, date: date)
-        await cache.set(expectedResult, for: cacheKey)
+        await cache.setStreetLevelOutcomes(expectedResult, forStreet: streetID, date: date)
 
         let result = try await service.streetLevelOutcomes(forStreet: streetID, date: date)
 
@@ -58,11 +57,10 @@ final class OutcomeServiceTests: XCTestCase {
         let expectedResult = Outcome.mocks
         let streetID = expectedResult[0].crime.location.street.id
         let date = Date()
-        let cacheKey = OutcomesAtStreetLevelForStreetCachingKey(streetID: streetID, date: date)
         apiClient.add(response: .success(Outcome.mocks))
         _ = try await service.streetLevelOutcomes(forStreet: streetID, date: date)
 
-        let cachedResult = await cache.object(for: cacheKey, type: [Outcome].self)
+        let cachedResult = await cache.streetLevelOutcomes(forStreet: streetID, date: date)
 
         XCTAssertEqual(cachedResult, expectedResult)
     }
@@ -144,8 +142,7 @@ final class OutcomeServiceTests: XCTestCase {
     func testFetchCaseHistoryWhenCachedReturnsCachedCaseHistory() async throws {
         let expectedResult = CaseHistory.mock
         let crimeID = expectedResult.crime.crimeID
-        let cacheKey = OutcomesForCrimeCachingKey(crimeID: crimeID)
-        await cache.set(expectedResult, for: cacheKey)
+        await cache.setCaseHistory(expectedResult, forCrime: crimeID)
 
         let result = try await service.caseHistory(forCrime: crimeID)
 
@@ -160,7 +157,7 @@ final class OutcomeServiceTests: XCTestCase {
         apiClient.add(response: .success(CaseHistory.mock))
         _ = try await service.caseHistory(forCrime: crimeID)
 
-        let cachedResult = await cache.object(for: cacheKey, type: CaseHistory.self)
+        let cachedResult = await cache.caseHistory(forCrime: crimeID)
 
         XCTAssertEqual(cachedResult, expectedResult)
     }
