@@ -32,6 +32,10 @@ extension PoliceDataKitFactory {
         PoliceForceDefaultCache(cacheStore: cacheStore)
     }
 
+    static var stopAndSearchCache: some StopAndSearchCache {
+        StopAndSearchDefaultCache(cacheStore: cacheStore)
+    }
+
 }
 
 extension PoliceDataKitFactory {
