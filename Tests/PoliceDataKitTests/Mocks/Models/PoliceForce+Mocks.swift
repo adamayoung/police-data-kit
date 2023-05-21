@@ -56,4 +56,10 @@ extension PoliceForce {
         )
     }
 
+    static var mocks: [Self] {
+        [
+            .mock
+        ]
+    }
+
 }

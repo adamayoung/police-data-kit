@@ -153,7 +153,6 @@ final class OutcomeServiceTests: XCTestCase {
     func testFetchCaseHistoryWhenNotCachedAndReturnsCaseHistoryShouldCacheResult() async throws {
         let expectedResult = CaseHistory.mock
         let crimeID = expectedResult.crime.crimeID
-        let cacheKey = OutcomesForCrimeCachingKey(crimeID: crimeID)
         apiClient.add(response: .success(CaseHistory.mock))
         _ = try await service.caseHistory(forCrime: crimeID)
 

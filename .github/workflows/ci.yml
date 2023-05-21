@@ -36,7 +36,7 @@ jobs:
         run: swiftlint --strict --reporter github-actions-logging
 
       - name: Build
-        run: swift build --build-tests
+        run: swift build -Xswiftc -warnings-as-errors --build-tests
 
       - name: Test
         run: swift test --skip-build --parallel
