@@ -6,13 +6,13 @@ final class StopAndSearchServiceTests: XCTestCase {
 
     var service: StopAndSearchService!
     var apiClient: MockAPIClient!
-    var cache: MockCache!
+    var cache: StopAndSearchMockCache!
     var availableDataRegion: MKCoordinateRegion!
 
     override func setUp() {
         super.setUp()
         apiClient = MockAPIClient()
-        cache = MockCache()
+        cache = StopAndSearchMockCache()
         availableDataRegion = .test
         service = StopAndSearchService(
             apiClient: apiClient,
@@ -97,8 +97,7 @@ final class StopAndSearchServiceTests: XCTestCase {
         let streetID = 123456
         let date = Date()
         let expectedResult = StopAndSearch.mocks
-        let cacheKey = StopAndSearchesAtLocationCachingKey(streetID: streetID, date: date)
-        await cache.set(expectedResult, for: cacheKey)
+        await cache.setStopAndSearches(expectedResult, atLocation: streetID, date: date)
 
         let result = try await service.stopAndSearches(atLocation: streetID, date: date)
 
@@ -110,11 +109,10 @@ final class StopAndSearchServiceTests: XCTestCase {
         let streetID = 123456
         let date = Date()
         let expectedResult = StopAndSearch.mocks
-        let cacheKey = StopAndSearchesAtLocationCachingKey(streetID: streetID, date: date)
         apiClient.add(response: .success(StopAndSearch.mocks))
         _ = try await service.stopAndSearches(atLocation: streetID, date: date)
 
-        let cachedResult = await cache.object(for: cacheKey, type: [StopAndSearch].self)
+        let cachedResult = await cache.stopAndSearches(atLocation: streetID, date: date)
 
         XCTAssertEqual(cachedResult, expectedResult)
     }
@@ -139,8 +137,7 @@ final class StopAndSearchServiceTests: XCTestCase {
         let policeForceID = "cleveland"
         let date = Date()
         let expectedResult = StopAndSearch.mocks
-        let cacheKey = StopAndSearchesWithNoLocationCachingKey(policeForceID: policeForceID, date: date)
-        await cache.set(expectedResult, for: cacheKey)
+        await cache.setStopAndSearchesWithNoLocation(expectedResult, forPoliceForce: policeForceID, date: date)
 
         let result = try await service.stopAndSearchesWithNoLocation(forPoliceForce: policeForceID, date: date)
 
@@ -152,11 +149,10 @@ final class StopAndSearchServiceTests: XCTestCase {
         let policeForceID = "cleveland"
         let date = Date()
         let expectedResult = StopAndSearch.mocks
-        let cacheKey = StopAndSearchesWithNoLocationCachingKey(policeForceID: policeForceID, date: date)
         apiClient.add(response: .success(StopAndSearch.mocks))
         _ = try await service.stopAndSearchesWithNoLocation(forPoliceForce: policeForceID, date: date)
 
-        let cachedResult = await cache.object(for: cacheKey, type: [StopAndSearch].self)
+        let cachedResult = await cache.stopAndSearchesWithNoLocation(forPoliceForce: policeForceID, date: date)
 
         XCTAssertEqual(cachedResult, expectedResult)
     }
@@ -181,8 +177,7 @@ final class StopAndSearchServiceTests: XCTestCase {
         let policeForceID = "avon-and-somerset"
         let date = Date()
         let expectedResult = StopAndSearch.mocks
-        let cacheKey = StopAndSearchesForPoliceForceCachingKey(policeForceID: policeForceID, date: date)
-        await cache.set(expectedResult, for: cacheKey)
+        await cache.setStopAndSearches(expectedResult, forPoliceForce: policeForceID, date: date)
 
         let result = try await service.stopAndSearches(forPoliceForce: policeForceID, date: date)
 
@@ -194,11 +189,10 @@ final class StopAndSearchServiceTests: XCTestCase {
         let policeForceID = "avon-and-somerset"
         let date = Date()
         let expectedResult = StopAndSearch.mocks
-        let cacheKey = StopAndSearchesForPoliceForceCachingKey(policeForceID: policeForceID, date: date)
         apiClient.add(response: .success(StopAndSearch.mocks))
         _ = try await service.stopAndSearches(forPoliceForce: policeForceID, date: date)
 
-        let cachedResult = await cache.object(for: cacheKey, type: [StopAndSearch].self)
+        let cachedResult = await cache.stopAndSearches(forPoliceForce: policeForceID, date: date)
 
         XCTAssertEqual(cachedResult, expectedResult)
     }

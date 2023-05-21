@@ -21,7 +21,7 @@ public final class StopAndSearchService {
     private static let logger = Logger(subsystem: Logger.policeDataKit, category: "StopAndSearchService")
 
     private let apiClient: any APIClient
-    private let cache: any Cache
+    private let cache: any StopAndSearchCache
     private let availableDataRegion: MKCoordinateRegion
 
     ///
@@ -33,12 +33,12 @@ public final class StopAndSearchService {
     public convenience init() {
         self.init(
             apiClient: PoliceDataKitFactory.apiClient,
-            cache: PoliceDataKitFactory.cacheStore,
+            cache: PoliceDataKitFactory.stopAndSearchCache,
             availableDataRegion: .availableDataRegion
         )
     }
 
-    init(apiClient: some APIClient, cache: some Cache, availableDataRegion: MKCoordinateRegion) {
+    init(apiClient: some APIClient, cache: some StopAndSearchCache, availableDataRegion: MKCoordinateRegion) {
         self.apiClient = apiClient
         self.cache = cache
         self.availableDataRegion = availableDataRegion
@@ -140,8 +140,7 @@ public final class StopAndSearchService {
     public func stopAndSearches(atLocation streetID: Int, date: Date = Date()) async throws -> [StopAndSearch] {
         Self.logger.trace("fetching Stop and Searches at location \(streetID, privacy: .public)")
 
-        let cacheKey = StopAndSearchesAtLocationCachingKey(streetID: streetID, date: date)
-        if let cachedStopAndSearches = await cache.object(for: cacheKey, type: [StopAndSearch].self) {
+        if let cachedStopAndSearches = await cache.stopAndSearches(atLocation: streetID, date: date) {
             return cachedStopAndSearches
         }
 
@@ -156,7 +155,7 @@ public final class StopAndSearchService {
             throw Self.mapToStopAndSearchError(error)
         }
 
-        await cache.set(stopAndSearches, for: cacheKey)
+        await cache.setStopAndSearches(stopAndSearches, atLocation: streetID, date: date)
 
         return stopAndSearches
     }
@@ -183,8 +182,8 @@ public final class StopAndSearchService {
         // swiftlint:disable:next line_length
         Self.logger.trace("fetching Stop and Searches with no location for Police Force \(policeForceID, privacy: .public)")
 
-        let cacheKey = StopAndSearchesWithNoLocationCachingKey(policeForceID: policeForceID, date: date)
-        if let cachedStopAndSearches = await cache.object(for: cacheKey, type: [StopAndSearch].self) {
+        if let cachedStopAndSearches = await cache.stopAndSearchesWithNoLocation(forPoliceForce: policeForceID,
+                                                                                 date: date) {
             return cachedStopAndSearches
         }
 
@@ -201,7 +200,7 @@ public final class StopAndSearchService {
             throw Self.mapToStopAndSearchError(error)
         }
 
-        await cache.set(stopAndSearches, for: cacheKey)
+        await cache.setStopAndSearchesWithNoLocation(stopAndSearches, forPoliceForce: policeForceID, date: date)
 
         return stopAndSearches
     }
@@ -227,8 +226,7 @@ public final class StopAndSearchService {
                                 date: Date = Date()) async throws -> [StopAndSearch] {
         Self.logger.trace("fetching Stop and Searches for Police Force \(policeForceID, privacy: .public)")
 
-        let cacheKey = StopAndSearchesForPoliceForceCachingKey(policeForceID: policeForceID, date: date)
-        if let cachedStopAndSearches = await cache.object(for: cacheKey, type: [StopAndSearch].self) {
+        if let cachedStopAndSearches = await cache.stopAndSearches(forPoliceForce: policeForceID, date: date) {
             return cachedStopAndSearches
         }
 
@@ -243,7 +241,7 @@ public final class StopAndSearchService {
             throw Self.mapToStopAndSearchError(error)
         }
 
-        await cache.set(stopAndSearches, for: cacheKey)
+        await cache.setStopAndSearches(stopAndSearches, forPoliceForce: policeForceID, date: date)
 
         return stopAndSearches
     }
