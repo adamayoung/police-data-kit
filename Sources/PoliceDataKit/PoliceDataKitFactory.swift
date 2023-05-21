@@ -28,6 +28,10 @@ extension PoliceDataKitFactory {
         OutcomeDefaultCache(cacheStore: cacheStore)
     }
 
+    static var policeForceCache: some PoliceForceCache {
+        PoliceForceDefaultCache(cacheStore: cacheStore)
+    }
+
 }
 
 extension PoliceDataKitFactory {

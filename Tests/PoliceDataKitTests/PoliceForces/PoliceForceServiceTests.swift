@@ -5,12 +5,12 @@ final class PoliceForceServiceTests: XCTestCase {
 
     var service: PoliceForceService!
     var apiClient: MockAPIClient!
-    var cache: MockCache!
+    var cache: PoliceForceMockCache!
 
     override func setUp() {
         super.setUp()
         apiClient = MockAPIClient()
-        cache = MockCache()
+        cache = PoliceForceMockCache()
         service = PoliceForceService(apiClient: apiClient, cache: cache)
     }
 
@@ -34,8 +34,7 @@ final class PoliceForceServiceTests: XCTestCase {
 
     func testPoliceForcesWhenCachedReturnsCachedPoliceForceReferences() async throws {
         let expectedResult = PoliceForceReference.mocks
-        let cacheKey = PoliceForcesCachingKey()
-        await cache.set(expectedResult, for: cacheKey)
+        await cache.setPoliceForces(expectedResult)
 
         let result = try await service.policeForces()
 
@@ -45,11 +44,10 @@ final class PoliceForceServiceTests: XCTestCase {
 
     func testPoliceForcesWhenNotCachedAndReturnsPoliceForceReferencesShouldCacheResult() async throws {
         let expectedResult = PoliceForceReference.mocks
-        let cacheKey = PoliceForcesCachingKey()
         apiClient.add(response: .success(PoliceForceReference.mocks))
         _ = try await service.policeForces()
 
-        let cachedResult = await cache.object(for: cacheKey, type: [PoliceForceReference].self)
+        let cachedResult = await cache.policeForces()
 
         XCTAssertEqual(cachedResult, expectedResult)
     }
@@ -83,8 +81,7 @@ final class PoliceForceServiceTests: XCTestCase {
     func testPoliceForceWhenCachedReturnsCachedPoliceForce() async throws {
         let expectedResult = PoliceForce.mock
         let id = expectedResult.id
-        let cacheKey = PoliceForceCachingKey(id: id)
-        await cache.set(expectedResult, for: cacheKey)
+        await cache.setPoliceForce(expectedResult, withID: id)
 
         let result = try await service.policeForce(withID: id)
 
@@ -95,11 +92,10 @@ final class PoliceForceServiceTests: XCTestCase {
     func testPoliceForceWhenNotCachedAndReturnsPoliceForceShouldCacheResult() async throws {
         let expectedResult = PoliceForce.mock
         let id = expectedResult.id
-        let cacheKey = PoliceForceCachingKey(id: id)
         apiClient.add(response: .success(PoliceForce.mock))
         _ = try await service.policeForce(withID: id)
 
-        let cachedResult = await cache.object(for: cacheKey, type: PoliceForce.self)
+        let cachedResult = await cache.policeForce(withID: id)
 
         XCTAssertEqual(cachedResult, expectedResult)
     }
@@ -136,8 +132,7 @@ final class PoliceForceServiceTests: XCTestCase {
     func testFetchSeniorOfficersWhenCachedReturnsCachedPoliceOfficers() async throws {
         let expectedResult = PoliceOfficer.mocks
         let policeForceID = "leicestershire"
-        let cacheKey = PoliceForceSeniorOfficersCachingKey(policeForceID: policeForceID)
-        await cache.set(expectedResult, for: cacheKey)
+        await cache.setSeniorOfficers(expectedResult, inPoliceForce: policeForceID)
 
         let result = try await service.seniorOfficers(inPoliceForce: policeForceID)
 
@@ -148,11 +143,10 @@ final class PoliceForceServiceTests: XCTestCase {
     func testFetchSeniorOfficersWhenNotCachedAndReturnsPoliceOfficersShouldCacheResult() async throws {
         let expectedResult = PoliceOfficer.mocks
         let policeForceID = "leicestershire"
-        let cacheKey = PoliceForceSeniorOfficersCachingKey(policeForceID: policeForceID)
         apiClient.add(response: .success(PoliceOfficer.mocks))
         _ = try await service.seniorOfficers(inPoliceForce: policeForceID)
 
-        let cachedResult = await cache.object(for: cacheKey, type: [PoliceOfficer].self)
+        let cachedResult = await cache.seniorOfficers(inPoliceForce: policeForceID)
 
         XCTAssertEqual(cachedResult, expectedResult)
     }

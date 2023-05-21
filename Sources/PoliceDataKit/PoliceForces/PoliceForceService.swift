@@ -16,7 +16,7 @@ public final class PoliceForceService {
     private static let logger = Logger(subsystem: Logger.policeDataKit, category: "PoliceForceService")
 
     private let apiClient: any APIClient
-    private let cache: any Cache
+    private let cache: any PoliceForceCache
 
     ///
     /// Creates a police force service object.
@@ -27,11 +27,11 @@ public final class PoliceForceService {
     public convenience init() {
         self.init(
             apiClient: PoliceDataKitFactory.apiClient,
-            cache: PoliceDataKitFactory.cacheStore
+            cache: PoliceDataKitFactory.policeForceCache
         )
     }
 
-    init(apiClient: some APIClient, cache: some Cache) {
+    init(apiClient: some APIClient, cache: some PoliceForceCache) {
         self.apiClient = apiClient
         self.cache = cache
     }
@@ -51,8 +51,7 @@ public final class PoliceForceService {
     public func policeForces() async throws -> [PoliceForceReference] {
         Self.logger.trace("fetching Police Forces")
 
-        let cacheKey = PoliceForcesCachingKey()
-        if let cachedPoliceForces = await cache.object(for: cacheKey, type: [PoliceForceReference].self) {
+        if let cachedPoliceForces = await cache.policeForces() {
             return cachedPoliceForces
         }
 
@@ -64,7 +63,7 @@ public final class PoliceForceService {
             throw Self.mapToPoliceForceError(error)
         }
 
-        await cache.set(policeForces, for: cacheKey)
+        await cache.setPoliceForces(policeForces)
 
         return policeForces
     }
@@ -83,8 +82,7 @@ public final class PoliceForceService {
     public func policeForce(withID id: PoliceForce.ID) async throws -> PoliceForce {
         Self.logger.trace("fetching Police Force \(id, privacy: .public)")
 
-        let cacheKey = PoliceForceCachingKey(id: id)
-        if let cachedPoliceForce = await cache.object(for: cacheKey, type: PoliceForce.self) {
+        if let cachedPoliceForce = await cache.policeForce(withID: id) {
             return cachedPoliceForce
         }
 
@@ -97,7 +95,7 @@ public final class PoliceForceService {
             throw Self.mapToPoliceForceError(error)
         }
 
-        await cache.set(policeForce, for: cacheKey)
+        await cache.setPoliceForce(policeForce, withID: id)
 
         return policeForce
     }
@@ -116,8 +114,7 @@ public final class PoliceForceService {
     public func seniorOfficers(inPoliceForce policeForceID: PoliceForce.ID) async throws -> [PoliceOfficer] {
         Self.logger.trace("fetching Senior Officers in Police Force \(policeForceID, privacy: .public)")
 
-        let cacheKey = PoliceForceSeniorOfficersCachingKey(policeForceID: policeForceID)
-        if let cachedPeopleOfficers = await cache.object(for: cacheKey, type: [PoliceOfficer].self) {
+        if let cachedPeopleOfficers = await cache.seniorOfficers(inPoliceForce: policeForceID) {
             return cachedPeopleOfficers
         }
 
@@ -132,7 +129,7 @@ public final class PoliceForceService {
             throw Self.mapToPoliceForceError(error)
         }
 
-        await cache.set(policeOfficers, for: cacheKey)
+        await cache.setSeniorOfficers(policeOfficers, inPoliceForce: policeForceID)
 
         return policeOfficers
     }
