@@ -1,3 +1,4 @@
+import Combine
 import MapKit
 @testable import PoliceDataKit
 import XCTest
@@ -8,12 +9,14 @@ final class NeighbourhoodServiceTests: XCTestCase {
     var apiClient: MockAPIClient!
     var cache: NeighbourhoodMockCache!
     var availableDataRegion: MKCoordinateRegion!
+    var cancellables: Set<AnyCancellable>!
 
     override func setUp() {
         super.setUp()
         apiClient = MockAPIClient()
         cache = NeighbourhoodMockCache()
         availableDataRegion = .test
+        cancellables = Set<AnyCancellable>()
         service = NeighbourhoodService(
             apiClient: apiClient,
             cache: cache,
@@ -23,6 +26,7 @@ final class NeighbourhoodServiceTests: XCTestCase {
 
     override func tearDown() {
         service = nil
+        cancellables = nil
         availableDataRegion = nil
         cache = nil
         apiClient = nil
@@ -131,6 +135,41 @@ extension NeighbourhoodServiceTests {
         apiClient.add(response: .success(expectedResult))
 
         let result = try await service.neighbourhood(at: coordinate)
+
+        XCTAssertEqual(result, expectedResult)
+        XCTAssertEqual(apiClient.requestedURLs.count, 2)
+        XCTAssertEqual(
+            apiClient.requestedURLs.first,
+            NeighbourhoodsEndpoint.locateNeighbourhood(coordinate: coordinate).path
+        )
+        XCTAssertEqual(
+            apiClient.requestedURLs.last,
+            NeighbourhoodsEndpoint.details(
+                id: neighbourhoodPolicingTeam.neighbourhood,
+                policeForceID: neighbourhoodPolicingTeam.force
+            ).path
+        )
+    }
+
+    func testNeighbourhoodPublisherAtCoordinateReturnsNeighbourhood() throws {
+        let coordinate = CLLocationCoordinate2D.mock
+        let neighbourhoodPolicingTeam = NeighbourhoodPolicingTeam.mock
+        let expectedResult = Neighbourhood.mock
+
+        apiClient.add(response: .success(neighbourhoodPolicingTeam))
+        apiClient.add(response: .success(expectedResult))
+
+        let expectation = self.expectation(description: "NeighbourhoodPublisher")
+        var result: Neighbourhood?
+        service.neighbourhoodPublisher(at: coordinate)
+            .sink { _ in
+                expectation.fulfill()
+            } receiveValue: { neighbourhood in
+                result = neighbourhood
+            }
+            .store(in: &cancellables)
+
+        wait(for: [expectation])
 
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(apiClient.requestedURLs.count, 2)
@@ -342,6 +381,31 @@ extension NeighbourhoodServiceTests {
 
         XCTAssertEqual(resultError, .locationOutsideOfDataSetRegion)
         XCTAssertEqual(apiClient.requestedURLs.count, 0)
+    }
+
+    func testNeighbourhoodPolicingTeamPublisherAtCoordinateReturnsNeighbourhoodPolicingTeam() {
+        let coordinate = CLLocationCoordinate2D.mock
+        let expectedResult = NeighbourhoodPolicingTeam.mock
+        apiClient.add(response: .success(NeighbourhoodPolicingTeam.mock))
+
+        let expectation = self.expectation(description: "NeighbourhoodPolicingTeamPublisher")
+        var result: NeighbourhoodPolicingTeam?
+        service.neighbourhoodPolicingTeamPublisher(at: coordinate)
+            .sink { _ in
+                expectation.fulfill()
+            } receiveValue: { policingTeam in
+                result = policingTeam
+            }
+            .store(in: &cancellables)
+
+        wait(for: [expectation])
+
+        XCTAssertEqual(result, expectedResult)
+        XCTAssertEqual(apiClient.requestedURLs.count, 1)
+        XCTAssertEqual(
+            apiClient.requestedURLs.last,
+            NeighbourhoodsEndpoint.locateNeighbourhood(coordinate: coordinate).path
+        )
     }
 
 }

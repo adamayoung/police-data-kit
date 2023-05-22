@@ -101,7 +101,8 @@ let boundary = try await neighbourhoodService.policeOfficers(forNeighbourhood: g
 
 ### Fetching the Police Team for a Neighbourhood
 
-The neighbourhood policing team responsible for a particular area can be fetched with ``NeighbourhoodService/neighbourhoodPolicingTeam(at:)``.
+The neighbourhood policing team responsible for a particular area can be fetched with ``NeighbourhoodService/neighbourhoodPolicingTeam(at:)`` or
+``NeighbourhoodService/neighbourhoodPolicingTeamPublisher(at:)``.
 
 For example, to find the policing team for
 [Leeds City Centre](https://maps.apple.com/?address=7%20King%20Edward%20St,%20Leeds,%20LS1%206AX,%20England&auid=1817029011196917833&ll=53.797927,-1.541522&lsp=9902&q=Leeds%20City%20Centre):
@@ -110,4 +111,12 @@ For example, to find the policing team for
 let leedsCityCentreCoordinate = CLLocationCoordinate2D(latitude: 53.797927, longitude: -1.541522)
 
 let policingTeam = try await neighbourhoodService.neighbourhoodPolicingTeam(at: leedsCityCentreCoordinate)
+```
+
+```swift
+neighbourhoodService.neighbourhoodPolicingTeamPublisher(at: leedsCityCentreCoordinate)
+    .sink {
+        ...
+    }
+    
 ```
