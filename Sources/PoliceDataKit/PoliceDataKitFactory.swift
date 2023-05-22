@@ -24,6 +24,10 @@ extension PoliceDataKitFactory {
         CrimeDefaultCache(cacheStore: cacheStore)
     }
 
+    static var neighbourhoodCache: some NeighbourhoodCache {
+        NeighbourhoodDefaultCache(cacheStore: cacheStore)
+    }
+
     static var outcomeCache: some OutcomeCache {
         OutcomeDefaultCache(cacheStore: cacheStore)
     }

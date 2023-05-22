@@ -17,7 +17,7 @@ public final class NeighbourhoodService {
     private static let logger = Logger(subsystem: Logger.policeDataKit, category: "NeighbourhoodService")
 
     private let apiClient: any APIClient
-    private let cache: any Cache
+    private let cache: any NeighbourhoodCache
     private let availableDataRegion: MKCoordinateRegion
 
     ///
@@ -29,12 +29,12 @@ public final class NeighbourhoodService {
     public convenience init() {
         self.init(
             apiClient: PoliceDataKitFactory.apiClient,
-            cache: PoliceDataKitFactory.cacheStore,
+            cache: PoliceDataKitFactory.neighbourhoodCache,
             availableDataRegion: .availableDataRegion
         )
     }
 
-    init(apiClient: some APIClient, cache: some Cache, availableDataRegion: MKCoordinateRegion) {
+    init(apiClient: some APIClient, cache: some NeighbourhoodCache, availableDataRegion: MKCoordinateRegion) {
         self.apiClient = apiClient
         self.cache = cache
         self.availableDataRegion = availableDataRegion
@@ -54,8 +54,7 @@ public final class NeighbourhoodService {
     public func neighbourhoods(inPoliceForce policeForceID: PoliceForce.ID) async throws -> [NeighbourhoodReference] {
         Self.logger.trace("fetching Neighbourhoods in Police Force \(policeForceID, privacy: .public)")
 
-        let cacheKey = NeighbourhoodsInPoliceForceCachingKey(policeForceID: policeForceID)
-        if let cachedNeighbourhoodReferences = await cache.object(for: cacheKey, type: [NeighbourhoodReference].self) {
+        if let cachedNeighbourhoodReferences = await cache.neighbourhoods(inPoliceForce: policeForceID) {
             return cachedNeighbourhoodReferences
         }
 
@@ -70,7 +69,7 @@ public final class NeighbourhoodService {
             throw Self.mapToNeighbourhoodError(error)
         }
 
-        await cache.set(neighbourhoodReferences, for: cacheKey)
+        await cache.setNeighbourhoods(neighbourhoodReferences, inPoliceForce: policeForceID)
 
         return neighbourhoodReferences
     }
@@ -93,8 +92,7 @@ public final class NeighbourhoodService {
         // swiftlint:disable:next line_length
         Self.logger.trace("fetching Neighbourhood \(id, privacy: .public) in Police Force \(policeForceID, privacy: .public)")
 
-        let cacheKey = NeighbourhoodCachingKey(id: id, policeForceID: policeForceID)
-        if let cachedNeighbourhood = await cache.object(for: cacheKey, type: Neighbourhood.self) {
+        if let cachedNeighbourhood = await cache.neighbourhood(withID: id, inPoliceForce: policeForceID) {
             return cachedNeighbourhood
         }
 
@@ -109,7 +107,7 @@ public final class NeighbourhoodService {
             throw Self.mapToNeighbourhoodError(error)
         }
 
-        await cache.set(neighbourhood, for: cacheKey)
+        await cache.setNeighbourhood(neighbourhood, withID: id, inPoliceForce: policeForceID)
 
         return neighbourhood
     }
@@ -154,8 +152,7 @@ public final class NeighbourhoodService {
         // swiftlint:disable:next line_length
         Self.logger.trace("fetching Boundary for Neighbourhood \(neighbourhoodID, privacy: .public) in Police Force \(policeForceID, privacy: .public)")
 
-        let cacheKey = NeighbourhoodBoundaryCachingKey(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID)
-        if let cachedBoundary = await cache.object(for: cacheKey, type: [CLLocationCoordinate2D].self) {
+        if let cachedBoundary = await cache.boundary(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID) {
             return cachedBoundary
         }
 
@@ -172,7 +169,7 @@ public final class NeighbourhoodService {
             throw Self.mapToNeighbourhoodError(error)
         }
 
-        await cache.set(boundary, for: cacheKey)
+        await cache.setBoundary(boundary, forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
         return boundary
     }
@@ -195,10 +192,8 @@ public final class NeighbourhoodService {
         // swiftlint:disable:next line_length
         Self.logger.trace("fetching Police Officers for Neighbourhood \(neighbourhoodID, privacy: .public) in Police Force \(policeForceID, privacy: .public)")
 
-        let cacheKey = NeighbourhoodPoliceOfficersCachingKey(
-            neighbourhoodID: neighbourhoodID, policeForceID: policeForceID
-        )
-        if let cachedPoliceOfficers = await cache.object(for: cacheKey, type: [PoliceOfficer].self) {
+        if let cachedPoliceOfficers = await cache.policeOfficers(forNeighbourhood: neighbourhoodID,
+                                                                 inPoliceForce: policeForceID) {
             return cachedPoliceOfficers
         }
 
@@ -215,7 +210,7 @@ public final class NeighbourhoodService {
             throw Self.mapToNeighbourhoodError(error)
         }
 
-        await cache.set(policeOfficers, for: cacheKey)
+        await cache.setPoliceOfficers(policeOfficers, forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
         return policeOfficers
     }
@@ -238,10 +233,8 @@ public final class NeighbourhoodService {
         // swiftlint:disable:next line_length
         Self.logger.trace("fetching Priorities for Neighbourhood \(neighbourhoodID, privacy: .public) in Police Force \(policeForceID, privacy: .public)")
 
-        let cacheKey = NeighbourhoodPrioritiesCachingKey(
-            neighbourhoodID: neighbourhoodID, policeForceID: policeForceID
-        )
-        if let cachedPriorities = await cache.object(for: cacheKey, type: [NeighbourhoodPriority].self) {
+        if let cachedPriorities = await cache.priorities(forNeighbourhood: neighbourhoodID,
+                                                         inPoliceForce: policeForceID) {
             return cachedPriorities
         }
 
@@ -258,7 +251,7 @@ public final class NeighbourhoodService {
             throw Self.mapToNeighbourhoodError(error)
         }
 
-        await cache.set(priorities, for: cacheKey)
+        await cache.setPriorities(priorities, forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
         return priorities
     }
