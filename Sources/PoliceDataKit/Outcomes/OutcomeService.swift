@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import MapKit
 import os
@@ -116,6 +117,40 @@ public final class OutcomeService {
     }
 
     ///
+    /// Returns a publisher that wraps a list of crime outcomes within a 1 mile radius of a single point.
+    ///
+    /// [https://data.police.uk/docs/method/outcomes-at-location/](https://data.police.uk/docs/method/outcomes-at-location/)
+    ///
+    /// Outcomes are not available for the Police Service of Northern Ireland.
+    ///
+    /// - Parameters:
+    ///   - coordinate: A coordinate.
+    ///   - date: Limit results to a specific month. The latest month will be shown by default.
+    ///
+    /// - Returns: The outcomes of crimes in a 1 mile radius of the specified coordinate and date.
+    /// 
+    public func streetLevelOutcomesPublisher(at coordinate: CLLocationCoordinate2D,
+                                             date: Date = Date()) -> AnyPublisher<[Outcome], OutcomeError> {
+        Future { [weak self] promise in
+            guard let self else {
+                promise(.failure(.unknown))
+                return
+            }
+
+            Task {
+                do {
+                    let outcomes = try await self.streetLevelOutcomes(at: coordinate, date: date)
+                    promise(.success(outcomes))
+                } catch let error {
+                    let outcomeError = Self.mapToOutcomeError(error)
+                    promise(.failure(outcomeError))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
+    }
+
+    ///
     /// Returns a list of crime outcomes within a custom area.
     ///
     /// [https://data.police.uk/docs/method/outcomes-at-location/](https://data.police.uk/docs/method/outcomes-at-location/)
@@ -146,6 +181,40 @@ public final class OutcomeService {
         }
 
         return outcomes
+    }
+
+    ///
+    /// Returns a publisher that wraps a list of crime outcomes within a custom area.
+    ///
+    /// [https://data.police.uk/docs/method/outcomes-at-location/](https://data.police.uk/docs/method/outcomes-at-location/)
+    ///
+    /// Outcomes are not available for the Police Service of Northern Ireland.
+    ///
+    /// - Parameters:
+    ///   - coordinates: Coordinates which define the boundary of the custom area.
+    ///   - date: Limit results to a specific month. The latest month will be shown by default.
+    ///
+    /// - Returns: The outcomes of crimes within the specified area.
+    ///
+    public func streetLevelOutcomesPublisher(in coordinates: [CLLocationCoordinate2D],
+                                             date: Date = Date()) -> AnyPublisher<[Outcome], OutcomeError> {
+        Future { [weak self] promise in
+            guard let self else {
+                promise(.failure(.unknown))
+                return
+            }
+
+            Task {
+                do {
+                    let outcomes = try await self.streetLevelOutcomes(in: coordinates, date: date)
+                    promise(.success(outcomes))
+                } catch let error {
+                    let outcomeError = Self.mapToOutcomeError(error)
+                    promise(.failure(outcomeError))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
     }
 
     ///
@@ -187,6 +256,10 @@ public final class OutcomeService {
 extension OutcomeService {
 
     private static func mapToOutcomeError(_ error: Error) -> OutcomeError {
+        if let error = error as? OutcomeError {
+            return error
+        }
+
         guard let error = error as? APIClientError else {
             return .unknown
         }
