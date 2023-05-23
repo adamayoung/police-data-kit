@@ -1,3 +1,4 @@
+import Combine
 import MapKit
 @testable import PoliceDataKit
 import XCTest
@@ -8,17 +9,20 @@ final class OutcomeServiceTests: XCTestCase {
     var apiClient: MockAPIClient!
     var cache: OutcomeMockCache!
     var availableDataRegion: MKCoordinateRegion!
+    var cancellables: Set<AnyCancellable>!
 
     override func setUp() {
         super.setUp()
         apiClient = MockAPIClient()
         cache = OutcomeMockCache()
         availableDataRegion = .test
+        cancellables = Set<AnyCancellable>()
         service = OutcomeService(apiClient: apiClient, cache: cache, availableDataRegion: availableDataRegion)
     }
 
     override func tearDown() {
         service = nil
+        cancellables = nil
         availableDataRegion = nil
         cache = nil
         apiClient = nil
@@ -81,6 +85,32 @@ final class OutcomeServiceTests: XCTestCase {
         )
     }
 
+    func testStreetLevelOutcomesPublisherAtCoordinateReturnsOutcomes() {
+        let coordinate = CLLocationCoordinate2D.mock
+        let expectedResult = Outcome.mocks
+        let date = Date()
+        apiClient.add(response: .success(Outcome.mocks))
+
+        let expectation = self.expectation(description: "StreetLevelOutcomesPublisher")
+        var result: [Outcome]?
+        service.streetLevelOutcomesPublisher(at: coordinate)
+            .sink { _ in
+                expectation.fulfill()
+            } receiveValue: { outcomes in
+                result = outcomes
+            }
+            .store(in: &cancellables)
+
+        wait(for: [expectation])
+
+        XCTAssertEqual(result, expectedResult)
+        XCTAssertEqual(apiClient.requestedURLs.count, 1)
+        XCTAssertEqual(
+            apiClient.requestedURLs.last,
+            OutcomesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate, date: date).path
+        )
+    }
+
     func testStreetLevelOutcomesAtCoordsWhenNotInAvailableDataRegionThrowsError() async throws {
         let coordinate = CLLocationCoordinate2D.outsideAvailableDataRegion
         let date = Date()
@@ -104,6 +134,32 @@ final class OutcomeServiceTests: XCTestCase {
         apiClient.add(response: .success(Outcome.mocks))
 
         let result = try await service.streetLevelOutcomes(in: boundary, date: date)
+
+        XCTAssertEqual(result, expectedResult)
+        XCTAssertEqual(apiClient.requestedURLs.count, 1)
+        XCTAssertEqual(
+            apiClient.requestedURLs.last,
+            OutcomesEndpoint.streetLevelOutcomesInArea(coordinates: CLLocationCoordinate2D.mocks, date: date).path
+        )
+    }
+
+    func testStreetLevelOutcomesPublisherInAreaReturnsOutcomes() {
+        let boundary = CLLocationCoordinate2D.mocks
+        let expectedResult = Outcome.mocks
+        let date = Date()
+        apiClient.add(response: .success(Outcome.mocks))
+
+        let expectation = self.expectation(description: "StreetLevelOutcomesPublisher")
+        var result: [Outcome]?
+        service.streetLevelOutcomesPublisher(in: boundary)
+            .sink { _ in
+                expectation.fulfill()
+            } receiveValue: { outcomes in
+                result = outcomes
+            }
+            .store(in: &cancellables)
+
+        wait(for: [expectation])
 
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(apiClient.requestedURLs.count, 1)
