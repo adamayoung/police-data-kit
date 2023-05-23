@@ -107,7 +107,7 @@ neighbourhood in
 let granthamTownCentreNeighbourhoodID = "NC44"
 let lincolnshirePoliceForceID = "lincolnshire"
 
-let boundary = try await neighbourhoodService.policeOfficers(forNeighbourhood: granthamTownCentreNeighbourhoodID, inPoliceForce: lincolnshirePoliceForceID)
+let boundary = try await neighbourhoodService.priorities(forNeighbourhood: granthamTownCentreNeighbourhoodID, inPoliceForce: lincolnshirePoliceForceID)
 ```
 
 ### Fetching the Police Team for a Neighbourhood
