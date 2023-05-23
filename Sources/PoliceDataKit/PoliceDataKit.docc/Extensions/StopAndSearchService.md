@@ -9,7 +9,9 @@
 ### Stop and Searches
 
 - ``stopAndSearches(at:date:)``
+- ``stopAndSearchesPublisher(at:date:)``
 - ``stopAndSearches(in:date:)``
+- ``stopAndSearchesPublisher(in:date:)``
 - ``stopAndSearches(atLocation:date:)``
 - ``stopAndSearchesWithNoLocation(forPoliceForce:date:)``
 - ``stopAndSearches(forPoliceForce:date:)``

@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import MapKit
 import os
@@ -86,6 +87,42 @@ public final class StopAndSearchService {
     }
 
     ///
+    /// Returns a publisher that wraps stop and searches at street-level within a 1 mile radius of a single point.
+    ///
+    /// The stop and searches returned in the API, like the crimes, are only an approximation of where the actual stop and searches
+    /// occurred, they are not the exact locations. See the [about page](https://data.police.uk/about/#location-anonymisation)
+    /// for more information about location anonymisation.
+    ///
+    /// [https://data.police.uk/docs/method/stops-street/](https://data.police.uk/docs/method/stops-street/)
+    ///
+    /// - Parameters:
+    ///   - coordinate: A coordinate.
+    ///   - date: Limit results to a specific month. The latest month will be shown by default.
+    ///
+    /// - Returns: A list of stop and searches.
+    ///
+    public func stopAndSearchesPublisher(at coordinate: CLLocationCoordinate2D,
+                                         date: Date = Date()) -> AnyPublisher<[StopAndSearch], StopAndSearchError> {
+        Future { [weak self] promise in
+            guard let self else {
+                promise(.failure(.unknown))
+                return
+            }
+
+            Task {
+                do {
+                    let stopAndSearches = try await self.stopAndSearches(at: coordinate, date: date)
+                    promise(.success(stopAndSearches))
+                } catch let error {
+                    let outcomeError = Self.mapToStopAndSearchError(error)
+                    promise(.failure(outcomeError))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
+    }
+
+    ///
     /// Returns stop and searches at street-level within a custom area.
     ///
     /// The stop and searches returned in the API, like the crimes, are only an approximation of where the actual stop and searches occurred, they are not the
@@ -118,6 +155,42 @@ public final class StopAndSearchService {
         }
 
         return stopAndSearches
+    }
+
+    ///
+    /// Returns a publisher that wraps  stop and searches at street-level within a custom area.
+    ///
+    /// The stop and searches returned in the API, like the crimes, are only an approximation of where the actual stop and searches occurred, they are not the
+    /// exact locations. See the [about page](https://data.police.uk/about/#location-anonymisation) for more information about
+    /// location anonymisation.
+    ///
+    /// [https://data.police.uk/docs/method/stops-street/](https://data.police.uk/docs/method/stops-street/)
+    ///
+    /// - Parameters:
+    ///   - coordinates: Coordinates which define the boundary of the custom area.
+    ///   - date: Limit results to a specific month. The latest month will be shown by default.
+    ///
+    /// - Returns: A list of stop and searches.
+    ///
+    public func stopAndSearchesPublisher(in coordinates: [CLLocationCoordinate2D],
+                                         date: Date = Date()) -> AnyPublisher<[StopAndSearch], StopAndSearchError> {
+        Future { [weak self] promise in
+            guard let self else {
+                promise(.failure(.unknown))
+                return
+            }
+
+            Task {
+                do {
+                    let stopAndSearches = try await self.stopAndSearches(in: coordinates, date: date)
+                    promise(.success(stopAndSearches))
+                } catch let error {
+                    let outcomeError = Self.mapToStopAndSearchError(error)
+                    promise(.failure(outcomeError))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
     }
 
     ///
@@ -251,6 +324,10 @@ public final class StopAndSearchService {
 extension StopAndSearchService {
 
     private static func mapToStopAndSearchError(_ error: Error) -> StopAndSearchError {
+        if let error = error as? StopAndSearchError {
+            return error
+        }
+
         guard let error = error as? APIClientError else {
             return .unknown
         }
