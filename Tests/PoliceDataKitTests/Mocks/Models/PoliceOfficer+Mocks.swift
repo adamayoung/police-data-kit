@@ -25,6 +25,15 @@ extension PoliceOfficer {
         )
     }
 
+    static var mockNoBioOrContactDetails: Self {
+        PoliceOfficer(
+            name: "Dave Smith",
+            rank: nil,
+            bio: nil,
+            contactDetails: ContactDetails()
+        )
+    }
+
     static var mocks: [Self] {
         [
             .mock,

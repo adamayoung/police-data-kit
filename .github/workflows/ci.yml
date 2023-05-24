@@ -39,7 +39,10 @@ jobs:
         run: swift build -Xswiftc -warnings-as-errors --build-tests
 
       - name: Test
-        run: swift test --skip-build --parallel --filter PoliceDataKitTests 
+        run: swift test --skip-build --parallel --filter PoliceDataKitTests
+      
+      - name: Build for Release
+        run: swift build -c release -Xswiftc -warnings-as-errors
 
   build-documentation:
     name: Build Documentation

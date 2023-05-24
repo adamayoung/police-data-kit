@@ -9,7 +9,7 @@ public struct PoliceOfficer: Equatable, Codable {
     public let name: String
 
     /// Police Force rank.
-    public let rank: String
+    public let rank: String?
 
     /// Officer biography.
     public let bio: String?
@@ -28,7 +28,7 @@ public struct PoliceOfficer: Equatable, Codable {
     ///
     public init(
         name: String,
-        rank: String,
+        rank: String? = nil,
         bio: String? = nil,
         contactDetails: ContactDetails
     ) {

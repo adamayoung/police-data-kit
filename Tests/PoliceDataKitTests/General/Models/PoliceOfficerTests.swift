@@ -9,4 +9,11 @@ final class PoliceOfficerTests: XCTestCase {
         XCTAssertEqual(result, .mock)
     }
 
+    func testDecodeWithNullsReturnsPoliceOfficer() throws {
+        let result = try JSONDecoder.policeDataAPI
+            .decode(PoliceOfficer.self, fromResource: "police-officer-nulls")
+
+        XCTAssertEqual(result, .mockNoBioOrContactDetails)
+    }
+
 }
