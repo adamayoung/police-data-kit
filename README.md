@@ -1,6 +1,6 @@
 # PoliceDataKit
 
-[![CI](https://github.com/adamayoung/police-data-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/adamayoung/police-data-kit/actions/workflows/ci.yml) [![Documentation](https://github.com/adamayoung/police-data-kit/actions/workflows/documentation.yml/badge.svg)](https://github.com/adamayoung/police-data-kit/actions/workflows/documentation.yml)
+[![CI](https://github.com/adamayoung/police-data-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/adamayoung/police-data-kit/actions/workflows/ci.yml) [![Integration Tests](https://github.com/adamayoung/police-data-kit/actions/workflows/integration.yml/badge.svg)](https://github.com/adamayoung/police-data-kit/actions/workflows/integration.yml) [![Documentation](https://github.com/adamayoung/police-data-kit/actions/workflows/documentation.yml/badge.svg)](https://github.com/adamayoung/police-data-kit/actions/workflows/documentation.yml)
 
 A Swift Package for retrieving open data about crime and policing in England, Wales and Northern Ireland.
 
