@@ -51,8 +51,8 @@ final class PoliceForceIntegrationTests: XCTestCase {
         XCTAssertEqual(policeForceError, .notFound)
     }
 
-    func testSeniorOfficersForStaffordshirePolice() async throws {
-        let policForceID = "staffordshire"
+    func testSeniorOfficersForWarwickshirePolice() async throws {
+        let policForceID = "warwickshire"
 
         let policeOfficers = try await policeForceService.seniorOfficers(inPoliceForce: policForceID)
 
