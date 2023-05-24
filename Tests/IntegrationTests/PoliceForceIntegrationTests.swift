@@ -47,7 +47,6 @@ final class PoliceForceIntegrationTests: XCTestCase {
             policeForceError = error as? PoliceForceError
         }
 
-        XCTAssertNotNil(policeForceError)
         XCTAssertEqual(policeForceError, .notFound)
     }
 
@@ -77,7 +76,6 @@ final class PoliceForceIntegrationTests: XCTestCase {
             policeForceError = error as? PoliceForceError
         }
 
-        XCTAssertNotNil(policeForceError)
         XCTAssertEqual(policeForceError, .notFound)
     }
 
