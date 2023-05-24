@@ -1,9 +1,9 @@
 name: Documentation
 
 on:
-  release:
-    types:
-      - published
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -13,7 +13,7 @@ permissions:
 
 concurrency:
   group: "documentation"
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 env:
   DEVELOPER_DIR: /Applications/Xcode_14.3.app/Contents/Developer
