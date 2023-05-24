@@ -75,7 +75,7 @@ final class CrimeServiceTests: XCTestCase {
 
     func testCrimesForStreetWhenNotCachedReturnsCrimes() async throws {
         let expectedResult = Crime.mocks
-        let streetID = expectedResult[0].location.street.id
+        let streetID = try XCTUnwrap(expectedResult[0].location?.street.id)
         let date = Date()
         apiClient.add(response: .success(Crime.mocks))
 
@@ -90,7 +90,7 @@ final class CrimeServiceTests: XCTestCase {
 
     func testCrimesForStreetWhenCachedReturnsCachedCrimes() async throws {
         let expectedResult = Crime.mocks
-        let streetID = expectedResult[0].location.street.id
+        let streetID = try XCTUnwrap(expectedResult[0].location?.street.id)
         let date = Date()
         await cache.setCrimes(expectedResult, forStreet: streetID, date: date)
 
@@ -102,7 +102,7 @@ final class CrimeServiceTests: XCTestCase {
 
     func testCrimesForStreetWhenNotCachedAndReturnsCrimesShouldCacheResult() async throws {
         let expectedResult = Crime.mocks
-        let streetID = expectedResult[0].location.street.id
+        let streetID = try XCTUnwrap(expectedResult[0].location?.street.id)
         let date = Date()
         apiClient.add(response: .success(Crime.mocks))
         _ = try await service.crimes(forStreet: streetID, date: date)

@@ -68,8 +68,9 @@ public final class CrimeService {
 
         let crimes: [Crime]
         do {
+            let endpoint = CrimesEndpoint.streetLevelCrimesAtSpecificPoint(coordinate: coordinate, date: date)
             crimes = try await apiClient.get(
-                endpoint: CrimesEndpoint.streetLevelCrimesAtSpecificPoint(coordinate: coordinate, date: date)
+                endpoint: endpoint
             )
         } catch let error {
             // swiftlint:disable:next line_length
