@@ -20,7 +20,7 @@ env:
 
 jobs:
   deploy:
-    name: Deploy
+    name: Deploy Documentation
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}documentation/policedatakit
