@@ -69,7 +69,6 @@ public final class CrimeService {
         let crimes: [Crime]
         do {
             let endpoint = CrimesEndpoint.streetLevelCrimesAtSpecificPoint(coordinate: coordinate, date: date)
-            print(endpoint.path)
             crimes = try await apiClient.get(
                 endpoint: endpoint
             )
