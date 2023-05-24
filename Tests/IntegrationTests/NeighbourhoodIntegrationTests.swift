@@ -138,7 +138,7 @@ final class NeighbourhoodIntegrationTests: XCTestCase {
         XCTAssertEqual(result?.name, "Leeds City")
     }
 
-    func testBoundaryForNeighbourhoodInPoliceForceForWestYokrshireWakefieldCentral() async throws {
+    func testBoundaryForNeighbourhoodInPoliceForceForWakefieldCentralWestYokrshire() async throws {
         let neighbourhoodID = "WDT_CEN"
         let policeForceID = "west-yorkshire"
 
@@ -166,6 +166,54 @@ final class NeighbourhoodIntegrationTests: XCTestCase {
                                                                            inPoliceForce: policeForceID)
 
         XCTAssertGreaterThan(policeOfficers.count, 0)
+    }
+
+    func testPrioritiesForNeighbourhoodInPoliceForceForDoncasterWestSouthYorkshire() async throws {
+        let neighbourhoodID = "AB"
+        let policeForceID = "south-yorkshire"
+
+        let priorties = try await neighbourhoodService.priorities(forNeighbourhood: neighbourhoodID,
+                                                                  inPoliceForce: policeForceID)
+
+        XCTAssertGreaterThan(priorties.count, 0)
+    }
+
+    func testPrioritiesForNeighbourhoodInPoliceForceForGloucesterCityCentreGloucestershire() async throws {
+        let neighbourhoodID = "BA1"
+        let policeForceID = "gloucestershire"
+
+        let priorties = try await neighbourhoodService.priorities(forNeighbourhood: neighbourhoodID,
+                                                                  inPoliceForce: policeForceID)
+
+        XCTAssertGreaterThan(priorties.count, 0)
+    }
+
+    func testNeighbourhoodPolicingTeamAtCoordinateForGloucesterCityCentreGloucestershire() async throws {
+        let gloucesterCoordinate = CLLocationCoordinate2D(latitude: 51.86703, longitude: -2.2413)
+
+        let policingTeam = try await neighbourhoodService.neighbourhoodPolicingTeam(at: gloucesterCoordinate)
+
+        XCTAssertEqual(policingTeam.force, "gloucestershire")
+        XCTAssertEqual(policingTeam.neighbourhood, "BA1")
+    }
+
+    func testNeighbourhoodPolicingTeamPublisherAtCoordinateForGloucesterCityCentreGloucestershire() {
+        let gloucesterCoordinate = CLLocationCoordinate2D(latitude: 51.86703, longitude: -2.2413)
+
+        let expectation = self.expectation(description: "NeighbourhoodPublisher")
+        var result: NeighbourhoodPolicingTeam?
+        neighbourhoodService.neighbourhoodPolicingTeamPublisher(at: gloucesterCoordinate)
+            .sink { _ in
+                expectation.fulfill()
+            } receiveValue: { policingTeam in
+                result = policingTeam
+            }
+            .store(in: &cancellables)
+
+        wait(for: [expectation])
+
+        XCTAssertEqual(result?.force, "gloucestershire")
+        XCTAssertEqual(result?.neighbourhood, "BA1")
     }
 
 }
