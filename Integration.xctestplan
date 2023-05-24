@@ -1,0 +1,35 @@
+{
+  "configurations" : [
+    {
+      "id" : "41C002F4-B317-40CE-A718-D6B26C87E7AE",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:",
+          "identifier" : "PoliceDataKit",
+          "name" : "PoliceDataKit"
+        }
+      ]
+    },
+    "language" : "en-GB",
+    "region" : "GB",
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "IntegrationTests",
+        "name" : "IntegrationTests"
+      }
+    }
+  ],
+  "version" : 1
+}
