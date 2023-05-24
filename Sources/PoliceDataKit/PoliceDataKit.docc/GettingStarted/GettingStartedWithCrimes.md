@@ -32,11 +32,11 @@ Or within a defined boundary (a collection of CLLocationCoordinate2Ds) using
 
 ```swift
 let boundary = [
-   CLLocationCoordinate2D(latitude: 51.507, 0.127),
-   CLLocationCoordinate2D(latitude: 51.508, 0.127),
-   CLLocationCoordinate2D(latitude: 51.508, 0.128),
-   CLLocationCoordinate2D(latitude: 51.507, 0.128),
-   CLLocationCoordinate2D(latitude: 51.507, 0.127)
+   CLLocationCoordinate2D(latitude: 51.507, longitude: 0.127),
+   CLLocationCoordinate2D(latitude: 51.508, longitude: 0.127),
+   CLLocationCoordinate2D(latitude: 51.508, longitude: 0.128),
+   CLLocationCoordinate2D(latitude: 51.507, longitude: 0.128),
+   CLLocationCoordinate2D(latitude: 51.507, longitude: 0.127)
 ]
 
 let crimes = try await crimeService.streetLevelCrimes(in: boundary)
@@ -52,7 +52,7 @@ For example, to find all crimes for the current month on
 [Saunders Way, London](https://maps.apple.com/?address=Saunders%20Way,%20London,%20SE28,%20England&ll=51.507081,0.112754&q=Saunders%20Way):
 
 ```swift
-let saundersWayLondonStreetID = 1705005 
+let saundersWayLondonStreetID = 1705005
 
 let crimes = try await crimeService.crimes(forStreet: saundersWayLondonStreetID)
 ```

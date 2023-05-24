@@ -27,10 +27,10 @@ public struct Crime: Identifiable, Equatable, Codable {
     /// of a crime — not the exact place that it happened.
     ///
     /// [https://data.police.uk/about/#location-anonymisation](https://data.police.uk/about/#location-anonymisation)
-    public let location: Location
+    public let location: Location?
 
     /// The type of the location.
-    public let locationType: CrimeLocationType
+    public let locationType: CrimeLocationType?
 
     /// For Bristish Transport Police locations, the type of location at which this crime was recorded.
     public let locationSubtype: String?
@@ -60,8 +60,8 @@ public struct Crime: Identifiable, Equatable, Codable {
         crimeID: String,
         context: String? = nil,
         categoryID: String,
-        location: Location,
-        locationType: CrimeLocationType,
+        location: Location? = nil,
+        locationType: CrimeLocationType? = nil,
         locationSubtype: String? = nil,
         date: Date,
         outcomeStatus: OutcomeStatus? = nil
