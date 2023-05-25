@@ -28,6 +28,7 @@
 
 "MALE" = "Male";
 "FEMALE" = "Female";
+"OTHER" = "Other";
 
 "PERSON_SEARCH" = "Person search";
 "VEHICLE_SEARCH" = "Vehicle search";

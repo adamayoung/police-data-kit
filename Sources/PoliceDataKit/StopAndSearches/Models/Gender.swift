@@ -11,6 +11,9 @@ public enum Gender: String, CaseIterable, CustomStringConvertible, Codable {
     /// Female.
     case female = "Female"
 
+    /// Other.
+    case other = "Other"
+
     /// The localized string describing the gender.
     public var description: String {
         switch self {
@@ -19,6 +22,9 @@ public enum Gender: String, CaseIterable, CustomStringConvertible, Codable {
 
         case .female:
             return NSLocalizedString("FEMALE", bundle: .module, comment: "Female")
+
+        case .other:
+            return NSLocalizedString("OTHER", bundle: .module, comment: "Other")
         }
     }
 }
