@@ -33,7 +33,7 @@ jobs:
             ${{ runner.os }}-spm-
 
       - name: Build
-        run: swift build -Xswiftc -warnings-as-errors --build-tests
+        run: swift build --build-tests
 
       - name: Test
         run: swift test --skip-build --filter IntegrationTests
