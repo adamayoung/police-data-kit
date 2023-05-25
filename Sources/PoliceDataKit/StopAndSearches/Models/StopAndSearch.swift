@@ -24,10 +24,10 @@ public struct StopAndSearch: Equatable, Codable {
     public let officerDefinedEthnicity: String?
 
     /// The power used to carry out the stop and search.
-    public let legislation: String
+    public let legislation: String?
 
     /// The reason the stop and search was carried out.
-    public let objectOfSearch: String
+    public let objectOfSearch: String?
 
     /// Whether the person searched had more than their outer clothing removed
     public let removalOfMoreThanOuterClothing: Bool?
@@ -36,7 +36,7 @@ public struct StopAndSearch: Equatable, Codable {
     public let operationName: String?
 
     /// Approximate location of the incident.
-    public let location: Location
+    public let location: Location?
 
     /// The outcome of the stop.
     public let outcome: String?
@@ -75,11 +75,11 @@ public struct StopAndSearch: Equatable, Codable {
         ageRange: String? = nil,
         selfDefinedEthnicity: String? = nil,
         officerDefinedEthnicity: String? = nil,
-        legislation: String,
-        objectOfSearch: String,
+        legislation: String? = nil,
+        objectOfSearch: String? = nil,
         removalOfMoreThanOuterClothing: Bool? = nil,
         operationName: String? = nil,
-        location: Location,
+        location: Location? = nil,
         outcome: String? = nil,
         outcomeLinkedToObjectOfSearch: Bool? = nil,
         date: Date
