@@ -50,24 +50,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
-      - name: Cache SPM
-        uses: actions/cache@v3
-        with:
-          path: .derivedData
-          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
-          restore-keys: |
-            ${{ runner.os }}-spm-
     
       - name: Build
         run: |
           device=`xcrun xctrace list devices 2>&1 | grep -oE 'iPhone.*?[^\(]+' | head -1 | awk '{$1=$1;print}' | sed -e "s/ Simulator$//"`
-          xcodebuild -scheme PoliceDataKit -destination "platform=iOS Simulator,name=$device" -derivedDataPath ".derivedData" -parallelizeTargets build-for-testing
+          xcodebuild -scheme PoliceDataKit -destination "platform=iOS Simulator,name=$device" -parallelizeTargets build-for-testing
 
       - name: Test
         run: |
           device=`xcrun xctrace list devices 2>&1 | grep -oE 'iPhone.*?[^\(]+' | head -1 | awk '{$1=$1;print}' | sed -e "s/ Simulator$//"`
-          xcodebuild -scheme PoliceDataKit -destination "platform=iOS Simulator,name=$device" -derivedDataPath ".derivedData" -parallel-testing-enabled YES -only-testing:PoliceDataKitTests test-without-building
+          xcodebuild -scheme PoliceDataKit -destination "platform=iOS Simulator,name=$device" -parallel-testing-enabled YES -only-testing:PoliceDataKitTests test-without-building
 
   build-documentation:
     name: Build Documentation
