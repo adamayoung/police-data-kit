@@ -17,8 +17,8 @@ env:
   DEVELOPER_DIR: /Applications/Xcode_14.3.app/Contents/Developer
 
 jobs:      
-  build-test:
-    name: Build and Test
+  build-test-macos:
+    name: Build and Test (macOS)
     runs-on: macos-13
     steps:
       - name: Checkout
@@ -43,6 +43,36 @@ jobs:
       
       - name: Build for Release
         run: swift build -c release -Xswiftc -warnings-as-errors
+  
+  build-test-ios:
+    name: Build and Test (iOS)
+    runs-on: macos-13
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Cache SPM
+        uses: actions/cache@v3
+        with:
+          path: .build
+          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-
+    
+      - name: Set Device
+        run: |
+          device=`xcrun xctrace list devices 2>&1 | grep -oE 'iPhone.*?[^\(]+' | head -1 | awk '{$1=$1;print}' | sed -e "s/ Simulator$//"`
+          echo "platform=iOS Simulator,name=$device" | cat >destination
+      
+      - name: Build
+        env:
+          destination: ${{ 'destination' }}
+        run: xcodebuild -scheme PoliceDataKit -destination "$destination" -parallelizeTargets build-for-testing
+
+      - name: Test
+        env:
+          destination: ${{ 'destination' }}
+        run: xcodebuild -scheme PoliceDataKit -destination "$destination" -parallel-testing-enabled YES -only-testing:PoliceDataKitTests test-without-building
 
   build-documentation:
     name: Build Documentation
