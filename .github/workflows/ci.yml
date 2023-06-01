@@ -16,23 +16,7 @@ concurrency:
 env:
   DEVELOPER_DIR: /Applications/Xcode_14.3.app/Contents/Developer
 
-jobs:
-  markdown-lint:
-    name: Markdown Lint
-    runs-on: macos-13
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      
-      - name: Install markdownlint-cli
-        run: brew install markdownlint-cli
-      
-      - name: Lint README
-        run: markdownlint README.md
-      
-      - name: Lint DocC files
-        run: markdownlint **/*.docc/**/*.md
-      
+jobs:      
   build-test:
     name: Build and Test
     runs-on: macos-13
@@ -74,6 +58,12 @@ jobs:
           key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
           restore-keys: |
             ${{ runner.os }}-spm-
+
+      - name: Install markdownlint-cli
+        run: brew install markdownlint-cli
+
+      - name: Lint DocC files
+        run: markdownlint **/*.docc/**/*.md
 
       - name: Build
         run: swift package generate-documentation --product PoliceDataKit
