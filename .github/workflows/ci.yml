@@ -54,27 +54,20 @@ jobs:
       - name: Cache SPM
         uses: actions/cache@v3
         with:
-          path: .build
+          path: .derivedData
           key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
           restore-keys: |
             ${{ runner.os }}-spm-
     
-      - name: Set Device
+      - name: Build
         run: |
           device=`xcrun xctrace list devices 2>&1 | grep -oE 'iPhone.*?[^\(]+' | head -1 | awk '{$1=$1;print}' | sed -e "s/ Simulator$//"`
-          echo $device | cat >device
-      
-      - name: Build
-        env:
-          platform: "iOS Simulator"
-          device: ${{ 'device' }}
-        run: xcodebuild -scheme PoliceDataKit -destination "platform=$platform,name=$device" -derivedDataPath ".derivedData" -parallelizeTargets build-for-testing
+          xcodebuild -scheme PoliceDataKit -destination "platform=iOS Simulator,name=$device" -derivedDataPath ".derivedData" -parallelizeTargets build-for-testing
 
       - name: Test
-        env:
-          platform: "iOS Simulator"
-          device: ${{ 'device' }}
-        run: xcodebuild -scheme PoliceDataKit -destination "platform=$platform,name=$device" -derivedDataPath ".derivedData" -parallel-testing-enabled YES -only-testing:PoliceDataKitTests test-without-building
+        run: |
+          device=`xcrun xctrace list devices 2>&1 | grep -oE 'iPhone.*?[^\(]+' | head -1 | awk '{$1=$1;print}' | sed -e "s/ Simulator$//"`
+          xcodebuild -scheme PoliceDataKit -destination "platform=iOS Simulator,name=$device" -derivedDataPath ".derivedData" -parallel-testing-enabled YES -only-testing:PoliceDataKitTests test-without-building
 
   build-documentation:
     name: Build Documentation
