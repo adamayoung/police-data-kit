@@ -16,7 +16,7 @@ concurrency:
 env:
   DEVELOPER_DIR: /Applications/Xcode_14.3.app/Contents/Developer
 
-jobs:      
+jobs:
   build-test:
     name: Build and Test
     runs-on: macos-13
