@@ -16,7 +16,7 @@ let policeForceService = PoliceForceService()
 
 ### Fetching all Police Forces
 
-All Police Forces in the UK can be fetched using ``PoliceForceService/policeForces()``. 
+All Police Forces in the UK can be fetched using ``PoliceForceService/policeForces()``.
 
 ```swift
 let policeForces = try await policeForceService.policeForces()

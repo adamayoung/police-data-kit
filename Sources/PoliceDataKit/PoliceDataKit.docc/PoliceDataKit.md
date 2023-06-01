@@ -1,10 +1,12 @@
 # ``PoliceDataKit``
 
-Deliver open data about crime and policing in England, Wales and Northern Ireland to your users.
+Deliver open data about crime and policing in England, Wales and Northern
+Ireland to your users.
 
 ## Overview
 
-PoliceDataKit provides data relating to crime and policing in England, Wales and Northen Ireland.
+PoliceDataKit provides data relating to crime and policing in England, Wales
+and Northern Ireland.
 
 The API provides a rich data source for information, including:
 
@@ -19,70 +21,70 @@ For the Police API documentation, see [https://data.police.uk](https://data.poli
 
 ### Police Forces
 
-- <doc:/GettingStartedWithPoliceForces>
-- ``PoliceForceService``
-- ``PoliceForce``
-- ``PoliceForceReference``
-- ``EngagementMethod``
-- ``PoliceForceError``
+* <doc:/GettingStartedWithPoliceForces>
+* ``PoliceForceService``
+* ``PoliceForce``
+* ``PoliceForceReference``
+* ``EngagementMethod``
+* ``PoliceForceError``
 
 ### Neighbourhoods
 
-- <doc:/GettingStartedWithNeighbourhoods>
-- ``NeighbourhoodService``
-- ``Neighbourhood``
-- ``NeighbourhoodReference``
-- ``NeighbourhoodLocation``
-- ``NeighbourhoodPolicingTeam``
-- ``NeighbourhoodPriority``
-- ``Link``
-- ``NeighbourhoodError``
+* <doc:/GettingStartedWithNeighbourhoods>
+* ``NeighbourhoodService``
+* ``Neighbourhood``
+* ``NeighbourhoodReference``
+* ``NeighbourhoodLocation``
+* ``NeighbourhoodPolicingTeam``
+* ``NeighbourhoodPriority``
+* ``Link``
+* ``NeighbourhoodError``
 
 ### Crimes
 
-- <doc:/GettingStartedWithCrimes>
-- ``CrimeService``
-- ``Crime``
-- ``CrimeCategory``
-- ``CrimeLocationType``
-- ``CrimeError``
+* <doc:/GettingStartedWithCrimes>
+* ``CrimeService``
+* ``Crime``
+* ``CrimeCategory``
+* ``CrimeLocationType``
+* ``CrimeError``
 
 ### Outcomes
 
-- <doc:/GettingStartedWithOutcomes>
-- ``OutcomeService``
-- ``Outcome``
-- ``OutcomeCategory``
-- ``OutcomeCrime``
-- ``OutcomeStatus``
-- ``CaseHistory``
-- ``CaseHistoryCrime``
-- ``CaseHistoryOutcome``
-- ``OutcomeError``
+* <doc:/GettingStartedWithOutcomes>
+* ``OutcomeService``
+* ``Outcome``
+* ``OutcomeCategory``
+* ``OutcomeCrime``
+* ``OutcomeStatus``
+* ``CaseHistory``
+* ``CaseHistoryCrime``
+* ``CaseHistoryOutcome``
+* ``OutcomeError``
 
 ### Stop and Searches
 
-- <doc:/GettingStartedWithStopAndSearches>
-- ``StopAndSearchService``
-- ``StopAndSearch``
-- ``StopAndSearchType``
-- ``Gender``
-- ``StopAndSearchError``
+* <doc:/GettingStartedWithStopAndSearches>
+* ``StopAndSearchService``
+* ``StopAndSearch``
+* ``StopAndSearchType``
+* ``Gender``
+* ``StopAndSearchError``
 
 ### Availability
 
-- <doc:/GettingStartedWithAvailability>
-- ``AvailabilityService``
-- ``DataSet``
-- ``AvailabilityError``
+* <doc:/GettingStartedWithAvailability>
+* ``AvailabilityService``
+* ``DataSet``
+* ``AvailabilityError``
 
 ### General
 
-- ``ContactDetails``
-- ``Location``
-- ``PoliceOfficer``
-- ``Street``
+* ``ContactDetails``
+* ``Location``
+* ``PoliceOfficer``
+* ``Street``
 
 ### API Call Limits
 
-- <doc:/APICallLimits>
+* <doc:/APICallLimits>
