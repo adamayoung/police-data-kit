@@ -68,13 +68,13 @@ jobs:
         env:
           platform: "iOS Simulator"
           device: ${{ 'device' }}
-        run: xcodebuild -scheme PoliceDataKit -destination "platform=$platform,name=$device" -parallelizeTargets build-for-testing
+        run: xcodebuild -scheme PoliceDataKit -destination "platform=$platform,name=$device" -derivedDataPath ".derivedData" -parallelizeTargets build-for-testing
 
       - name: Test
         env:
           platform: "iOS Simulator"
           device: ${{ 'device' }}
-        run: xcodebuild -scheme PoliceDataKit -destination "platform=$platform,name=$device" -parallel-testing-enabled YES -only-testing:PoliceDataKitTests test-without-building
+        run: xcodebuild -scheme PoliceDataKit -destination "platform=$platform,name=$device" -derivedDataPath ".derivedData" -parallel-testing-enabled YES -only-testing:PoliceDataKitTests test-without-building
 
   build-documentation:
     name: Build Documentation
