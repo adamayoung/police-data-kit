@@ -4,7 +4,8 @@ Learn how to fetch availability data sets from the UK Police API.
 
 ## Overview
 
-Availability data sets allows you find out what data is available from what Police Force.
+Availability data sets allows you find out what data is available from what
+Police Force.
 
 ### Create the Service
 
