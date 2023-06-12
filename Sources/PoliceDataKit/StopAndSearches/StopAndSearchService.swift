@@ -10,6 +10,7 @@ import os
 /// validation to check for mandatory fields and data formats. The location coordinates of the stop are anonymised
 /// and the age of the person stopped is changed to an age group (e.g. 18-24) before publication.
 ///
+@available(iOS 15.0, tvOS 15.0, watchOS 8.0, macOS 12, *)
 public final class StopAndSearchService {
 
     ///
