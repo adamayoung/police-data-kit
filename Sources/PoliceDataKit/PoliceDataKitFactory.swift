@@ -11,7 +11,7 @@ extension PoliceDataKitFactory {
     static let apiClient: some APIClient = {
         PoliceDataAPIClient(
             baseURL: policeDataBaseURL,
-            urlSession: .shared,
+            urlSession: urlSession,
             serialiser: serialiser
         )
     }()
@@ -43,6 +43,20 @@ extension PoliceDataKitFactory {
 }
 
 extension PoliceDataKitFactory {
+
+    private static let urlSession = URLSession(configuration: urlSessionConfiguration)
+
+    private static var urlSessionConfiguration: URLSessionConfiguration {
+        let configuration = URLSessionConfiguration.default
+        #if !os(macOS)
+        configuration.multipathServiceType = .handover
+        #endif
+
+        configuration.waitsForConnectivity = true
+        configuration.timeoutIntervalForRequest = 30
+
+        return configuration
+    }
 
     static let cacheStore: some Cache = {
         InMemoryCache(name: "PoliceDataKitCache")
