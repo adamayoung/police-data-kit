@@ -20,7 +20,6 @@
 import Combine
 import Foundation
 import MapKit
-import os
 
 ///
 /// Provides an interface for obtaining outcome data from the UK Police API.
@@ -34,8 +33,6 @@ public final class OutcomeService {
     /// Use this object to interface to outcome services in your application.
     ///
     public static let shared = OutcomeService()
-
-    private static let logger = Logger(subsystem: Logger.policeDataKit, category: "OutcomeService")
 
     private let apiClient: any APIClient
     private let cache: any OutcomeCache
@@ -77,8 +74,6 @@ public final class OutcomeService {
     /// - Returns: The outcomes of crimes for the specified street and date..
     ///
     public func streetLevelOutcomes(forStreet streetID: Int, date: Date = Date()) async throws -> [Outcome] {
-        Self.logger.trace("fetching street level Outcomes for Street \(streetID, privacy: .public)")
-
         if let cachedOutcomes = await cache.streetLevelOutcomes(forStreet: streetID, date: date) {
             return cachedOutcomes
         }
@@ -89,8 +84,6 @@ public final class OutcomeService {
                 endpoint: OutcomesEndpoint.streetLevelOutcomesForStreet(streetID: streetID, date: date)
             )
         } catch let error {
-            // swiftlint:disable:next line_length
-            Self.logger.error("failed fetching street level Outcomes for Street \(streetID, privacy: .public): \(error.localizedDescription, privacy: .public)")
             throw Self.mapToOutcomeError(error)
         }
 
@@ -118,8 +111,6 @@ public final class OutcomeService {
         at coordinate: CLLocationCoordinate2D,
         date: Date = Date()
     ) async throws -> [Outcome] {
-        Self.logger.trace("fetching street level Outcomes at coordinate \(coordinate, privacy: .public)")
-
         guard availableDataRegion.contains(coordinate: coordinate) else {
             throw OutcomeError.locationOutsideOfDataSetRegion
         }
@@ -130,8 +121,6 @@ public final class OutcomeService {
                 endpoint: OutcomesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate, date: date)
             )
         } catch let error {
-            // swiftlint:disable:next line_length
-            Self.logger.error("failed fetching street level Outcomes at coordinate \(coordinate, privacy: .public): \(error.localizedDescription, privacy: .public)")
             throw Self.mapToOutcomeError(error)
         }
 
@@ -193,16 +182,12 @@ public final class OutcomeService {
         in coordinates: [CLLocationCoordinate2D],
         date: Date = Date()
     ) async throws -> [Outcome] {
-        Self.logger.trace("fetching street level Outcomes in area")
-
         let outcomes: [Outcome]
         do {
             outcomes = try await apiClient.get(
                 endpoint: OutcomesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates, date: date)
             )
         } catch let error {
-            // swiftlint:disable:next line_length
-            Self.logger.error("failed fetching street level Outcomes in area: \(error.localizedDescription, privacy: .public)")
             throw Self.mapToOutcomeError(error)
         }
 
@@ -259,8 +244,6 @@ public final class OutcomeService {
     /// - Returns: The case history for the specified crime.
     ///
     public func caseHistory(forCrime crimeID: String) async throws -> CaseHistory {
-        Self.logger.trace("fetching Case History for crime \(crimeID, privacy: .public)")
-
         if let cachedCaseHistory = await cache.caseHistory(forCrime: crimeID) {
             return cachedCaseHistory
         }
@@ -269,8 +252,6 @@ public final class OutcomeService {
         do {
             caseHistory = try await apiClient.get(endpoint: OutcomesEndpoint.caseHistory(crimeID: crimeID))
         } catch let error {
-            // swiftlint:disable:next line_length
-            Self.logger.error("failed fetching Case History for crime \(crimeID, privacy: .public): \(error.localizedDescription, privacy: .public)")
             throw Self.mapToOutcomeError(error)
         }
 

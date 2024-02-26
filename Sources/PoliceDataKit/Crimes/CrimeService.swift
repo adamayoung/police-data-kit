@@ -20,7 +20,6 @@
 import Combine
 import Foundation
 import MapKit
-import os
 
 ///
 /// Provides an interface for obtaining crime data from the UK Police API.
@@ -34,8 +33,6 @@ public final class CrimeService {
     /// Use this object to interface to crime services in your application.
     ///
     public static let shared = CrimeService()
-
-    private static let logger = Logger(subsystem: Logger.policeDataKit, category: "CrimeService")
 
     private let apiClient: any APIClient
     private let cache: any CrimeCache
@@ -81,8 +78,6 @@ public final class CrimeService {
     /// - Returns: The street level crimes in a 1 mile radius of the specifed coordinate and date.
     ///
     public func streetLevelCrimes(at coordinate: CLLocationCoordinate2D, date: Date = Date()) async throws -> [Crime] {
-        Self.logger.trace("fetching street level Crimes at coordinate \(coordinate, privacy: .public)")
-
         guard availableDataRegion.contains(coordinate: coordinate) else {
             throw CrimeError.locationOutsideOfDataSetRegion
         }
@@ -93,8 +88,6 @@ public final class CrimeService {
                 endpoint: CrimesEndpoint.streetLevelCrimesAtSpecificPoint(coordinate: coordinate, date: date)
             )
         } catch let error {
-            // swiftlint:disable:next line_length
-            Self.logger.error("failed fetching street level Crimes at coordinate \(coordinate, privacy: .public): \(error.localizedDescription, privacy: .public)")
             throw Self.mapToCrimeError(error)
         }
 
@@ -164,7 +157,6 @@ public final class CrimeService {
         in coordinates: [CLLocationCoordinate2D],
         date: Date = Date()
     ) async throws -> [Crime] {
-        Self.logger.trace("fetching street level Crimes in area")
 
         let crimes: [Crime]
         do {
@@ -172,8 +164,6 @@ public final class CrimeService {
                 endpoint: CrimesEndpoint.streetLevelCrimesInArea(coordinates: coordinates, date: date)
             )
         } catch let error {
-            // swiftlint:disable:next line_length
-            Self.logger.error("failed fetching street level Crimes in area: \(error.localizedDescription, privacy: .public)")
             throw Self.mapToCrimeError(error)
         }
 
@@ -238,8 +228,6 @@ public final class CrimeService {
     /// - Returns: The crimes at the specified street and date.
     ///
     public func crimes(forStreet streetID: Int, date: Date = Date()) async throws -> [Crime] {
-        Self.logger.trace("fetching Crimes for street \(streetID, privacy: .public)")
-
         if let cachedCrimes = await cache.crimes(forStreet: streetID, date: date) {
             return cachedCrimes
         }
@@ -250,8 +238,6 @@ public final class CrimeService {
                 endpoint: CrimesEndpoint.crimesAtLocationForStreet(streetID: streetID, date: date)
             )
         } catch let error {
-            // swiftlint:disable:next line_length
-            Self.logger.error("failed fetching Crimes for street \(streetID, privacy: .public): \(error.localizedDescription, privacy: .public)")
             throw Self.mapToCrimeError(error)
         }
 
@@ -277,8 +263,6 @@ public final class CrimeService {
     /// - Returns: The crimes for the street nearest to the specified coordinate and date.
     ///
     public func crimes(at coordinate: CLLocationCoordinate2D, date: Date = Date()) async throws -> [Crime] {
-        Self.logger.trace("fetching Crimes at coordinate \(coordinate, privacy: .public)")
-
         guard availableDataRegion.contains(coordinate: coordinate) else {
             throw CrimeError.locationOutsideOfDataSetRegion
         }
@@ -289,8 +273,6 @@ public final class CrimeService {
                 endpoint: CrimesEndpoint.crimesAtLocationAtSpecificPoint(coordinate: coordinate, date: date)
             )
         } catch let error {
-            // swiftlint:disable:next line_length
-            Self.logger.error("failed fetching Crimes at coordinate \(coordinate, privacy: .public): \(error.localizedDescription, privacy: .public)")
             throw Self.mapToCrimeError(error)
         }
 
@@ -353,9 +335,6 @@ public final class CrimeService {
         inPoliceForce policeForceID: PoliceForce.ID,
         date: Date = Date()
     ) async throws -> [Crime] {
-        // swiftlint:disable:next line_length
-        Self.logger.trace("fetching Crimes with no location for category \(categoryID, privacy: .public) in Police Force \(policeForceID, privacy: .public)")
-
         if let cachedCrimes = await cache.crimesWithNoLocation(
             forCategory: categoryID,
             inPoliceForce: policeForceID,
@@ -372,8 +351,6 @@ public final class CrimeService {
                 )
             )
         } catch let error {
-            // swiftlint:disable:next line_length
-            Self.logger.error("failed fetching Crimes with no location for category \(categoryID, privacy: .public) in Police Force \(policeForceID, privacy: .public): \(error.localizedDescription, privacy: .public)")
             throw Self.mapToCrimeError(error)
         }
 
@@ -394,8 +371,6 @@ public final class CrimeService {
     /// - Returns: The crime categories for the specified month.
     ///
     public func crimeCategories(forDate date: Date = Date()) async throws -> [CrimeCategory] {
-        Self.logger.trace("fetching Crime categories for date \(date, privacy: .public)")
-
         if let cachedCategories = await cache.crimeCategories(forDate: date) {
             return cachedCategories
         }
@@ -404,8 +379,6 @@ public final class CrimeService {
         do {
             crimeCategories = try await apiClient.get(endpoint: CrimesEndpoint.categories(date: date))
         } catch let error {
-            // swiftlint:disable:next line_length
-            Self.logger.error("failed fetching Crime categories for date \(date, privacy: .public): \(error.localizedDescription, privacy: .public)")
             throw Self.mapToCrimeError(error)
         }
 
