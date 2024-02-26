@@ -36,11 +36,11 @@ final class JSONDecoderDateDecodingStrategyPoliceDataAPITestsTests: XCTestCase {
     }
 
     func testDecodingDateTimeDateReturnsDate() throws {
-        let data = try XCTUnwrap("""
+        let data = Data("""
             {
                 "date": "2021-05-24T11:28:00"
             }
-        """.data(using: .utf8))
+        """.utf8)
         let expectedResult = Date(timeIntervalSince1970: 1_621_855_680)
 
         let container = try decoder.decode(Container.self, from: data)
@@ -50,11 +50,11 @@ final class JSONDecoderDateDecodingStrategyPoliceDataAPITestsTests: XCTestCase {
     }
 
     func testDecodingDateTimeWithTimeZoneOffsetDateReturnsDate() throws {
-        let data = try XCTUnwrap("""
+        let data = Data("""
             {
                 "date": "2021-05-24T11:28:00-07:00"
             }
-        """.data(using: .utf8))
+        """.utf8)
         let expectedResult = Date(timeIntervalSince1970: 1_621_880_880)
 
         let container = try decoder.decode(Container.self, from: data)
@@ -64,11 +64,11 @@ final class JSONDecoderDateDecodingStrategyPoliceDataAPITestsTests: XCTestCase {
     }
 
     func testDecodingYearMonthDateReturnsDate() throws {
-        let data = try XCTUnwrap("""
+        let data = Data("""
             {
                 "date": "2021-05"
             }
-        """.data(using: .utf8))
+        """.utf8)
         let expectedResult = Date(timeIntervalSince1970: 1_619_827_200)
 
         let container = try decoder.decode(Container.self, from: data)
@@ -78,11 +78,11 @@ final class JSONDecoderDateDecodingStrategyPoliceDataAPITestsTests: XCTestCase {
     }
 
     func testDecodingWhenInvalidDateThrowsDecodingError() throws {
-        let data = try XCTUnwrap("""
+        let data = Data("""
             {
                 "date": "11111"
             }
-        """.data(using: .utf8))
+        """.utf8)
 
         XCTAssertThrowsError(try decoder.decode(Container.self, from: data))
     }
