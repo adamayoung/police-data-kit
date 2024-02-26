@@ -170,7 +170,7 @@ final class NeighbourhoodIntegrationTests: XCTestCase {
             inPoliceForce: policeForceID
         )
 
-        XCTAssertEqual(boundary.count, 993)
+        XCTAssertEqual(boundary.count, 961)
     }
 
     func testPoliceOfficersForNeighbourhoodInPoliceForceForWakefieldCentralWestYorkshire() async throws {
