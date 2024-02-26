@@ -1,3 +1,22 @@
+//
+//  CrimeService.swift
+//  PoliceDataKit
+//
+//  Copyright © 2024 Adam Young.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an AS IS BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+
 import Combine
 import Foundation
 import MapKit
@@ -99,8 +118,10 @@ public final class CrimeService {
     ///
     /// - Returns: The street level crimes in a 1 mile radius of the specifed coordinate and date.
     ///
-    public func streetLevelCrimesPublisher(at coordinate: CLLocationCoordinate2D,
-                                           date: Date = Date()) -> AnyPublisher<[Crime], CrimeError> {
+    public func streetLevelCrimesPublisher(
+        at coordinate: CLLocationCoordinate2D,
+        date: Date = Date()
+    ) -> AnyPublisher<[Crime], CrimeError> {
         Future { [weak self] promise in
             guard let self else {
                 promise(.failure(.unknown))
@@ -139,8 +160,10 @@ public final class CrimeService {
     ///
     /// - Returns: The street level crimes with the specified area and month..
     ///
-    public func streetLevelCrimes(in coordinates: [CLLocationCoordinate2D],
-                                  date: Date = Date()) async throws -> [Crime] {
+    public func streetLevelCrimes(
+        in coordinates: [CLLocationCoordinate2D],
+        date: Date = Date()
+    ) async throws -> [Crime] {
         Self.logger.trace("fetching street level Crimes in area")
 
         let crimes: [Crime]
@@ -176,8 +199,10 @@ public final class CrimeService {
     ///
     /// - Returns: The street level crimes with the specified area and month..
     ///
-    public func streetLevelCrimesPublisher(in coordinates: [CLLocationCoordinate2D],
-                                           date: Date = Date()) -> AnyPublisher<[Crime], CrimeError> {
+    public func streetLevelCrimesPublisher(
+        in coordinates: [CLLocationCoordinate2D],
+        date: Date = Date()
+    ) -> AnyPublisher<[Crime], CrimeError> {
         Future { [weak self] promise in
             guard let self else {
                 promise(.failure(.unknown))
@@ -211,7 +236,7 @@ public final class CrimeService {
     /// - Throws: Crime data error ``CrimeError``.
     ///
     /// - Returns: The crimes at the specified street and date.
-    /// 
+    ///
     public func crimes(forStreet streetID: Int, date: Date = Date()) async throws -> [Crime] {
         Self.logger.trace("fetching Crimes for street \(streetID, privacy: .public)")
 
@@ -286,8 +311,10 @@ public final class CrimeService {
     ///
     /// - Returns: The crimes for the street nearest to the specified coordinate and date.
     ///
-    public func crimesPublisher(at coordinate: CLLocationCoordinate2D,
-                                date: Date = Date()) -> AnyPublisher<[Crime], CrimeError> {
+    public func crimesPublisher(
+        at coordinate: CLLocationCoordinate2D,
+        date: Date = Date()
+    ) -> AnyPublisher<[Crime], CrimeError> {
         Future { [weak self] promise in
             guard let self else {
                 promise(.failure(.unknown))
@@ -321,14 +348,19 @@ public final class CrimeService {
     ///
     /// - Returns: The crimes not mapped to a location.
     ///
-    public func crimesWithNoLocation(forCategory categoryID: CrimeCategory.ID = CrimeCategory.default.id,
-                                     inPoliceForce policeForceID: PoliceForce.ID,
-                                     date: Date = Date()) async throws -> [Crime] {
+    public func crimesWithNoLocation(
+        forCategory categoryID: CrimeCategory.ID = CrimeCategory.default.id,
+        inPoliceForce policeForceID: PoliceForce.ID,
+        date: Date = Date()
+    ) async throws -> [Crime] {
         // swiftlint:disable:next line_length
         Self.logger.trace("fetching Crimes with no location for category \(categoryID, privacy: .public) in Police Force \(policeForceID, privacy: .public)")
 
-        if let cachedCrimes = await cache.crimesWithNoLocation(forCategory: categoryID, inPoliceForce: policeForceID,
-                                                               date: date) {
+        if let cachedCrimes = await cache.crimesWithNoLocation(
+            forCategory: categoryID,
+            inPoliceForce: policeForceID,
+            date: date
+        ) {
             return cachedCrimes
         }
 

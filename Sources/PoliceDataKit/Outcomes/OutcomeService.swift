@@ -1,3 +1,22 @@
+//
+//  OutcomeService.swift
+//  PoliceDataKit
+//
+//  Copyright © 2024 Adam Young.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an AS IS BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+
 import Combine
 import Foundation
 import MapKit
@@ -94,9 +113,11 @@ public final class OutcomeService {
     /// - Throws: Outcome data error ``OutcomeError``.
     ///
     /// - Returns: The outcomes of crimes in a 1 mile radius of the specified coordinate and date.
-    /// 
-    public func streetLevelOutcomes(at coordinate: CLLocationCoordinate2D,
-                                    date: Date = Date()) async throws -> [Outcome] {
+    ///
+    public func streetLevelOutcomes(
+        at coordinate: CLLocationCoordinate2D,
+        date: Date = Date()
+    ) async throws -> [Outcome] {
         Self.logger.trace("fetching street level Outcomes at coordinate \(coordinate, privacy: .public)")
 
         guard availableDataRegion.contains(coordinate: coordinate) else {
@@ -129,9 +150,11 @@ public final class OutcomeService {
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
     /// - Returns: The outcomes of crimes in a 1 mile radius of the specified coordinate and date.
-    /// 
-    public func streetLevelOutcomesPublisher(at coordinate: CLLocationCoordinate2D,
-                                             date: Date = Date()) -> AnyPublisher<[Outcome], OutcomeError> {
+    ///
+    public func streetLevelOutcomesPublisher(
+        at coordinate: CLLocationCoordinate2D,
+        date: Date = Date()
+    ) -> AnyPublisher<[Outcome], OutcomeError> {
         Future { [weak self] promise in
             guard let self else {
                 promise(.failure(.unknown))
@@ -166,8 +189,10 @@ public final class OutcomeService {
     ///
     /// - Returns: The outcomes of crimes within the specified area.
     ///
-    public func streetLevelOutcomes(in coordinates: [CLLocationCoordinate2D],
-                                    date: Date = Date()) async throws -> [Outcome] {
+    public func streetLevelOutcomes(
+        in coordinates: [CLLocationCoordinate2D],
+        date: Date = Date()
+    ) async throws -> [Outcome] {
         Self.logger.trace("fetching street level Outcomes in area")
 
         let outcomes: [Outcome]
@@ -197,8 +222,10 @@ public final class OutcomeService {
     ///
     /// - Returns: The outcomes of crimes within the specified area.
     ///
-    public func streetLevelOutcomesPublisher(in coordinates: [CLLocationCoordinate2D],
-                                             date: Date = Date()) -> AnyPublisher<[Outcome], OutcomeError> {
+    public func streetLevelOutcomesPublisher(
+        in coordinates: [CLLocationCoordinate2D],
+        date: Date = Date()
+    ) -> AnyPublisher<[Outcome], OutcomeError> {
         Future { [weak self] promise in
             guard let self else {
                 promise(.failure(.unknown))

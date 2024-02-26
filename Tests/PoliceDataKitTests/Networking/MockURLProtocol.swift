@@ -1,3 +1,22 @@
+//
+//  MockURLProtocol.swift
+//  PoliceDataKit
+//
+//  Copyright © 2024 Adam Young.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an AS IS BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+
 import Foundation
 
 final class MockURLProtocol: URLProtocol {
@@ -5,9 +24,9 @@ final class MockURLProtocol: URLProtocol {
     static var data: Data?
     static var failError: Error?
     static var responseStatusCode: Int = 200
-    static private(set) var lastRequest: URLRequest?
+    private(set) static var lastRequest: URLRequest?
 
-    override class func canInit(with request: URLRequest) -> Bool {
+    override class func canInit(with _: URLRequest) -> Bool {
         true
     }
 
@@ -18,7 +37,7 @@ final class MockURLProtocol: URLProtocol {
 
     override func startLoading() {
         if let failError = Self.failError {
-            self.client?.urlProtocol(self, didFailWithError: failError)
+            client?.urlProtocol(self, didFailWithError: failError)
             return
         }
 
@@ -27,16 +46,20 @@ final class MockURLProtocol: URLProtocol {
         }
 
         if let data = Self.data {
-            self.client?.urlProtocol(self, didLoad: data)
+            client?.urlProtocol(self, didLoad: data)
         }
 
-        let response = HTTPURLResponse(url: url, statusCode: Self.responseStatusCode, httpVersion: "2.0",
-                                       headerFields: nil)!
-        self.client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
-        self.client?.urlProtocolDidFinishLoading(self)
+        let response = HTTPURLResponse(
+            url: url,
+            statusCode: Self.responseStatusCode,
+            httpVersion: "2.0",
+            headerFields: nil
+        )!
+        client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+        client?.urlProtocolDidFinishLoading(self)
     }
 
-    override func stopLoading() { }
+    override func stopLoading() {}
 
     static func reset() {
         data = nil

@@ -1,3 +1,22 @@
+//
+//  NeighbourhoodService.swift
+//  PoliceDataKit
+//
+//  Copyright © 2024 Adam Young.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an AS IS BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+
 import Combine
 import Foundation
 import MapKit
@@ -89,8 +108,10 @@ public final class NeighbourhoodService {
     ///
     /// - Returns: The neighbourhood matching the specified ID and police force.
     ///
-    public func neighbourhood(withID id: String,
-                              inPoliceForce policeForceID: PoliceForce.ID) async throws -> Neighbourhood {
+    public func neighbourhood(
+        withID id: String,
+        inPoliceForce policeForceID: PoliceForce.ID
+    ) async throws -> Neighbourhood {
         // swiftlint:disable:next line_length
         Self.logger.trace("fetching Neighbourhood \(id, privacy: .public) in Police Force \(policeForceID, privacy: .public)")
 
@@ -179,8 +200,10 @@ public final class NeighbourhoodService {
     ///
     /// - Returns: The coordinates that make up the boundary of the matching neighbourhood.
     ///
-    public func boundary(forNeighbourhood neighbourhoodID: Neighbourhood.ID,
-                         inPoliceForce policeForceID: PoliceForce.ID) async throws -> [CLLocationCoordinate2D] {
+    public func boundary(
+        forNeighbourhood neighbourhoodID: Neighbourhood.ID,
+        inPoliceForce policeForceID: PoliceForce.ID
+    ) async throws -> [CLLocationCoordinate2D] {
         // swiftlint:disable:next line_length
         Self.logger.trace("fetching Boundary for Neighbourhood \(neighbourhoodID, privacy: .public) in Police Force \(policeForceID, privacy: .public)")
 
@@ -219,13 +242,17 @@ public final class NeighbourhoodService {
     ///
     /// - Returns: Police officers who are members of the neighbourhood team for the specified neighbourhood and police force.
     ///
-    public func policeOfficers(forNeighbourhood neighbourhoodID: Neighbourhood.ID,
-                               inPoliceForce policeForceID: PoliceForce.ID) async throws -> [PoliceOfficer] {
+    public func policeOfficers(
+        forNeighbourhood neighbourhoodID: Neighbourhood.ID,
+        inPoliceForce policeForceID: PoliceForce.ID
+    ) async throws -> [PoliceOfficer] {
         // swiftlint:disable:next line_length
         Self.logger.trace("fetching Police Officers for Neighbourhood \(neighbourhoodID, privacy: .public) in Police Force \(policeForceID, privacy: .public)")
 
-        if let cachedPoliceOfficers = await cache.policeOfficers(forNeighbourhood: neighbourhoodID,
-                                                                 inPoliceForce: policeForceID) {
+        if let cachedPoliceOfficers = await cache.policeOfficers(
+            forNeighbourhood: neighbourhoodID,
+            inPoliceForce: policeForceID
+        ) {
             return cachedPoliceOfficers
         }
 
@@ -259,14 +286,18 @@ public final class NeighbourhoodService {
     /// - Throws: Neighbourhood data error ``NeighbourhoodError``.
     ///
     /// - Returns: The neighbourhood priorities for the specified neighbourhood and police force.
-    /// 
-    public func priorities(forNeighbourhood neighbourhoodID: Neighbourhood.ID,
-                           inPoliceForce policeForceID: PoliceForce.ID) async throws -> [NeighbourhoodPriority] {
+    ///
+    public func priorities(
+        forNeighbourhood neighbourhoodID: Neighbourhood.ID,
+        inPoliceForce policeForceID: PoliceForce.ID
+    ) async throws -> [NeighbourhoodPriority] {
         // swiftlint:disable:next line_length
         Self.logger.trace("fetching Priorities for Neighbourhood \(neighbourhoodID, privacy: .public) in Police Force \(policeForceID, privacy: .public)")
 
-        if let cachedPriorities = await cache.priorities(forNeighbourhood: neighbourhoodID,
-                                                         inPoliceForce: policeForceID) {
+        if let cachedPriorities = await cache.priorities(
+            forNeighbourhood: neighbourhoodID,
+            inPoliceForce: policeForceID
+        ) {
             return cachedPriorities
         }
 

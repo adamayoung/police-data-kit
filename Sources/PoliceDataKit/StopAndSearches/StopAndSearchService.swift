@@ -1,3 +1,22 @@
+//
+//  StopAndSearchService.swift
+//  PoliceDataKit
+//
+//  Copyright © 2024 Adam Young.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an AS IS BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+
 import Combine
 import Foundation
 import MapKit
@@ -63,8 +82,10 @@ public final class StopAndSearchService {
     ///
     /// - Returns: A list of stop and searches.
     ///
-    public func stopAndSearches(at coordinate: CLLocationCoordinate2D,
-                                date: Date = Date()) async throws -> [StopAndSearch] {
+    public func stopAndSearches(
+        at coordinate: CLLocationCoordinate2D,
+        date: Date = Date()
+    ) async throws -> [StopAndSearch] {
         Self.logger.trace("fetching Stop and Searches at \(coordinate, privacy: .public)")
 
         guard availableDataRegion.contains(coordinate: coordinate) else {
@@ -102,8 +123,10 @@ public final class StopAndSearchService {
     ///
     /// - Returns: A list of stop and searches.
     ///
-    public func stopAndSearchesPublisher(at coordinate: CLLocationCoordinate2D,
-                                         date: Date = Date()) -> AnyPublisher<[StopAndSearch], StopAndSearchError> {
+    public func stopAndSearchesPublisher(
+        at coordinate: CLLocationCoordinate2D,
+        date: Date = Date()
+    ) -> AnyPublisher<[StopAndSearch], StopAndSearchError> {
         Future { [weak self] promise in
             guard let self else {
                 promise(.failure(.unknown))
@@ -140,8 +163,10 @@ public final class StopAndSearchService {
     ///
     /// - Returns: A list of stop and searches.
     ///
-    public func stopAndSearches(in coordinates: [CLLocationCoordinate2D],
-                                date: Date = Date()) async throws -> [StopAndSearch] {
+    public func stopAndSearches(
+        in coordinates: [CLLocationCoordinate2D],
+        date: Date = Date()
+    ) async throws -> [StopAndSearch] {
         Self.logger.trace("fetching Stop and Searches in area")
 
         let stopAndSearches: [StopAndSearch]
@@ -173,8 +198,10 @@ public final class StopAndSearchService {
     ///
     /// - Returns: A list of stop and searches.
     ///
-    public func stopAndSearchesPublisher(in coordinates: [CLLocationCoordinate2D],
-                                         date: Date = Date()) -> AnyPublisher<[StopAndSearch], StopAndSearchError> {
+    public func stopAndSearchesPublisher(
+        in coordinates: [CLLocationCoordinate2D],
+        date: Date = Date()
+    ) -> AnyPublisher<[StopAndSearch], StopAndSearchError> {
         Future { [weak self] promise in
             guard let self else {
                 promise(.failure(.unknown))
@@ -251,13 +278,17 @@ public final class StopAndSearchService {
     ///
     /// - Returns: A list of stop and searches.
     ///
-    public func stopAndSearchesWithNoLocation(forPoliceForce policeForceID: PoliceForce.ID,
-                                              date: Date = Date()) async throws -> [StopAndSearch] {
+    public func stopAndSearchesWithNoLocation(
+        forPoliceForce policeForceID: PoliceForce.ID,
+        date: Date = Date()
+    ) async throws -> [StopAndSearch] {
         // swiftlint:disable:next line_length
         Self.logger.trace("fetching Stop and Searches with no location for Police Force \(policeForceID, privacy: .public)")
 
-        if let cachedStopAndSearches = await cache.stopAndSearchesWithNoLocation(forPoliceForce: policeForceID,
-                                                                                 date: date) {
+        if let cachedStopAndSearches = await cache.stopAndSearchesWithNoLocation(
+            forPoliceForce: policeForceID,
+            date: date
+        ) {
             return cachedStopAndSearches
         }
 
@@ -295,9 +326,11 @@ public final class StopAndSearchService {
     /// - Throws: Stop and Search data error ``StopAndSearchError``.
     ///
     /// - Returns: A list of stop and searches.
-    /// 
-    public func stopAndSearches(forPoliceForce policeForceID: PoliceForce.ID,
-                                date: Date = Date()) async throws -> [StopAndSearch] {
+    ///
+    public func stopAndSearches(
+        forPoliceForce policeForceID: PoliceForce.ID,
+        date: Date = Date()
+    ) async throws -> [StopAndSearch] {
         Self.logger.trace("fetching Stop and Searches for Police Force \(policeForceID, privacy: .public)")
 
         if let cachedStopAndSearches = await cache.stopAndSearches(forPoliceForce: policeForceID, date: date) {
