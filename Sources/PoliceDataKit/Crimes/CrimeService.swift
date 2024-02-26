@@ -157,7 +157,6 @@ public final class CrimeService {
         in coordinates: [CLLocationCoordinate2D],
         date: Date = Date()
     ) async throws -> [Crime] {
-
         let crimes: [Crime]
         do {
             crimes = try await apiClient.get(
