@@ -1,5 +1,23 @@
+//
+//  PoliceForceService.swift
+//  PoliceDataKit
+//
+//  Copyright © 2024 Adam Young.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an AS IS BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+
 import Foundation
-import os
 
 ///
 /// Provides an interface for obtaining police force data from the UK Police API.
@@ -13,8 +31,6 @@ public final class PoliceForceService {
     /// Use this object to interface to police force services in your application.
     ///
     public static let shared = PoliceForceService()
-
-    private static let logger = Logger(subsystem: Logger.policeDataKit, category: "PoliceForceService")
 
     private let apiClient: any APIClient
     private let cache: any PoliceForceCache
@@ -50,8 +66,6 @@ public final class PoliceForceService {
     /// - Returns: All Police Forces.
     ///
     public func policeForces() async throws -> [PoliceForceReference] {
-        Self.logger.trace("fetching Police Forces")
-
         if let cachedPoliceForces = await cache.policeForces() {
             return cachedPoliceForces
         }
@@ -60,7 +74,6 @@ public final class PoliceForceService {
         do {
             policeForces = try await apiClient.get(endpoint: PoliceForcesEndpoint.list)
         } catch let error {
-            Self.logger.error("failed fetching Police Forces: \(error.localizedDescription, privacy: .public)")
             throw Self.mapToPoliceForceError(error)
         }
 
@@ -81,8 +94,6 @@ public final class PoliceForceService {
     /// - Returns: The Police Force specified.
     ///
     public func policeForce(withID id: PoliceForce.ID) async throws -> PoliceForce {
-        Self.logger.trace("fetching Police Force \(id, privacy: .public)")
-
         if let cachedPoliceForce = await cache.policeForce(withID: id) {
             return cachedPoliceForce
         }
@@ -91,8 +102,6 @@ public final class PoliceForceService {
         do {
             policeForce = try await apiClient.get(endpoint: PoliceForcesEndpoint.details(id: id))
         } catch let error {
-            // swiftlint:disable:next line_length
-            Self.logger.error("failed fetching Police Force \(id, privacy: .public): \(error.localizedDescription, privacy: .public)")
             throw Self.mapToPoliceForceError(error)
         }
 
@@ -113,8 +122,6 @@ public final class PoliceForceService {
     /// - Returns: Senior Police Officers for the specified Police Force.
     ///
     public func seniorOfficers(inPoliceForce policeForceID: PoliceForce.ID) async throws -> [PoliceOfficer] {
-        Self.logger.trace("fetching Senior Officers in Police Force \(policeForceID, privacy: .public)")
-
         if let cachedPeopleOfficers = await cache.seniorOfficers(inPoliceForce: policeForceID) {
             return cachedPeopleOfficers
         }
@@ -125,8 +132,6 @@ public final class PoliceForceService {
                 endpoint: PoliceForcesEndpoint.seniorOfficers(policeForceID: policeForceID)
             )
         } catch let error {
-            // swiftlint:disable:next line_length
-            Self.logger.error("failed fetching Senior Officers in Police Force \(policeForceID, privacy: .public): \(error.localizedDescription, privacy: .public)")
             throw Self.mapToPoliceForceError(error)
         }
 

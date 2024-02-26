@@ -1,3 +1,22 @@
+//
+//  StopAndSearchError.swift
+//  PoliceDataKit
+//
+//  Copyright © 2024 Adam Young.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an AS IS BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+
 import Foundation
 
 ///
@@ -19,47 +38,50 @@ public enum StopAndSearchError: LocalizedError, Equatable {
 
 }
 
-extension StopAndSearchError {
+public extension StopAndSearchError {
 
     /// A localized message describing what error occurred.
-    public var errorDescription: String? {
+    var errorDescription: String? {
         switch self {
         case .notFound:
-            return NSLocalizedString("NOT_FOUND", bundle: .module, comment: "Not found error")
+            NSLocalizedString("NOT_FOUND", bundle: .module, comment: "Not found error")
 
         case .locationOutsideOfDataSetRegion:
-            return NSLocalizedString("LOCATION_OUTSIDE_OF_DATA_SET_REGION", bundle: .module,
-                                     comment: "Location outside of data set region")
+            NSLocalizedString(
+                "LOCATION_OUTSIDE_OF_DATA_SET_REGION",
+                bundle: .module,
+                comment: "Location outside of data set region"
+            )
 
         case .network:
-            return NSLocalizedString("NETWORK_ERROR", bundle: .module, comment: "Network error")
+            NSLocalizedString("NETWORK_ERROR", bundle: .module, comment: "Network error")
 
         case .unknown:
-            return NSLocalizedString("UNKNOWN_ERROR", bundle: .module, comment: "Unknown error")
+            NSLocalizedString("UNKNOWN_ERROR", bundle: .module, comment: "Unknown error")
         }
     }
 
 }
 
-extension StopAndSearchError {
+public extension StopAndSearchError {
 
     /// Returns a Boolean value indicating whether two `StopAndSearchError`s are equal.
-    public static func == (lhs: StopAndSearchError, rhs: StopAndSearchError) -> Bool {
+    static func == (lhs: StopAndSearchError, rhs: StopAndSearchError) -> Bool {
         switch (lhs, rhs) {
         case (.notFound, .notFound):
-            return true
+            true
 
         case (.locationOutsideOfDataSetRegion, .locationOutsideOfDataSetRegion):
-            return true
+            true
 
         case (.network, .network):
-            return true
+            true
 
         case (.unknown, .unknown):
-            return true
+            true
 
         default:
-            return false
+            false
         }
     }
 

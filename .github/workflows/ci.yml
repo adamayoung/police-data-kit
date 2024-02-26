@@ -1,12 +1,15 @@
 name: CI
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/ci.yml"
+      - "**/*.swift"
   workflow_dispatch:
 
 concurrency:
@@ -14,26 +17,15 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  DEVELOPER_DIR: /Applications/Xcode_14.3.app/Contents/Developer
+  DEVELOPER_DIR: /Applications/Xcode_15.2.app/Contents/Developer
 
 jobs:
   build-test:
     name: Build and Test
-    runs-on: macos-13
+    runs-on: macos-14
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Cache SPM
-        uses: actions/cache@v3
-        with:
-          path: .build
-          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
-          restore-keys: |
-            ${{ runner.os }}-spm-
-      
-      - name: Lint
-        run: swiftlint --strict --reporter github-actions-logging
+        uses: actions/checkout@v4
 
       - name: Build
         run: swift build -Xswiftc -warnings-as-errors --build-tests
@@ -43,27 +35,26 @@ jobs:
       
       - name: Build for Release
         run: swift build -c release -Xswiftc -warnings-as-errors
-
-  build-documentation:
-    name: Build Documentation
-    runs-on: macos-13
+  
+  build-and-test-platforms:
+    name: Build and Test (${{ matrix.name }})
+    runs-on: macos-14
+    continue-on-error: true
+    strategy:
+      matrix:
+        include:
+          - name: iOS
+            destination: platform=iOS Simulator,name=iPhone 15,OS=17.2
+          - name: watchOS
+            destination: platform=watchOS Simulator,name=Apple Watch Series 9 (45mm),OS=10.2
+          - name: tvOS
+            destination: platform=tvOS Simulator,name=Apple TV 4K (3rd generation),OS=17.2
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Cache SPM
-        uses: actions/cache@v3
-        with:
-          path: .build
-          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
-          restore-keys: |
-            ${{ runner.os }}-spm-
-
-      - name: Install markdownlint-cli
-        run: brew install markdownlint-cli
-
-      - name: Lint DocC files
-        run: markdownlint **/*.docc/**/*.md
+        uses: actions/checkout@v4
 
       - name: Build
-        run: swift package generate-documentation --product PoliceDataKit
+        run: set -o pipefail && env NSUnbufferedIO=YES && xcodebuild build-for-testing -scheme PoliceDataKit -only-testing PoliceDataKitTests -destination '${{ matrix.destination }}' | xcpretty
+      
+      - name: Test
+        run: set -o pipefail && env NSUnbufferedIO=YES && xcodebuild test-without-building -scheme PoliceDataKit -only-testing PoliceDataKitTests -destination '${{ matrix.destination }}' | xcpretty

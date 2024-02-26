@@ -1,5 +1,23 @@
+//
+//  AvailabilityService.swift
+//  PoliceDataKit
+//
+//  Copyright © 2024 Adam Young.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an AS IS BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+
 import Foundation
-import os
 
 ///
 /// Provides an interface for obtaining availability data sets from the UK Police API.
@@ -13,8 +31,6 @@ public final class AvailabilityService {
     /// Use this object to interface to availability services in your application.
     ///
     public static let shared = AvailabilityService()
-
-    private static let logger = Logger(subsystem: Logger.policeDataKit, category: "AvailabilityService")
 
     private let apiClient: any APIClient
     private let cache: any AvailabilityCache
@@ -47,8 +63,6 @@ public final class AvailabilityService {
     /// - Returns: The available data sets.
     ///
     public func availableDataSets() async throws -> [DataSet] {
-        Self.logger.trace("fetching available data sets")
-
         if let cachedDataSets = await cache.availableDataSets() {
             return cachedDataSets
         }
@@ -57,7 +71,6 @@ public final class AvailabilityService {
         do {
             dataSets = try await apiClient.get(endpoint: AvailabilityEndpoint.dataSets)
         } catch let error {
-            Self.logger.error("failed fetching available data sets: \(error.localizedDescription)")
             throw Self.mapToAvailabilityError(error)
         }
 

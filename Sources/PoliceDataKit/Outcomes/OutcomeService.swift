@@ -1,7 +1,25 @@
+//
+//  OutcomeService.swift
+//  PoliceDataKit
+//
+//  Copyright © 2024 Adam Young.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an AS IS BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+
 import Combine
 import Foundation
 import MapKit
-import os
 
 ///
 /// Provides an interface for obtaining outcome data from the UK Police API.
@@ -15,8 +33,6 @@ public final class OutcomeService {
     /// Use this object to interface to outcome services in your application.
     ///
     public static let shared = OutcomeService()
-
-    private static let logger = Logger(subsystem: Logger.policeDataKit, category: "OutcomeService")
 
     private let apiClient: any APIClient
     private let cache: any OutcomeCache
@@ -58,8 +74,6 @@ public final class OutcomeService {
     /// - Returns: The outcomes of crimes for the specified street and date..
     ///
     public func streetLevelOutcomes(forStreet streetID: Int, date: Date = Date()) async throws -> [Outcome] {
-        Self.logger.trace("fetching street level Outcomes for Street \(streetID, privacy: .public)")
-
         if let cachedOutcomes = await cache.streetLevelOutcomes(forStreet: streetID, date: date) {
             return cachedOutcomes
         }
@@ -70,8 +84,6 @@ public final class OutcomeService {
                 endpoint: OutcomesEndpoint.streetLevelOutcomesForStreet(streetID: streetID, date: date)
             )
         } catch let error {
-            // swiftlint:disable:next line_length
-            Self.logger.error("failed fetching street level Outcomes for Street \(streetID, privacy: .public): \(error.localizedDescription, privacy: .public)")
             throw Self.mapToOutcomeError(error)
         }
 
@@ -94,11 +106,11 @@ public final class OutcomeService {
     /// - Throws: Outcome data error ``OutcomeError``.
     ///
     /// - Returns: The outcomes of crimes in a 1 mile radius of the specified coordinate and date.
-    /// 
-    public func streetLevelOutcomes(at coordinate: CLLocationCoordinate2D,
-                                    date: Date = Date()) async throws -> [Outcome] {
-        Self.logger.trace("fetching street level Outcomes at coordinate \(coordinate, privacy: .public)")
-
+    ///
+    public func streetLevelOutcomes(
+        at coordinate: CLLocationCoordinate2D,
+        date: Date = Date()
+    ) async throws -> [Outcome] {
         guard availableDataRegion.contains(coordinate: coordinate) else {
             throw OutcomeError.locationOutsideOfDataSetRegion
         }
@@ -109,8 +121,6 @@ public final class OutcomeService {
                 endpoint: OutcomesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate, date: date)
             )
         } catch let error {
-            // swiftlint:disable:next line_length
-            Self.logger.error("failed fetching street level Outcomes at coordinate \(coordinate, privacy: .public): \(error.localizedDescription, privacy: .public)")
             throw Self.mapToOutcomeError(error)
         }
 
@@ -129,9 +139,11 @@ public final class OutcomeService {
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
     /// - Returns: The outcomes of crimes in a 1 mile radius of the specified coordinate and date.
-    /// 
-    public func streetLevelOutcomesPublisher(at coordinate: CLLocationCoordinate2D,
-                                             date: Date = Date()) -> AnyPublisher<[Outcome], OutcomeError> {
+    ///
+    public func streetLevelOutcomesPublisher(
+        at coordinate: CLLocationCoordinate2D,
+        date: Date = Date()
+    ) -> AnyPublisher<[Outcome], OutcomeError> {
         Future { [weak self] promise in
             guard let self else {
                 promise(.failure(.unknown))
@@ -166,18 +178,16 @@ public final class OutcomeService {
     ///
     /// - Returns: The outcomes of crimes within the specified area.
     ///
-    public func streetLevelOutcomes(in coordinates: [CLLocationCoordinate2D],
-                                    date: Date = Date()) async throws -> [Outcome] {
-        Self.logger.trace("fetching street level Outcomes in area")
-
+    public func streetLevelOutcomes(
+        in coordinates: [CLLocationCoordinate2D],
+        date: Date = Date()
+    ) async throws -> [Outcome] {
         let outcomes: [Outcome]
         do {
             outcomes = try await apiClient.get(
                 endpoint: OutcomesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates, date: date)
             )
         } catch let error {
-            // swiftlint:disable:next line_length
-            Self.logger.error("failed fetching street level Outcomes in area: \(error.localizedDescription, privacy: .public)")
             throw Self.mapToOutcomeError(error)
         }
 
@@ -197,8 +207,10 @@ public final class OutcomeService {
     ///
     /// - Returns: The outcomes of crimes within the specified area.
     ///
-    public func streetLevelOutcomesPublisher(in coordinates: [CLLocationCoordinate2D],
-                                             date: Date = Date()) -> AnyPublisher<[Outcome], OutcomeError> {
+    public func streetLevelOutcomesPublisher(
+        in coordinates: [CLLocationCoordinate2D],
+        date: Date = Date()
+    ) -> AnyPublisher<[Outcome], OutcomeError> {
         Future { [weak self] promise in
             guard let self else {
                 promise(.failure(.unknown))
@@ -232,8 +244,6 @@ public final class OutcomeService {
     /// - Returns: The case history for the specified crime.
     ///
     public func caseHistory(forCrime crimeID: String) async throws -> CaseHistory {
-        Self.logger.trace("fetching Case History for crime \(crimeID, privacy: .public)")
-
         if let cachedCaseHistory = await cache.caseHistory(forCrime: crimeID) {
             return cachedCaseHistory
         }
@@ -242,8 +252,6 @@ public final class OutcomeService {
         do {
             caseHistory = try await apiClient.get(endpoint: OutcomesEndpoint.caseHistory(crimeID: crimeID))
         } catch let error {
-            // swiftlint:disable:next line_length
-            Self.logger.error("failed fetching Case History for crime \(crimeID, privacy: .public): \(error.localizedDescription, privacy: .public)")
             throw Self.mapToOutcomeError(error)
         }
 

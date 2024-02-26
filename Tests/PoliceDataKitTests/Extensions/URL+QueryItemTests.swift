@@ -1,3 +1,22 @@
+//
+//  URL+QueryItemTests.swift
+//  PoliceDataKit
+//
+//  Copyright © 2024 Adam Young.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an AS IS BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+
 import CoreLocation
 @testable import PoliceDataKit
 import XCTest
@@ -29,7 +48,7 @@ final class URLQueryItemTests: XCTestCase {
     func testAppendingQueryItemWithDateWhenURLContainsNoQueryItemsAndNoDateFormatterReturnsURLWithYearMonthDate() {
         let baseURL = URL(string: "https://some.domain.com")
         let queryItemName = "date"
-        let date = Date(timeIntervalSince1970: 1621850198) // 2021-05-24 09:56:38 +0000
+        let date = Date(timeIntervalSince1970: 1_621_850_198) // 2021-05-24 09:56:38 +0000
         let expectedResult = URL(string: "https://some.domain.com?\(queryItemName)=2021-05")
 
         let result = baseURL?.appendingQueryItem(name: queryItemName, date: date)
@@ -40,7 +59,7 @@ final class URLQueryItemTests: XCTestCase {
     func testAppendingQueryItemWithDateWhenURLContainsQueryItemsAndNoDateFormatterReturnsURLWithYearMonthDate() {
         let baseURL = URL(string: "https://some.domain.com?id=987")
         let queryItemName = "date"
-        let date = Date(timeIntervalSince1970: 1621850198) // 2021-05-24 09:56:38 +0000
+        let date = Date(timeIntervalSince1970: 1_621_850_198) // 2021-05-24 09:56:38 +0000
         let expectedResult = URL(string: "https://some.domain.com?id=987&\(queryItemName)=2021-05")
 
         let result = baseURL?.appendingQueryItem(name: queryItemName, date: date)
@@ -51,7 +70,7 @@ final class URLQueryItemTests: XCTestCase {
     func testAppendingQueryItemWithDateWhenURLContainsNoQueryItemsAndWithDateFormatterReturnsURLWithFormattedDate() {
         let baseURL = URL(string: "https://some.domain.com")
         let queryItemName = "date"
-        let date = Date(timeIntervalSince1970: 1621850198) // 2021-05-24 09:56:38 +0000
+        let date = Date(timeIntervalSince1970: 1_621_850_198) // 2021-05-24 09:56:38 +0000
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let expectedResult = URL(string: "https://some.domain.com?\(queryItemName)=2021-05-24")

@@ -1,3 +1,22 @@
+//
+//  NeighbourhoodsEndpoint.swift
+//  PoliceDataKit
+//
+//  Copyright © 2024 Adam Young.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an AS IS BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+
 import CoreLocation
 import Foundation
 
@@ -18,36 +37,36 @@ extension NeighbourhoodsEndpoint: Endpoint {
 
     var path: URL {
         switch self {
-        case .list(let policeForceID):
-            return Self.basePath
+        case let .list(policeForceID):
+            Self.basePath
                 .appendingPathComponent(policeForceID)
                 .appendingPathComponent("neighbourhoods")
 
-        case .details(let id, let policeForceID):
-            return Self.basePath
+        case let .details(id, policeForceID):
+            Self.basePath
                 .appendingPathComponent(policeForceID)
                 .appendingPathComponent(id)
 
-        case .boundary(let neighbourhoodID, let policeForceID):
-            return Self.basePath
+        case let .boundary(neighbourhoodID, policeForceID):
+            Self.basePath
                 .appendingPathComponent(policeForceID)
                 .appendingPathComponent(neighbourhoodID)
                 .appendingPathComponent("boundary")
 
-        case .policeOfficers(let neighbourhoodID, let policeForceID):
-            return Self.basePath
+        case let .policeOfficers(neighbourhoodID, policeForceID):
+            Self.basePath
                 .appendingPathComponent(policeForceID)
                 .appendingPathComponent(neighbourhoodID)
                 .appendingPathComponent("people")
 
-        case .priorities(let neighbourhoodID, let policeForceID):
-            return Self.basePath
+        case let .priorities(neighbourhoodID, policeForceID):
+            Self.basePath
                 .appendingPathComponent(policeForceID)
                 .appendingPathComponent(neighbourhoodID)
                 .appendingPathComponent("priorities")
 
-        case .locateNeighbourhood(let coordinate):
-            return Self.basePath
+        case let .locateNeighbourhood(coordinate):
+            Self.basePath
                 .appendingPathComponent("locate-neighbourhood")
                 .appendingQueryItem(name: "q", coordinate: coordinate)
         }

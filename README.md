@@ -9,7 +9,7 @@ Wales and Northern Ireland.
 
 ## Requirements
 
-* Swift 5.7+
+* Swift 5.9+
 
 ## Installation
 
@@ -19,7 +19,7 @@ Add the PoliceDataKit package as a dependency to your `Package.swift` file, and
 add it as a dependency to your target.
 
 ```swift
-// swift-tools-version:5.7
+// swift-tools-version:5.9
 
 import PackageDescription
 
@@ -27,7 +27,7 @@ let package = Package(
   name: "MyProject",
 
   dependencies: [
-    .package(url: "https://github.com/adamayoung/police-data-kit.git", from: "3.0.0")
+    .package(url: "https://github.com/adamayoung/police-data-kit.git", from: "4.0.0")
   ],
 
   targets: [

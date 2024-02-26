@@ -1,3 +1,22 @@
+//
+//  CrimeIntegrationTests.swift
+//  PoliceDataKit
+//
+//  Copyright © 2024 Adam Young.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an AS IS BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+
 import Combine
 import CoreLocation
 import PoliceDataKit
@@ -33,7 +52,7 @@ final class CrimeIntegrationTests: XCTestCase {
         let leedsCityCentreCoordinate = CLLocationCoordinate2D(latitude: 53.797927, longitude: -1.541522)
         let date = try XCTUnwrap(Date(isoString: "2023-03-01T12:00:00Z"))
 
-        let expectation = self.expectation(description: "StreetLevelCrimesPublisher")
+        let expectation = expectation(description: "StreetLevelCrimesPublisher")
         var result: [Crime]?
         crimeService.streetLevelCrimesPublisher(at: leedsCityCentreCoordinate, date: date)
             .sink { _ in
@@ -72,7 +91,7 @@ final class CrimeIntegrationTests: XCTestCase {
         ]
         let date = try XCTUnwrap(Date(isoString: "2023-03-01T12:00:00Z"))
 
-        let expectation = self.expectation(description: "StreetLevelCrimesPublisher")
+        let expectation = expectation(description: "StreetLevelCrimesPublisher")
         var result: [Crime]?
         crimeService.streetLevelCrimesPublisher(in: boundary, date: date)
             .sink { _ in
@@ -89,7 +108,7 @@ final class CrimeIntegrationTests: XCTestCase {
     }
 
     func testCrimesForStreetAtSaundersWayLondon() async throws {
-        let saundersWayLondonStreetID = 1705005
+        let saundersWayLondonStreetID = 1_705_005
         let date = try XCTUnwrap(Date(isoString: "2023-02-01T12:00:00Z"))
 
         let crimes = try await crimeService.crimes(forStreet: saundersWayLondonStreetID, date: date)
@@ -119,7 +138,7 @@ final class CrimeIntegrationTests: XCTestCase {
         let leedsCityCentreCoordinate = CLLocationCoordinate2D(latitude: 53.797927, longitude: -1.541522)
         let date = try XCTUnwrap(Date(isoString: "2023-03-01T12:00:00Z"))
 
-        let expectation = self.expectation(description: "StreetLevelCrimesPublisher")
+        let expectation = expectation(description: "StreetLevelCrimesPublisher")
         var result: [Crime]?
         crimeService.crimesPublisher(at: leedsCityCentreCoordinate, date: date)
             .sink { _ in

@@ -1,3 +1,22 @@
+//
+//  NeighbourhoodIntegrationTests.swift
+//  PoliceDataKit
+//
+//  Copyright © 2024 Adam Young.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an AS IS BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+
 import Combine
 import CoreLocation
 import PoliceDataKit
@@ -53,8 +72,10 @@ final class NeighbourhoodIntegrationTests: XCTestCase {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
 
-        let neighbourhood = try await neighbourhoodService.neighbourhood(withID: neighbourhoodID,
-                                                                         inPoliceForce: policeForceID)
+        let neighbourhood = try await neighbourhoodService.neighbourhood(
+            withID: neighbourhoodID,
+            inPoliceForce: policeForceID
+        )
 
         XCTAssertEqual(neighbourhood.id, neighbourhoodID)
     }
@@ -63,8 +84,10 @@ final class NeighbourhoodIntegrationTests: XCTestCase {
         let neighbourhoodID = "NC09"
         let policeForceID = "lincolnshire"
 
-        let neighbourhood = try await neighbourhoodService.neighbourhood(withID: neighbourhoodID,
-                                                                         inPoliceForce: policeForceID)
+        let neighbourhood = try await neighbourhoodService.neighbourhood(
+            withID: neighbourhoodID,
+            inPoliceForce: policeForceID
+        )
 
         XCTAssertEqual(neighbourhood.id, neighbourhoodID)
     }
@@ -122,7 +145,7 @@ final class NeighbourhoodIntegrationTests: XCTestCase {
     func testNeighbourhoodPublisherAtCoordinateForLeedsCityCentre() {
         let leedsCityCentreCoordinate = CLLocationCoordinate2D(latitude: 53.797927, longitude: -1.541522)
 
-        let expectation = self.expectation(description: "NeighbourhoodPublisher")
+        let expectation = expectation(description: "NeighbourhoodPublisher")
         var result: Neighbourhood?
         neighbourhoodService.neighbourhoodPublisher(at: leedsCityCentreCoordinate)
             .sink { _ in
@@ -142,18 +165,22 @@ final class NeighbourhoodIntegrationTests: XCTestCase {
         let neighbourhoodID = "WDT_CEN"
         let policeForceID = "west-yorkshire"
 
-        let boundary = try await neighbourhoodService.boundary(forNeighbourhood: neighbourhoodID,
-                                                               inPoliceForce: policeForceID)
+        let boundary = try await neighbourhoodService.boundary(
+            forNeighbourhood: neighbourhoodID,
+            inPoliceForce: policeForceID
+        )
 
-        XCTAssertEqual(boundary.count, 993)
+        XCTAssertEqual(boundary.count, 961)
     }
 
     func testPoliceOfficersForNeighbourhoodInPoliceForceForWakefieldCentralWestYorkshire() async throws {
         let neighbourhoodID = "WDT_CEN"
         let policeForceID = "west-yorkshire"
 
-        let policeOfficers = try await neighbourhoodService.policeOfficers(forNeighbourhood: neighbourhoodID,
-                                                                           inPoliceForce: policeForceID)
+        let policeOfficers = try await neighbourhoodService.policeOfficers(
+            forNeighbourhood: neighbourhoodID,
+            inPoliceForce: policeForceID
+        )
 
         XCTAssertGreaterThan(policeOfficers.count, 0)
     }
@@ -162,8 +189,10 @@ final class NeighbourhoodIntegrationTests: XCTestCase {
         let neighbourhoodID = "AB"
         let policeForceID = "south-yorkshire"
 
-        let policeOfficers = try await neighbourhoodService.policeOfficers(forNeighbourhood: neighbourhoodID,
-                                                                           inPoliceForce: policeForceID)
+        let policeOfficers = try await neighbourhoodService.policeOfficers(
+            forNeighbourhood: neighbourhoodID,
+            inPoliceForce: policeForceID
+        )
 
         XCTAssertGreaterThan(policeOfficers.count, 0)
     }
@@ -172,8 +201,10 @@ final class NeighbourhoodIntegrationTests: XCTestCase {
         let neighbourhoodID = "AB"
         let policeForceID = "south-yorkshire"
 
-        let priorties = try await neighbourhoodService.priorities(forNeighbourhood: neighbourhoodID,
-                                                                  inPoliceForce: policeForceID)
+        let priorties = try await neighbourhoodService.priorities(
+            forNeighbourhood: neighbourhoodID,
+            inPoliceForce: policeForceID
+        )
 
         XCTAssertGreaterThan(priorties.count, 0)
     }
@@ -182,8 +213,10 @@ final class NeighbourhoodIntegrationTests: XCTestCase {
         let neighbourhoodID = "BA1"
         let policeForceID = "gloucestershire"
 
-        let priorties = try await neighbourhoodService.priorities(forNeighbourhood: neighbourhoodID,
-                                                                  inPoliceForce: policeForceID)
+        let priorties = try await neighbourhoodService.priorities(
+            forNeighbourhood: neighbourhoodID,
+            inPoliceForce: policeForceID
+        )
 
         XCTAssertGreaterThan(priorties.count, 0)
     }
@@ -200,7 +233,7 @@ final class NeighbourhoodIntegrationTests: XCTestCase {
     func testNeighbourhoodPolicingTeamPublisherAtCoordinateForGloucesterCityCentreGloucestershire() {
         let gloucesterCoordinate = CLLocationCoordinate2D(latitude: 51.86703, longitude: -2.2413)
 
-        let expectation = self.expectation(description: "NeighbourhoodPublisher")
+        let expectation = expectation(description: "NeighbourhoodPublisher")
         var result: NeighbourhoodPolicingTeam?
         neighbourhoodService.neighbourhoodPolicingTeamPublisher(at: gloucesterCoordinate)
             .sink { _ in

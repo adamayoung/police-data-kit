@@ -1,8 +1,28 @@
+//
+//  CrimeServiceTests.swift
+//  PoliceDataKit
+//
+//  Copyright © 2024 Adam Young.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an AS IS BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+
 import Combine
 import MapKit
 @testable import PoliceDataKit
 import XCTest
 
+// swiftlint:disable:next type_body_length
 final class CrimeServiceTests: XCTestCase {
 
     var service: CrimeService!
@@ -51,7 +71,7 @@ final class CrimeServiceTests: XCTestCase {
         let expectedResult = Crime.mocks
         apiClient.add(response: .success(Crime.mocks))
 
-        let expectation = self.expectation(description: "StreetLevelCrimesPublisher")
+        let expectation = expectation(description: "StreetLevelCrimesPublisher")
         var result: [Crime]?
         service.streetLevelCrimesPublisher(at: coordinate, date: date)
             .sink { _ in
@@ -109,7 +129,7 @@ final class CrimeServiceTests: XCTestCase {
         let expectedResult = Crime.mocks
         apiClient.add(response: .success(Crime.mocks))
 
-        let expectation = self.expectation(description: "StreetLevelCrimesPublisher")
+        let expectation = expectation(description: "StreetLevelCrimesPublisher")
         var result: [Crime]?
         service.streetLevelCrimesPublisher(in: coordinates, date: date)
             .sink { _ in
@@ -190,7 +210,7 @@ final class CrimeServiceTests: XCTestCase {
         let expectedResult = Crime.mocks
         apiClient.add(response: .success(Crime.mocks))
 
-        let expectation = self.expectation(description: "StreetLevelCrimesPublisher")
+        let expectation = expectation(description: "StreetLevelCrimesPublisher")
         var result: [Crime]?
         service.crimesPublisher(at: coordinate, date: date)
             .sink { _ in
@@ -234,8 +254,11 @@ final class CrimeServiceTests: XCTestCase {
         let expectedResult = Crime.mocks
         apiClient.add(response: .success(Crime.mocks))
 
-        let result = try await service.crimesWithNoLocation(forCategory: categoryID, inPoliceForce: policeForceID,
-                                                            date: date)
+        let result = try await service.crimesWithNoLocation(
+            forCategory: categoryID,
+            inPoliceForce: policeForceID,
+            date: date
+        )
 
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(
@@ -250,11 +273,18 @@ final class CrimeServiceTests: XCTestCase {
         let policeForceID = PoliceForce.mock.id
         let date = Date()
         let expectedResult = Crime.mocks
-        await cache.setCrimesWithNoLocation(expectedResult, forCategory: categoryID, inPoliceForce: policeForceID,
-                                            date: date)
+        await cache.setCrimesWithNoLocation(
+            expectedResult,
+            forCategory: categoryID,
+            inPoliceForce: policeForceID,
+            date: date
+        )
 
-        let result = try await service.crimesWithNoLocation(forCategory: categoryID, inPoliceForce: policeForceID,
-                                                            date: date)
+        let result = try await service.crimesWithNoLocation(
+            forCategory: categoryID,
+            inPoliceForce: policeForceID,
+            date: date
+        )
 
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(apiClient.requestedURLs.count, 0)
@@ -269,8 +299,11 @@ final class CrimeServiceTests: XCTestCase {
         apiClient.add(response: .success(Crime.mocks))
         _ = try await service.crimesWithNoLocation(forCategory: categoryID, inPoliceForce: policeForceID, date: date)
 
-        let cachedResult = await cache.crimesWithNoLocation(forCategory: categoryID, inPoliceForce: policeForceID,
-                                                            date: date)
+        let cachedResult = await cache.crimesWithNoLocation(
+            forCategory: categoryID,
+            inPoliceForce: policeForceID,
+            date: date
+        )
 
         XCTAssertEqual(cachedResult, expectedResult)
     }
