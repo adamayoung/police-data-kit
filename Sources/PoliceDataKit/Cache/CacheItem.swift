@@ -19,10 +19,10 @@
 
 import Foundation
 
-final class CacheItem {
+final class CacheItem: @unchecked Sendable {
 
     let key: String
-    let object: Any
+    let object: any Sendable
     let expiresAt: Date?
 
     var isExpired: Bool {
@@ -33,7 +33,7 @@ final class CacheItem {
         return expiresAt.timeIntervalSinceNow < 0
     }
 
-    init(key: String, object: Any, expiresIn: TimeInterval? = nil) {
+    init(key: String, object: any Sendable, expiresIn: TimeInterval? = nil) {
         self.key = key
         self.object = object
         self.expiresAt = {

@@ -18,71 +18,79 @@
 //
 
 import CoreLocation
+import Foundation
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class NeighbourhoodsEndpointTests: XCTestCase {
+@Suite("NeighbourhoodsEndpoint")
+struct NeighbourhoodsEndpointTests {
 
-    func testListEndpointReturnsURL() throws {
+    @Test("list endpoint returns u r l")
+    func listEndpointReturnsURL() throws {
         let policeForceID = "leicestershire"
-        let expectedPath = try XCTUnwrap(URL(string: "/\(policeForceID)/neighbourhoods"))
+        let expectedPath = try #require(URL(string: "/\(policeForceID)/neighbourhoods"))
 
         let path = NeighbourhoodsEndpoint.list(policeForceID: policeForceID).path
 
-        XCTAssertEqual(path, expectedPath)
+        #expect(path == expectedPath)
     }
 
-    func testDetailsEndpointReturnsURL() throws {
+    @Test("details endpoint returns u r l")
+    func detailsEndpointReturnsURL() throws {
         let id = "AB123"
         let policeForceID = "leicestershire"
-        let expectedPath = try XCTUnwrap(URL(string: "/\(policeForceID)/\(id)"))
+        let expectedPath = try #require(URL(string: "/\(policeForceID)/\(id)"))
 
         let path = NeighbourhoodsEndpoint.details(id: id, policeForceID: policeForceID).path
 
-        XCTAssertEqual(path, expectedPath)
+        #expect(path == expectedPath)
     }
 
-    func testBoundaryEndpointReturnsURL() throws {
+    @Test("boundary endpoint returns u r l")
+    func boundaryEndpointReturnsURL() throws {
         let neighbourhoodID = "AB123"
         let policeForceID = "leicestershire"
-        let expectedPath = try XCTUnwrap(URL(string: "/\(policeForceID)/\(neighbourhoodID)/boundary"))
+        let expectedPath = try #require(URL(string: "/\(policeForceID)/\(neighbourhoodID)/boundary"))
 
         let path = NeighbourhoodsEndpoint.boundary(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID).path
 
-        XCTAssertEqual(path, expectedPath)
+        #expect(path == expectedPath)
     }
 
-    func testTeamEndpointReturnsURL() throws {
+    @Test("team endpoint returns u r l")
+    func teamEndpointReturnsURL() throws {
         let neighbourhoodID = "AB123"
         let policeForceID = "leicestershire"
-        let expectedPath = try XCTUnwrap(URL(string: "/\(policeForceID)/\(neighbourhoodID)/people"))
+        let expectedPath = try #require(URL(string: "/\(policeForceID)/\(neighbourhoodID)/people"))
 
         let path = NeighbourhoodsEndpoint.policeOfficers(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID)
             .path
 
-        XCTAssertEqual(path, expectedPath)
+        #expect(path == expectedPath)
     }
 
-    func testPrioritiesEndpointReturnsURL() throws {
+    @Test("priorities endpoint returns u r l")
+    func prioritiesEndpointReturnsURL() throws {
         let neighbourhoodID = "AB123"
         let policeForceID = "leicestershire"
-        let expectedPath = try XCTUnwrap(URL(string: "/\(policeForceID)/\(neighbourhoodID)/priorities"))
+        let expectedPath = try #require(URL(string: "/\(policeForceID)/\(neighbourhoodID)/priorities"))
 
         let path = NeighbourhoodsEndpoint.priorities(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID)
             .path
 
-        XCTAssertEqual(path, expectedPath)
+        #expect(path == expectedPath)
     }
 
-    func testLocateNeighbourhoodReturnsURL() throws {
+    @Test("locate neighbourhood returns u r l")
+    func locateNeighbourhoodReturnsURL() throws {
         let coordinate = CLLocationCoordinate2D(latitude: 2.345, longitude: -1.234)
-        let expectedPath = try XCTUnwrap(URL(
+        let expectedPath = try #require(URL(
             string: "/locate-neighbourhood?q=\(coordinate.latitude),\(coordinate.longitude)"
         ))
 
         let path = NeighbourhoodsEndpoint.locateNeighbourhood(coordinate: coordinate).path
 
-        XCTAssertEqual(path, expectedPath)
+        #expect(path == expectedPath)
     }
 
 }

@@ -19,7 +19,7 @@
 
 import Foundation
 
-protocol CachingKey: CustomStringConvertible {
+protocol CachingKey: CustomStringConvertible, Sendable {
 
     var keyValue: String { get }
 

@@ -19,8 +19,8 @@
 
 import Foundation
 
-protocol Serialiser {
+protocol Serialiser: Sendable {
 
-    func decode<T: Decodable>(_ type: T.Type, from data: Data) async throws -> T
+    func decode<T: Decodable>(_ type: T.Type, from data: Data) throws -> T
 
 }

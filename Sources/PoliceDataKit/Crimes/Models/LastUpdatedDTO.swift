@@ -1,5 +1,5 @@
 //
-//  MKCoordinateRegion+Mocks.swift
+//  LastUpdatedDTO.swift
 //  PoliceDataKit
 //
 //  Copyright © 2024 Adam Young.
@@ -18,21 +18,13 @@
 //
 
 import Foundation
-import MapKit
 
-extension MKCoordinateRegion {
+struct LastUpdatedDTO: Decodable {
 
-    static var test: Self {
-        MKCoordinateRegion(
-            center: CLLocationCoordinate2D(
-                latitude: 54.4661645479556,
-                longitude: -3.1076525162671667
-            ),
-            span: MKCoordinateSpan(
-                latitudeDelta: 13.0738,
-                longitudeDelta: 11.4748
-            )
-        )
+    let date: Date
+
+    private enum CodingKeys: String, CodingKey {
+        case date
     }
 
 }

@@ -23,7 +23,7 @@ import Foundation
 ///
 /// A model representing a location.
 ///
-public struct Location: Equatable, Codable {
+public struct Location: Equatable, Codable, Sendable {
 
     /// An approximate street for the location.
     ///
@@ -95,7 +95,7 @@ public extension Location {
         }()
 
         try container.encodeIfPresent(latitudeString, forKey: .latitude)
-        try container.encodeIfPresent(longitudeString, forKey: .latitude)
+        try container.encodeIfPresent(longitudeString, forKey: .longitude)
         try container.encode(street, forKey: .street)
     }
 

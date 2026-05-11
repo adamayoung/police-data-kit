@@ -33,10 +33,4 @@ struct CrimesWithNoLocationForCategoryInPoliceForceCachingKey: CachingKey {
         DateFormatter.yearMonth.string(from: date)
     }
 
-    init(categoryID: CrimeCategory.ID, policeForceID: PoliceForce.ID, date: Date) {
-        self.categoryID = categoryID
-        self.policeForceID = policeForceID
-        self.date = date
-    }
-
 }

@@ -22,10 +22,16 @@ import Foundation
 ///
 /// An error PoliceDataKit returns.
 ///
-public enum AvailabilityError: LocalizedError, Equatable {
+public enum AvailabilityError: LocalizedError, Equatable, Sendable {
 
     /// An error indicating there was a network problem.
     case network(Error)
+
+    /// An error indicating the API rate limit has been exceeded.
+    ///
+    /// The associated value, if present, is the number of seconds the API requested clients to wait
+    /// before retrying.
+    case rateLimitExceeded(retryAfter: TimeInterval?)
 
     /// An unknown error.
     case unknown
@@ -40,6 +46,9 @@ public extension AvailabilityError {
         case .network:
             NSLocalizedString("NETWORK_ERROR", bundle: .module, comment: "Network error")
 
+        case .rateLimitExceeded:
+            NSLocalizedString("RATE_LIMIT_EXCEEDED_ERROR", bundle: .module, comment: "Rate limit exceeded error")
+
         case .unknown:
             NSLocalizedString("UNKNOWN_ERROR", bundle: .module, comment: "Unknown error")
         }
@@ -53,6 +62,9 @@ public extension AvailabilityError {
     static func == (lhs: AvailabilityError, rhs: AvailabilityError) -> Bool {
         switch (lhs, rhs) {
         case (.network, .network):
+            true
+
+        case (.rateLimitExceeded, .rateLimitExceeded):
             true
 
         case (.unknown, .unknown):

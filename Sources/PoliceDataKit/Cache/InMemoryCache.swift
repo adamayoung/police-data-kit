@@ -31,7 +31,10 @@ final actor InMemoryCache: Cache {
         self.defaultExpiresIn = defaultExpiresIn
     }
 
-    func object<ObjectType: Any>(for key: some CustomStringConvertible, type _: ObjectType.Type) async -> ObjectType? {
+    func object<ObjectType: Sendable>(
+        for key: some CustomStringConvertible & Sendable,
+        type _: ObjectType.Type
+    ) async -> ObjectType? {
         let cacheKey = keyValue(for: key)
 
         guard let item = cache.object(forKey: cacheKey) else {
@@ -46,7 +49,11 @@ final actor InMemoryCache: Cache {
         return item.object as? ObjectType
     }
 
-    func set(_ object: Any?, for key: some CustomStringConvertible, expiresIn: TimeInterval? = nil) async {
+    func set(
+        _ object: (any Sendable)?,
+        for key: some CustomStringConvertible & Sendable,
+        expiresIn: TimeInterval? = nil
+    ) async {
         let cacheKey = keyValue(for: key)
 
         guard let object else {

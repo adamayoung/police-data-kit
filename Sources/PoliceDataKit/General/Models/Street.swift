@@ -22,7 +22,7 @@ import Foundation
 ///
 /// A model representing a street.
 ///
-public struct Street: Identifiable, Equatable, Codable {
+public struct Street: Identifiable, Equatable, Codable, Sendable {
 
     /// Unique identifier for the street.
     public let id: Int

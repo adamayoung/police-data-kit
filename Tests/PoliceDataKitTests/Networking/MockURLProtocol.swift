@@ -21,16 +21,18 @@ import Foundation
 
 final class MockURLProtocol: URLProtocol {
 
-    static var data: Data?
-    static var failError: Error?
-    static var responseStatusCode: Int = 200
-    private(set) static var lastRequest: URLRequest?
+    // nonisolated(unsafe) is safe here: MockURLProtocol is test-only infrastructure
+    // accessed sequentially within a @Suite(.serialized) test suite.
+    nonisolated(unsafe) static var data: Data?
+    nonisolated(unsafe) static var failError: Error?
+    nonisolated(unsafe) static var responseStatusCode: Int = 200
+    private(set) nonisolated(unsafe) static var lastRequest: URLRequest?
 
-    override class func canInit(with _: URLRequest) -> Bool {
+    override static func canInit(with _: URLRequest) -> Bool {
         true
     }
 
-    override class func canonicalRequest(for request: URLRequest) -> URLRequest {
+    override static func canonicalRequest(for request: URLRequest) -> URLRequest {
         lastRequest = request
         return request
     }

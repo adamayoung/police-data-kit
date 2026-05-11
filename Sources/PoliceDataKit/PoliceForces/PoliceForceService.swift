@@ -22,8 +22,7 @@ import Foundation
 ///
 /// Provides an interface for obtaining police force data from the UK Police API.
 ///
-@available(iOS 15.0, tvOS 15.0, watchOS 8.0, macOS 12, *)
-public final class PoliceForceService {
+public final class PoliceForceService: Sendable {
 
     ///
     /// A single, shared police force service object.
@@ -32,8 +31,8 @@ public final class PoliceForceService {
     ///
     public static let shared = PoliceForceService()
 
-    private let apiClient: any APIClient
-    private let cache: any PoliceForceCache
+    private let apiClient: any APIClient & Sendable
+    private let cache: any PoliceForceCache & Sendable
 
     ///
     /// Creates a police force service object.
@@ -48,7 +47,7 @@ public final class PoliceForceService {
         )
     }
 
-    init(apiClient: some APIClient, cache: some PoliceForceCache) {
+    init(apiClient: some APIClient & Sendable, cache: some PoliceForceCache & Sendable) {
         self.apiClient = apiClient
         self.cache = cache
     }
@@ -61,11 +60,12 @@ public final class PoliceForceService {
     ///
     /// [https://data.police.uk/docs/method/forces/](https://data.police.uk/docs/method/forces/)
     ///
-    /// - Throws: Police Force data error ``PoliceForceError``.
+    /// - Throws: ``PoliceForceError/notFound`` if no data exists; ``PoliceForceError/network(_:)`` on transport failure;
+    ///   ``PoliceForceError/unknown`` otherwise.
     ///
     /// - Returns: All Police Forces.
     ///
-    public func policeForces() async throws -> [PoliceForceReference] {
+    public func policeForces() async throws(PoliceForceError) -> [PoliceForceReference] {
         if let cachedPoliceForces = await cache.policeForces() {
             return cachedPoliceForces
         }
@@ -89,11 +89,12 @@ public final class PoliceForceService {
     ///
     /// - Parameter id: Police Force identifier.
     ///
-    /// - Throws: Police Force data error ``PoliceForceError``.
+    /// - Throws: ``PoliceForceError/notFound`` if no data exists; ``PoliceForceError/network(_:)`` on transport failure;
+    ///   ``PoliceForceError/unknown`` otherwise.
     ///
     /// - Returns: The Police Force specified.
     ///
-    public func policeForce(withID id: PoliceForce.ID) async throws -> PoliceForce {
+    public func policeForce(withID id: PoliceForce.ID) async throws(PoliceForceError) -> PoliceForce {
         if let cachedPoliceForce = await cache.policeForce(withID: id) {
             return cachedPoliceForce
         }
@@ -115,13 +116,16 @@ public final class PoliceForceService {
     ///
     /// [https://data.police.uk/docs/method/senior-officers/](https://data.police.uk/docs/method/senior-officers/)
     ///
-    /// - Parameter id: Police Force identifier.
+    /// - Parameter policeForceID: Police Force identifier.
     ///
-    /// - Throws: Police Force data error ``PoliceForceError``.
+    /// - Throws: ``PoliceForceError/notFound`` if no data exists; ``PoliceForceError/network(_:)`` on transport failure;
+    ///   ``PoliceForceError/unknown`` otherwise.
     ///
     /// - Returns: Senior Police Officers for the specified Police Force.
     ///
-    public func seniorOfficers(inPoliceForce policeForceID: PoliceForce.ID) async throws -> [PoliceOfficer] {
+    public func seniorOfficers(
+        inPoliceForce policeForceID: PoliceForce.ID
+    ) async throws(PoliceForceError) -> [PoliceOfficer] {
         if let cachedPeopleOfficers = await cache.seniorOfficers(inPoliceForce: policeForceID) {
             return cachedPeopleOfficers
         }
@@ -144,20 +148,19 @@ public final class PoliceForceService {
 
 extension PoliceForceService {
 
-    private static func mapToPoliceForceError(_ error: Error) -> PoliceForceError {
-        guard let error = error as? APIClientError else {
-            return .unknown
-        }
-
+    private static func mapToPoliceForceError(_ error: APIClientError) -> PoliceForceError {
         switch error {
-        case .network:
-            return .network(error)
+        case let .network(underlying):
+            .network(underlying)
 
         case .notFound:
-            return .notFound
+            .notFound
+
+        case let .rateLimitExceeded(retryAfter):
+            .rateLimitExceeded(retryAfter: retryAfter)
 
         case .decode, .unknown:
-            return .unknown
+            .unknown
         }
     }
 

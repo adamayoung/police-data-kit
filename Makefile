@@ -2,13 +2,11 @@ TARGET = PoliceDataKit
 TEST_TARGET = PoliceDataKitTests
 INTEGRATION_TEST_TARGET = IntegrationTests
 
-IOS_DESTINATION = 'platform=iOS Simulator,name=iPhone 15,OS=17.2'
-WATCHOS_DESINTATION = 'platform=watchOS Simulator,name=Apple Watch Series 9 (45mm),OS=10.2'
-TVOS_DESTINATION =  'platform=tvOS Simulator,name=Apple TV 4K (3rd generation),OS=17.2'
+IOS_DESTINATION = 'platform=iOS Simulator,name=iPhone 17,OS=26.2'
+WATCHOS_DESTINATION = 'platform=watchOS Simulator,name=Apple Watch Series 11 (46mm),OS=26.2'
+TVOS_DESTINATION = 'platform=tvOS Simulator,name=Apple TV 4K (3rd generation),OS=26.2'
 
-SWIFT_CONTAINER_IMAGE = swift:5.9.2-jammy
-
-all: build
+SWIFT_CONTAINER_IMAGE = swift:6.0.3-jammy
 
 .PHONY: clean
 clean:
@@ -17,13 +15,13 @@ clean:
 
 .PHONY: format
 format:
-	swiftlint --fix
-	swiftformat .
+	@swiftlint --fix .
+	@swiftformat .
 
 .PHONY: lint
 lint:
-	swiftlint --strict
-	swiftformat --lint .
+	@swiftlint --strict .
+	@swiftformat --lint .
 
 .PHONY: lint-markdown
 lint-markdown:
@@ -32,7 +30,11 @@ lint-markdown:
 
 .PHONY: build
 build:
-	swift build
+	set -o pipefail && swift build -Xswiftc -warnings-as-errors 2>&1 | xcsift -f toon --Werror
+
+.PHONY: build-tests
+build-tests:
+	set -o pipefail && swift build --build-tests -Xswiftc -warnings-as-errors 2>&1 | xcsift -f toon --Werror
 
 .PHONY: build-linux
 build-linux:
@@ -40,7 +42,7 @@ build-linux:
 
 .PHONY: build-release
 build-release:
-	swift build -c release -Xswiftc -warnings-as-errors
+	set -o pipefail && swift build -c release -Xswiftc -warnings-as-errors 2>&1 | xcsift -f toon --Werror
 
 .PHONY: build-linux-release
 build-linux-release:
@@ -48,7 +50,7 @@ build-linux-release:
 
 .PHONY: build-docs
 build-docs:
-	SWIFTCI_DOCC=1 swift package generate-documentation --product $(TARGET)
+	SWIFTCI_DOCC=1 swift package generate-documentation --product $(TARGET) --warnings-as-errors
 	swift package resolve
 
 .PHONY: preview-docs
@@ -66,32 +68,32 @@ generate-docs:
 
 .PHONY: test
 test:
-	swift build -Xswiftc -warnings-as-errors --build-tests
-	swift test --skip-build --filter $(TEST_TARGET)
+	set -o pipefail && swift build --build-tests -Xswiftc -warnings-as-errors 2>&1 | xcsift -f toon --Werror
+	set -o pipefail && swift test --skip-build --filter $(TEST_TARGET) 2>&1 | xcsift -f toon
 
 .PHONY: test-ios
 test-ios:
-	xcodebuild build-for-testing -scheme $(TARGET) -only-testing $(TEST_TARGET) -destination $(IOS_DESTINATION)
-	xcodebuild test-without-building -scheme $(TARGET) -only-testing $(TEST_TARGET) -destination $(IOS_DESTINATION)
+	set -o pipefail && xcodebuild build-for-testing -scheme $(TARGET) -only-testing $(TEST_TARGET) -destination $(IOS_DESTINATION) 2>&1 | xcsift -f toon
+	set -o pipefail && xcodebuild test-without-building -scheme $(TARGET) -only-testing $(TEST_TARGET) -destination $(IOS_DESTINATION) 2>&1 | xcsift -f toon
 
 .PHONY: test-watchos
 test-watchos:
-	xcodebuild build-for-testing -scheme $(TARGET) -only-testing $(TEST_TARGET) -destination $(WATCHOS_DESINTATION)
-	xcodebuild test-without-building -scheme $(TARGET) -only-testing $(TEST_TARGET) -destination $(WATCHOS_DESINTATION)
+	set -o pipefail && xcodebuild build-for-testing -scheme $(TARGET) -only-testing $(TEST_TARGET) -destination $(WATCHOS_DESTINATION) 2>&1 | xcsift -f toon
+	set -o pipefail && xcodebuild test-without-building -scheme $(TARGET) -only-testing $(TEST_TARGET) -destination $(WATCHOS_DESTINATION) 2>&1 | xcsift -f toon
 
 .PHONY: test-tvos
 test-tvos:
-	xcodebuild build-for-testing -scheme $(TARGET) -only-testing $(TEST_TARGET) -destination $(TVOS_DESTINATION)
-	xcodebuild test-without-building -scheme $(TARGET) -only-testing $(TEST_TARGET) -destination $(TVOS_DESTINATION)
+	set -o pipefail && xcodebuild build-for-testing -scheme $(TARGET) -only-testing $(TEST_TARGET) -destination $(TVOS_DESTINATION) 2>&1 | xcsift -f toon
+	set -o pipefail && xcodebuild test-without-building -scheme $(TARGET) -only-testing $(TEST_TARGET) -destination $(TVOS_DESTINATION) 2>&1 | xcsift -f toon
 
 .PHONY: test-linux
 test-linux:
-	docker run --rm -v "$${PWD}:/workspace" -w /workspace $(SWIFT_CONTAINER_IMAGE) /bin/bash -cl "swift build -Xswiftc -warnings-as-errors --build-tests && swift test --skip-build --filter $(TEST_TARGET)"
+	docker run -i --rm -v "$${PWD}:/workspace" -w /workspace $(SWIFT_CONTAINER_IMAGE) /bin/bash -cl "swift build --build-tests -Xswiftc -warnings-as-errors && swift test --skip-build --filter $(TEST_TARGET)"
 
 .PHONY: integration-test
-integration-test: .check-env-vars
-	swift build --build-tests
-	swift test --skip-build --filter $(INTEGRATION_TEST_TARGET)
+integration-test:
+	set -o pipefail && swift build --build-tests 2>&1 | xcsift -f toon
+	set -o pipefail && swift test --skip-build --filter $(INTEGRATION_TEST_TARGET) 2>&1 | xcsift -f toon
 
 .PHONY: ci
 ci: lint lint-markdown test test-ios test-watchos test-tvos test-linux integration-test build-release build-docs

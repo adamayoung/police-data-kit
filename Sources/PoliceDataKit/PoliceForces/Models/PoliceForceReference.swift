@@ -22,7 +22,7 @@ import Foundation
 ///
 /// A model representing a reference to a police force.
 ///
-public struct PoliceForceReference: Identifiable, Equatable, Codable {
+public struct PoliceForceReference: Identifiable, Equatable, Codable, Sendable {
 
     /// Unique police force identifier.
     public let id: String

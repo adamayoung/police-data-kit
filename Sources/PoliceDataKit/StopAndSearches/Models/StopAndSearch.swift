@@ -22,7 +22,7 @@ import Foundation
 ///
 /// A model representing a stop and search.
 ///
-public struct StopAndSearch: Equatable, Codable {
+public struct StopAndSearch: Equatable, Codable, Sendable {
 
     /// Type of stop and search.
     public let type: StopAndSearchType

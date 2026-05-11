@@ -17,16 +17,18 @@
 //  limitations under the License.
 //
 
+import Foundation
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class PoliceForceReferenceTests: XCTestCase {
-
-    func testDecodeReturnsPoliceForceReference() throws {
+@Suite("PoliceForceReference")
+struct PoliceForceReferenceTests {
+    @Test
+    func decodeReturnsPoliceForceReference() throws {
         let result = try JSONDecoder.policeDataAPI
             .decode(PoliceForceReference.self, fromResource: "police-force-reference")
 
-        XCTAssertEqual(result, .mock)
+        #expect(result == .mock)
     }
 
 }

@@ -17,9 +17,8 @@
 //  limitations under the License.
 //
 
-import Combine
+import CoreLocation
 import Foundation
-import MapKit
 
 ///
 /// Provides an interface for obtaining stop and search data from the UK Police API.
@@ -28,8 +27,7 @@ import MapKit
 /// validation to check for mandatory fields and data formats. The location coordinates of the stop are anonymised
 /// and the age of the person stopped is changed to an age group (e.g. 18-24) before publication.
 ///
-@available(iOS 15.0, tvOS 15.0, watchOS 8.0, macOS 12, *)
-public final class StopAndSearchService {
+public final class StopAndSearchService: Sendable {
 
     ///
     /// A single, shared stop and search service object.
@@ -38,9 +36,9 @@ public final class StopAndSearchService {
     ///
     public static let shared = StopAndSearchService()
 
-    private let apiClient: any APIClient
-    private let cache: any StopAndSearchCache
-    private let availableDataRegion: MKCoordinateRegion
+    private let apiClient: any APIClient & Sendable
+    private let cache: any StopAndSearchCache & Sendable
+    private let availableDataRegion: AvailableRegion
 
     ///
     /// Creates a stop and search service object.
@@ -56,7 +54,11 @@ public final class StopAndSearchService {
         )
     }
 
-    init(apiClient: some APIClient, cache: some StopAndSearchCache, availableDataRegion: MKCoordinateRegion) {
+    init(
+        apiClient: some APIClient & Sendable,
+        cache: some StopAndSearchCache & Sendable,
+        availableDataRegion: AvailableRegion
+    ) {
         self.apiClient = apiClient
         self.cache = cache
         self.availableDataRegion = availableDataRegion
@@ -75,14 +77,16 @@ public final class StopAndSearchService {
     ///   - coordinate: A coordinate.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Stop and Search data error ``StopAndSearchError``.
+    /// - Throws: ``StopAndSearchError/locationOutsideOfDataSetRegion`` if the coordinate is outside the data region;
+    ///   ``StopAndSearchError/notFound`` if no data exists; ``StopAndSearchError/network(_:)`` on transport failure;
+    ///   ``StopAndSearchError/unknown`` otherwise.
     ///
     /// - Returns: A list of stop and searches.
     ///
     public func stopAndSearches(
         at coordinate: CLLocationCoordinate2D,
         date: Date = Date()
-    ) async throws -> [StopAndSearch] {
+    ) async throws(StopAndSearchError) -> [StopAndSearch] {
         guard availableDataRegion.contains(coordinate: coordinate) else {
             throw StopAndSearchError.locationOutsideOfDataSetRegion
         }
@@ -102,44 +106,6 @@ public final class StopAndSearchService {
     }
 
     ///
-    /// Returns a publisher that wraps stop and searches at street-level within a 1 mile radius of a single point.
-    ///
-    /// The stop and searches returned in the API, like the crimes, are only an approximation of where the actual stop and searches
-    /// occurred, they are not the exact locations. See the [about page](https://data.police.uk/about/#location-anonymisation)
-    /// for more information about location anonymisation.
-    ///
-    /// [https://data.police.uk/docs/method/stops-street/](https://data.police.uk/docs/method/stops-street/)
-    ///
-    /// - Parameters:
-    ///   - coordinate: A coordinate.
-    ///   - date: Limit results to a specific month. The latest month will be shown by default.
-    ///
-    /// - Returns: A list of stop and searches.
-    ///
-    public func stopAndSearchesPublisher(
-        at coordinate: CLLocationCoordinate2D,
-        date: Date = Date()
-    ) -> AnyPublisher<[StopAndSearch], StopAndSearchError> {
-        Future { [weak self] promise in
-            guard let self else {
-                promise(.failure(.unknown))
-                return
-            }
-
-            Task {
-                do {
-                    let stopAndSearches = try await self.stopAndSearches(at: coordinate, date: date)
-                    promise(.success(stopAndSearches))
-                } catch let error {
-                    let outcomeError = Self.mapToStopAndSearchError(error)
-                    promise(.failure(outcomeError))
-                }
-            }
-        }
-        .eraseToAnyPublisher()
-    }
-
-    ///
     /// Returns stop and searches at street-level within a custom area.
     ///
     /// The stop and searches returned in the API, like the crimes, are only an approximation of where the actual stop and searches occurred, they are not the
@@ -152,14 +118,15 @@ public final class StopAndSearchService {
     ///   - coordinates: Coordinates which define the boundary of the custom area.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Stop and Search data error ``StopAndSearchError``.
+    /// - Throws: ``StopAndSearchError/notFound`` if no data exists; ``StopAndSearchError/network(_:)`` on transport failure;
+    ///   ``StopAndSearchError/unknown`` otherwise.
     ///
     /// - Returns: A list of stop and searches.
     ///
     public func stopAndSearches(
         in coordinates: [CLLocationCoordinate2D],
         date: Date = Date()
-    ) async throws -> [StopAndSearch] {
+    ) async throws(StopAndSearchError) -> [StopAndSearch] {
         let stopAndSearches: [StopAndSearch]
         do {
             stopAndSearches = try await apiClient.get(
@@ -170,44 +137,6 @@ public final class StopAndSearchService {
         }
 
         return stopAndSearches
-    }
-
-    ///
-    /// Returns a publisher that wraps  stop and searches at street-level within a custom area.
-    ///
-    /// The stop and searches returned in the API, like the crimes, are only an approximation of where the actual stop and searches occurred, they are not the
-    /// exact locations. See the [about page](https://data.police.uk/about/#location-anonymisation) for more information about
-    /// location anonymisation.
-    ///
-    /// [https://data.police.uk/docs/method/stops-street/](https://data.police.uk/docs/method/stops-street/)
-    ///
-    /// - Parameters:
-    ///   - coordinates: Coordinates which define the boundary of the custom area.
-    ///   - date: Limit results to a specific month. The latest month will be shown by default.
-    ///
-    /// - Returns: A list of stop and searches.
-    ///
-    public func stopAndSearchesPublisher(
-        in coordinates: [CLLocationCoordinate2D],
-        date: Date = Date()
-    ) -> AnyPublisher<[StopAndSearch], StopAndSearchError> {
-        Future { [weak self] promise in
-            guard let self else {
-                promise(.failure(.unknown))
-                return
-            }
-
-            Task {
-                do {
-                    let stopAndSearches = try await self.stopAndSearches(in: coordinates, date: date)
-                    promise(.success(stopAndSearches))
-                } catch let error {
-                    let outcomeError = Self.mapToStopAndSearchError(error)
-                    promise(.failure(outcomeError))
-                }
-            }
-        }
-        .eraseToAnyPublisher()
     }
 
     ///
@@ -223,11 +152,15 @@ public final class StopAndSearchService {
     ///   - streetID: A street ID.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Stop and Search data error ``StopAndSearchError``.
+    /// - Throws: ``StopAndSearchError/notFound`` if no data exists; ``StopAndSearchError/network(_:)`` on transport failure;
+    ///   ``StopAndSearchError/unknown`` otherwise.
     ///
     /// - Returns: A list of stop and searches.
     ///
-    public func stopAndSearches(atLocation streetID: Int, date: Date = Date()) async throws -> [StopAndSearch] {
+    public func stopAndSearches(
+        atLocation streetID: Int,
+        date: Date = Date()
+    ) async throws(StopAndSearchError) -> [StopAndSearch] {
         if let cachedStopAndSearches = await cache.stopAndSearches(atLocation: streetID, date: date) {
             return cachedStopAndSearches
         }
@@ -259,14 +192,15 @@ public final class StopAndSearchService {
     ///   - policeForceID: Police Force identifier.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Stop and Search data error ``StopAndSearchError``.
+    /// - Throws: ``StopAndSearchError/notFound`` if no data exists; ``StopAndSearchError/network(_:)`` on transport failure;
+    ///   ``StopAndSearchError/unknown`` otherwise.
     ///
     /// - Returns: A list of stop and searches.
     ///
     public func stopAndSearchesWithNoLocation(
         forPoliceForce policeForceID: PoliceForce.ID,
         date: Date = Date()
-    ) async throws -> [StopAndSearch] {
+    ) async throws(StopAndSearchError) -> [StopAndSearch] {
         if let cachedStopAndSearches = await cache.stopAndSearchesWithNoLocation(
             forPoliceForce: policeForceID,
             date: date
@@ -303,14 +237,15 @@ public final class StopAndSearchService {
     ///   - policeForceID: Police Force identifier.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Stop and Search data error ``StopAndSearchError``.
+    /// - Throws: ``StopAndSearchError/notFound`` if no data exists; ``StopAndSearchError/network(_:)`` on transport failure;
+    ///   ``StopAndSearchError/unknown`` otherwise.
     ///
     /// - Returns: A list of stop and searches.
     ///
     public func stopAndSearches(
         forPoliceForce policeForceID: PoliceForce.ID,
         date: Date = Date()
-    ) async throws -> [StopAndSearch] {
+    ) async throws(StopAndSearchError) -> [StopAndSearch] {
         if let cachedStopAndSearches = await cache.stopAndSearches(forPoliceForce: policeForceID, date: date) {
             return cachedStopAndSearches
         }
@@ -333,24 +268,19 @@ public final class StopAndSearchService {
 
 extension StopAndSearchService {
 
-    private static func mapToStopAndSearchError(_ error: Error) -> StopAndSearchError {
-        if let error = error as? StopAndSearchError {
-            return error
-        }
-
-        guard let error = error as? APIClientError else {
-            return .unknown
-        }
-
+    private static func mapToStopAndSearchError(_ error: APIClientError) -> StopAndSearchError {
         switch error {
-        case .network:
-            return .network(error)
+        case let .network(underlying):
+            .network(underlying)
 
         case .notFound:
-            return .notFound
+            .notFound
+
+        case let .rateLimitExceeded(retryAfter):
+            .rateLimitExceeded(retryAfter: retryAfter)
 
         case .decode, .unknown:
-            return .unknown
+            .unknown
         }
     }
 

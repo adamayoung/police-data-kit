@@ -19,7 +19,7 @@
 
 import Foundation
 
-protocol AvailabilityCache {
+protocol AvailabilityCache: Sendable {
 
     func availableDataSets() async -> [DataSet]?
 

@@ -22,7 +22,7 @@ import Foundation
 ///
 /// A model representing case history of a crime.
 ///
-public struct CaseHistory: Equatable, Codable {
+public struct CaseHistory: Equatable, Codable, Sendable {
 
     /// Crime information.
     public let crime: CaseHistoryCrime

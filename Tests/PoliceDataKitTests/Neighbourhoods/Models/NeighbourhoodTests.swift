@@ -17,35 +17,41 @@
 //  limitations under the License.
 //
 
+import Foundation
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class NeighbourhoodTests: XCTestCase {
+@Suite("Neighbourhood")
+struct NeighbourhoodTests {
 
-    func testDecodeReturnsNeighbourhood() throws {
+    @Test("decode returns neighbourhood")
+    func decodeReturnsNeighbourhood() throws {
         let result = try JSONDecoder.policeDataAPI.decode(Neighbourhood.self, fromResource: "neighbourhood")
 
-        XCTAssertEqual(result, .mock)
+        #expect(result == .mock)
     }
 
-    func testPopulationReturnsPopulation() throws {
+    @Test("population returns population")
+    func populationReturnsPopulation() throws {
         let expectedResult = Neighbourhood.mock.population
 
         let result = try JSONDecoder.policeDataAPI.decode(Neighbourhood.self, fromResource: "neighbourhood")
 
-        XCTAssertEqual(result.population, expectedResult)
+        #expect(result.population == expectedResult)
     }
 
-    func testDecodeWithEmptyPoliceForceWebsiteURL() throws {
+    @Test("decode with empty police force website u r l")
+    func decodeWithEmptyPoliceForceWebsiteURL() throws {
         let result = try JSONDecoder.policeDataAPI.decode(
             Neighbourhood.self,
             fromResource: "neighbourhood-empty-force-url"
         )
 
-        XCTAssertNil(result.policeForceWebsiteURL)
+        #expect(result.policeForceWebsiteURL == nil)
     }
 
-    func testDecodedWithHTMLInName() throws {
+    @Test("decoded with h t m l in name")
+    func decodedWithHTMLInName() throws {
         let expectedResult = "Leake & Keyworth"
 
         let result = try JSONDecoder.policeDataAPI.decode(
@@ -53,7 +59,7 @@ final class NeighbourhoodTests: XCTestCase {
             fromResource: "neighbourhood-html-in-name"
         )
 
-        XCTAssertEqual(result.name, expectedResult)
+        #expect(result.name == expectedResult)
     }
 
 }

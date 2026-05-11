@@ -10,9 +10,7 @@
 
 - ``streetLevelOutcomes(forStreet:date:)``
 - ``streetLevelOutcomes(at:date:)``
-- ``streetLevelOutcomesPublisher(at:date:)``
 - ``streetLevelOutcomes(in:date:)``
-- ``streetLevelOutcomesPublisher(at:date:)``
 
 ### Case History
 

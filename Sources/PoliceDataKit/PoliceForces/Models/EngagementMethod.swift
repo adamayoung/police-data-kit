@@ -22,7 +22,7 @@ import Foundation
 ///
 /// A model representing an engagement method - ways to keep informed.
 ///
-public struct EngagementMethod: Equatable, Codable {
+public struct EngagementMethod: Equatable, Codable, Sendable {
 
     /// Engagement method title.
     public let title: String
@@ -33,17 +33,22 @@ public struct EngagementMethod: Equatable, Codable {
     /// Engagement method website URL.
     public let url: URL?
 
+    /// Engagement method type.
+    public let type: String?
+
     /// Creates a engagement method object.
     ///
     /// - Parameters:
     ///   - title: Engagement method type.
     ///   - description: Engagement method description.
     ///   - url: Engagement method website URL.
+    ///   - type: Engagement method type identifier.
     ///
-    public init(title: String, description: String? = nil, url: URL? = nil) {
+    public init(title: String, description: String? = nil, url: URL? = nil, type: String? = nil) {
         self.title = title
         self.description = description
         self.url = url
+        self.type = type
     }
 
 }
@@ -54,6 +59,7 @@ public extension EngagementMethod {
         case title
         case description
         case url
+        case type
     }
 
     init(from decoder: Decoder) throws {
@@ -67,20 +73,15 @@ public extension EngagementMethod {
 
             return URL(string: urlString)
         }()
+        self.type = try container.decodeIfPresent(String.self, forKey: .type)
     }
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(title, forKey: .title)
         try container.encodeIfPresent(description, forKey: .description)
-        let urlString: String = {
-            guard let url else {
-                return ""
-            }
-
-            return url.absoluteString
-        }()
-        try container.encode(urlString, forKey: .url)
+        try container.encodeIfPresent(url?.absoluteString, forKey: .url)
+        try container.encodeIfPresent(type, forKey: .type)
     }
 
 }

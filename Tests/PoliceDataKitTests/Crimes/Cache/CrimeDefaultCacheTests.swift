@@ -17,36 +17,33 @@
 //  limitations under the License.
 //
 
+import Foundation
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class CrimeDefaultCacheTests: XCTestCase {
+@Suite("CrimeDefaultCache")
+struct CrimeDefaultCacheTests {
 
-    var cache: CrimeDefaultCache!
-    var cacheStore: MockCache!
+    let cache: CrimeDefaultCache
+    let cacheStore: MockCache
 
-    override func setUp() {
-        super.setUp()
-        cacheStore = MockCache()
-        cache = CrimeDefaultCache(cacheStore: cacheStore)
+    init() {
+        self.cacheStore = MockCache()
+        self.cache = CrimeDefaultCache(cacheStore: cacheStore)
     }
 
-    override func tearDown() {
-        cache = nil
-        cacheStore = nil
-        super.tearDown()
-    }
-
-    func testCrimesForStreetWhenMissReturnsNil() async {
+    @Test("crimes for street when miss returns nil")
+    func crimesForStreetWhenMissReturnsNil() async {
         let streetID = 1
         let date = Date()
 
         let result = await cache.crimes(forStreet: streetID, date: date)
 
-        XCTAssertNil(result)
+        #expect(result == nil)
     }
 
-    func testCrimesForStreetWhenHitReturnsCrimes() async {
+    @Test("crimes for street when hit returns crimes")
+    func crimesForStreetWhenHitReturnsCrimes() async {
         let streetID = 1
         let date = Date()
         let cacheKey = CrimesForStreetCachingKey(streetID: streetID, date: date)
@@ -55,10 +52,11 @@ final class CrimeDefaultCacheTests: XCTestCase {
 
         let result = await cache.crimes(forStreet: streetID, date: date)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testSetCrimesForStreetSetsCrimes() async {
+    @Test("setCrimes for street sets crimes")
+    func setCrimesForStreetSetsCrimes() async {
         let streetID = 1
         let date = Date()
         let cacheKey = CrimesForStreetCachingKey(streetID: streetID, date: date)
@@ -67,20 +65,22 @@ final class CrimeDefaultCacheTests: XCTestCase {
         await cache.setCrimes(expectedResult, forStreet: streetID, date: date)
         let result = await cacheStore.object(for: cacheKey, type: [Crime].self)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testCrimesWithNoLocationWhenMissReturnsNil() async {
+    @Test("crimes with no location when miss returns nil")
+    func crimesWithNoLocationWhenMissReturnsNil() async {
         let categoryID = "test-crime"
         let policeForceID = "test-police-force"
         let date = Date()
 
         let result = await cache.crimesWithNoLocation(forCategory: categoryID, inPoliceForce: policeForceID, date: date)
 
-        XCTAssertNil(result)
+        #expect(result == nil)
     }
 
-    func testCrimesWithNoLocationWhenHitReturnsCrimes() async {
+    @Test("crimes with no location when hit returns crimes")
+    func crimesWithNoLocationWhenHitReturnsCrimes() async {
         let categoryID = "test-crime"
         let policeForceID = "test-police-force"
         let date = Date()
@@ -94,10 +94,11 @@ final class CrimeDefaultCacheTests: XCTestCase {
 
         let result = await cache.crimesWithNoLocation(forCategory: categoryID, inPoliceForce: policeForceID, date: date)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testCrimesWithNoLocationSetsCrimes() async {
+    @Test("setCrimesWithNoLocation sets crimes")
+    func crimesWithNoLocationSetsCrimes() async {
         let categoryID = "test-crime"
         let policeForceID = "test-police-force"
         let date = Date()
@@ -116,18 +117,20 @@ final class CrimeDefaultCacheTests: XCTestCase {
         )
         let result = await cacheStore.object(for: cacheKey, type: [Crime].self)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testCrimeCategoriesWhenMissReturnsNil() async {
+    @Test("crime categories when miss returns nil")
+    func crimeCategoriesWhenMissReturnsNil() async {
         let date = Date()
 
         let result = await cache.crimeCategories(forDate: date)
 
-        XCTAssertNil(result)
+        #expect(result == nil)
     }
 
-    func testCrimeCategoriesWhenHitReturnsCrimeCategories() async {
+    @Test("crime categories when hit returns crime categories")
+    func crimeCategoriesWhenHitReturnsCrimeCategories() async {
         let date = Date()
         let cacheKey = CrimeCategoriesCachingKey(date: date)
         let expectedResult = CrimeCategory.mocks
@@ -135,10 +138,11 @@ final class CrimeDefaultCacheTests: XCTestCase {
 
         let result = await cache.crimeCategories(forDate: date)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testSetCrimeCategoriesSetsCrimeCategories() async {
+    @Test("setCrimeCategories sets crime categories")
+    func setCrimeCategoriesSetsCrimeCategories() async {
         let date = Date()
         let cacheKey = CrimeCategoriesCachingKey(date: date)
         let expectedResult = CrimeCategory.mocks
@@ -146,7 +150,7 @@ final class CrimeDefaultCacheTests: XCTestCase {
         await cache.setCrimeCategories(expectedResult, forDate: date)
         let result = await cacheStore.object(for: cacheKey, type: [CrimeCategory].self)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
 }

@@ -17,24 +17,38 @@
 //  limitations under the License.
 //
 
+import Foundation
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class MockAPIClient: APIClient {
+final actor MockAPIClient: APIClient {
 
     var responses: [Result<Any, Error>] = []
     private(set) var requestedURLs: [URL] = []
 
     private var responseIndex = 0
 
-    func get<Response>(path: URL) async throws -> Response where Response: Decodable {
+    func get<Response: Decodable & Sendable>(path: URL) async throws(APIClientError) -> Response {
         requestedURLs.append(path)
 
         let response = response(at: responseIndex)
         responseIndex += 1
 
-        guard let result = try response?.get() as? Response else {
-            XCTFail("Can't cast response to type \(String(describing: Response.self))")
+        let anyValue: Any
+        do {
+            guard let value = try response?.get() else {
+                Issue.record("No response configured for request to \(path)")
+                throw APIClientError.unknown
+            }
+            anyValue = value
+        } catch let error as APIClientError {
+            throw error
+        } catch {
+            throw APIClientError.unknown
+        }
+
+        guard let result = anyValue as? Response else {
+            Issue.record("Can't cast response to type \(String(describing: Response.self))")
             throw APIClientError.unknown
         }
 

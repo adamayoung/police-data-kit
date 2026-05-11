@@ -22,7 +22,7 @@ import Foundation
 ///
 /// A model representing an outcome category of a crime.
 ///
-public struct OutcomeCategory: Identifiable, Equatable, Codable {
+public struct OutcomeCategory: Identifiable, Equatable, Codable, Sendable {
 
     /// Category code.
     public let id: String

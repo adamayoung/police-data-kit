@@ -42,4 +42,11 @@ extension DateFormatter {
         return dateFormatter
     }
 
+    static var dateOnly: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        return dateFormatter
+    }
+
 }

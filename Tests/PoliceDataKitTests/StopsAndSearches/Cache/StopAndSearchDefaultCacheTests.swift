@@ -17,36 +17,33 @@
 //  limitations under the License.
 //
 
+import Foundation
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class StopAndSearchDefaultCacheTests: XCTestCase {
+@Suite("StopAndSearchDefaultCache")
+struct StopAndSearchDefaultCacheTests {
 
-    var cache: StopAndSearchDefaultCache!
-    var cacheStore: MockCache!
+    let cache: StopAndSearchDefaultCache
+    let cacheStore: MockCache
 
-    override func setUp() {
-        super.setUp()
-        cacheStore = MockCache()
-        cache = StopAndSearchDefaultCache(cacheStore: cacheStore)
+    init() {
+        self.cacheStore = MockCache()
+        self.cache = StopAndSearchDefaultCache(cacheStore: cacheStore)
     }
 
-    override func tearDown() {
-        cache = nil
-        cacheStore = nil
-        super.tearDown()
-    }
-
-    func testStopAndSearchesAtLocationWhenMissReturnsNil() async {
+    @Test("stop and searches at location when miss returns nil")
+    func stopAndSearchesAtLocationWhenMissReturnsNil() async {
         let streetID = 1
         let date = Date()
 
         let result = await cache.stopAndSearches(atLocation: streetID, date: date)
 
-        XCTAssertNil(result)
+        #expect(result == nil)
     }
 
-    func testStopAndSearchesAtLocationWhenHitReturnsStopAndSearches() async {
+    @Test("stop and searches at location when hit returns stop and searches")
+    func stopAndSearchesAtLocationWhenHitReturnsStopAndSearches() async {
         let streetID = 1
         let date = Date()
         let expectedResult = StopAndSearch.mocks
@@ -55,10 +52,11 @@ final class StopAndSearchDefaultCacheTests: XCTestCase {
 
         let result = await cache.stopAndSearches(atLocation: streetID, date: date)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testSetStopAndSearchesAtLocationSetsStopAndSearches() async {
+    @Test("set stop and searches at location sets stop and searches")
+    func setStopAndSearchesAtLocationSetsStopAndSearches() async {
         let streetID = 1
         let date = Date()
         let expectedResult = StopAndSearch.mocks
@@ -67,19 +65,21 @@ final class StopAndSearchDefaultCacheTests: XCTestCase {
         await cache.setStopAndSearches(expectedResult, atLocation: streetID, date: date)
         let result = await cacheStore.object(for: cacheKey, type: [StopAndSearch].self)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testStopAndSearchesWithNoLocationWhenMissReturnsNil() async {
+    @Test("stop and searches with no location when miss returns nil")
+    func stopAndSearchesWithNoLocationWhenMissReturnsNil() async {
         let policeForceID = "test-police-force"
         let date = Date()
 
         let result = await cache.stopAndSearchesWithNoLocation(forPoliceForce: policeForceID, date: date)
 
-        XCTAssertNil(result)
+        #expect(result == nil)
     }
 
-    func testStopAndSearchesWithNoLocationWhenHitReturnsStopAndSearches() async {
+    @Test("stop and searches with no location when hit returns stop and searches")
+    func stopAndSearchesWithNoLocationWhenHitReturnsStopAndSearches() async {
         let policeForceID = "test-police-force"
         let date = Date()
         let expectedResult = StopAndSearch.mocks
@@ -88,10 +88,11 @@ final class StopAndSearchDefaultCacheTests: XCTestCase {
 
         let result = await cache.stopAndSearchesWithNoLocation(forPoliceForce: policeForceID, date: date)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testSetStopAndSearchesWithNoLocationSetsStopAndSearches() async {
+    @Test("set stop and searches with no location sets stop and searches")
+    func setStopAndSearchesWithNoLocationSetsStopAndSearches() async {
         let policeForceID = "test-police-force"
         let date = Date()
         let expectedResult = StopAndSearch.mocks
@@ -100,19 +101,21 @@ final class StopAndSearchDefaultCacheTests: XCTestCase {
         await cache.setStopAndSearchesWithNoLocation(expectedResult, forPoliceForce: policeForceID, date: date)
         let result = await cacheStore.object(for: cacheKey, type: [StopAndSearch].self)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testStopAndSearchesForPoliceForceWhenMissReturnsNil() async {
+    @Test("stop and searches for police force when miss returns nil")
+    func stopAndSearchesForPoliceForceWhenMissReturnsNil() async {
         let policeForceID = "test-police-force"
         let date = Date()
 
         let result = await cache.stopAndSearches(forPoliceForce: policeForceID, date: date)
 
-        XCTAssertNil(result)
+        #expect(result == nil)
     }
 
-    func testStopAndSearchesForPoliceForceWhenHitReturnsStopAndSearches() async {
+    @Test("stop and searches for police force when hit returns stop and searches")
+    func stopAndSearchesForPoliceForceWhenHitReturnsStopAndSearches() async {
         let policeForceID = "test-police-force"
         let date = Date()
         let expectedResult = StopAndSearch.mocks
@@ -121,10 +124,11 @@ final class StopAndSearchDefaultCacheTests: XCTestCase {
 
         let result = await cache.stopAndSearches(forPoliceForce: policeForceID, date: date)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testSetStopAndSearchesForPoliceForceSetsStopAndSearches() async {
+    @Test("set stop and searches for police force sets stop and searches")
+    func setStopAndSearchesForPoliceForceSetsStopAndSearches() async {
         let policeForceID = "test-police-force"
         let date = Date()
         let expectedResult = StopAndSearch.mocks
@@ -133,7 +137,7 @@ final class StopAndSearchDefaultCacheTests: XCTestCase {
         await cache.setStopAndSearches(expectedResult, forPoliceForce: policeForceID, date: date)
         let result = await cacheStore.object(for: cacheKey, type: [StopAndSearch].self)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
 }

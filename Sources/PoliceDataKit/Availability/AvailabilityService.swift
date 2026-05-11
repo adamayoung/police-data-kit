@@ -22,8 +22,7 @@ import Foundation
 ///
 /// Provides an interface for obtaining availability data sets from the UK Police API.
 ///
-@available(iOS 15.0, tvOS 15.0, watchOS 8.0, macOS 12, *)
-public final class AvailabilityService {
+public final class AvailabilityService: Sendable {
 
     ///
     /// A single, shared availability service object.
@@ -32,8 +31,8 @@ public final class AvailabilityService {
     ///
     public static let shared = AvailabilityService()
 
-    private let apiClient: any APIClient
-    private let cache: any AvailabilityCache
+    private let apiClient: any APIClient & Sendable
+    private let cache: any AvailabilityCache & Sendable
 
     ///
     /// Creates an availability service object.
@@ -48,7 +47,7 @@ public final class AvailabilityService {
         )
     }
 
-    init(apiClient: some APIClient, cache: some AvailabilityCache) {
+    init(apiClient: some APIClient & Sendable, cache: some AvailabilityCache & Sendable) {
         self.apiClient = apiClient
         self.cache = cache
     }
@@ -58,11 +57,11 @@ public final class AvailabilityService {
     ///
     /// [https://data.police.uk/docs/method/crimes-street-dates/](https://data.police.uk/docs/method/crimes-street-dates/)
     ///
-    /// - Throws: Availability data error ``AvailabilityError``.
+    /// - Throws: ``AvailabilityError/network(_:)`` on transport failure; ``AvailabilityError/unknown`` otherwise.
     ///
     /// - Returns: The available data sets.
     ///
-    public func availableDataSets() async throws -> [DataSet] {
+    public func availableDataSets() async throws(AvailabilityError) -> [DataSet] {
         if let cachedDataSets = await cache.availableDataSets() {
             return cachedDataSets
         }
@@ -83,17 +82,16 @@ public final class AvailabilityService {
 
 extension AvailabilityService {
 
-    private static func mapToAvailabilityError(_ error: Error) -> AvailabilityError {
-        guard let error = error as? APIClientError else {
-            return .unknown
-        }
-
+    private static func mapToAvailabilityError(_ error: APIClientError) -> AvailabilityError {
         switch error {
-        case .network:
-            return .network(error)
+        case let .network(underlying):
+            .network(underlying)
+
+        case let .rateLimitExceeded(retryAfter):
+            .rateLimitExceeded(retryAfter: retryAfter)
 
         case .notFound, .decode, .unknown:
-            return .unknown
+            .unknown
         }
     }
 

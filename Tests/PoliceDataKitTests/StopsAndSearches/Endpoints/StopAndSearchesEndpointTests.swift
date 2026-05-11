@@ -18,62 +18,69 @@
 //
 
 import CoreLocation
+import Foundation
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class StopAndSearchesEndpointTests: XCTestCase {
+@Suite("StopAndSearchesEndpoint")
+struct StopAndSearchesEndpointTests {
 
-    func testStopAndSearchesByAreaAtSpecificPointEndpointReturnsURL() throws {
+    @Test("stop and searches by area at specific point endpoint returns u r l")
+    func stopAndSearchesByAreaAtSpecificPointEndpointReturnsURL() throws {
         let coordinate = CLLocationCoordinate2D(latitude: 2.345, longitude: -1.234)
         let date = Date(timeIntervalSince1970: 0)
-        let expectedPath = try XCTUnwrap(URL(
+        let expectedPath = try #require(URL(
             string: "/stops-street?lat=\(coordinate.latitude)&lng=\(coordinate.longitude)&date=1970-01"
         ))
 
         let path = StopAndSearchesEndpoint.stopAndSearchesByAreaAtSpecificPoint(coordinate: coordinate, date: date).path
 
-        XCTAssertEqual(path, expectedPath)
+        #expect(path == expectedPath)
     }
 
-    func testStopAndSearchesByAreaInAreaEndpointReturnsURL() throws {
+    @Test("stop and searches by area in area endpoint returns u r l")
+    func stopAndSearchesByAreaInAreaEndpointReturnsURL() throws {
         let coordinates = CLLocationCoordinate2D.mocks
         let poly = coordinates.map { "\($0.latitude),\($0.longitude)" }.joined(separator: ":")
         let date = Date(timeIntervalSince1970: 0)
-        let expectedPath = try XCTUnwrap(URL(string: "/stops-street?poly=\(poly)&date=1970-01"))
+        let expectedPath = try #require(URL(string: "/stops-street?poly=\(poly)&date=1970-01"))
 
         let path = StopAndSearchesEndpoint.stopAndSearchesByAreaInArea(coordinates: coordinates, date: date).path
 
-        XCTAssertEqual(path, expectedPath)
+        #expect(path == expectedPath)
     }
 
-    func testStopAndSearchesAtLocationEndpointReturnsURL() throws {
+    @Test("stop and searches at location endpoint returns u r l")
+    func stopAndSearchesAtLocationEndpointReturnsURL() throws {
         let streetID = 883_407
         let date = Date(timeIntervalSince1970: 0)
-        let expectedPath = try XCTUnwrap(URL(string: "/stops-at-location?location_id=\(streetID)&date=1970-01"))
+        let expectedPath = try #require(URL(string: "/stops-at-location?location_id=\(streetID)&date=1970-01"))
 
         let path = StopAndSearchesEndpoint.stopAndSearchesAtLocation(streetID: streetID, date: date).path
 
-        XCTAssertEqual(path, expectedPath)
+        #expect(path == expectedPath)
     }
 
-    func testStopAndSearchesWithNoLocationEndpointReturnsURL() throws {
+    @Test("stop and searches with no location endpoint returns u r l")
+    func stopAndSearchesWithNoLocationEndpointReturnsURL() throws {
         let policeForceID = "cleveland"
         let date = Date(timeIntervalSince1970: 0)
-        let expectedPath = try XCTUnwrap(URL(string: "/stops-no-location?force=\(policeForceID)&date=1970-01"))
+        let expectedPath = try #require(URL(string: "/stops-no-location?force=\(policeForceID)&date=1970-01"))
 
         let path = StopAndSearchesEndpoint.stopAndSearchesWithNoLocation(policeForceID: policeForceID, date: date).path
 
-        XCTAssertEqual(path, expectedPath)
+        #expect(path == expectedPath)
     }
 
-    func testStopAndSearchesByForceReturnsURL() throws {
+    @Test("stop and searches by force returns u r l")
+    func stopAndSearchesByForceReturnsURL() throws {
         let policeForceID = "avon-and-somerset"
         let date = Date(timeIntervalSince1970: 0)
-        let expectedPath = try XCTUnwrap(URL(string: "/stops-force?force=\(policeForceID)&date=1970-01"))
+        let expectedPath = try #require(URL(string: "/stops-force?force=\(policeForceID)&date=1970-01"))
 
         let path = StopAndSearchesEndpoint.stopAndSearchesByPoliceForce(policeForceID: policeForceID, date: date).path
 
-        XCTAssertEqual(path, expectedPath)
+        #expect(path == expectedPath)
     }
 
 }

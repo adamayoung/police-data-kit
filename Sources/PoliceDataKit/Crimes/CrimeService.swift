@@ -17,15 +17,13 @@
 //  limitations under the License.
 //
 
-import Combine
+import CoreLocation
 import Foundation
-import MapKit
 
 ///
 /// Provides an interface for obtaining crime data from the UK Police API.
 ///
-@available(iOS 15.0, tvOS 15.0, watchOS 8.0, macOS 12, *)
-public final class CrimeService {
+public final class CrimeService: Sendable {
 
     ///
     /// A single, shared crime service object.
@@ -34,9 +32,9 @@ public final class CrimeService {
     ///
     public static let shared = CrimeService()
 
-    private let apiClient: any APIClient
-    private let cache: any CrimeCache
-    private let availableDataRegion: MKCoordinateRegion
+    private let apiClient: any APIClient & Sendable
+    private let cache: any CrimeCache & Sendable
+    private let availableDataRegion: AvailableRegion
 
     ///
     /// Creates a crime service object.
@@ -52,7 +50,11 @@ public final class CrimeService {
         )
     }
 
-    init(apiClient: some APIClient, cache: some CrimeCache, availableDataRegion: MKCoordinateRegion) {
+    init(
+        apiClient: some APIClient & Sendable,
+        cache: some CrimeCache & Sendable,
+        availableDataRegion: AvailableRegion
+    ) {
         self.apiClient = apiClient
         self.cache = cache
         self.availableDataRegion = availableDataRegion
@@ -73,11 +75,16 @@ public final class CrimeService {
     ///   - coordinate: A coordinate.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Crime data error ``CrimeError``.
+    /// - Throws: ``CrimeError/locationOutsideOfDataSetRegion`` if the coordinate is outside the data region;
+    ///   ``CrimeError/notFound`` if no data exists; ``CrimeError/network(_:)`` on transport failure;
+    ///   ``CrimeError/unknown`` otherwise.
     ///
     /// - Returns: The street level crimes in a 1 mile radius of the specifed coordinate and date.
     ///
-    public func streetLevelCrimes(at coordinate: CLLocationCoordinate2D, date: Date = Date()) async throws -> [Crime] {
+    public func streetLevelCrimes(
+        at coordinate: CLLocationCoordinate2D,
+        date: Date = Date()
+    ) async throws(CrimeError) -> [Crime] {
         guard availableDataRegion.contains(coordinate: coordinate) else {
             throw CrimeError.locationOutsideOfDataSetRegion
         }
@@ -95,46 +102,6 @@ public final class CrimeService {
     }
 
     ///
-    /// Returns a publisher that wraps a list of crimes at street-level within a 1 mile radius of a single point.
-    ///
-    /// The street-level crimes returned in the API are only an approximation of where the actual crimes occurred, they are not
-    /// the exact locations. See the [about page](https://data.police.uk/about/#location-anonymisation) for more
-    /// information about location anonymisation.
-    ///
-    /// Since only the British Transport Police provide data for Scotland, crime levels may appear much lower than they really are.
-    ///
-    /// [https://data.police.uk/docs/method/crime-street/](https://data.police.uk/docs/method/crime-street/)
-    ///
-    /// - Parameters:
-    ///   - coordinate: A coordinate.
-    ///   - date: Limit results to a specific month. The latest month will be shown by default.
-    ///
-    /// - Returns: The street level crimes in a 1 mile radius of the specifed coordinate and date.
-    ///
-    public func streetLevelCrimesPublisher(
-        at coordinate: CLLocationCoordinate2D,
-        date: Date = Date()
-    ) -> AnyPublisher<[Crime], CrimeError> {
-        Future { [weak self] promise in
-            guard let self else {
-                promise(.failure(.unknown))
-                return
-            }
-
-            Task {
-                do {
-                    let crimes = try await self.streetLevelCrimes(at: coordinate, date: date)
-                    promise(.success(crimes))
-                } catch let error {
-                    let crimeError = Self.mapToCrimeError(error)
-                    promise(.failure(crimeError))
-                }
-            }
-        }
-        .eraseToAnyPublisher()
-    }
-
-    ///
     /// Returns a list of crimes within a custom area.
     ///
     /// The street-level crimes returned in the API are only an approximation of where the actual crimes occurred, they are not the
@@ -149,14 +116,15 @@ public final class CrimeService {
     ///   - coordinates: Coordinates which define the boundary of the custom area.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Crime data error ``CrimeError``.
+    /// - Throws: ``CrimeError/notFound`` if no data exists; ``CrimeError/network(_:)`` on transport failure;
+    ///   ``CrimeError/unknown`` otherwise.
     ///
     /// - Returns: The street level crimes with the specified area and month..
     ///
     public func streetLevelCrimes(
         in coordinates: [CLLocationCoordinate2D],
         date: Date = Date()
-    ) async throws -> [Crime] {
+    ) async throws(CrimeError) -> [Crime] {
         let crimes: [Crime]
         do {
             crimes = try await apiClient.get(
@@ -170,48 +138,6 @@ public final class CrimeService {
     }
 
     ///
-    /// Returns a publisher that wraps a list of crimes within a custom area.
-    ///
-    /// The street-level crimes returned in the API are only an approximation of where the actual crimes occurred, they are not the
-    /// exact locations. See the [about page](https://data.police.uk/about/#location-anonymisation) for more
-    /// information about location anonymisation.
-    ///
-    /// Since only the British Transport Police provide data for Scotland, crime levels may appear much lower than they really are.
-    ///
-    /// [https://data.police.uk/docs/method/crime-street/](https://data.police.uk/docs/method/crime-street/)
-    ///
-    /// - Parameters:
-    ///   - coordinates: Coordinates which define the boundary of the custom area.
-    ///   - date: Limit results to a specific month. The latest month will be shown by default.
-    ///
-    /// - Throws: Crime data error ``CrimeError``.
-    ///
-    /// - Returns: The street level crimes with the specified area and month..
-    ///
-    public func streetLevelCrimesPublisher(
-        in coordinates: [CLLocationCoordinate2D],
-        date: Date = Date()
-    ) -> AnyPublisher<[Crime], CrimeError> {
-        Future { [weak self] promise in
-            guard let self else {
-                promise(.failure(.unknown))
-                return
-            }
-
-            Task {
-                do {
-                    let crimes = try await self.streetLevelCrimes(in: coordinates, date: date)
-                    promise(.success(crimes))
-                } catch let error {
-                    let crimeError = Self.mapToCrimeError(error)
-                    promise(.failure(crimeError))
-                }
-            }
-        }
-        .eraseToAnyPublisher()
-    }
-
-    ///
     /// Returns just the crimes which occurred at the specified location, rather than those within a radius.
     ///
     /// Since only the British Transport Police provide data for Scotland, crime levels may appear much lower than they really are.
@@ -222,11 +148,12 @@ public final class CrimeService {
     ///   - streetID: The street identifier.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Crime data error ``CrimeError``.
+    /// - Throws: ``CrimeError/notFound`` if no data exists; ``CrimeError/network(_:)`` on transport failure;
+    ///   ``CrimeError/unknown`` otherwise.
     ///
     /// - Returns: The crimes at the specified street and date.
     ///
-    public func crimes(forStreet streetID: Int, date: Date = Date()) async throws -> [Crime] {
+    public func crimes(forStreet streetID: Int, date: Date = Date()) async throws(CrimeError) -> [Crime] {
         if let cachedCrimes = await cache.crimes(forStreet: streetID, date: date) {
             return cachedCrimes
         }
@@ -257,11 +184,13 @@ public final class CrimeService {
     ///   - coordinate: A coordinate.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Crime data error ``CrimeError``.
+    /// - Throws: ``CrimeError/locationOutsideOfDataSetRegion`` if the coordinate is outside the data region;
+    ///   ``CrimeError/notFound`` if no data exists; ``CrimeError/network(_:)`` on transport failure;
+    ///   ``CrimeError/unknown`` otherwise.
     ///
     /// - Returns: The crimes for the street nearest to the specified coordinate and date.
     ///
-    public func crimes(at coordinate: CLLocationCoordinate2D, date: Date = Date()) async throws -> [Crime] {
+    public func crimes(at coordinate: CLLocationCoordinate2D, date: Date = Date()) async throws(CrimeError) -> [Crime] {
         guard availableDataRegion.contains(coordinate: coordinate) else {
             throw CrimeError.locationOutsideOfDataSetRegion
         }
@@ -279,53 +208,17 @@ public final class CrimeService {
     }
 
     ///
-    /// Returns a publisher that wraps just the crimes which occurred at the specified location, rather than those within a radius by finding the nearest
-    /// location of the coordinate and the crimes which occurred there.
-    ///
-    /// Since only the British Transport Police provide data for Scotland, crime levels may appear much lower than they really are.
-    ///
-    /// [https://data.police.uk/docs/method/crimes-at-location/](https://data.police.uk/docs/method/crimes-at-location/)
-    ///
-    /// - Parameters:
-    ///   - coordinate: A coordinate.
-    ///   - date: Limit results to a specific month. The latest month will be shown by default.
-    ///
-    /// - Returns: The crimes for the street nearest to the specified coordinate and date.
-    ///
-    public func crimesPublisher(
-        at coordinate: CLLocationCoordinate2D,
-        date: Date = Date()
-    ) -> AnyPublisher<[Crime], CrimeError> {
-        Future { [weak self] promise in
-            guard let self else {
-                promise(.failure(.unknown))
-                return
-            }
-
-            Task {
-                do {
-                    let crimes = try await self.crimes(at: coordinate, date: date)
-                    promise(.success(crimes))
-                } catch let error {
-                    let crimeError = Self.mapToCrimeError(error)
-                    promise(.failure(crimeError))
-                }
-            }
-        }
-        .eraseToAnyPublisher()
-    }
-
-    ///
     /// Returns a list of crimes that could not be mapped to a location.
     ///
     /// [https://data.police.uk/docs/method/crimes-no-location/](https://data.police.uk/docs/method/crimes-no-location/)
     ///
     /// - Parameters:
-    ///   - category: The category of the crimes. All crimes with be shown by default.
+    ///   - categoryID: The category of the crimes. All crimes with be shown by default.
     ///   - policeForceID: Police Force identifier.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Crime data error ``CrimeError``.
+    /// - Throws: ``CrimeError/notFound`` if no data exists; ``CrimeError/network(_:)`` on transport failure;
+    ///   ``CrimeError/unknown`` otherwise.
     ///
     /// - Returns: The crimes not mapped to a location.
     ///
@@ -333,7 +226,7 @@ public final class CrimeService {
         forCategory categoryID: CrimeCategory.ID = CrimeCategory.default.id,
         inPoliceForce policeForceID: PoliceForce.ID,
         date: Date = Date()
-    ) async throws -> [Crime] {
+    ) async throws(CrimeError) -> [Crime] {
         if let cachedCrimes = await cache.crimesWithNoLocation(
             forCategory: categoryID,
             inPoliceForce: policeForceID,
@@ -359,17 +252,42 @@ public final class CrimeService {
     }
 
     ///
+    /// Returns the date when crime data was last updated.
+    ///
+    /// [https://data.police.uk/docs/method/crime-last-updated/](https://data.police.uk/docs/method/crime-last-updated/)
+    ///
+    /// - Throws: ``CrimeError/notFound`` if no data exists; ``CrimeError/network(_:)`` on transport failure;
+    ///   ``CrimeError/unknown`` otherwise.
+    ///
+    /// - Returns: The date the crime data was last updated.
+    ///
+    public func latestDataDate() async throws(CrimeError) -> Date {
+        if let cached = await cache.latestDataDate() {
+            return cached
+        }
+        let lastUpdated: LastUpdatedDTO
+        do {
+            lastUpdated = try await apiClient.get(endpoint: CrimesEndpoint.lastUpdated)
+        } catch let error {
+            throw Self.mapToCrimeError(error)
+        }
+        await cache.setLatestDataDate(lastUpdated.date)
+        return lastUpdated.date
+    }
+
+    ///
     /// Returns a list of valid crime categories for a given data set date.
     ///
     /// [https://data.police.uk/docs/method/crime-categories/](https://data.police.uk/docs/method/crime-categories/)
     ///
     /// - Parameter date: Month to fetch crime categories for. The latest month will be shown by default.
     ///
-    /// - Throws: Crime data error ``CrimeError``.
+    /// - Throws: ``CrimeError/notFound`` if no data exists; ``CrimeError/network(_:)`` on transport failure;
+    ///   ``CrimeError/unknown`` otherwise.
     ///
     /// - Returns: The crime categories for the specified month.
     ///
-    public func crimeCategories(forDate date: Date = Date()) async throws -> [CrimeCategory] {
+    public func crimeCategories(forDate date: Date = Date()) async throws(CrimeError) -> [CrimeCategory] {
         if let cachedCategories = await cache.crimeCategories(forDate: date) {
             return cachedCategories
         }
@@ -390,24 +308,19 @@ public final class CrimeService {
 
 extension CrimeService {
 
-    private static func mapToCrimeError(_ error: Error) -> CrimeError {
-        if let error = error as? CrimeError {
-            return error
-        }
-
-        guard let error = error as? APIClientError else {
-            return .unknown
-        }
-
+    private static func mapToCrimeError(_ error: APIClientError) -> CrimeError {
         switch error {
-        case .network:
-            return .network(error)
+        case let .network(underlying):
+            .network(underlying)
 
         case .notFound:
-            return .notFound
+            .notFound
+
+        case let .rateLimitExceeded(retryAfter):
+            .rateLimitExceeded(retryAfter: retryAfter)
 
         case .decode, .unknown:
-            return .unknown
+            .unknown
         }
     }
 

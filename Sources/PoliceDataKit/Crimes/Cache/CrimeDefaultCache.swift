@@ -30,9 +30,7 @@ final actor CrimeDefaultCache: CrimeCache {
 
     func crimes(forStreet streetID: Int, date: Date) async -> [Crime]? {
         let cacheKey = CrimesForStreetCachingKey(streetID: streetID, date: date)
-        let cachedCrimes = await cacheStore.object(for: cacheKey, type: [Crime].self)
-
-        return cachedCrimes
+        return await cacheStore.object(for: cacheKey, type: [Crime].self)
     }
 
     func setCrimes(_ crimes: [Crime], forStreet streetID: Int, date: Date) async {
@@ -51,9 +49,7 @@ final actor CrimeDefaultCache: CrimeCache {
             policeForceID: policeForceID,
             date: date
         )
-        let cachedCrimes = await cacheStore.object(for: cacheKey, type: [Crime].self)
-
-        return cachedCrimes
+        return await cacheStore.object(for: cacheKey, type: [Crime].self)
     }
 
     func setCrimesWithNoLocation(
@@ -73,15 +69,23 @@ final actor CrimeDefaultCache: CrimeCache {
 
     func crimeCategories(forDate date: Date) async -> [CrimeCategory]? {
         let cacheKey = CrimeCategoriesCachingKey(date: date)
-        let cachedCrimeCategories = await cacheStore.object(for: cacheKey, type: [CrimeCategory].self)
-
-        return cachedCrimeCategories
+        return await cacheStore.object(for: cacheKey, type: [CrimeCategory].self)
     }
 
     func setCrimeCategories(_ crimeCategories: [CrimeCategory], forDate date: Date) async {
         let cacheKey = CrimeCategoriesCachingKey(date: date)
 
         await cacheStore.set(crimeCategories, for: cacheKey)
+    }
+
+    func latestDataDate() async -> Date? {
+        let cacheKey = CrimeLastUpdatedCachingKey()
+        return await cacheStore.object(for: cacheKey, type: Date.self)
+    }
+
+    func setLatestDataDate(_ date: Date) async {
+        let cacheKey = CrimeLastUpdatedCachingKey()
+        await cacheStore.set(date, for: cacheKey)
     }
 
 }

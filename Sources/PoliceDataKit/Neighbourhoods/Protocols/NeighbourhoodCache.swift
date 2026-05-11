@@ -20,7 +20,7 @@
 import CoreLocation
 import Foundation
 
-protocol NeighbourhoodCache {
+protocol NeighbourhoodCache: Sendable {
 
     func neighbourhoods(inPoliceForce policeForceID: PoliceForce.ID) async -> [NeighbourhoodReference]?
 
@@ -66,6 +66,17 @@ protocol NeighbourhoodCache {
 
     func setPriorities(
         _ priorities: [NeighbourhoodPriority],
+        forNeighbourhood neighbourhoodID: Neighbourhood.ID,
+        inPoliceForce policeForceID: PoliceForce.ID
+    ) async
+
+    func events(
+        forNeighbourhood neighbourhoodID: Neighbourhood.ID,
+        inPoliceForce policeForceID: PoliceForce.ID
+    ) async -> [NeighbourhoodEvent]?
+
+    func setEvents(
+        _ events: [NeighbourhoodEvent],
         forNeighbourhood neighbourhoodID: Neighbourhood.ID,
         inPoliceForce policeForceID: PoliceForce.ID
     ) async

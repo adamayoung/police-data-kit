@@ -17,54 +17,44 @@
 //  limitations under the License.
 //
 
-import Combine
-import MapKit
+import CoreLocation
+import Foundation
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class OutcomeServiceTests: XCTestCase {
+@Suite("Outcome service")
+struct OutcomeServiceTests {
 
-    var service: OutcomeService!
-    var apiClient: MockAPIClient!
-    var cache: OutcomeMockCache!
-    var availableDataRegion: MKCoordinateRegion!
-    var cancellables: Set<AnyCancellable>!
+    let service: OutcomeService
+    let apiClient: MockAPIClient
+    let cache: OutcomeMockCache
+    let availableDataRegion: AvailableRegion
 
-    override func setUp() {
-        super.setUp()
-        apiClient = MockAPIClient()
-        cache = OutcomeMockCache()
-        availableDataRegion = .test
-        cancellables = Set<AnyCancellable>()
-        service = OutcomeService(apiClient: apiClient, cache: cache, availableDataRegion: availableDataRegion)
+    init() {
+        self.apiClient = MockAPIClient()
+        self.cache = OutcomeMockCache()
+        self.availableDataRegion = .test
+        self.service = OutcomeService(apiClient: apiClient, cache: cache, availableDataRegion: availableDataRegion)
     }
 
-    override func tearDown() {
-        service = nil
-        cancellables = nil
-        availableDataRegion = nil
-        cache = nil
-        apiClient = nil
-        super.tearDown()
-    }
-
-    func testStreetLevelOutcomesForStreetWhenNotCachedReturnsOutcomes() async throws {
+    @Test("street level outcomes for street when not cached returns outcomes")
+    func streetLevelOutcomesForStreetWhenNotCachedReturnsOutcomes() async throws {
         let expectedResult = Outcome.mocks
         let streetID = expectedResult[0].crime.location.street.id
         let date = Date()
-        apiClient.add(response: .success(Outcome.mocks))
+        await apiClient.add(response: .success(Outcome.mocks))
 
         let result = try await service.streetLevelOutcomes(forStreet: streetID, date: date)
 
-        XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 1)
-        XCTAssertEqual(
-            apiClient.requestedURLs.last,
-            OutcomesEndpoint.streetLevelOutcomesForStreet(streetID: streetID, date: date).path
-        )
+        #expect(result == expectedResult)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        #expect(requestedURLsCount == 1)
+        let lastURL = await apiClient.requestedURLs.last
+        #expect(lastURL == OutcomesEndpoint.streetLevelOutcomesForStreet(streetID: streetID, date: date).path)
     }
 
-    func testStreetLevelOutcomesForStreetWhenCachedReturnsCachedOutcomes() async throws {
+    @Test("street level outcomes for street when cached returns cached outcomes")
+    func streetLevelOutcomesForStreetWhenCachedReturnsCachedOutcomes() async throws {
         let expectedResult = Outcome.mocks
         let streetID = expectedResult[0].crime.location.street.id
         let date = Date()
@@ -72,168 +62,134 @@ final class OutcomeServiceTests: XCTestCase {
 
         let result = try await service.streetLevelOutcomes(forStreet: streetID, date: date)
 
-        XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 0)
+        #expect(result == expectedResult)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        #expect(requestedURLsCount == 0)
     }
 
-    func testStreetLevelOutcomesForStreetWhenNotCachedAndReturnsOutcomesShouldCacheResult() async throws {
+    @Test("street level outcomes for street when not cached and returns outcomes should cache result")
+    func streetLevelOutcomesForStreetWhenNotCachedAndReturnsOutcomesShouldCacheResult() async throws {
         let expectedResult = Outcome.mocks
         let streetID = expectedResult[0].crime.location.street.id
         let date = Date()
-        apiClient.add(response: .success(Outcome.mocks))
+        await apiClient.add(response: .success(Outcome.mocks))
         _ = try await service.streetLevelOutcomes(forStreet: streetID, date: date)
 
         let cachedResult = await cache.streetLevelOutcomes(forStreet: streetID, date: date)
 
-        XCTAssertEqual(cachedResult, expectedResult)
+        #expect(cachedResult == expectedResult)
     }
 
-    func testStreetLevelOutcomesAtCoordinateReturnsOutcomes() async throws {
+    @Test("street level outcomes at coordinate returns outcomes")
+    func streetLevelOutcomesAtCoordinateReturnsOutcomes() async throws {
         let coordinate = CLLocationCoordinate2D.mock
         let expectedResult = Outcome.mocks
         let date = Date()
-        apiClient.add(response: .success(Outcome.mocks))
+        await apiClient.add(response: .success(Outcome.mocks))
 
         let result = try await service.streetLevelOutcomes(at: coordinate, date: date)
 
-        XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 1)
-        XCTAssertEqual(
-            apiClient.requestedURLs.last,
-            OutcomesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate, date: date).path
+        #expect(result == expectedResult)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        #expect(requestedURLsCount == 1)
+        let lastURL = await apiClient.requestedURLs.last
+        #expect(
+            lastURL == OutcomesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate, date: date).path
         )
     }
 
-    func testStreetLevelOutcomesPublisherAtCoordinateReturnsOutcomes() {
-        let coordinate = CLLocationCoordinate2D.mock
-        let expectedResult = Outcome.mocks
-        let date = Date()
-        apiClient.add(response: .success(Outcome.mocks))
-
-        let expectation = expectation(description: "StreetLevelOutcomesPublisher")
-        var result: [Outcome]?
-        service.streetLevelOutcomesPublisher(at: coordinate)
-            .sink { _ in
-                expectation.fulfill()
-            } receiveValue: { outcomes in
-                result = outcomes
-            }
-            .store(in: &cancellables)
-
-        wait(for: [expectation])
-
-        XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 1)
-        XCTAssertEqual(
-            apiClient.requestedURLs.last,
-            OutcomesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate, date: date).path
-        )
-    }
-
-    func testStreetLevelOutcomesAtCoordsWhenNotInAvailableDataRegionThrowsError() async throws {
+    @Test("street level outcomes at coords when not in available data region throws error")
+    func streetLevelOutcomesAtCoordsWhenNotInAvailableDataRegionThrowsError() async throws {
         let coordinate = CLLocationCoordinate2D.outsideAvailableDataRegion
         let date = Date()
-        apiClient.add(response: .success(Outcome.mocks))
+        await apiClient.add(response: .success(Outcome.mocks))
 
         var resultError: OutcomeError?
         do {
             _ = try await service.streetLevelOutcomes(at: coordinate, date: date)
-        } catch let error as OutcomeError {
+        } catch {
             resultError = error
         }
 
-        XCTAssertEqual(resultError, .locationOutsideOfDataSetRegion)
-        XCTAssertEqual(apiClient.requestedURLs.count, 0)
+        #expect(resultError == .locationOutsideOfDataSetRegion)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        #expect(requestedURLsCount == 0)
     }
 
-    func testStreetLevelOutcomesInAreaReturnsOutcomes() async throws {
+    @Test("street level outcomes in area returns outcomes")
+    func streetLevelOutcomesInAreaReturnsOutcomes() async throws {
         let boundary = CLLocationCoordinate2D.mocks
         let expectedResult = Outcome.mocks
         let date = Date()
-        apiClient.add(response: .success(Outcome.mocks))
+        await apiClient.add(response: .success(Outcome.mocks))
 
         let result = try await service.streetLevelOutcomes(in: boundary, date: date)
 
-        XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 1)
-        XCTAssertEqual(
-            apiClient.requestedURLs.last,
-            OutcomesEndpoint.streetLevelOutcomesInArea(coordinates: CLLocationCoordinate2D.mocks, date: date).path
+        #expect(result == expectedResult)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        #expect(requestedURLsCount == 1)
+        let lastURL = await apiClient.requestedURLs.last
+        #expect(
+            lastURL == OutcomesEndpoint.streetLevelOutcomesInArea(
+                coordinates: CLLocationCoordinate2D.mocks,
+                date: date
+            ).path
         )
     }
 
-    func testStreetLevelOutcomesPublisherInAreaReturnsOutcomes() {
-        let boundary = CLLocationCoordinate2D.mocks
-        let expectedResult = Outcome.mocks
-        let date = Date()
-        apiClient.add(response: .success(Outcome.mocks))
-
-        let expectation = expectation(description: "StreetLevelOutcomesPublisher")
-        var result: [Outcome]?
-        service.streetLevelOutcomesPublisher(in: boundary)
-            .sink { _ in
-                expectation.fulfill()
-            } receiveValue: { outcomes in
-                result = outcomes
-            }
-            .store(in: &cancellables)
-
-        wait(for: [expectation])
-
-        XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 1)
-        XCTAssertEqual(
-            apiClient.requestedURLs.last,
-            OutcomesEndpoint.streetLevelOutcomesInArea(coordinates: CLLocationCoordinate2D.mocks, date: date).path
-        )
-    }
-
-    func testFetchCaseHistoryNotCachedReturnsCaseHistory() async throws {
+    @Test("fetch case history not cached returns case history")
+    func fetchCaseHistoryNotCachedReturnsCaseHistory() async throws {
         let expectedResult = CaseHistory.mock
         let crimeID = expectedResult.crime.crimeID
-        apiClient.add(response: .success(CaseHistory.mock))
+        await apiClient.add(response: .success(CaseHistory.mock))
 
         let result = try await service.caseHistory(forCrime: crimeID)
 
-        XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 1)
-        XCTAssertEqual(apiClient.requestedURLs.last, OutcomesEndpoint.caseHistory(crimeID: crimeID).path)
+        #expect(result == expectedResult)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        #expect(requestedURLsCount == 1)
+        let lastURL = await apiClient.requestedURLs.last
+        #expect(lastURL == OutcomesEndpoint.caseHistory(crimeID: crimeID).path)
     }
 
-    func testFetchCaseHistoryWhenNotFoundThrowsNotFoundError() async throws {
+    @Test("fetch case history when not found throws notFound error")
+    func fetchCaseHistoryWhenNotFoundThrowsNotFoundError() async throws {
         let crimeID = "123ABC"
-        apiClient.add(response: .failure(APIClientError.notFound))
+        await apiClient.add(response: .failure(APIClientError.notFound))
 
         var resultError: OutcomeError?
         do {
             _ = try await service.caseHistory(forCrime: crimeID)
-        } catch let error as OutcomeError {
+        } catch {
             resultError = error
         }
 
-        XCTAssertEqual(resultError, .notFound)
+        #expect(resultError == .notFound)
     }
 
-    func testFetchCaseHistoryWhenCachedReturnsCachedCaseHistory() async throws {
+    @Test("fetch case history when cached returns cached case history")
+    func fetchCaseHistoryWhenCachedReturnsCachedCaseHistory() async throws {
         let expectedResult = CaseHistory.mock
         let crimeID = expectedResult.crime.crimeID
         await cache.setCaseHistory(expectedResult, forCrime: crimeID)
 
         let result = try await service.caseHistory(forCrime: crimeID)
 
-        XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 0)
+        #expect(result == expectedResult)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        #expect(requestedURLsCount == 0)
     }
 
-    func testFetchCaseHistoryWhenNotCachedAndReturnsCaseHistoryShouldCacheResult() async throws {
+    @Test("fetch case history when not cached and returns case history should cache result")
+    func fetchCaseHistoryWhenNotCachedAndReturnsCaseHistoryShouldCacheResult() async throws {
         let expectedResult = CaseHistory.mock
         let crimeID = expectedResult.crime.crimeID
-        apiClient.add(response: .success(CaseHistory.mock))
+        await apiClient.add(response: .success(CaseHistory.mock))
         _ = try await service.caseHistory(forCrime: crimeID)
 
         let cachedResult = await cache.caseHistory(forCrime: crimeID)
 
-        XCTAssertEqual(cachedResult, expectedResult)
+        #expect(cachedResult == expectedResult)
     }
 
 }

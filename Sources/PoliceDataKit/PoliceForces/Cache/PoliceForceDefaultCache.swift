@@ -29,9 +29,7 @@ final class PoliceForceDefaultCache: PoliceForceCache {
 
     func policeForces() async -> [PoliceForceReference]? {
         let cacheKey = PoliceForcesCachingKey()
-        let cachedPoliceForces = await cacheStore.object(for: cacheKey, type: [PoliceForceReference].self)
-
-        return cachedPoliceForces
+        return await cacheStore.object(for: cacheKey, type: [PoliceForceReference].self)
     }
 
     func setPoliceForces(_ policeForces: [PoliceForceReference]) async {
@@ -42,9 +40,7 @@ final class PoliceForceDefaultCache: PoliceForceCache {
 
     func policeForce(withID id: PoliceForce.ID) async -> PoliceForce? {
         let cacheKey = PoliceForceCachingKey(id: id)
-        let cachedPoliceForce = await cacheStore.object(for: cacheKey, type: PoliceForce.self)
-
-        return cachedPoliceForce
+        return await cacheStore.object(for: cacheKey, type: PoliceForce.self)
     }
 
     func setPoliceForce(_ policeForce: PoliceForce, withID id: PoliceForce.ID) async {
@@ -55,9 +51,7 @@ final class PoliceForceDefaultCache: PoliceForceCache {
 
     func seniorOfficers(inPoliceForce policeForceID: PoliceForce.ID) async -> [PoliceOfficer]? {
         let cacheKey = PoliceForceSeniorOfficersCachingKey(policeForceID: policeForceID)
-        let cachedSeniorOfficers = await cacheStore.object(for: cacheKey, type: [PoliceOfficer].self)
-
-        return cachedSeniorOfficers
+        return await cacheStore.object(for: cacheKey, type: [PoliceOfficer].self)
     }
 
     func setSeniorOfficers(_ policeOfficers: [PoliceOfficer], inPoliceForce policeForceID: PoliceForce.ID) async {

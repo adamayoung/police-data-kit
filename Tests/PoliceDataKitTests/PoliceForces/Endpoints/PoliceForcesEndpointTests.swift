@@ -17,35 +17,40 @@
 //  limitations under the License.
 //
 
+import Foundation
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class PoliceForcesEndpointTests: XCTestCase {
+@Suite("PoliceForcesEndpoint")
+struct PoliceForcesEndpointTests {
 
-    func testListEndpointReturnsURL() throws {
-        let expectedPath = try XCTUnwrap(URL(string: "/forces"))
+    @Test("list endpoint returns u r l")
+    func listEndpointReturnsURL() throws {
+        let expectedPath = try #require(URL(string: "/forces"))
 
         let path = PoliceForcesEndpoint.list.path
 
-        XCTAssertEqual(path, expectedPath)
+        #expect(path == expectedPath)
     }
 
-    func testDetailsEndpointReturnsURL() throws {
+    @Test("details endpoint returns u r l")
+    func detailsEndpointReturnsURL() throws {
         let id = "leicestershire"
-        let expectedPath = try XCTUnwrap(URL(string: "/forces/\(id)"))
+        let expectedPath = try #require(URL(string: "/forces/\(id)"))
 
         let path = PoliceForcesEndpoint.details(id: id).path
 
-        XCTAssertEqual(path, expectedPath)
+        #expect(path == expectedPath)
     }
 
-    func testSeniorOfficersEndpointReturnsURL() throws {
+    @Test("senior officers endpoint returns u r l")
+    func seniorOfficersEndpointReturnsURL() throws {
         let policeForceID = "leicestershire"
-        let expectedPath = try XCTUnwrap(URL(string: "/forces/\(policeForceID)/people"))
+        let expectedPath = try #require(URL(string: "/forces/\(policeForceID)/people"))
 
         let path = PoliceForcesEndpoint.seniorOfficers(policeForceID: policeForceID).path
 
-        XCTAssertEqual(path, expectedPath)
+        #expect(path == expectedPath)
     }
 
 }

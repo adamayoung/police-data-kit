@@ -17,32 +17,37 @@
 //  limitations under the License.
 //
 
+import Foundation
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class EngagementMethodTests: XCTestCase {
+@Suite("EngagementMethod")
+struct EngagementMethodTests {
 
-    func testDecodeReturnsEngagementMethod() throws {
+    @Test("decode returns engagement method")
+    func decodeReturnsEngagementMethod() throws {
         let result = try JSONDecoder.policeDataAPI
             .decode(EngagementMethod.self, fromResource: "engagement-method")
 
-        XCTAssertEqual(result, .mock)
+        #expect(result == .mock)
     }
 
-    func testDecodeReturnsEngagementMethodWithURL() throws {
+    @Test("decode returns engagement method with u r l")
+    func decodeReturnsEngagementMethodWithURL() throws {
         let engagementMethod = try JSONDecoder.policeDataAPI
             .decode(EngagementMethod.self, fromResource: "engagement-method")
 
         let result = engagementMethod.url
 
-        XCTAssertEqual(result, EngagementMethod.mock.url)
+        #expect(result == EngagementMethod.mock.url)
     }
 
-    func testDecodeReturnsEngagementMethodWithEmptyURL() throws {
+    @Test("decode returns engagement method with empty u r l")
+    func decodeReturnsEngagementMethodWithEmptyURL() throws {
         let result = try JSONDecoder.policeDataAPI
             .decode(EngagementMethod.self, fromResource: "engagement-method-empty-url")
 
-        XCTAssertNil(result.url)
+        #expect(result.url == nil)
     }
 
 }

@@ -17,23 +17,27 @@
 //  limitations under the License.
 //
 
+import Foundation
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class NeighbourhoodPriorityTests: XCTestCase {
+@Suite("NeighbourhoodPriority")
+struct NeighbourhoodPriorityTests {
 
-    func testDecodeReturnsNeighbourhoodPriority() throws {
+    @Test("decode returns neighbourhood priority")
+    func decodeReturnsNeighbourhoodPriority() throws {
         let result = try JSONDecoder.policeDataAPI
             .decode(NeighbourhoodPriority.self, fromResource: "neighbourhood-priority")
 
-        XCTAssertEqual(result, .mock)
+        #expect(result == .mock)
     }
 
-    func testDecodeWhenNotActionReturnsNeighbourhoodPriority() throws {
+    @Test("decode when not action returns neighbourhood priority")
+    func decodeWhenNotActionReturnsNeighbourhoodPriority() throws {
         let result = try JSONDecoder.policeDataAPI
             .decode(NeighbourhoodPriority.self, fromResource: "neighbourhood-priority-no-action")
 
-        XCTAssertEqual(result, .mockNoAction)
+        #expect(result == .mockNoAction)
     }
 
 }

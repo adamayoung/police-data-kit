@@ -28,6 +28,7 @@ enum NeighbourhoodsEndpoint {
     case policeOfficers(neighbourhoodID: Neighbourhood.ID, policeForceID: PoliceForce.ID)
     case priorities(neighbourhoodID: Neighbourhood.ID, policeForceID: PoliceForce.ID)
     case locateNeighbourhood(coordinate: CLLocationCoordinate2D)
+    case events(policeForceID: PoliceForce.ID, neighbourhoodID: Neighbourhood.ID)
 
 }
 
@@ -69,6 +70,12 @@ extension NeighbourhoodsEndpoint: Endpoint {
             Self.basePath
                 .appendingPathComponent("locate-neighbourhood")
                 .appendingQueryItem(name: "q", coordinate: coordinate)
+
+        case let .events(policeForceID, neighbourhoodID):
+            Self.basePath
+                .appendingPathComponent(policeForceID)
+                .appendingPathComponent(neighbourhoodID)
+                .appendingPathComponent("events")
         }
     }
 

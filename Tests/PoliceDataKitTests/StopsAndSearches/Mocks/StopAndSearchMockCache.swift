@@ -20,7 +20,7 @@
 import Foundation
 @testable import PoliceDataKit
 
-final class StopAndSearchMockCache: StopAndSearchCache {
+final actor StopAndSearchMockCache: StopAndSearchCache {
 
     private var cacheStore: [String: Any] = [:]
 

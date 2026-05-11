@@ -20,7 +20,7 @@
 import CoreLocation
 import Foundation
 
-protocol CrimeCache {
+protocol CrimeCache: Sendable {
 
     func crimes(forStreet streetID: Int, date: Date) async -> [Crime]?
 
@@ -42,5 +42,9 @@ protocol CrimeCache {
     func crimeCategories(forDate date: Date) async -> [CrimeCategory]?
 
     func setCrimeCategories(_ crimeCategories: [CrimeCategory], forDate date: Date) async
+
+    func latestDataDate() async -> Date?
+
+    func setLatestDataDate(_ date: Date) async
 
 }

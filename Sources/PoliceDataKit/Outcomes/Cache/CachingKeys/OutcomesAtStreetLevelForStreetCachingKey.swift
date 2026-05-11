@@ -32,9 +32,4 @@ struct OutcomesAtStreetLevelForStreetCachingKey: CachingKey {
         DateFormatter.yearMonth.string(from: date)
     }
 
-    init(streetID: Int, date: Date) {
-        self.streetID = streetID
-        self.date = date
-    }
-
 }

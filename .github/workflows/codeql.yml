@@ -9,7 +9,7 @@ on:
       - main
   schedule:
     # Every Sunday at 12am
-    - cron:  '0 0 * * 0'
+    - cron: '0 0 * * 0'
   workflow_dispatch:
 
 concurrency:
@@ -17,31 +17,41 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  DEVELOPER_DIR: /Applications/Xcode_15.2.app/Contents/Developer
+  DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
 
 jobs:
   analyze:
     name: Analyze
-    runs-on: macos-14
-    timeout-minutes: 120
+    runs-on: macos-26
+    timeout-minutes: 60
     permissions:
       actions: read
       contents: read
       security-events: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+
+      - name: Cache Swift packages
+        uses: actions/cache@v5
+        with:
+          path: |
+            .build
+            ~/Library/Developer/Xcode/DerivedData
+          key: ${{ runner.os }}-swift-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-swift-
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@v4
         with:
           languages: swift
           config-file: ./.github/codeql/codeql-config.yml
 
       - name: Build
-        run: swift build --build-tests 
+        run: swift build
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@v4
         with:
           category: "/language:swift"

@@ -18,26 +18,24 @@
 //
 
 import PoliceDataKit
-import XCTest
+import Testing
 
-final class AvailabilityIntegrationTests: XCTestCase {
+@Suite("Availability integration", .integrationGate, .tags(.integration))
+struct AvailabilityIntegrationTests {
 
-    var availabilityService: AvailabilityService!
+    let availabilityService: AvailabilityService
 
-    override func setUp() {
-        super.setUp()
-        availabilityService = AvailabilityService()
+    init() {
+        self.availabilityService = AvailabilityService()
     }
 
-    override func tearDown() {
-        availabilityService = nil
-        super.tearDown()
-    }
+    @Test("available data sets returns data sets")
+    func availableDataSets() async throws {
+        let dataSets = try await retry {
+            try await availabilityService.availableDataSets()
+        }
 
-    func testAvailableDataSets() async throws {
-        let dataSets = try await availabilityService.availableDataSets()
-
-        XCTAssertGreaterThan(dataSets.count, 0)
+        #expect(!dataSets.isEmpty)
     }
 
 }

@@ -21,11 +21,11 @@ import Foundation
 
 extension JSONDecoder {
 
-    func decode<T>(
+    func decode<T: Decodable>(
         _: T.Type,
         fromResource fileName: String,
         withExtension fileType: String = "json"
-    ) throws -> T where T: Decodable {
+    ) throws -> T {
         let data = try Data(fromResource: fileName, withExtension: fileType)
         return try decode(T.self, from: data)
     }

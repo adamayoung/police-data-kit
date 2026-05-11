@@ -17,158 +17,110 @@
 //  limitations under the License.
 //
 
-import Combine
-import MapKit
+import CoreLocation
+import Foundation
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class StopAndSearchServiceTests: XCTestCase {
+@Suite("Stop and search service")
+struct StopAndSearchServiceTests {
 
-    var service: StopAndSearchService!
-    var apiClient: MockAPIClient!
-    var cache: StopAndSearchMockCache!
-    var availableDataRegion: MKCoordinateRegion!
-    var cancellables: Set<AnyCancellable>!
+    let service: StopAndSearchService
+    let apiClient: MockAPIClient
+    let cache: StopAndSearchMockCache
+    let availableDataRegion: AvailableRegion
 
-    override func setUp() {
-        super.setUp()
-        apiClient = MockAPIClient()
-        cache = StopAndSearchMockCache()
-        availableDataRegion = .test
-        cancellables = Set<AnyCancellable>()
-        service = StopAndSearchService(
+    init() {
+        self.apiClient = MockAPIClient()
+        self.cache = StopAndSearchMockCache()
+        self.availableDataRegion = .test
+        self.service = StopAndSearchService(
             apiClient: apiClient,
             cache: cache,
             availableDataRegion: availableDataRegion
         )
     }
 
-    override func tearDown() {
-        service = nil
-        cancellables = nil
-        availableDataRegion = nil
-        cache = nil
-        apiClient = nil
-        super.tearDown()
-    }
-
-    func testStopAndSearchesAtCoordinateReturnsStopAndSearches() async throws {
+    @Test("stop and searches at coordinate returns stop and searches")
+    func stopAndSearchesAtCoordinateReturnsStopAndSearches() async throws {
         let coordinate = CLLocationCoordinate2D.mock
         let date = Date()
         let expectedResult = StopAndSearch.mocks
-        apiClient.add(response: .success(StopAndSearch.mocks))
+        await apiClient.add(response: .success(StopAndSearch.mocks))
 
         let result = try await service.stopAndSearches(at: coordinate, date: date)
 
-        XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 1)
-        XCTAssertEqual(
-            apiClient.requestedURLs.last,
-            StopAndSearchesEndpoint.stopAndSearchesByAreaAtSpecificPoint(coordinate: .mock, date: date).path
+        #expect(result == expectedResult)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        #expect(requestedURLsCount == 1)
+        let lastURL = await apiClient.requestedURLs.last
+        #expect(
+            lastURL == StopAndSearchesEndpoint.stopAndSearchesByAreaAtSpecificPoint(
+                coordinate: .mock,
+                date: date
+            ).path
         )
     }
 
-    func testStopAndSearchesPublisherAtCoordinateReturnsStopAndSearches() {
-        let coordinate = CLLocationCoordinate2D.mock
-        let date = Date()
-        let expectedResult = StopAndSearch.mocks
-        apiClient.add(response: .success(StopAndSearch.mocks))
-
-        let expectation = expectation(description: "StopAndSearchPublisher")
-        var result: [StopAndSearch]?
-        service.stopAndSearchesPublisher(at: coordinate, date: date)
-            .sink { _ in
-                expectation.fulfill()
-            } receiveValue: { stopAndSearches in
-                result = stopAndSearches
-            }
-            .store(in: &cancellables)
-
-        wait(for: [expectation])
-
-        XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 1)
-        XCTAssertEqual(
-            apiClient.requestedURLs.last,
-            StopAndSearchesEndpoint.stopAndSearchesByAreaAtSpecificPoint(coordinate: .mock, date: date).path
-        )
-    }
-
-    func testStopAndSearchesAtCoordsWhenOutsideDataRegionThrowsLocationOutsideOfDataSetRegionError() async throws {
+    @Test("stop and searches at coords when outside data region throws locationOutsideOfDataSetRegion error")
+    func stopAndSearchesAtCoordsWhenOutsideDataRegionThrowsLocationOutsideOfDataSetRegionError() async throws {
         let coordinate = CLLocationCoordinate2D.outsideAvailableDataRegion
         let date = Date()
-        apiClient.add(response: .success(StopAndSearch.mocks))
+        await apiClient.add(response: .success(StopAndSearch.mocks))
 
         var resultError: StopAndSearchError?
         do {
             _ = try await service.stopAndSearches(at: coordinate, date: date)
-        } catch let error as StopAndSearchError {
+        } catch {
             resultError = error
         }
 
-        XCTAssertEqual(resultError, .locationOutsideOfDataSetRegion)
-        XCTAssertEqual(apiClient.requestedURLs.count, 0)
+        #expect(resultError == .locationOutsideOfDataSetRegion)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        #expect(requestedURLsCount == 0)
     }
 
-    func testStopAndSearchesInAreaReturnsStopAndSearches() async throws {
+    @Test("stop and searches in area returns stop and searches")
+    func stopAndSearchesInAreaReturnsStopAndSearches() async throws {
         let coordinates = CLLocationCoordinate2D.mocks
         let date = Date()
         let expectedResult = StopAndSearch.mocks
-        apiClient.add(response: .success(StopAndSearch.mocks))
+        await apiClient.add(response: .success(StopAndSearch.mocks))
 
         let result = try await service.stopAndSearches(in: coordinates, date: date)
 
-        XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 1)
-        XCTAssertEqual(
-            apiClient.requestedURLs.last,
-            StopAndSearchesEndpoint.stopAndSearchesByAreaInArea(coordinates: coordinates, date: date).path
+        #expect(result == expectedResult)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        #expect(requestedURLsCount == 1)
+        let lastURL = await apiClient.requestedURLs.last
+        #expect(
+            lastURL == StopAndSearchesEndpoint.stopAndSearchesByAreaInArea(
+                coordinates: coordinates,
+                date: date
+            ).path
         )
     }
 
-    func testStopAndSearchesPublisherInAreaReturnsStopAndSearches() {
-        let coordinates = CLLocationCoordinate2D.mocks
-        let date = Date()
-        let expectedResult = StopAndSearch.mocks
-        apiClient.add(response: .success(StopAndSearch.mocks))
-
-        let expectation = expectation(description: "StopAndSearchPublisher")
-        var result: [StopAndSearch]?
-        service.stopAndSearchesPublisher(in: coordinates, date: date)
-            .sink { _ in
-                expectation.fulfill()
-            } receiveValue: { stopAndSearches in
-                result = stopAndSearches
-            }
-            .store(in: &cancellables)
-
-        wait(for: [expectation])
-
-        XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 1)
-        XCTAssertEqual(
-            apiClient.requestedURLs.last,
-            StopAndSearchesEndpoint.stopAndSearchesByAreaInArea(coordinates: coordinates, date: date).path
-        )
-    }
-
-    func testStopAndSearchesAtLocationWhenNotCachedReturnsStopAndSearches() async throws {
+    @Test("stop and searches at location when not cached returns stop and searches")
+    func stopAndSearchesAtLocationWhenNotCachedReturnsStopAndSearches() async throws {
         let streetID = 123_456
         let date = Date()
         let expectedResult = StopAndSearch.mocks
-        apiClient.add(response: .success(StopAndSearch.mocks))
+        await apiClient.add(response: .success(StopAndSearch.mocks))
 
         let result = try await service.stopAndSearches(atLocation: streetID, date: date)
 
-        XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 1)
-        XCTAssertEqual(
-            apiClient.requestedURLs.last,
-            StopAndSearchesEndpoint.stopAndSearchesAtLocation(streetID: streetID, date: date).path
+        #expect(result == expectedResult)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        #expect(requestedURLsCount == 1)
+        let lastURL = await apiClient.requestedURLs.last
+        #expect(
+            lastURL == StopAndSearchesEndpoint.stopAndSearchesAtLocation(streetID: streetID, date: date).path
         )
     }
 
-    func testStopAndSearchesAtLocationWhenCachedReturnsCachedStopAndSearches() async throws {
+    @Test("stop and searches at location when cached returns cached stop and searches")
+    func stopAndSearchesAtLocationWhenCachedReturnsCachedStopAndSearches() async throws {
         let streetID = 123_456
         let date = Date()
         let expectedResult = StopAndSearch.mocks
@@ -176,39 +128,47 @@ final class StopAndSearchServiceTests: XCTestCase {
 
         let result = try await service.stopAndSearches(atLocation: streetID, date: date)
 
-        XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 0)
+        #expect(result == expectedResult)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        #expect(requestedURLsCount == 0)
     }
 
-    func testStopAndSearchesAtLocationWhenNotCachedAndReturnsStopAndSearchesShouldCacheResult() async throws {
+    @Test("stop and searches at location when not cached and returns stop and searches should cache result")
+    func stopAndSearchesAtLocationWhenNotCachedAndReturnsStopAndSearchesShouldCacheResult() async throws {
         let streetID = 123_456
         let date = Date()
         let expectedResult = StopAndSearch.mocks
-        apiClient.add(response: .success(StopAndSearch.mocks))
+        await apiClient.add(response: .success(StopAndSearch.mocks))
         _ = try await service.stopAndSearches(atLocation: streetID, date: date)
 
         let cachedResult = await cache.stopAndSearches(atLocation: streetID, date: date)
 
-        XCTAssertEqual(cachedResult, expectedResult)
+        #expect(cachedResult == expectedResult)
     }
 
-    func testStopAndSearchesWithNoLocationWhenNotCachedReturnsStopAndSearches() async throws {
+    @Test("stop and searches with no location when not cached returns stop and searches")
+    func stopAndSearchesWithNoLocationWhenNotCachedReturnsStopAndSearches() async throws {
         let policeForceID = "cleveland"
         let date = Date()
         let expectedResult = StopAndSearch.mocks
-        apiClient.add(response: .success(StopAndSearch.mocks))
+        await apiClient.add(response: .success(StopAndSearch.mocks))
 
         let result = try await service.stopAndSearchesWithNoLocation(forPoliceForce: policeForceID, date: date)
 
-        XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 1)
-        XCTAssertEqual(
-            apiClient.requestedURLs.last,
-            StopAndSearchesEndpoint.stopAndSearchesWithNoLocation(policeForceID: policeForceID, date: date).path
+        #expect(result == expectedResult)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        #expect(requestedURLsCount == 1)
+        let lastURL = await apiClient.requestedURLs.last
+        #expect(
+            lastURL == StopAndSearchesEndpoint.stopAndSearchesWithNoLocation(
+                policeForceID: policeForceID,
+                date: date
+            ).path
         )
     }
 
-    func testStopAndSearchesWithNoLocationWhenCachedReturnsCachedStopAndSearches() async throws {
+    @Test("stop and searches with no location when cached returns cached stop and searches")
+    func stopAndSearchesWithNoLocationWhenCachedReturnsCachedStopAndSearches() async throws {
         let policeForceID = "cleveland"
         let date = Date()
         let expectedResult = StopAndSearch.mocks
@@ -216,39 +176,47 @@ final class StopAndSearchServiceTests: XCTestCase {
 
         let result = try await service.stopAndSearchesWithNoLocation(forPoliceForce: policeForceID, date: date)
 
-        XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 0)
+        #expect(result == expectedResult)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        #expect(requestedURLsCount == 0)
     }
 
-    func testStopAndSearchesWithNoLocationWhenNotCachedAndReturnsStopAndSearchesShouldCacheResult() async throws {
+    @Test("stop and searches with no location when not cached and returns stop and searches should cache result")
+    func stopAndSearchesWithNoLocationWhenNotCachedAndReturnsStopAndSearchesShouldCacheResult() async throws {
         let policeForceID = "cleveland"
         let date = Date()
         let expectedResult = StopAndSearch.mocks
-        apiClient.add(response: .success(StopAndSearch.mocks))
+        await apiClient.add(response: .success(StopAndSearch.mocks))
         _ = try await service.stopAndSearchesWithNoLocation(forPoliceForce: policeForceID, date: date)
 
         let cachedResult = await cache.stopAndSearchesWithNoLocation(forPoliceForce: policeForceID, date: date)
 
-        XCTAssertEqual(cachedResult, expectedResult)
+        #expect(cachedResult == expectedResult)
     }
 
-    func testStopAndSearchesForPoliceForceWhenNotCachedReturnsStopAndSearches() async throws {
+    @Test("stop and searches for police force when not cached returns stop and searches")
+    func stopAndSearchesForPoliceForceWhenNotCachedReturnsStopAndSearches() async throws {
         let policeForceID = "avon-and-somerset"
         let date = Date()
         let expectedResult = StopAndSearch.mocks
-        apiClient.add(response: .success(StopAndSearch.mocks))
+        await apiClient.add(response: .success(StopAndSearch.mocks))
 
         let result = try await service.stopAndSearches(forPoliceForce: policeForceID, date: date)
 
-        XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 1)
-        XCTAssertEqual(
-            apiClient.requestedURLs.last,
-            StopAndSearchesEndpoint.stopAndSearchesByPoliceForce(policeForceID: policeForceID, date: date).path
+        #expect(result == expectedResult)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        #expect(requestedURLsCount == 1)
+        let lastURL = await apiClient.requestedURLs.last
+        #expect(
+            lastURL == StopAndSearchesEndpoint.stopAndSearchesByPoliceForce(
+                policeForceID: policeForceID,
+                date: date
+            ).path
         )
     }
 
-    func testStopAndSearchesForPoliceForceWhenCachedReturnsCachedStopAndSearches() async throws {
+    @Test("stop and searches for police force when cached returns cached stop and searches")
+    func stopAndSearchesForPoliceForceWhenCachedReturnsCachedStopAndSearches() async throws {
         let policeForceID = "avon-and-somerset"
         let date = Date()
         let expectedResult = StopAndSearch.mocks
@@ -256,20 +224,22 @@ final class StopAndSearchServiceTests: XCTestCase {
 
         let result = try await service.stopAndSearches(forPoliceForce: policeForceID, date: date)
 
-        XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 0)
+        #expect(result == expectedResult)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        #expect(requestedURLsCount == 0)
     }
 
-    func testStopAndSearchesForPoliceForceWhenNotCachedAndReturnsStopAndSearchesShouldCacheResult() async throws {
+    @Test("stop and searches for police force when not cached and returns stop and searches should cache result")
+    func stopAndSearchesForPoliceForceWhenNotCachedAndReturnsStopAndSearchesShouldCacheResult() async throws {
         let policeForceID = "avon-and-somerset"
         let date = Date()
         let expectedResult = StopAndSearch.mocks
-        apiClient.add(response: .success(StopAndSearch.mocks))
+        await apiClient.add(response: .success(StopAndSearch.mocks))
         _ = try await service.stopAndSearches(forPoliceForce: policeForceID, date: date)
 
         let cachedResult = await cache.stopAndSearches(forPoliceForce: policeForceID, date: date)
 
-        XCTAssertEqual(cachedResult, expectedResult)
+        #expect(cachedResult == expectedResult)
     }
 
 }

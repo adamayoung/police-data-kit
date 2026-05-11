@@ -1,4 +1,4 @@
-// swift-tools-version:5.9
+// swift-tools-version:6.0
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import class Foundation.ProcessInfo
@@ -10,10 +10,10 @@ let package = Package(
     defaultLocalization: "en",
 
     platforms: [
-        .macOS(.v12),
-        .iOS(.v15),
-        .tvOS(.v15),
-        .watchOS(.v8)
+        .macOS(.v14),
+        .iOS(.v17),
+        .tvOS(.v17),
+        .watchOS(.v10)
     ],
 
     products: [
@@ -28,6 +28,9 @@ let package = Package(
             name: "PoliceDataKit",
             resources: [
                 .process("Resources")
+            ],
+            swiftSettings: [
+                .swiftLanguageMode(.v6)
             ]
         ),
         .testTarget(
@@ -35,17 +38,23 @@ let package = Package(
             dependencies: ["PoliceDataKit"],
             resources: [
                 .process("Resources")
+            ],
+            swiftSettings: [
+                .swiftLanguageMode(.v6)
             ]
         ),
         .testTarget(
             name: "IntegrationTests",
-            dependencies: ["PoliceDataKit"]
+            dependencies: ["PoliceDataKit"],
+            swiftSettings: [
+                .swiftLanguageMode(.v6)
+            ]
         )
     ]
 )
 
 if ProcessInfo.processInfo.environment["SWIFTCI_DOCC"] == "1" {
     package.dependencies += [
-        .package(url: "https://github.com/apple/swift-docc-plugin.git", from: "1.3.0")
+        .package(url: "https://github.com/apple/swift-docc-plugin.git", from: "1.4.0")
     ]
 }

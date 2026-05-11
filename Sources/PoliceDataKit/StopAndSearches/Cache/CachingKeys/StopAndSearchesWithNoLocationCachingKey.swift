@@ -32,9 +32,4 @@ struct StopAndSearchesWithNoLocationCachingKey: CachingKey {
         DateFormatter.yearMonth.string(from: date)
     }
 
-    init(policeForceID: String, date: Date) {
-        self.policeForceID = policeForceID
-        self.date = date
-    }
-
 }

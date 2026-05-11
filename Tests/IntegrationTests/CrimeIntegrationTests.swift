@@ -17,158 +17,117 @@
 //  limitations under the License.
 //
 
-import Combine
 import CoreLocation
+import Foundation
 import PoliceDataKit
-import XCTest
+import Testing
 
-final class CrimeIntegrationTests: XCTestCase {
+@Suite("Crime integration", .integrationGate, .tags(.integration))
+struct CrimeIntegrationTests {
 
-    var crimeService: CrimeService!
-    var cancellables: Set<AnyCancellable>!
+    let crimeService: CrimeService
 
-    override func setUp() {
-        super.setUp()
-        cancellables = Set<AnyCancellable>()
-        crimeService = CrimeService()
+    init() {
+        self.crimeService = CrimeService()
     }
 
-    override func tearDown() {
-        crimeService = nil
-        cancellables = nil
-        super.tearDown()
-    }
-
-    func testStreetLevelCrimesAtCoordinateForLeedsCityCentre() async throws {
+    @Test("street level crimes at coordinate for Leeds City Centre")
+    func streetLevelCrimesAtCoordinateForLeedsCityCentre() async throws {
         let leedsCityCentreCoordinate = CLLocationCoordinate2D(latitude: 53.797927, longitude: -1.541522)
-        let date = try XCTUnwrap(Date(isoString: "2023-03-01T12:00:00Z"))
+        let date = try #require(Date(isoString: "2025-09-01T12:00:00Z"))
 
-        let crimes = try await crimeService.streetLevelCrimes(at: leedsCityCentreCoordinate, date: date)
+        let crimes = try await retry {
+            try await crimeService.streetLevelCrimes(at: leedsCityCentreCoordinate, date: date)
+        }
 
-        XCTAssertGreaterThan(crimes.count, 0)
+        #expect(!crimes.isEmpty)
     }
 
-    func testStreetLevelCrimesPublisherAtCoordinateForLeedsCityCentre() throws {
-        let leedsCityCentreCoordinate = CLLocationCoordinate2D(latitude: 53.797927, longitude: -1.541522)
-        let date = try XCTUnwrap(Date(isoString: "2023-03-01T12:00:00Z"))
-
-        let expectation = expectation(description: "StreetLevelCrimesPublisher")
-        var result: [Crime]?
-        crimeService.streetLevelCrimesPublisher(at: leedsCityCentreCoordinate, date: date)
-            .sink { _ in
-                expectation.fulfill()
-            } receiveValue: { crimes in
-                result = crimes
-            }
-            .store(in: &cancellables)
-
-        wait(for: [expectation])
-
-        let crimes = try XCTUnwrap(result)
-        XCTAssertGreaterThan(crimes.count, 0)
-    }
-
-    func testStreetLevelCrimesInCoordinatesForGloucesterCityCentre() async throws {
+    @Test("street level crimes in coordinates for Gloucester City Centre")
+    func streetLevelCrimesInCoordinatesForGloucesterCityCentre() async throws {
         let boundary = [
             CLLocationCoordinate2D(latitude: 51.86703, longitude: -2.24132),
             CLLocationCoordinate2D(latitude: 51.86732, longitude: -2.23382),
             CLLocationCoordinate2D(latitude: 51.86377, longitude: -2.23746),
             CLLocationCoordinate2D(latitude: 51.86703, longitude: -2.24132)
         ]
-        let date = try XCTUnwrap(Date(isoString: "2023-03-01T12:00:00Z"))
+        let date = try #require(Date(isoString: "2025-09-01T12:00:00Z"))
 
-        let crimes = try await crimeService.streetLevelCrimes(in: boundary, date: date)
+        let crimes = try await retry {
+            try await crimeService.streetLevelCrimes(in: boundary, date: date)
+        }
 
-        XCTAssertGreaterThan(crimes.count, 0)
+        #expect(!crimes.isEmpty)
     }
 
-    func testStreetLevelCrimesPublisherInCoordinatesForGloucesterCityCentre() throws {
-        let boundary = [
-            CLLocationCoordinate2D(latitude: 51.86703, longitude: -2.24132),
-            CLLocationCoordinate2D(latitude: 51.86732, longitude: -2.23382),
-            CLLocationCoordinate2D(latitude: 51.86377, longitude: -2.23746),
-            CLLocationCoordinate2D(latitude: 51.86703, longitude: -2.24132)
-        ]
-        let date = try XCTUnwrap(Date(isoString: "2023-03-01T12:00:00Z"))
-
-        let expectation = expectation(description: "StreetLevelCrimesPublisher")
-        var result: [Crime]?
-        crimeService.streetLevelCrimesPublisher(in: boundary, date: date)
-            .sink { _ in
-                expectation.fulfill()
-            } receiveValue: { crimes in
-                result = crimes
-            }
-            .store(in: &cancellables)
-
-        wait(for: [expectation])
-
-        let crimes = try XCTUnwrap(result)
-        XCTAssertGreaterThan(crimes.count, 0)
-    }
-
-    func testCrimesForStreetAtSaundersWayLondon() async throws {
+    @Test("crimes for street at Saunders Way London")
+    func crimesForStreetAtSaundersWayLondon() async throws {
         let saundersWayLondonStreetID = 1_705_005
-        let date = try XCTUnwrap(Date(isoString: "2023-02-01T12:00:00Z"))
+        let date = try #require(Date(isoString: "2025-09-01T12:00:00Z"))
 
-        let crimes = try await crimeService.crimes(forStreet: saundersWayLondonStreetID, date: date)
+        let crimes = try await retry {
+            try await crimeService.crimes(forStreet: saundersWayLondonStreetID, date: date)
+        }
 
-        XCTAssertGreaterThan(crimes.count, 0)
+        #expect(!crimes.isEmpty)
     }
 
-    func testCrimesWithNoLocationForHertfordshireConstabulary() async throws {
+    @Test("crimes with no location for Hertfordshire Constabulary")
+    func crimesWithNoLocationForHertfordshireConstabulary() async throws {
         let policeForceID = "hertfordshire"
-        let date = try XCTUnwrap(Date(isoString: "2023-03-01T12:00:00Z"))
+        let date = try #require(Date(isoString: "2025-09-01T12:00:00Z"))
 
-        let crimes = try await crimeService.crimesWithNoLocation(inPoliceForce: policeForceID, date: date)
+        let crimes = try await retry {
+            try await crimeService.crimesWithNoLocation(inPoliceForce: policeForceID, date: date)
+        }
 
-        XCTAssertGreaterThan(crimes.count, 0)
+        #expect(!crimes.isEmpty)
     }
 
-    func testCrimesAtCoordinateForLeedsCityCentre() async throws {
+    @Test("crimes at coordinate for Leeds City Centre")
+    func crimesAtCoordinateForLeedsCityCentre() async throws {
         let leedsCityCentreCoordinate = CLLocationCoordinate2D(latitude: 53.797927, longitude: -1.541522)
-        let date = try XCTUnwrap(Date(isoString: "2023-03-01T12:00:00Z"))
+        let date = try #require(Date(isoString: "2025-09-01T12:00:00Z"))
 
-        let crimes = try await crimeService.crimes(at: leedsCityCentreCoordinate, date: date)
+        let crimes = try await retry {
+            try await crimeService.crimes(at: leedsCityCentreCoordinate, date: date)
+        }
 
-        XCTAssertGreaterThan(crimes.count, 0)
+        #expect(!crimes.isEmpty)
     }
 
-    func testCrimesPublisherAtCoordinateForLeedsCityCentre() throws {
-        let leedsCityCentreCoordinate = CLLocationCoordinate2D(latitude: 53.797927, longitude: -1.541522)
-        let date = try XCTUnwrap(Date(isoString: "2023-03-01T12:00:00Z"))
-
-        let expectation = expectation(description: "StreetLevelCrimesPublisher")
-        var result: [Crime]?
-        crimeService.crimesPublisher(at: leedsCityCentreCoordinate, date: date)
-            .sink { _ in
-                expectation.fulfill()
-            } receiveValue: { crimes in
-                result = crimes
-            }
-            .store(in: &cancellables)
-
-        wait(for: [expectation])
-
-        let crimes = try XCTUnwrap(result)
-        XCTAssertGreaterThan(crimes.count, 0)
-    }
-
-    func testCrimesWithNoLocationInPoliceForceForSurrey() async throws {
+    @Test("crimes with no location in police force for Surrey")
+    func crimesWithNoLocationInPoliceForceForSurrey() async throws {
         let policeForceID = "surrey"
-        let date = try XCTUnwrap(Date(isoString: "2023-03-01T12:00:00Z"))
+        let date = try #require(Date(isoString: "2025-09-01T12:00:00Z"))
 
-        let crimes = try await crimeService.crimesWithNoLocation(inPoliceForce: policeForceID, date: date)
+        let crimes = try await retry {
+            try await crimeService.crimesWithNoLocation(inPoliceForce: policeForceID, date: date)
+        }
 
-        XCTAssertGreaterThan(crimes.count, 0)
+        #expect(!crimes.isEmpty)
     }
 
-    func testCrimeCategories() async throws {
-        let date = try XCTUnwrap(Date(isoString: "2023-03-01T12:00:00Z"))
+    @Test("crime categories returns categories")
+    func crimeCategories() async throws {
+        let date = try #require(Date(isoString: "2025-09-01T12:00:00Z"))
 
-        let crimeCategories = try await crimeService.crimeCategories(forDate: date)
+        let crimeCategories = try await retry {
+            try await crimeService.crimeCategories(forDate: date)
+        }
 
-        XCTAssertGreaterThan(crimeCategories.count, 0)
+        #expect(!crimeCategories.isEmpty)
+    }
+
+    @Test("latest data date returns date")
+    func latestDataDateReturnsDate() async throws {
+        let currentDate = Date()
+
+        let date = try await retry {
+            try await crimeService.latestDataDate()
+        }
+
+        #expect(date <= currentDate)
     }
 
 }

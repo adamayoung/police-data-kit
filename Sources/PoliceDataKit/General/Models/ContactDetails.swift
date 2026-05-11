@@ -22,7 +22,7 @@ import Foundation
 ///
 /// A model representing contact details.
 ///
-public struct ContactDetails: Equatable, Codable {
+public struct ContactDetails: Equatable, Codable, Sendable {
 
     /// Email address.
     public let email: String?

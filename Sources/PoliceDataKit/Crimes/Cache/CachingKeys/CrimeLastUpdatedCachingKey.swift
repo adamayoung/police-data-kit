@@ -1,5 +1,5 @@
 //
-//  URLSessionConfiguration+Mock.swift
+//  CrimeLastUpdatedCachingKey.swift
 //  PoliceDataKit
 //
 //  Copyright © 2024 Adam Young.
@@ -19,12 +19,12 @@
 
 import Foundation
 
-extension URLSessionConfiguration {
+struct CrimeLastUpdatedCachingKey: CachingKey {
 
-    static var mock: URLSessionConfiguration {
-        let config = URLSessionConfiguration.ephemeral
-        config.protocolClasses = [URLProtocolMock.self]
-        return config
+    var keyValue: String {
+        "crimeLastUpdated"
     }
+
+    init() {}
 
 }

@@ -27,8 +27,4 @@ struct PoliceForceCachingKey: CachingKey {
         "police-force-\(id)"
     }
 
-    init(id: PoliceForce.ID) {
-        self.id = id
-    }
-
 }

@@ -22,7 +22,7 @@ import Foundation
 ///
 /// A model representing an outcome of a crime.
 ///
-public struct Outcome: Equatable, Codable {
+public struct Outcome: Equatable, Codable, Sendable {
 
     /// An identifier for the suspect/offender, where available.
     public let personID: String?

@@ -19,11 +19,18 @@
 
 import Foundation
 
-protocol Cache {
+protocol Cache: Sendable {
 
-    func object<ObjectType: Any>(for key: some CustomStringConvertible, type: ObjectType.Type) async -> ObjectType?
+    func object<ObjectType: Sendable>(
+        for key: some CustomStringConvertible & Sendable,
+        type: ObjectType.Type
+    ) async -> ObjectType?
 
-    func set(_ object: Any?, for key: some CustomStringConvertible, expiresIn: TimeInterval?) async
+    func set(
+        _ object: (any Sendable)?,
+        for key: some CustomStringConvertible & Sendable,
+        expiresIn: TimeInterval?
+    ) async
 
     func removeAll() async
 
@@ -31,7 +38,7 @@ protocol Cache {
 
 extension Cache {
 
-    func set(_ object: Any?, for key: some CustomStringConvertible) async {
+    func set(_ object: (any Sendable)?, for key: some CustomStringConvertible & Sendable) async {
         await set(object, for: key, expiresIn: nil)
     }
 

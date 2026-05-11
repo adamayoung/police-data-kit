@@ -17,117 +17,70 @@
 //  limitations under the License.
 //
 
-import Combine
 import CoreLocation
+import Foundation
 import PoliceDataKit
-import XCTest
+import Testing
 
-final class OutcomeIntegrationTests: XCTestCase {
+@Suite("Outcome integration", .integrationGate, .tags(.integration))
+struct OutcomeIntegrationTests {
 
-    var outcomeService: OutcomeService!
-    var cancellables: Set<AnyCancellable>!
+    let outcomeService: OutcomeService
 
-    override func setUp() {
-        super.setUp()
-        cancellables = Set<AnyCancellable>()
-        outcomeService = OutcomeService()
+    init() {
+        self.outcomeService = OutcomeService()
     }
 
-    override func tearDown() {
-        outcomeService = nil
-        cancellables = nil
-        super.tearDown()
-    }
-
-    func testStreetLevelOutcomesForStreetForPrincesStreetLondon() async throws {
+    @Test("street level outcomes for street for Princes Street London")
+    func streetLevelOutcomesForStreetForPrincesStreetLondon() async throws {
         let princesStreetLondonStreetID = 1_675_924
-        let date = try XCTUnwrap(Date(isoString: "2022-08-01T12:00:00Z"))
+        let date = try #require(Date(isoString: "2025-09-01T12:00:00Z"))
 
-        let outcomes = try await outcomeService.streetLevelOutcomes(forStreet: princesStreetLondonStreetID, date: date)
+        let outcomes = try await retry {
+            try await outcomeService.streetLevelOutcomes(forStreet: princesStreetLondonStreetID, date: date)
+        }
 
-        XCTAssertGreaterThan(outcomes.count, 0)
+        #expect(!outcomes.isEmpty)
     }
 
-    func testStreetLevelOutcomesAtCoordinateForLeedsCityCentre() async throws {
-        // The API is sometimes slow and times out, causing this test to fail
-        try XCTSkipIf(true)
-
+    @Test("street level outcomes at coordinate for Leeds City Centre")
+    func streetLevelOutcomesAtCoordinateForLeedsCityCentre() async throws {
         let leedsCityCentreCoordinate = CLLocationCoordinate2D(latitude: 53.797927, longitude: -1.541522)
-        let date = try XCTUnwrap(Date(isoString: "2022-08-01T12:00:00Z"))
+        let date = try #require(Date(isoString: "2025-09-01T12:00:00Z"))
 
-        let outcomes = try await outcomeService.streetLevelOutcomes(at: leedsCityCentreCoordinate, date: date)
+        let outcomes = try await retry {
+            try await outcomeService.streetLevelOutcomes(at: leedsCityCentreCoordinate, date: date)
+        }
 
-        XCTAssertGreaterThan(outcomes.count, 0)
+        #expect(!outcomes.isEmpty)
     }
 
-    func testStreetLevelOutcomesPublisherAtCoordinateForLeedsCityCentre() throws {
-        // The API is sometimes slow and times out, causing this test to fail
-        try XCTSkipIf(true)
-
-        let leedsCityCentreCoordinate = CLLocationCoordinate2D(latitude: 53.797927, longitude: -1.541522)
-        let date = try XCTUnwrap(Date(isoString: "2022-03-01T12:00:00Z"))
-
-        let expectation = expectation(description: "OutcomesPublisher")
-        var result: [Outcome]?
-        outcomeService.streetLevelOutcomesPublisher(at: leedsCityCentreCoordinate, date: date)
-            .sink { _ in
-                expectation.fulfill()
-            } receiveValue: { outcomes in
-                result = outcomes
-            }
-            .store(in: &cancellables)
-
-        wait(for: [expectation])
-
-        let outcomes = try XCTUnwrap(result)
-        XCTAssertGreaterThan(outcomes.count, 0)
-    }
-
-    func testStreetLevelOutcomesInCoordinatesForGloucesterCityCentre() async throws {
+    @Test("street level outcomes in coordinates for Gloucester City Centre")
+    func streetLevelOutcomesInCoordinatesForGloucesterCityCentre() async throws {
         let boundary = [
             CLLocationCoordinate2D(latitude: 51.86703, longitude: -2.24132),
             CLLocationCoordinate2D(latitude: 51.86732, longitude: -2.23382),
             CLLocationCoordinate2D(latitude: 51.86377, longitude: -2.23746),
             CLLocationCoordinate2D(latitude: 51.86703, longitude: -2.24132)
         ]
-        let date = try XCTUnwrap(Date(isoString: "2023-03-01T12:00:00Z"))
+        let date = try #require(Date(isoString: "2025-09-01T12:00:00Z"))
 
-        let outcomes = try await outcomeService.streetLevelOutcomes(in: boundary, date: date)
+        let outcomes = try await retry {
+            try await outcomeService.streetLevelOutcomes(in: boundary, date: date)
+        }
 
-        XCTAssertGreaterThan(outcomes.count, 0)
+        #expect(!outcomes.isEmpty)
     }
 
-    func testStreetLevelOutcomesPublisherInCoordinatesForGloucesterCityCentre() throws {
-        let boundary = [
-            CLLocationCoordinate2D(latitude: 51.86703, longitude: -2.24132),
-            CLLocationCoordinate2D(latitude: 51.86732, longitude: -2.23382),
-            CLLocationCoordinate2D(latitude: 51.86377, longitude: -2.23746),
-            CLLocationCoordinate2D(latitude: 51.86703, longitude: -2.24132)
-        ]
-        let date = try XCTUnwrap(Date(isoString: "2022-09-01T12:00:00Z"))
+    @Test("case history for crime")
+    func caseHistoryForCrime() async throws {
+        let crimeID = "9442760eab1f3e579c0a22d30258453dda5a16c472720210f2ec08e6034fe5c0"
 
-        let expectation = expectation(description: "OutcomesPublisher")
-        var result: [Outcome]?
-        outcomeService.streetLevelOutcomesPublisher(in: boundary, date: date)
-            .sink { _ in
-                expectation.fulfill()
-            } receiveValue: { outcomes in
-                result = outcomes
-            }
-            .store(in: &cancellables)
+        let caseHistory = try await retry {
+            try await outcomeService.caseHistory(forCrime: crimeID)
+        }
 
-        wait(for: [expectation])
-
-        let outcomes = try XCTUnwrap(result)
-        XCTAssertGreaterThan(outcomes.count, 0)
-    }
-
-    func testCaseHistoryForCrime() async throws {
-        let crimeID = "42c325e012eb6c5bb9558ac25f6817c6d52c1e220651d5d011587221610f163b"
-
-        let caseHistory = try await outcomeService.caseHistory(forCrime: crimeID)
-
-        XCTAssertEqual(caseHistory.crime.crimeID, crimeID)
+        #expect(caseHistory.crime.crimeID == crimeID)
     }
 
 }

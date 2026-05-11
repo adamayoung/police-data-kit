@@ -19,19 +19,19 @@
 
 import Foundation
 
-final actor PoliceDataAPIClient: APIClient {
+final class PoliceDataAPIClient: APIClient {
 
     private let baseURL: URL
     private let urlSession: URLSession
-    private let serialiser: Serialiser
+    private let serialiser: any Serialiser & Sendable
 
-    init(baseURL: URL, urlSession: URLSession, serialiser: Serialiser) {
+    init(baseURL: URL, urlSession: URLSession, serialiser: any Serialiser & Sendable) {
         self.baseURL = baseURL
         self.urlSession = urlSession
         self.serialiser = serialiser
     }
 
-    func get<Response: Decodable>(path: URL) async throws -> Response {
+    func get<Response: Decodable & Sendable>(path: URL) async throws(APIClientError) -> Response {
         let urlRequest = buildURLRequest(for: path)
 
         let data: Data
@@ -46,7 +46,7 @@ final actor PoliceDataAPIClient: APIClient {
         try validate(response: response)
         let result: Response
         do {
-            result = try await serialiser.decode(Response.self, from: data)
+            result = try serialiser.decode(Response.self, from: data)
         } catch let error {
             throw APIClientError.decode(error)
         }
@@ -79,7 +79,7 @@ extension PoliceDataAPIClient {
         return urlComponents.url!
     }
 
-    private func validate(response: URLResponse) throws {
+    private func validate(response: URLResponse) throws(APIClientError) {
         if let error = APIClientError(response: response) {
             throw error
         }
@@ -90,13 +90,20 @@ extension PoliceDataAPIClient {
 private extension APIClientError {
 
     init?(response: URLResponse) {
-        let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
+        let httpResponse = response as? HTTPURLResponse
+        let statusCode = httpResponse?.statusCode ?? -1
         guard statusCode != 200 else {
             return nil
         }
 
         if statusCode == 404 {
             self = .notFound
+            return
+        }
+
+        if statusCode == 429 {
+            let retryAfter = (httpResponse?.value(forHTTPHeaderField: "Retry-After")).flatMap(TimeInterval.init)
+            self = .rateLimitExceeded(retryAfter: retryAfter)
             return
         }
 

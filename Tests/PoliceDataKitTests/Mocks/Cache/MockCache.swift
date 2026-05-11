@@ -22,17 +22,24 @@ import Foundation
 
 final actor MockCache: Cache {
 
-    private var cacheStore: [String: Any]
+    private var cacheStore: [String: any Sendable]
 
-    init(initialCacheStore: [String: Any] = [:]) {
+    init(initialCacheStore: [String: any Sendable] = [:]) {
         self.cacheStore = initialCacheStore
     }
 
-    func object<ObjectType>(for key: some CustomStringConvertible, type _: ObjectType.Type) async -> ObjectType? {
+    func object<ObjectType: Sendable>(
+        for key: some CustomStringConvertible & Sendable,
+        type _: ObjectType.Type
+    ) async -> ObjectType? {
         cacheStore[key.description] as? ObjectType
     }
 
-    func set(_ object: Any?, for key: some CustomStringConvertible, expiresIn _: TimeInterval? = nil) async {
+    func set(
+        _ object: (any Sendable)?,
+        for key: some CustomStringConvertible & Sendable,
+        expiresIn _: TimeInterval? = nil
+    ) async {
         guard let object else {
             cacheStore.removeValue(forKey: key.description)
             return
@@ -42,9 +49,7 @@ final actor MockCache: Cache {
     }
 
     func removeAll() async {
-        Task {
-            cacheStore.removeAll()
-        }
+        cacheStore.removeAll()
     }
 
 }

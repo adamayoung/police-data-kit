@@ -17,15 +17,13 @@
 //  limitations under the License.
 //
 
-import Combine
+import CoreLocation
 import Foundation
-import MapKit
 
 ///
 /// Provides an interface for obtaining outcome data from the UK Police API.
 ///
-@available(iOS 15.0, tvOS 15.0, watchOS 8.0, macOS 12, *)
-public final class OutcomeService {
+public final class OutcomeService: Sendable {
 
     ///
     /// A single, shared outcome service object.
@@ -34,9 +32,9 @@ public final class OutcomeService {
     ///
     public static let shared = OutcomeService()
 
-    private let apiClient: any APIClient
-    private let cache: any OutcomeCache
-    private let availableDataRegion: MKCoordinateRegion
+    private let apiClient: any APIClient & Sendable
+    private let cache: any OutcomeCache & Sendable
+    private let availableDataRegion: AvailableRegion
 
     ///
     /// Creates an outcome service object.
@@ -52,7 +50,11 @@ public final class OutcomeService {
         )
     }
 
-    init(apiClient: some APIClient, cache: some OutcomeCache, availableDataRegion: MKCoordinateRegion) {
+    init(
+        apiClient: some APIClient & Sendable,
+        cache: some OutcomeCache & Sendable,
+        availableDataRegion: AvailableRegion
+    ) {
         self.apiClient = apiClient
         self.cache = cache
         self.availableDataRegion = availableDataRegion
@@ -69,11 +71,15 @@ public final class OutcomeService {
     ///   - streetID: Street identifier.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Outcome data error ``OutcomeError``.
+    /// - Throws: ``OutcomeError/notFound`` if no data exists; ``OutcomeError/network(_:)`` on transport failure;
+    ///   ``OutcomeError/unknown`` otherwise.
     ///
     /// - Returns: The outcomes of crimes for the specified street and date..
     ///
-    public func streetLevelOutcomes(forStreet streetID: Int, date: Date = Date()) async throws -> [Outcome] {
+    public func streetLevelOutcomes(
+        forStreet streetID: Int,
+        date: Date = Date()
+    ) async throws(OutcomeError) -> [Outcome] {
         if let cachedOutcomes = await cache.streetLevelOutcomes(forStreet: streetID, date: date) {
             return cachedOutcomes
         }
@@ -103,14 +109,16 @@ public final class OutcomeService {
     ///   - coordinate: A coordinate.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Outcome data error ``OutcomeError``.
+    /// - Throws: ``OutcomeError/locationOutsideOfDataSetRegion`` if the coordinate is outside the data region;
+    ///   ``OutcomeError/notFound`` if no data exists; ``OutcomeError/network(_:)`` on transport failure;
+    ///   ``OutcomeError/unknown`` otherwise.
     ///
     /// - Returns: The outcomes of crimes in a 1 mile radius of the specified coordinate and date.
     ///
     public func streetLevelOutcomes(
         at coordinate: CLLocationCoordinate2D,
         date: Date = Date()
-    ) async throws -> [Outcome] {
+    ) async throws(OutcomeError) -> [Outcome] {
         guard availableDataRegion.contains(coordinate: coordinate) else {
             throw OutcomeError.locationOutsideOfDataSetRegion
         }
@@ -128,42 +136,6 @@ public final class OutcomeService {
     }
 
     ///
-    /// Returns a publisher that wraps a list of crime outcomes within a 1 mile radius of a single point.
-    ///
-    /// [https://data.police.uk/docs/method/outcomes-at-location/](https://data.police.uk/docs/method/outcomes-at-location/)
-    ///
-    /// Outcomes are not available for the Police Service of Northern Ireland.
-    ///
-    /// - Parameters:
-    ///   - coordinate: A coordinate.
-    ///   - date: Limit results to a specific month. The latest month will be shown by default.
-    ///
-    /// - Returns: The outcomes of crimes in a 1 mile radius of the specified coordinate and date.
-    ///
-    public func streetLevelOutcomesPublisher(
-        at coordinate: CLLocationCoordinate2D,
-        date: Date = Date()
-    ) -> AnyPublisher<[Outcome], OutcomeError> {
-        Future { [weak self] promise in
-            guard let self else {
-                promise(.failure(.unknown))
-                return
-            }
-
-            Task {
-                do {
-                    let outcomes = try await self.streetLevelOutcomes(at: coordinate, date: date)
-                    promise(.success(outcomes))
-                } catch let error {
-                    let outcomeError = Self.mapToOutcomeError(error)
-                    promise(.failure(outcomeError))
-                }
-            }
-        }
-        .eraseToAnyPublisher()
-    }
-
-    ///
     /// Returns a list of crime outcomes within a custom area.
     ///
     /// [https://data.police.uk/docs/method/outcomes-at-location/](https://data.police.uk/docs/method/outcomes-at-location/)
@@ -174,14 +146,15 @@ public final class OutcomeService {
     ///   - coordinates: Coordinates which define the boundary of the custom area.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    ///   - Throws: Outcome data error ``OutcomeError``.
+    /// - Throws: ``OutcomeError/notFound`` if no data exists; ``OutcomeError/network(_:)`` on transport failure;
+    ///   ``OutcomeError/unknown`` otherwise.
     ///
     /// - Returns: The outcomes of crimes within the specified area.
     ///
     public func streetLevelOutcomes(
         in coordinates: [CLLocationCoordinate2D],
         date: Date = Date()
-    ) async throws -> [Outcome] {
+    ) async throws(OutcomeError) -> [Outcome] {
         let outcomes: [Outcome]
         do {
             outcomes = try await apiClient.get(
@@ -195,42 +168,6 @@ public final class OutcomeService {
     }
 
     ///
-    /// Returns a publisher that wraps a list of crime outcomes within a custom area.
-    ///
-    /// [https://data.police.uk/docs/method/outcomes-at-location/](https://data.police.uk/docs/method/outcomes-at-location/)
-    ///
-    /// Outcomes are not available for the Police Service of Northern Ireland.
-    ///
-    /// - Parameters:
-    ///   - coordinates: Coordinates which define the boundary of the custom area.
-    ///   - date: Limit results to a specific month. The latest month will be shown by default.
-    ///
-    /// - Returns: The outcomes of crimes within the specified area.
-    ///
-    public func streetLevelOutcomesPublisher(
-        in coordinates: [CLLocationCoordinate2D],
-        date: Date = Date()
-    ) -> AnyPublisher<[Outcome], OutcomeError> {
-        Future { [weak self] promise in
-            guard let self else {
-                promise(.failure(.unknown))
-                return
-            }
-
-            Task {
-                do {
-                    let outcomes = try await self.streetLevelOutcomes(in: coordinates, date: date)
-                    promise(.success(outcomes))
-                } catch let error {
-                    let outcomeError = Self.mapToOutcomeError(error)
-                    promise(.failure(outcomeError))
-                }
-            }
-        }
-        .eraseToAnyPublisher()
-    }
-
-    ///
     /// Returns the case history for a crime.
     ///
     /// [https://data.police.uk/docs/method/outcomes-for-crime/](https://data.police.uk/docs/method/outcomes-for-crime/)
@@ -239,11 +176,12 @@ public final class OutcomeService {
     ///
     /// - Parameter crimeID: The crimeID of a crime, not the id.
     ///
-    /// - Throws: Outcome data error ``OutcomeError``.
+    /// - Throws: ``OutcomeError/notFound`` if no data exists; ``OutcomeError/network(_:)`` on transport failure;
+    ///   ``OutcomeError/unknown`` otherwise.
     ///
     /// - Returns: The case history for the specified crime.
     ///
-    public func caseHistory(forCrime crimeID: String) async throws -> CaseHistory {
+    public func caseHistory(forCrime crimeID: String) async throws(OutcomeError) -> CaseHistory {
         if let cachedCaseHistory = await cache.caseHistory(forCrime: crimeID) {
             return cachedCaseHistory
         }
@@ -264,24 +202,19 @@ public final class OutcomeService {
 
 extension OutcomeService {
 
-    private static func mapToOutcomeError(_ error: Error) -> OutcomeError {
-        if let error = error as? OutcomeError {
-            return error
-        }
-
-        guard let error = error as? APIClientError else {
-            return .unknown
-        }
-
+    private static func mapToOutcomeError(_ error: APIClientError) -> OutcomeError {
         switch error {
-        case .network:
-            return .network(error)
+        case let .network(underlying):
+            .network(underlying)
 
         case .notFound:
-            return .notFound
+            .notFound
+
+        case let .rateLimitExceeded(retryAfter):
+            .rateLimitExceeded(retryAfter: retryAfter)
 
         case .decode, .unknown:
-            return .unknown
+            .unknown
         }
     }
 

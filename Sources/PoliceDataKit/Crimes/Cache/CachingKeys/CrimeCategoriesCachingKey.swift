@@ -31,8 +31,4 @@ struct CrimeCategoriesCachingKey: CachingKey {
         DateFormatter.yearMonth.string(from: date)
     }
 
-    init(date: Date) {
-        self.date = date
-    }
-
 }

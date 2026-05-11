@@ -22,7 +22,7 @@ import Foundation
 ///
 /// The location type of a crime.
 ///
-public enum CrimeLocationType: String, Equatable, CaseIterable, CustomStringConvertible, Codable {
+public enum CrimeLocationType: String, Equatable, CaseIterable, CustomStringConvertible, Codable, Sendable {
 
     /// A normal police force location.
     case force = "Force"

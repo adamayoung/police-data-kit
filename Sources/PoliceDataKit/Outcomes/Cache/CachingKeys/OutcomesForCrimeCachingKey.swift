@@ -27,8 +27,4 @@ struct OutcomesForCrimeCachingKey: CachingKey {
         "outcomes-for-crime-\(crimeID)"
     }
 
-    init(crimeID: String) {
-        self.crimeID = crimeID
-    }
-
 }

@@ -27,8 +27,4 @@ struct PoliceForceSeniorOfficersCachingKey: CachingKey {
         "police-force-\(policeForceID)-senior-officers"
     }
 
-    init(policeForceID: PoliceForce.ID) {
-        self.policeForceID = policeForceID
-    }
-
 }

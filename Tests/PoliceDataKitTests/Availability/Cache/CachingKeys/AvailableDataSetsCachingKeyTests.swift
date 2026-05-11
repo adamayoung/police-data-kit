@@ -18,14 +18,16 @@
 //
 
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class AvailableDataSetsCachingKeyTests: XCTestCase {
+@Suite("AvailableDataSets caching key")
+struct AvailableDataSetsCachingKeyTests {
 
-    func testKeyValue() {
+    @Test("key value")
+    func keyValue() {
         let cacheKey = AvailableDataSetsCachingKey()
 
-        XCTAssertEqual(cacheKey.keyValue, "available-data-sets")
+        #expect(cacheKey.keyValue == "available-data-sets")
     }
 
 }

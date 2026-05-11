@@ -18,41 +18,39 @@
 //
 
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class InMemoryCacheTests: XCTestCase {
+@Suite("InMemoryCache")
+struct InMemoryCacheTests {
 
-    var cache: InMemoryCache!
+    let cache: InMemoryCache
 
-    override func setUp() {
-        super.setUp()
-        cache = InMemoryCache(name: "Test")
+    init() {
+        self.cache = InMemoryCache(name: "Test")
     }
 
-    override func tearDown() {
-        cache = nil
-        super.tearDown()
-    }
-
-    func testEmptyCacheReturnsNil() async {
+    @Test("empty cache returns nil")
+    func emptyCacheReturnsNil() async {
         let key = "test1"
 
         let object = await cache.object(for: key, type: String.self)
 
-        XCTAssertNil(object)
+        #expect(object == nil)
     }
 
-    func testEmptyCacheWhenSetObjectReturnsObject() async {
+    @Test("empty cache when set object returns object")
+    func emptyCacheWhenSetObjectReturnsObject() async {
         let key = "test2"
         let object = "SomeCacheItem"
 
         await cache.set(object, for: key)
         let cachedObject = await cache.object(for: key, type: String.self)
 
-        XCTAssertEqual(cachedObject, object)
+        #expect(cachedObject == object)
     }
 
-    func testCacheContainsObjectWithKeyWhenSetNewObjectWithSameKeyReturnsNewObject() async {
+    @Test("cache contains object with key when set new object with same key returns new object")
+    func cacheContainsObjectWithKeyWhenSetNewObjectWithSameKeyReturnsNewObject() async {
         let key = "test3"
         let oldObject = "OldCacheItem"
         let newObject = "NewCacheItem"
@@ -61,10 +59,11 @@ final class InMemoryCacheTests: XCTestCase {
         await cache.set(newObject, for: key)
         let cachedObject = await cache.object(for: key, type: String.self)
 
-        XCTAssertEqual(cachedObject, newObject)
+        #expect(cachedObject == newObject)
     }
 
-    func testCacheContainsObjectWithKeyWhenSetNilWithSameKeyReturnsNil() async {
+    @Test("cache contains object with key when set nil with same key returns nil")
+    func cacheContainsObjectWithKeyWhenSetNilWithSameKeyReturnsNil() async {
         let key = "test4"
         let oldObject = "OldCacheItem"
 
@@ -72,20 +71,22 @@ final class InMemoryCacheTests: XCTestCase {
         await cache.set(nil, for: key)
         let cachedObject = await cache.object(for: key, type: String.self)
 
-        XCTAssertNil(cachedObject)
+        #expect(cachedObject == nil)
     }
 
-    func testCacheContainsExpiredObjectReturnsNil() async {
+    @Test("cache contains expired object returns nil")
+    func cacheContainsExpiredObjectReturnsNil() async {
         let key = "test5"
         let object = "ExpiredObject"
 
         await cache.set(object, for: key, expiresIn: 0)
         let cachedObject = await cache.object(for: key, type: String.self)
 
-        XCTAssertNil(cachedObject)
+        #expect(cachedObject == nil)
     }
 
-    func testRemoveAll() async {
+    @Test("removeAll clears all cached objects")
+    func removeAll() async {
         let key1 = "key1"
         let key2 = "key2"
         let key3 = "key3"
@@ -99,9 +100,9 @@ final class InMemoryCacheTests: XCTestCase {
         let cachedObject2 = await cache.object(for: key2, type: String.self)
         let cachedObject3 = await cache.object(for: key3, type: String.self)
 
-        XCTAssertNil(cachedObject1)
-        XCTAssertNil(cachedObject2)
-        XCTAssertNil(cachedObject3)
+        #expect(cachedObject1 == nil)
+        #expect(cachedObject2 == nil)
+        #expect(cachedObject3 == nil)
     }
 
 }

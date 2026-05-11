@@ -1,5 +1,5 @@
 //
-//  XCTestCase+URLProtocolMock.swift
+//  Tags.swift
 //  PoliceDataKit
 //
 //  Copyright © 2024 Adam Young.
@@ -17,23 +17,8 @@
 //  limitations under the License.
 //
 
-import Foundation
-import XCTest
+import Testing
 
-extension XCTestCase {
-
-    func verify(request: URLRequest) {
-        let nextRequest = URLProtocolMock.requests.removeFirst()
-
-        XCTAssertEqual(request, nextRequest)
-    }
-
-    func setMockURLSessionResponses(_ responseConfigs: [URL?: (HTTPURLResponse?, Data?)]) {
-        URLProtocolMock.responseConfigs = responseConfigs
-    }
-
-    func resetMockURLSession() {
-        URLProtocolMock.reset()
-    }
-
+extension Tag {
+    @Tag static var integration: Self
 }

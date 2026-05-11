@@ -17,114 +17,112 @@
 //  limitations under the License.
 //
 
+import Foundation
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class PoliceDataAPIClientTests: XCTestCase {
+/// MockURLProtocol uses nonisolated(unsafe) static state; serialised to avoid data races.
+@Suite("PoliceDataAPIClient", .serialized)
+struct PoliceDataAPIClientTests {
 
-    var apiClient: PoliceDataAPIClient!
-    var baseURL: URL!
-    var urlSession: URLSession!
-    var serialiser: JSONSerialiser!
+    let apiClient: PoliceDataAPIClient
+    let baseURL: URL
+    let urlSession: URLSession
+    let serialiser: JSONSerialiser
 
-    override func setUp() {
-        super.setUp()
-        baseURL = URL(string: "https://some.domain.com/path")
+    init() throws {
+        self.baseURL = try #require(URL(string: "https://some.domain.com/path"))
 
         let configuration = URLSessionConfiguration.default
         configuration.protocolClasses = [MockURLProtocol.self]
-        urlSession = URLSession(configuration: configuration)
-        serialiser = JSONSerialiser(decoder: JSONDecoder())
-        apiClient = PoliceDataAPIClient(baseURL: baseURL, urlSession: urlSession, serialiser: serialiser)
-    }
+        self.urlSession = URLSession(configuration: configuration)
+        self.serialiser = JSONSerialiser(decoder: JSONDecoder())
+        self.apiClient = PoliceDataAPIClient(baseURL: baseURL, urlSession: urlSession, serialiser: serialiser)
 
-    override func tearDown() {
-        apiClient = nil
-        serialiser = nil
-        baseURL = nil
         MockURLProtocol.reset()
-        super.tearDown()
     }
 
     #if !os(watchOS)
-        func testGetWhenRequestFailsThrowsNetworkError() async throws {
+        @Test("get when request fails throws network error")
+        func getWhenRequestFailsThrowsNetworkError() async throws {
             let expectedError = NSError(domain: NSURLErrorDomain, code: URLError.badServerResponse.rawValue)
             MockURLProtocol.failError = expectedError
-            let path = try XCTUnwrap(URL(string: "/error"))
+            let path = try #require(URL(string: "/error"))
 
+            var caughtError: APIClientError?
             do {
                 _ = try await apiClient.get(path: path) as String
-            } catch let error as APIClientError {
-                switch error {
-                case let .network(error as NSError):
-                    XCTAssertEqual(error.code, expectedError.code)
-                    return
-                default:
-                    break
-                }
+            } catch {
+                caughtError = error
             }
 
-            XCTFail("Expected error to be thrown")
+            if case let .network(networkError as NSError) = caughtError {
+                #expect(networkError.code == expectedError.code)
+            } else {
+                Issue.record("Expected .network error to be thrown, got \(String(describing: caughtError))")
+            }
         }
     #endif
 
-    func testGetWhenResponseStatusCodeIs404ReturnsNotFoundError() async throws {
+    @Test("get when response status code is 404 returns not found error")
+    func getWhenResponseStatusCodeIs404ReturnsNotFoundError() async throws {
         MockURLProtocol.responseStatusCode = 404
-        let path = try XCTUnwrap(URL(string: "/error"))
+        let path = try #require(URL(string: "/error"))
 
+        var caughtError: APIClientError?
         do {
             _ = try await apiClient.get(path: path) as String
-        } catch let error as APIClientError {
-            switch error {
-            case .notFound:
-                XCTAssertTrue(true)
-                return
-            default:
-                break
-            }
+        } catch {
+            caughtError = error
         }
 
-        XCTFail("Expected not found error to be thrown")
+        if case .notFound = caughtError {
+            // pass
+        } else {
+            Issue.record("Expected .notFound error to be thrown, got \(String(describing: caughtError))")
+        }
     }
 
-    func testGetWhenResponseStatusCodeIs500ReturnsUnknownError() async throws {
+    @Test("get when response status code is 500 returns unknown error")
+    func getWhenResponseStatusCodeIs500ReturnsUnknownError() async throws {
         MockURLProtocol.responseStatusCode = 500
-        let path = try XCTUnwrap(URL(string: "/error"))
+        let path = try #require(URL(string: "/error"))
 
+        var caughtError: APIClientError?
         do {
             _ = try await apiClient.get(path: path) as String
-        } catch let error as APIClientError {
-            switch error {
-            case .unknown:
-                XCTAssertTrue(true)
-                return
-            default:
-                break
-            }
+        } catch {
+            caughtError = error
         }
 
-        XCTFail("Expected unknown error to be thrown")
+        if case .unknown = caughtError {
+            // pass
+        } else {
+            Issue.record("Expected .unknown error to be thrown, got \(String(describing: caughtError))")
+        }
     }
 
-    func testGetWhenResponseHasValidDataReturnsDecodedObject() async throws {
+    @Test("get when response has valid data returns decoded object")
+    func getWhenResponseHasValidDataReturnsDecodedObject() async throws {
         let expectedResult = MockObject()
         MockURLProtocol.data = expectedResult.data
-        let path = try XCTUnwrap(URL(string: "/object"))
+        let path = try #require(URL(string: "/object"))
 
         let result: MockObject = try await apiClient.get(path: path)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testGetURLRequestAcceptHeaderSetToApplicationJSON() async throws {
+    @Test("get URL request Accept header set to application/json")
+    func getURLRequestAcceptHeaderSetToApplicationJSON() async throws {
         let expectedResult = "application/json"
-        let path = try XCTUnwrap(URL(string: "/object"))
+        let path = try #require(URL(string: "/object"))
 
         _ = try? await apiClient.get(path: path) as String
 
         let result = MockURLProtocol.lastRequest?.value(forHTTPHeaderField: "Accept")
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
 }

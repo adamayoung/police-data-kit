@@ -22,7 +22,7 @@ import Foundation
 ///
 /// A model representing a category of a crime.
 ///
-public struct CrimeCategory: Identifiable, Decodable, Equatable {
+public struct CrimeCategory: Identifiable, Decodable, Equatable, Sendable {
 
     /// The default crime category which includes all crimes.
     public static let `default` = CrimeCategory(

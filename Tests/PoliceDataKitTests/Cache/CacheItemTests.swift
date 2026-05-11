@@ -18,26 +18,30 @@
 //
 
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class CacheItemTests: XCTestCase {
+@Suite("Cache item")
+struct CacheItemTests {
 
-    func testIsExpiredWhenNoExpiresInSetReturnsFalse() {
+    @Test("isExpired when no expiresIn set returns false")
+    func isExpiredWhenNoExpiresInSetReturnsFalse() {
         let item = CacheItem(key: "key1", object: "object1")
 
-        XCTAssertFalse(item.isExpired)
+        #expect(!item.isExpired)
     }
 
-    func testIsExpiredWhenNotExpiredReturnsFalse() {
+    @Test("isExpired when not expired returns false")
+    func isExpiredWhenNotExpiredReturnsFalse() {
         let item = CacheItem(key: "key2", object: "object3", expiresIn: 10)
 
-        XCTAssertFalse(item.isExpired)
+        #expect(!item.isExpired)
     }
 
-    func testIsExpiredWhenExpiredReturnsTrue() {
+    @Test("isExpired when expired returns true")
+    func isExpiredWhenExpiredReturnsTrue() {
         let item = CacheItem(key: "key3", object: "object3", expiresIn: -10)
 
-        XCTAssertTrue(item.isExpired)
+        #expect(item.isExpired)
     }
 
 }
