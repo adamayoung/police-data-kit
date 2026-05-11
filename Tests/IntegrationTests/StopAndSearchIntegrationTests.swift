@@ -22,7 +22,7 @@ import Foundation
 import PoliceDataKit
 import Testing
 
-@Suite("Stop and search integration", .tags(.integration))
+@Suite("Stop and search integration", .integrationGate, .tags(.integration))
 struct StopAndSearchIntegrationTests {
 
     let stopAndSearchService: StopAndSearchService
@@ -34,9 +34,11 @@ struct StopAndSearchIntegrationTests {
     @Test("stop and searches at coordinate for Gloucester")
     func stopAndSearchesAtCoordinateForGloucester() async throws {
         let gloucesterCoordinate = CLLocationCoordinate2D(latitude: 51.86703, longitude: -2.2413)
-        let date = try #require(Date(isoString: "2023-03-01T12:00:00Z"))
+        let date = try #require(Date(isoString: "2025-09-01T12:00:00Z"))
 
-        let stopAndSearches = try await stopAndSearchService.stopAndSearches(at: gloucesterCoordinate, date: date)
+        let stopAndSearches = try await retry {
+            try await stopAndSearchService.stopAndSearches(at: gloucesterCoordinate, date: date)
+        }
 
         #expect(!stopAndSearches.isEmpty)
     }
@@ -49,9 +51,11 @@ struct StopAndSearchIntegrationTests {
             CLLocationCoordinate2D(latitude: 51.86377, longitude: -2.23746),
             CLLocationCoordinate2D(latitude: 51.86703, longitude: -2.24132)
         ]
-        let date = try #require(Date(isoString: "2023-01-01T12:00:00Z"))
+        let date = try #require(Date(isoString: "2024-09-01T12:00:00Z"))
 
-        let stopAndSearches = try await stopAndSearchService.stopAndSearches(in: boundary, date: date)
+        let stopAndSearches = try await retry {
+            try await stopAndSearchService.stopAndSearches(in: boundary, date: date)
+        }
 
         #expect(!stopAndSearches.isEmpty)
     }
@@ -59,12 +63,14 @@ struct StopAndSearchIntegrationTests {
     @Test("stop and searches at location for Bond Street London")
     func stopAndSearchesAtLocationForBondStreetLondon() async throws {
         let bondStreetLondonStreetID = 2_342_948
-        let date = try #require(Date(isoString: "2023-03-01T12:00:00Z"))
+        let date = try #require(Date(isoString: "2024-09-01T12:00:00Z"))
 
-        let stopAndSearches = try await stopAndSearchService.stopAndSearches(
-            atLocation: bondStreetLondonStreetID,
-            date: date
-        )
+        let stopAndSearches = try await retry {
+            try await stopAndSearchService.stopAndSearches(
+                atLocation: bondStreetLondonStreetID,
+                date: date
+            )
+        }
 
         #expect(!stopAndSearches.isEmpty)
     }
@@ -72,12 +78,14 @@ struct StopAndSearchIntegrationTests {
     @Test("stop and searches with no location for Avon and Somerset Constabulary")
     func stopAndSearchesWithNoLocationForAvonAndSomersetConstabulary() async throws {
         let policeForceID = "avon-and-somerset"
-        let date = try #require(Date(isoString: "2022-06-01T12:00:00Z"))
+        let date = try #require(Date(isoString: "2025-09-01T12:00:00Z"))
 
-        let stopAndSearches = try await stopAndSearchService.stopAndSearchesWithNoLocation(
-            forPoliceForce: policeForceID,
-            date: date
-        )
+        let stopAndSearches = try await retry {
+            try await stopAndSearchService.stopAndSearchesWithNoLocation(
+                forPoliceForce: policeForceID,
+                date: date
+            )
+        }
 
         #expect(!stopAndSearches.isEmpty)
     }
@@ -85,9 +93,11 @@ struct StopAndSearchIntegrationTests {
     @Test("stop and searches for police force for Cumbria Constabulary")
     func stopAndSearchesForPoliceForceForCumbriaConstabulary() async throws {
         let policeForceID = "cumbria"
-        let date = try #require(Date(isoString: "2022-06-01T12:00:00Z"))
+        let date = try #require(Date(isoString: "2025-09-01T12:00:00Z"))
 
-        let stopAndSearches = try await stopAndSearchService.stopAndSearches(forPoliceForce: policeForceID, date: date)
+        let stopAndSearches = try await retry {
+            try await stopAndSearchService.stopAndSearches(forPoliceForce: policeForceID, date: date)
+        }
 
         #expect(!stopAndSearches.isEmpty)
     }

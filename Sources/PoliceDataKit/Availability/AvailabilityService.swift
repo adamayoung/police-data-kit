@@ -87,6 +87,9 @@ extension AvailabilityService {
         case let .network(underlying):
             .network(underlying)
 
+        case let .rateLimitExceeded(retryAfter):
+            .rateLimitExceeded(retryAfter: retryAfter)
+
         case .notFound, .decode, .unknown:
             .unknown
         }

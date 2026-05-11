@@ -20,7 +20,7 @@
 import PoliceDataKit
 import Testing
 
-@Suite("Availability integration", .tags(.integration))
+@Suite("Availability integration", .integrationGate, .tags(.integration))
 struct AvailabilityIntegrationTests {
 
     let availabilityService: AvailabilityService
@@ -31,7 +31,9 @@ struct AvailabilityIntegrationTests {
 
     @Test("available data sets returns data sets")
     func availableDataSets() async throws {
-        let dataSets = try await availabilityService.availableDataSets()
+        let dataSets = try await retry {
+            try await availabilityService.availableDataSets()
+        }
 
         #expect(!dataSets.isEmpty)
     }

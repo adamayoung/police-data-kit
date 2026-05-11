@@ -37,6 +37,7 @@ enum APIClientError: Error {
 
     case network(Error)
     case notFound
+    case rateLimitExceeded(retryAfter: TimeInterval?)
     case decode(Error)
     case unknown
 

@@ -21,7 +21,7 @@ import CoreLocation
 import PoliceDataKit
 import Testing
 
-@Suite("Neighbourhood integration", .tags(.integration))
+@Suite("Neighbourhood integration", .integrationGate, .tags(.integration))
 struct NeighbourhoodIntegrationTests {
 
     let neighbourhoodService: NeighbourhoodService
@@ -34,7 +34,9 @@ struct NeighbourhoodIntegrationTests {
     func neighbourhoodsInPoliceForceForNorfolkConstabulary() async throws {
         let policeForceID = "norfolk"
 
-        let neighbourhoods = try await neighbourhoodService.neighbourhoods(inPoliceForce: policeForceID)
+        let neighbourhoods = try await retry {
+            try await neighbourhoodService.neighbourhoods(inPoliceForce: policeForceID)
+        }
 
         #expect(!neighbourhoods.isEmpty)
     }
@@ -43,7 +45,9 @@ struct NeighbourhoodIntegrationTests {
     func neighbourhoodsInPoliceForceForNorthWalesPolice() async throws {
         let policeForceID = "north-wales"
 
-        let neighbourhoods = try await neighbourhoodService.neighbourhoods(inPoliceForce: policeForceID)
+        let neighbourhoods = try await retry {
+            try await neighbourhoodService.neighbourhoods(inPoliceForce: policeForceID)
+        }
 
         #expect(!neighbourhoods.isEmpty)
     }
@@ -54,8 +58,8 @@ struct NeighbourhoodIntegrationTests {
 
         var neighbourhoodError: NeighbourhoodError?
         do {
-            _ = try await neighbourhoodService.neighbourhoods(inPoliceForce: policeForceID)
-        } catch {
+            _ = try await retryOnRateLimit { try await neighbourhoodService.neighbourhoods(inPoliceForce: policeForceID) }
+        } catch let error as NeighbourhoodError {
             neighbourhoodError = error
         }
 
@@ -67,10 +71,12 @@ struct NeighbourhoodIntegrationTests {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
 
-        let neighbourhood = try await neighbourhoodService.neighbourhood(
-            withID: neighbourhoodID,
-            inPoliceForce: policeForceID
-        )
+        let neighbourhood = try await retry {
+            try await neighbourhoodService.neighbourhood(
+                withID: neighbourhoodID,
+                inPoliceForce: policeForceID
+            )
+        }
 
         #expect(neighbourhood.id == neighbourhoodID)
     }
@@ -80,10 +86,12 @@ struct NeighbourhoodIntegrationTests {
         let neighbourhoodID = "NC09"
         let policeForceID = "lincolnshire"
 
-        let neighbourhood = try await neighbourhoodService.neighbourhood(
-            withID: neighbourhoodID,
-            inPoliceForce: policeForceID
-        )
+        let neighbourhood = try await retry {
+            try await neighbourhoodService.neighbourhood(
+                withID: neighbourhoodID,
+                inPoliceForce: policeForceID
+            )
+        }
 
         #expect(neighbourhood.id == neighbourhoodID)
     }
@@ -95,8 +103,8 @@ struct NeighbourhoodIntegrationTests {
 
         var neighbourhoodError: NeighbourhoodError?
         do {
-            _ = try await neighbourhoodService.neighbourhood(withID: neighbourhoodID, inPoliceForce: policeForceID)
-        } catch {
+            _ = try await retryOnRateLimit { try await neighbourhoodService.neighbourhood(withID: neighbourhoodID, inPoliceForce: policeForceID) }
+        } catch let error as NeighbourhoodError {
             neighbourhoodError = error
         }
 
@@ -110,8 +118,8 @@ struct NeighbourhoodIntegrationTests {
 
         var neighbourhoodError: NeighbourhoodError?
         do {
-            _ = try await neighbourhoodService.neighbourhood(withID: neighbourhoodID, inPoliceForce: policeForceID)
-        } catch {
+            _ = try await retryOnRateLimit { try await neighbourhoodService.neighbourhood(withID: neighbourhoodID, inPoliceForce: policeForceID) }
+        } catch let error as NeighbourhoodError {
             neighbourhoodError = error
         }
 
@@ -122,7 +130,9 @@ struct NeighbourhoodIntegrationTests {
     func neighbourhoodAtCoordinateForLeedsCityCentre() async throws {
         let leedsCityCentreCoordinate = CLLocationCoordinate2D(latitude: 53.797927, longitude: -1.541522)
 
-        let neighbourhood = try await neighbourhoodService.neighbourhood(at: leedsCityCentreCoordinate)
+        let neighbourhood = try await retry {
+            try await neighbourhoodService.neighbourhood(at: leedsCityCentreCoordinate)
+        }
 
         #expect(neighbourhood.id == "LDT_CITY")
         #expect(neighbourhood.name == "Leeds City")
@@ -134,8 +144,8 @@ struct NeighbourhoodIntegrationTests {
 
         var neighbourhoodError: NeighbourhoodError?
         do {
-            _ = try await neighbourhoodService.neighbourhood(at: coordinate)
-        } catch {
+            _ = try await retryOnRateLimit { try await neighbourhoodService.neighbourhood(at: coordinate) }
+        } catch let error as NeighbourhoodError {
             neighbourhoodError = error
         }
 
@@ -147,10 +157,12 @@ struct NeighbourhoodIntegrationTests {
         let neighbourhoodID = "WDT_CEN"
         let policeForceID = "west-yorkshire"
 
-        let boundary = try await neighbourhoodService.boundary(
-            forNeighbourhood: neighbourhoodID,
-            inPoliceForce: policeForceID
-        )
+        let boundary = try await retry {
+            try await neighbourhoodService.boundary(
+                forNeighbourhood: neighbourhoodID,
+                inPoliceForce: policeForceID
+            )
+        }
 
         #expect(boundary.count == 961)
     }
@@ -160,10 +172,12 @@ struct NeighbourhoodIntegrationTests {
         let neighbourhoodID = "WDT_CEN"
         let policeForceID = "west-yorkshire"
 
-        let policeOfficers = try await neighbourhoodService.policeOfficers(
-            forNeighbourhood: neighbourhoodID,
-            inPoliceForce: policeForceID
-        )
+        let policeOfficers = try await retry {
+            try await neighbourhoodService.policeOfficers(
+                forNeighbourhood: neighbourhoodID,
+                inPoliceForce: policeForceID
+            )
+        }
 
         #expect(!policeOfficers.isEmpty)
     }
@@ -173,10 +187,12 @@ struct NeighbourhoodIntegrationTests {
         let neighbourhoodID = "AB"
         let policeForceID = "south-yorkshire"
 
-        let policeOfficers = try await neighbourhoodService.policeOfficers(
-            forNeighbourhood: neighbourhoodID,
-            inPoliceForce: policeForceID
-        )
+        let policeOfficers = try await retry {
+            try await neighbourhoodService.policeOfficers(
+                forNeighbourhood: neighbourhoodID,
+                inPoliceForce: policeForceID
+            )
+        }
 
         #expect(!policeOfficers.isEmpty)
     }
@@ -186,10 +202,12 @@ struct NeighbourhoodIntegrationTests {
         let neighbourhoodID = "AB"
         let policeForceID = "south-yorkshire"
 
-        let priorities = try await neighbourhoodService.priorities(
-            forNeighbourhood: neighbourhoodID,
-            inPoliceForce: policeForceID
-        )
+        let priorities = try await retry {
+            try await neighbourhoodService.priorities(
+                forNeighbourhood: neighbourhoodID,
+                inPoliceForce: policeForceID
+            )
+        }
 
         #expect(!priorities.isEmpty)
     }
@@ -199,10 +217,12 @@ struct NeighbourhoodIntegrationTests {
         let neighbourhoodID = "BA1"
         let policeForceID = "gloucestershire"
 
-        let priorities = try await neighbourhoodService.priorities(
-            forNeighbourhood: neighbourhoodID,
-            inPoliceForce: policeForceID
-        )
+        let priorities = try await retry {
+            try await neighbourhoodService.priorities(
+                forNeighbourhood: neighbourhoodID,
+                inPoliceForce: policeForceID
+            )
+        }
 
         #expect(!priorities.isEmpty)
     }
@@ -211,7 +231,9 @@ struct NeighbourhoodIntegrationTests {
     func neighbourhoodPolicingTeamAtCoordinateForGloucesterCityCentreGloucestershire() async throws {
         let gloucesterCoordinate = CLLocationCoordinate2D(latitude: 51.86703, longitude: -2.2413)
 
-        let policingTeam = try await neighbourhoodService.neighbourhoodPolicingTeam(at: gloucesterCoordinate)
+        let policingTeam = try await retry {
+            try await neighbourhoodService.neighbourhoodPolicingTeam(at: gloucesterCoordinate)
+        }
 
         #expect(policingTeam.force == "gloucestershire")
         #expect(policingTeam.neighbourhood == "BA1")

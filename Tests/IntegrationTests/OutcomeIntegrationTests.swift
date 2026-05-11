@@ -22,7 +22,7 @@ import Foundation
 import PoliceDataKit
 import Testing
 
-@Suite("Outcome integration", .tags(.integration))
+@Suite("Outcome integration", .integrationGate, .tags(.integration))
 struct OutcomeIntegrationTests {
 
     let outcomeService: OutcomeService
@@ -34,9 +34,11 @@ struct OutcomeIntegrationTests {
     @Test("street level outcomes for street for Princes Street London")
     func streetLevelOutcomesForStreetForPrincesStreetLondon() async throws {
         let princesStreetLondonStreetID = 1_675_924
-        let date = try #require(Date(isoString: "2022-08-01T12:00:00Z"))
+        let date = try #require(Date(isoString: "2025-09-01T12:00:00Z"))
 
-        let outcomes = try await outcomeService.streetLevelOutcomes(forStreet: princesStreetLondonStreetID, date: date)
+        let outcomes = try await retry {
+            try await outcomeService.streetLevelOutcomes(forStreet: princesStreetLondonStreetID, date: date)
+        }
 
         #expect(!outcomes.isEmpty)
     }
@@ -44,7 +46,7 @@ struct OutcomeIntegrationTests {
     @Test("street level outcomes at coordinate for Leeds City Centre")
     func streetLevelOutcomesAtCoordinateForLeedsCityCentre() async throws {
         let leedsCityCentreCoordinate = CLLocationCoordinate2D(latitude: 53.797927, longitude: -1.541522)
-        let date = try #require(Date(isoString: "2022-08-01T12:00:00Z"))
+        let date = try #require(Date(isoString: "2025-09-01T12:00:00Z"))
 
         let outcomes = try await retry {
             try await outcomeService.streetLevelOutcomes(at: leedsCityCentreCoordinate, date: date)
@@ -61,18 +63,22 @@ struct OutcomeIntegrationTests {
             CLLocationCoordinate2D(latitude: 51.86377, longitude: -2.23746),
             CLLocationCoordinate2D(latitude: 51.86703, longitude: -2.24132)
         ]
-        let date = try #require(Date(isoString: "2023-03-01T12:00:00Z"))
+        let date = try #require(Date(isoString: "2025-09-01T12:00:00Z"))
 
-        let outcomes = try await outcomeService.streetLevelOutcomes(in: boundary, date: date)
+        let outcomes = try await retry {
+            try await outcomeService.streetLevelOutcomes(in: boundary, date: date)
+        }
 
         #expect(!outcomes.isEmpty)
     }
 
     @Test("case history for crime")
     func caseHistoryForCrime() async throws {
-        let crimeID = "42c325e012eb6c5bb9558ac25f6817c6d52c1e220651d5d011587221610f163b"
+        let crimeID = "9442760eab1f3e579c0a22d30258453dda5a16c472720210f2ec08e6034fe5c0"
 
-        let caseHistory = try await outcomeService.caseHistory(forCrime: crimeID)
+        let caseHistory = try await retry {
+            try await outcomeService.caseHistory(forCrime: crimeID)
+        }
 
         #expect(caseHistory.crime.crimeID == crimeID)
     }

@@ -69,13 +69,4 @@ public struct NeighbourhoodEvent: Equatable, Codable, Sendable {
         self.endDate = endDate
     }
 
-    private enum CodingKeys: String, CodingKey {
-        case title
-        case type
-        case description
-        case address
-        case startDate = "start_date"
-        case endDate = "end_date"
-    }
-
 }

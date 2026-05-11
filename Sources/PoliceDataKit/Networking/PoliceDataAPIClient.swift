@@ -90,13 +90,20 @@ extension PoliceDataAPIClient {
 private extension APIClientError {
 
     init?(response: URLResponse) {
-        let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
+        let httpResponse = response as? HTTPURLResponse
+        let statusCode = httpResponse?.statusCode ?? -1
         guard statusCode != 200 else {
             return nil
         }
 
         if statusCode == 404 {
             self = .notFound
+            return
+        }
+
+        if statusCode == 429 {
+            let retryAfter = (httpResponse?.value(forHTTPHeaderField: "Retry-After")).flatMap(TimeInterval.init)
+            self = .rateLimitExceeded(retryAfter: retryAfter)
             return
         }
 

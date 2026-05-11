@@ -20,7 +20,7 @@
 import PoliceDataKit
 import Testing
 
-@Suite("Police force integration", .tags(.integration))
+@Suite("Police force integration", .integrationGate, .tags(.integration))
 struct PoliceForceIntegrationTests {
 
     let policeForceService: PoliceForceService
@@ -31,7 +31,9 @@ struct PoliceForceIntegrationTests {
 
     @Test("police forces returns forces")
     func policeForces() async throws {
-        let policeForces = try await policeForceService.policeForces()
+        let policeForces = try await retry {
+            try await policeForceService.policeForces()
+        }
 
         #expect(!policeForces.isEmpty)
     }
@@ -40,7 +42,9 @@ struct PoliceForceIntegrationTests {
     func policeForceWithCambridgeshireConstabulary() async throws {
         let policeForceID = "cambridgeshire"
 
-        let policeForce = try await policeForceService.policeForce(withID: policeForceID)
+        let policeForce = try await retry {
+            try await policeForceService.policeForce(withID: policeForceID)
+        }
 
         #expect(policeForce.id == policeForceID)
     }
@@ -49,7 +53,9 @@ struct PoliceForceIntegrationTests {
     func policeForceWithSuffolkConstabulary() async throws {
         let policeForceID = "suffolk"
 
-        let policeForce = try await policeForceService.policeForce(withID: policeForceID)
+        let policeForce = try await retry {
+            try await policeForceService.policeForce(withID: policeForceID)
+        }
 
         #expect(policeForce.id == policeForceID)
     }
@@ -60,19 +66,21 @@ struct PoliceForceIntegrationTests {
 
         var policeForceError: PoliceForceError?
         do {
-            _ = try await policeForceService.policeForce(withID: policeForceID)
-        } catch {
+            _ = try await retryOnRateLimit { try await policeForceService.policeForce(withID: policeForceID) }
+        } catch let error as PoliceForceError {
             policeForceError = error
         }
 
         #expect(policeForceError == .notFound)
     }
 
-    @Test("senior officers for Warwickshire Police")
+    @Test("senior officers for Nottinghamshire Police")
     func seniorOfficersForWarwickshirePolice() async throws {
-        let policeForceID = "warwickshire"
+        let policeForceID = "nottinghamshire"
 
-        let policeOfficers = try await policeForceService.seniorOfficers(inPoliceForce: policeForceID)
+        let policeOfficers = try await retry {
+            try await policeForceService.seniorOfficers(inPoliceForce: policeForceID)
+        }
 
         #expect(!policeOfficers.isEmpty)
     }
@@ -81,7 +89,9 @@ struct PoliceForceIntegrationTests {
     func seniorOfficersForNottinghamshirePolice() async throws {
         let policeForceID = "nottinghamshire"
 
-        let policeOfficers = try await policeForceService.seniorOfficers(inPoliceForce: policeForceID)
+        let policeOfficers = try await retry {
+            try await policeForceService.seniorOfficers(inPoliceForce: policeForceID)
+        }
 
         #expect(!policeOfficers.isEmpty)
     }
@@ -92,8 +102,8 @@ struct PoliceForceIntegrationTests {
 
         var policeForceError: PoliceForceError?
         do {
-            _ = try await policeForceService.seniorOfficers(inPoliceForce: policeForceID)
-        } catch {
+            _ = try await retryOnRateLimit { try await policeForceService.seniorOfficers(inPoliceForce: policeForceID) }
+        } catch let error as PoliceForceError {
             policeForceError = error
         }
 

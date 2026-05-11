@@ -210,6 +210,9 @@ extension OutcomeService {
         case .notFound:
             .notFound
 
+        case let .rateLimitExceeded(retryAfter):
+            .rateLimitExceeded(retryAfter: retryAfter)
+
         case .decode, .unknown:
             .unknown
         }
