@@ -80,14 +80,7 @@ public extension EngagementMethod {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(title, forKey: .title)
         try container.encodeIfPresent(description, forKey: .description)
-        let urlString: String = {
-            guard let url else {
-                return ""
-            }
-
-            return url.absoluteString
-        }()
-        try container.encode(urlString, forKey: .url)
+        try container.encodeIfPresent(url?.absoluteString, forKey: .url)
         try container.encodeIfPresent(type, forKey: .type)
     }
 
