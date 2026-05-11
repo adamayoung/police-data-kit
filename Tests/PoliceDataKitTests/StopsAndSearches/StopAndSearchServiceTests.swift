@@ -74,7 +74,7 @@ final class StopAndSearchServiceTests: XCTestCase {
         var resultError: StopAndSearchError?
         do {
             _ = try await service.stopAndSearches(at: coordinate, date: date)
-        } catch let error as StopAndSearchError {
+        } catch {
             resultError = error
         }
 

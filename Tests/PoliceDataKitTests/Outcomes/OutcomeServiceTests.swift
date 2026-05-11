@@ -113,7 +113,7 @@ final class OutcomeServiceTests: XCTestCase {
         var resultError: OutcomeError?
         do {
             _ = try await service.streetLevelOutcomes(at: coordinate, date: date)
-        } catch let error as OutcomeError {
+        } catch {
             resultError = error
         }
 
@@ -161,7 +161,7 @@ final class OutcomeServiceTests: XCTestCase {
         var resultError: OutcomeError?
         do {
             _ = try await service.caseHistory(forCrime: crimeID)
-        } catch let error as OutcomeError {
+        } catch {
             resultError = error
         }
 

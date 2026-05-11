@@ -54,7 +54,7 @@ final class PoliceDataAPIClientTests: XCTestCase {
 
             do {
                 _ = try await apiClient.get(path: path) as String
-            } catch let error as APIClientError {
+            } catch {
                 switch error {
                 case let .network(error as NSError):
                     XCTAssertEqual(error.code, expectedError.code)
@@ -74,7 +74,7 @@ final class PoliceDataAPIClientTests: XCTestCase {
 
         do {
             _ = try await apiClient.get(path: path) as String
-        } catch let error as APIClientError {
+        } catch {
             switch error {
             case .notFound:
                 XCTAssertTrue(true)
@@ -93,7 +93,7 @@ final class PoliceDataAPIClientTests: XCTestCase {
 
         do {
             _ = try await apiClient.get(path: path) as String
-        } catch let error as APIClientError {
+        } catch {
             switch error {
             case .unknown:
                 XCTAssertTrue(true)

@@ -74,7 +74,7 @@ extension CrimeServiceTests {
         var resultError: CrimeError?
         do {
             _ = try await service.streetLevelCrimes(at: coordinate, date: date)
-        } catch let error as CrimeError {
+        } catch {
             resultError = error
         }
 
@@ -172,7 +172,7 @@ extension CrimeServiceTests {
         var resultError: CrimeError?
         do {
             _ = try await service.crimes(at: coordinate, date: date)
-        } catch let error as CrimeError {
+        } catch {
             resultError = error
         }
 
@@ -337,7 +337,7 @@ extension CrimeServiceTests {
         var resultError: CrimeError?
         do {
             _ = try await service.latestDataDate()
-        } catch let error as CrimeError {
+        } catch {
             resultError = error
         }
 
@@ -354,7 +354,7 @@ extension CrimeServiceTests {
         var resultError: CrimeError?
         do {
             _ = try await service.latestDataDate()
-        } catch let error as CrimeError {
+        } catch {
             resultError = error
         }
 

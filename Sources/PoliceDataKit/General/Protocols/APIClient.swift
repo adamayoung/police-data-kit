@@ -21,13 +21,13 @@ import Foundation
 
 protocol APIClient: Sendable {
 
-    func get<Response: Decodable & Sendable>(path: URL) async throws -> Response
+    func get<Response: Decodable & Sendable>(path: URL) async throws(APIClientError) -> Response
 
 }
 
 extension APIClient {
 
-    func get<Response: Decodable & Sendable>(endpoint: Endpoint) async throws -> Response {
+    func get<Response: Decodable & Sendable>(endpoint: some Endpoint) async throws(APIClientError) -> Response {
         try await get(path: endpoint.path)
     }
 

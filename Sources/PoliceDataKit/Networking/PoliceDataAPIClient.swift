@@ -31,7 +31,7 @@ final class PoliceDataAPIClient: APIClient {
         self.serialiser = serialiser
     }
 
-    func get<Response: Decodable & Sendable>(path: URL) async throws -> Response {
+    func get<Response: Decodable & Sendable>(path: URL) async throws(APIClientError) -> Response {
         let urlRequest = buildURLRequest(for: path)
 
         let data: Data
@@ -79,7 +79,7 @@ extension PoliceDataAPIClient {
         return urlComponents.url!
     }
 
-    private func validate(response: URLResponse) throws {
+    private func validate(response: URLResponse) throws(APIClientError) {
         if let error = APIClientError(response: response) {
             throw error
         }

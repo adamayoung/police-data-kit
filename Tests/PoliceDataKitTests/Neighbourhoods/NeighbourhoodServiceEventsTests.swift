@@ -98,7 +98,7 @@ final class NeighbourhoodServiceEventsTests: XCTestCase {
         var resultError: NeighbourhoodError?
         do {
             _ = try await service.events(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
-        } catch let error as NeighbourhoodError {
+        } catch {
             resultError = error
         }
 
@@ -114,7 +114,7 @@ final class NeighbourhoodServiceEventsTests: XCTestCase {
         var resultError: NeighbourhoodError?
         do {
             _ = try await service.events(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
-        } catch let error as NeighbourhoodError {
+        } catch {
             resultError = error
         }
 
@@ -133,7 +133,7 @@ final class NeighbourhoodServiceEventsTests: XCTestCase {
         var resultError: NeighbourhoodError?
         do {
             _ = try await service.events(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
-        } catch let error as NeighbourhoodError {
+        } catch {
             resultError = error
         }
 

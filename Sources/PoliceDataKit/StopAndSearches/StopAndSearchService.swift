@@ -77,14 +77,16 @@ public final class StopAndSearchService: Sendable {
     ///   - coordinate: A coordinate.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Stop and Search data error ``StopAndSearchError``.
+    /// - Throws: ``StopAndSearchError/locationOutsideOfDataSetRegion`` if the coordinate is outside the data region;
+    ///   ``StopAndSearchError/notFound`` if no data exists; ``StopAndSearchError/network(_:)`` on transport failure;
+    ///   ``StopAndSearchError/unknown`` otherwise.
     ///
     /// - Returns: A list of stop and searches.
     ///
     public func stopAndSearches(
         at coordinate: CLLocationCoordinate2D,
         date: Date = Date()
-    ) async throws -> [StopAndSearch] {
+    ) async throws(StopAndSearchError) -> [StopAndSearch] {
         guard availableDataRegion.contains(coordinate: coordinate) else {
             throw StopAndSearchError.locationOutsideOfDataSetRegion
         }
@@ -116,14 +118,15 @@ public final class StopAndSearchService: Sendable {
     ///   - coordinates: Coordinates which define the boundary of the custom area.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Stop and Search data error ``StopAndSearchError``.
+    /// - Throws: ``StopAndSearchError/notFound`` if no data exists; ``StopAndSearchError/network(_:)`` on transport failure;
+    ///   ``StopAndSearchError/unknown`` otherwise.
     ///
     /// - Returns: A list of stop and searches.
     ///
     public func stopAndSearches(
         in coordinates: [CLLocationCoordinate2D],
         date: Date = Date()
-    ) async throws -> [StopAndSearch] {
+    ) async throws(StopAndSearchError) -> [StopAndSearch] {
         let stopAndSearches: [StopAndSearch]
         do {
             stopAndSearches = try await apiClient.get(
@@ -149,11 +152,15 @@ public final class StopAndSearchService: Sendable {
     ///   - streetID: A street ID.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Stop and Search data error ``StopAndSearchError``.
+    /// - Throws: ``StopAndSearchError/notFound`` if no data exists; ``StopAndSearchError/network(_:)`` on transport failure;
+    ///   ``StopAndSearchError/unknown`` otherwise.
     ///
     /// - Returns: A list of stop and searches.
     ///
-    public func stopAndSearches(atLocation streetID: Int, date: Date = Date()) async throws -> [StopAndSearch] {
+    public func stopAndSearches(
+        atLocation streetID: Int,
+        date: Date = Date()
+    ) async throws(StopAndSearchError) -> [StopAndSearch] {
         if let cachedStopAndSearches = await cache.stopAndSearches(atLocation: streetID, date: date) {
             return cachedStopAndSearches
         }
@@ -185,14 +192,15 @@ public final class StopAndSearchService: Sendable {
     ///   - policeForceID: Police Force identifier.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Stop and Search data error ``StopAndSearchError``.
+    /// - Throws: ``StopAndSearchError/notFound`` if no data exists; ``StopAndSearchError/network(_:)`` on transport failure;
+    ///   ``StopAndSearchError/unknown`` otherwise.
     ///
     /// - Returns: A list of stop and searches.
     ///
     public func stopAndSearchesWithNoLocation(
         forPoliceForce policeForceID: PoliceForce.ID,
         date: Date = Date()
-    ) async throws -> [StopAndSearch] {
+    ) async throws(StopAndSearchError) -> [StopAndSearch] {
         if let cachedStopAndSearches = await cache.stopAndSearchesWithNoLocation(
             forPoliceForce: policeForceID,
             date: date
@@ -229,14 +237,15 @@ public final class StopAndSearchService: Sendable {
     ///   - policeForceID: Police Force identifier.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Stop and Search data error ``StopAndSearchError``.
+    /// - Throws: ``StopAndSearchError/notFound`` if no data exists; ``StopAndSearchError/network(_:)`` on transport failure;
+    ///   ``StopAndSearchError/unknown`` otherwise.
     ///
     /// - Returns: A list of stop and searches.
     ///
     public func stopAndSearches(
         forPoliceForce policeForceID: PoliceForce.ID,
         date: Date = Date()
-    ) async throws -> [StopAndSearch] {
+    ) async throws(StopAndSearchError) -> [StopAndSearch] {
         if let cachedStopAndSearches = await cache.stopAndSearches(forPoliceForce: policeForceID, date: date) {
             return cachedStopAndSearches
         }
@@ -259,24 +268,16 @@ public final class StopAndSearchService: Sendable {
 
 extension StopAndSearchService {
 
-    private static func mapToStopAndSearchError(_ error: Error) -> StopAndSearchError {
-        if let error = error as? StopAndSearchError {
-            return error
-        }
-
-        guard let error = error as? APIClientError else {
-            return .unknown
-        }
-
+    private static func mapToStopAndSearchError(_ error: APIClientError) -> StopAndSearchError {
         switch error {
-        case .network:
-            return .network(error)
+        case let .network(underlying):
+            .network(underlying)
 
         case .notFound:
-            return .notFound
+            .notFound
 
         case .decode, .unknown:
-            return .unknown
+            .unknown
         }
     }
 

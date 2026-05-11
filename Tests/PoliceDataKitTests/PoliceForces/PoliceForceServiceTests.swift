@@ -95,7 +95,7 @@ final class PoliceForceServiceTests: XCTestCase {
         var resultError: PoliceForceError?
         do {
             _ = try await service.policeForce(withID: id)
-        } catch let error as PoliceForceError {
+        } catch {
             resultError = error
         }
 
@@ -149,7 +149,7 @@ final class PoliceForceServiceTests: XCTestCase {
         var resultError: PoliceForceError?
         do {
             _ = try await service.seniorOfficers(inPoliceForce: policeForceID)
-        } catch let error as PoliceForceError {
+        } catch {
             resultError = error
         }
 

@@ -60,11 +60,12 @@ public final class PoliceForceService: Sendable {
     ///
     /// [https://data.police.uk/docs/method/forces/](https://data.police.uk/docs/method/forces/)
     ///
-    /// - Throws: Police Force data error ``PoliceForceError``.
+    /// - Throws: ``PoliceForceError/notFound`` if no data exists; ``PoliceForceError/network(_:)`` on transport failure;
+    ///   ``PoliceForceError/unknown`` otherwise.
     ///
     /// - Returns: All Police Forces.
     ///
-    public func policeForces() async throws -> [PoliceForceReference] {
+    public func policeForces() async throws(PoliceForceError) -> [PoliceForceReference] {
         if let cachedPoliceForces = await cache.policeForces() {
             return cachedPoliceForces
         }
@@ -88,11 +89,12 @@ public final class PoliceForceService: Sendable {
     ///
     /// - Parameter id: Police Force identifier.
     ///
-    /// - Throws: Police Force data error ``PoliceForceError``.
+    /// - Throws: ``PoliceForceError/notFound`` if no data exists; ``PoliceForceError/network(_:)`` on transport failure;
+    ///   ``PoliceForceError/unknown`` otherwise.
     ///
     /// - Returns: The Police Force specified.
     ///
-    public func policeForce(withID id: PoliceForce.ID) async throws -> PoliceForce {
+    public func policeForce(withID id: PoliceForce.ID) async throws(PoliceForceError) -> PoliceForce {
         if let cachedPoliceForce = await cache.policeForce(withID: id) {
             return cachedPoliceForce
         }
@@ -116,11 +118,14 @@ public final class PoliceForceService: Sendable {
     ///
     /// - Parameter id: Police Force identifier.
     ///
-    /// - Throws: Police Force data error ``PoliceForceError``.
+    /// - Throws: ``PoliceForceError/notFound`` if no data exists; ``PoliceForceError/network(_:)`` on transport failure;
+    ///   ``PoliceForceError/unknown`` otherwise.
     ///
     /// - Returns: Senior Police Officers for the specified Police Force.
     ///
-    public func seniorOfficers(inPoliceForce policeForceID: PoliceForce.ID) async throws -> [PoliceOfficer] {
+    public func seniorOfficers(
+        inPoliceForce policeForceID: PoliceForce.ID
+    ) async throws(PoliceForceError) -> [PoliceOfficer] {
         if let cachedPeopleOfficers = await cache.seniorOfficers(inPoliceForce: policeForceID) {
             return cachedPeopleOfficers
         }
@@ -143,20 +148,16 @@ public final class PoliceForceService: Sendable {
 
 extension PoliceForceService {
 
-    private static func mapToPoliceForceError(_ error: Error) -> PoliceForceError {
-        guard let error = error as? APIClientError else {
-            return .unknown
-        }
-
+    private static func mapToPoliceForceError(_ error: APIClientError) -> PoliceForceError {
         switch error {
-        case .network:
-            return .network(error)
+        case let .network(underlying):
+            .network(underlying)
 
         case .notFound:
-            return .notFound
+            .notFound
 
         case .decode, .unknown:
-            return .unknown
+            .unknown
         }
     }
 

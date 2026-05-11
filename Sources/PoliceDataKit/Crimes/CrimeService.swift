@@ -75,11 +75,16 @@ public final class CrimeService: Sendable {
     ///   - coordinate: A coordinate.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Crime data error ``CrimeError``.
+    /// - Throws: ``CrimeError/locationOutsideOfDataSetRegion`` if the coordinate is outside the data region;
+    ///   ``CrimeError/notFound`` if no data exists; ``CrimeError/network(_:)`` on transport failure;
+    ///   ``CrimeError/unknown`` otherwise.
     ///
     /// - Returns: The street level crimes in a 1 mile radius of the specifed coordinate and date.
     ///
-    public func streetLevelCrimes(at coordinate: CLLocationCoordinate2D, date: Date = Date()) async throws -> [Crime] {
+    public func streetLevelCrimes(
+        at coordinate: CLLocationCoordinate2D,
+        date: Date = Date()
+    ) async throws(CrimeError) -> [Crime] {
         guard availableDataRegion.contains(coordinate: coordinate) else {
             throw CrimeError.locationOutsideOfDataSetRegion
         }
@@ -111,14 +116,15 @@ public final class CrimeService: Sendable {
     ///   - coordinates: Coordinates which define the boundary of the custom area.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Crime data error ``CrimeError``.
+    /// - Throws: ``CrimeError/notFound`` if no data exists; ``CrimeError/network(_:)`` on transport failure;
+    ///   ``CrimeError/unknown`` otherwise.
     ///
     /// - Returns: The street level crimes with the specified area and month..
     ///
     public func streetLevelCrimes(
         in coordinates: [CLLocationCoordinate2D],
         date: Date = Date()
-    ) async throws -> [Crime] {
+    ) async throws(CrimeError) -> [Crime] {
         let crimes: [Crime]
         do {
             crimes = try await apiClient.get(
@@ -142,11 +148,12 @@ public final class CrimeService: Sendable {
     ///   - streetID: The street identifier.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Crime data error ``CrimeError``.
+    /// - Throws: ``CrimeError/notFound`` if no data exists; ``CrimeError/network(_:)`` on transport failure;
+    ///   ``CrimeError/unknown`` otherwise.
     ///
     /// - Returns: The crimes at the specified street and date.
     ///
-    public func crimes(forStreet streetID: Int, date: Date = Date()) async throws -> [Crime] {
+    public func crimes(forStreet streetID: Int, date: Date = Date()) async throws(CrimeError) -> [Crime] {
         if let cachedCrimes = await cache.crimes(forStreet: streetID, date: date) {
             return cachedCrimes
         }
@@ -177,11 +184,13 @@ public final class CrimeService: Sendable {
     ///   - coordinate: A coordinate.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Crime data error ``CrimeError``.
+    /// - Throws: ``CrimeError/locationOutsideOfDataSetRegion`` if the coordinate is outside the data region;
+    ///   ``CrimeError/notFound`` if no data exists; ``CrimeError/network(_:)`` on transport failure;
+    ///   ``CrimeError/unknown`` otherwise.
     ///
     /// - Returns: The crimes for the street nearest to the specified coordinate and date.
     ///
-    public func crimes(at coordinate: CLLocationCoordinate2D, date: Date = Date()) async throws -> [Crime] {
+    public func crimes(at coordinate: CLLocationCoordinate2D, date: Date = Date()) async throws(CrimeError) -> [Crime] {
         guard availableDataRegion.contains(coordinate: coordinate) else {
             throw CrimeError.locationOutsideOfDataSetRegion
         }
@@ -208,7 +217,8 @@ public final class CrimeService: Sendable {
     ///   - policeForceID: Police Force identifier.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Crime data error ``CrimeError``.
+    /// - Throws: ``CrimeError/notFound`` if no data exists; ``CrimeError/network(_:)`` on transport failure;
+    ///   ``CrimeError/unknown`` otherwise.
     ///
     /// - Returns: The crimes not mapped to a location.
     ///
@@ -216,7 +226,7 @@ public final class CrimeService: Sendable {
         forCategory categoryID: CrimeCategory.ID = CrimeCategory.default.id,
         inPoliceForce policeForceID: PoliceForce.ID,
         date: Date = Date()
-    ) async throws -> [Crime] {
+    ) async throws(CrimeError) -> [Crime] {
         if let cachedCrimes = await cache.crimesWithNoLocation(
             forCategory: categoryID,
             inPoliceForce: policeForceID,
@@ -246,11 +256,12 @@ public final class CrimeService: Sendable {
     ///
     /// [https://data.police.uk/docs/method/crime-last-updated/](https://data.police.uk/docs/method/crime-last-updated/)
     ///
-    /// - Throws: Crime data error ``CrimeError``.
+    /// - Throws: ``CrimeError/notFound`` if no data exists; ``CrimeError/network(_:)`` on transport failure;
+    ///   ``CrimeError/unknown`` otherwise.
     ///
     /// - Returns: The date the crime data was last updated.
     ///
-    public func latestDataDate() async throws -> Date {
+    public func latestDataDate() async throws(CrimeError) -> Date {
         if let cached = await cache.latestDataDate() {
             return cached
         }
@@ -271,11 +282,12 @@ public final class CrimeService: Sendable {
     ///
     /// - Parameter date: Month to fetch crime categories for. The latest month will be shown by default.
     ///
-    /// - Throws: Crime data error ``CrimeError``.
+    /// - Throws: ``CrimeError/notFound`` if no data exists; ``CrimeError/network(_:)`` on transport failure;
+    ///   ``CrimeError/unknown`` otherwise.
     ///
     /// - Returns: The crime categories for the specified month.
     ///
-    public func crimeCategories(forDate date: Date = Date()) async throws -> [CrimeCategory] {
+    public func crimeCategories(forDate date: Date = Date()) async throws(CrimeError) -> [CrimeCategory] {
         if let cachedCategories = await cache.crimeCategories(forDate: date) {
             return cachedCategories
         }
@@ -296,24 +308,16 @@ public final class CrimeService: Sendable {
 
 extension CrimeService {
 
-    private static func mapToCrimeError(_ error: Error) -> CrimeError {
-        if let error = error as? CrimeError {
-            return error
-        }
-
-        guard let error = error as? APIClientError else {
-            return .unknown
-        }
-
+    private static func mapToCrimeError(_ error: APIClientError) -> CrimeError {
         switch error {
-        case .network:
-            return .network(error)
+        case let .network(underlying):
+            .network(underlying)
 
         case .notFound:
-            return .notFound
+            .notFound
 
         case .decode, .unknown:
-            return .unknown
+            .unknown
         }
     }
 

@@ -71,11 +71,15 @@ public final class OutcomeService: Sendable {
     ///   - streetID: Street identifier.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Outcome data error ``OutcomeError``.
+    /// - Throws: ``OutcomeError/notFound`` if no data exists; ``OutcomeError/network(_:)`` on transport failure;
+    ///   ``OutcomeError/unknown`` otherwise.
     ///
     /// - Returns: The outcomes of crimes for the specified street and date..
     ///
-    public func streetLevelOutcomes(forStreet streetID: Int, date: Date = Date()) async throws -> [Outcome] {
+    public func streetLevelOutcomes(
+        forStreet streetID: Int,
+        date: Date = Date()
+    ) async throws(OutcomeError) -> [Outcome] {
         if let cachedOutcomes = await cache.streetLevelOutcomes(forStreet: streetID, date: date) {
             return cachedOutcomes
         }
@@ -105,14 +109,16 @@ public final class OutcomeService: Sendable {
     ///   - coordinate: A coordinate.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    /// - Throws: Outcome data error ``OutcomeError``.
+    /// - Throws: ``OutcomeError/locationOutsideOfDataSetRegion`` if the coordinate is outside the data region;
+    ///   ``OutcomeError/notFound`` if no data exists; ``OutcomeError/network(_:)`` on transport failure;
+    ///   ``OutcomeError/unknown`` otherwise.
     ///
     /// - Returns: The outcomes of crimes in a 1 mile radius of the specified coordinate and date.
     ///
     public func streetLevelOutcomes(
         at coordinate: CLLocationCoordinate2D,
         date: Date = Date()
-    ) async throws -> [Outcome] {
+    ) async throws(OutcomeError) -> [Outcome] {
         guard availableDataRegion.contains(coordinate: coordinate) else {
             throw OutcomeError.locationOutsideOfDataSetRegion
         }
@@ -140,14 +146,15 @@ public final class OutcomeService: Sendable {
     ///   - coordinates: Coordinates which define the boundary of the custom area.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///
-    ///   - Throws: Outcome data error ``OutcomeError``.
+    /// - Throws: ``OutcomeError/notFound`` if no data exists; ``OutcomeError/network(_:)`` on transport failure;
+    ///   ``OutcomeError/unknown`` otherwise.
     ///
     /// - Returns: The outcomes of crimes within the specified area.
     ///
     public func streetLevelOutcomes(
         in coordinates: [CLLocationCoordinate2D],
         date: Date = Date()
-    ) async throws -> [Outcome] {
+    ) async throws(OutcomeError) -> [Outcome] {
         let outcomes: [Outcome]
         do {
             outcomes = try await apiClient.get(
@@ -169,11 +176,12 @@ public final class OutcomeService: Sendable {
     ///
     /// - Parameter crimeID: The crimeID of a crime, not the id.
     ///
-    /// - Throws: Outcome data error ``OutcomeError``.
+    /// - Throws: ``OutcomeError/notFound`` if no data exists; ``OutcomeError/network(_:)`` on transport failure;
+    ///   ``OutcomeError/unknown`` otherwise.
     ///
     /// - Returns: The case history for the specified crime.
     ///
-    public func caseHistory(forCrime crimeID: String) async throws -> CaseHistory {
+    public func caseHistory(forCrime crimeID: String) async throws(OutcomeError) -> CaseHistory {
         if let cachedCaseHistory = await cache.caseHistory(forCrime: crimeID) {
             return cachedCaseHistory
         }
@@ -194,24 +202,16 @@ public final class OutcomeService: Sendable {
 
 extension OutcomeService {
 
-    private static func mapToOutcomeError(_ error: Error) -> OutcomeError {
-        if let error = error as? OutcomeError {
-            return error
-        }
-
-        guard let error = error as? APIClientError else {
-            return .unknown
-        }
-
+    private static func mapToOutcomeError(_ error: APIClientError) -> OutcomeError {
         switch error {
-        case .network:
-            return .network(error)
+        case let .network(underlying):
+            .network(underlying)
 
         case .notFound:
-            return .notFound
+            .notFound
 
         case .decode, .unknown:
-            return .unknown
+            .unknown
         }
     }
 

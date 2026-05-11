@@ -67,11 +67,14 @@ public final class NeighbourhoodService: Sendable {
     ///
     /// - Parameter policeForceID: Police force identifier.
     ///
-    /// - Throws: Neighbourhood data error ``NeighbourhoodError``.
+    /// - Throws: ``NeighbourhoodError/notFound`` if no data exists; ``NeighbourhoodError/network(_:)`` on transport failure;
+    ///   ``NeighbourhoodError/unknown`` otherwise.
     ///
     /// - Returns: The neighbourhoods in the specified police force.
     ///
-    public func neighbourhoods(inPoliceForce policeForceID: PoliceForce.ID) async throws -> [NeighbourhoodReference] {
+    public func neighbourhoods(
+        inPoliceForce policeForceID: PoliceForce.ID
+    ) async throws(NeighbourhoodError) -> [NeighbourhoodReference] {
         if let cachedNeighbourhoodReferences = await cache.neighbourhoods(inPoliceForce: policeForceID) {
             return cachedNeighbourhoodReferences
         }
@@ -99,14 +102,15 @@ public final class NeighbourhoodService: Sendable {
     ///   - id: Neighbourhood identifier.
     ///   - policeForceID: Police Force identifier.
     ///
-    /// - Throws: Neighbourhood data error ``NeighbourhoodError``.
+    /// - Throws: ``NeighbourhoodError/notFound`` if no data exists; ``NeighbourhoodError/network(_:)`` on transport failure;
+    ///   ``NeighbourhoodError/unknown`` otherwise.
     ///
     /// - Returns: The neighbourhood matching the specified ID and police force.
     ///
     public func neighbourhood(
         withID id: String,
         inPoliceForce policeForceID: PoliceForce.ID
-    ) async throws -> Neighbourhood {
+    ) async throws(NeighbourhoodError) -> Neighbourhood {
         if let cachedNeighbourhood = await cache.neighbourhood(withID: id, inPoliceForce: policeForceID) {
             return cachedNeighbourhood
         }
@@ -131,11 +135,13 @@ public final class NeighbourhoodService: Sendable {
     /// - Parameters:
     ///   - coordinate: A coordinate.
     ///
-    /// - Throws: Neighbourhood data error ``NeighbourhoodError``.
+    /// - Throws: ``NeighbourhoodError/locationOutsideOfDataSetRegion`` if the coordinate is outside the data region;
+    ///   ``NeighbourhoodError/notFound`` if no data exists; ``NeighbourhoodError/network(_:)`` on transport failure;
+    ///   ``NeighbourhoodError/unknown`` otherwise.
     ///
     /// - Returns: The neighbourhood at the specified coordinate.
     ///
-    public func neighbourhood(at coordinate: CLLocationCoordinate2D) async throws -> Neighbourhood {
+    public func neighbourhood(at coordinate: CLLocationCoordinate2D) async throws(NeighbourhoodError) -> Neighbourhood {
         let neighbourhoodPolicingTeam = try await neighbourhoodPolicingTeam(at: coordinate)
         return try await neighbourhood(
             withID: neighbourhoodPolicingTeam.neighbourhood,
@@ -152,14 +158,15 @@ public final class NeighbourhoodService: Sendable {
     ///   - neighbourhoodID: Neighbourhood identifier.
     ///   - policeForceID: Police Force identifier.
     ///
-    /// - Throws: Neighbourhood data error ``NeighbourhoodError``.
+    /// - Throws: ``NeighbourhoodError/notFound`` if no data exists; ``NeighbourhoodError/network(_:)`` on transport failure;
+    ///   ``NeighbourhoodError/unknown`` otherwise.
     ///
     /// - Returns: The coordinates that make up the boundary of the matching neighbourhood.
     ///
     public func boundary(
         forNeighbourhood neighbourhoodID: Neighbourhood.ID,
         inPoliceForce policeForceID: PoliceForce.ID
-    ) async throws -> [CLLocationCoordinate2D] {
+    ) async throws(NeighbourhoodError) -> [CLLocationCoordinate2D] {
         if let cachedBoundary = await cache.boundary(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID) {
             return cachedBoundary
         }
@@ -189,14 +196,15 @@ public final class NeighbourhoodService: Sendable {
     ///   - neighbourhoodID: Neighbourhood identifier.
     ///   - policeForceID: Police Force identifier.
     ///
-    /// - Throws: Neighbourhood data error ``NeighbourhoodError``.
+    /// - Throws: ``NeighbourhoodError/notFound`` if no data exists; ``NeighbourhoodError/network(_:)`` on transport failure;
+    ///   ``NeighbourhoodError/unknown`` otherwise.
     ///
     /// - Returns: Police officers who are members of the neighbourhood team for the specified neighbourhood and police force.
     ///
     public func policeOfficers(
         forNeighbourhood neighbourhoodID: Neighbourhood.ID,
         inPoliceForce policeForceID: PoliceForce.ID
-    ) async throws -> [PoliceOfficer] {
+    ) async throws(NeighbourhoodError) -> [PoliceOfficer] {
         if let cachedPoliceOfficers = await cache.policeOfficers(
             forNeighbourhood: neighbourhoodID,
             inPoliceForce: policeForceID
@@ -229,14 +237,15 @@ public final class NeighbourhoodService: Sendable {
     ///   - neighbourhoodID: Neighbourhood identifier.
     ///   - policeForceID: Police Force identifier.
     ///
-    /// - Throws: Neighbourhood data error ``NeighbourhoodError``.
+    /// - Throws: ``NeighbourhoodError/notFound`` if no data exists; ``NeighbourhoodError/network(_:)`` on transport failure;
+    ///   ``NeighbourhoodError/unknown`` otherwise.
     ///
     /// - Returns: The neighbourhood events for the specified neighbourhood and police force.
     ///
     public func events(
         forNeighbourhood neighbourhoodID: Neighbourhood.ID,
         inPoliceForce policeForceID: PoliceForce.ID
-    ) async throws -> [NeighbourhoodEvent] {
+    ) async throws(NeighbourhoodError) -> [NeighbourhoodEvent] {
         if let cachedEvents = await cache.events(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID) {
             return cachedEvents
         }
@@ -266,14 +275,15 @@ public final class NeighbourhoodService: Sendable {
     ///   - neighbourhoodID: Neighbourhood identifier.
     ///   - policeForceID: Police Force identifier.
     ///
-    /// - Throws: Neighbourhood data error ``NeighbourhoodError``.
+    /// - Throws: ``NeighbourhoodError/notFound`` if no data exists; ``NeighbourhoodError/network(_:)`` on transport failure;
+    ///   ``NeighbourhoodError/unknown`` otherwise.
     ///
     /// - Returns: The neighbourhood priorities for the specified neighbourhood and police force.
     ///
     public func priorities(
         forNeighbourhood neighbourhoodID: Neighbourhood.ID,
         inPoliceForce policeForceID: PoliceForce.ID
-    ) async throws -> [NeighbourhoodPriority] {
+    ) async throws(NeighbourhoodError) -> [NeighbourhoodPriority] {
         if let cachedPriorities = await cache.priorities(
             forNeighbourhood: neighbourhoodID,
             inPoliceForce: policeForceID
@@ -304,13 +314,15 @@ public final class NeighbourhoodService: Sendable {
     ///
     /// - Parameter coordinate: A coordinate.
     ///
-    /// - Throws: Neighbourhood data error ``NeighbourhoodError``.
+    /// - Throws: ``NeighbourhoodError/locationOutsideOfDataSetRegion`` if the coordinate is outside the data region;
+    ///   ``NeighbourhoodError/notFound`` if no data exists; ``NeighbourhoodError/network(_:)`` on transport failure;
+    ///   ``NeighbourhoodError/unknown`` otherwise.
     ///
     /// - Returns: The neighbourhood policing team for the specificed location.
     ///
     public func neighbourhoodPolicingTeam(
         at coordinate: CLLocationCoordinate2D
-    ) async throws -> NeighbourhoodPolicingTeam {
+    ) async throws(NeighbourhoodError) -> NeighbourhoodPolicingTeam {
         guard availableDataRegion.contains(coordinate: coordinate) else {
             throw NeighbourhoodError.locationOutsideOfDataSetRegion
         }
@@ -331,24 +343,16 @@ public final class NeighbourhoodService: Sendable {
 
 extension NeighbourhoodService {
 
-    private static func mapToNeighbourhoodError(_ error: Error) -> NeighbourhoodError {
-        if let error = error as? NeighbourhoodError {
-            return error
-        }
-
-        guard let error = error as? APIClientError else {
-            return .unknown
-        }
-
+    private static func mapToNeighbourhoodError(_ error: APIClientError) -> NeighbourhoodError {
         switch error {
-        case .network:
-            return .network(error)
+        case let .network(underlying):
+            .network(underlying)
 
         case .notFound:
-            return .notFound
+            .notFound
 
         case .decode, .unknown:
-            return .unknown
+            .unknown
         }
     }
 

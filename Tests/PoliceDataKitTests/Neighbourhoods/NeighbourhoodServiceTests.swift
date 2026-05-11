@@ -115,7 +115,7 @@ extension NeighbourhoodServiceTests {
         var resultError: NeighbourhoodError?
         do {
             _ = try await service.neighbourhood(withID: id, inPoliceForce: policeForceID)
-        } catch let error as NeighbourhoodError {
+        } catch {
             resultError = error
         }
 
@@ -205,7 +205,7 @@ extension NeighbourhoodServiceTests {
         var resultError: NeighbourhoodError?
         do {
             _ = try await service.boundary(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
-        } catch let error as NeighbourhoodError {
+        } catch {
             resultError = error
         }
 
@@ -362,7 +362,7 @@ extension NeighbourhoodServiceTests {
         var resultError: NeighbourhoodError?
         do {
             _ = try await service.neighbourhoodPolicingTeam(at: coordinate)
-        } catch let error as NeighbourhoodError {
+        } catch {
             resultError = error
         }
 
@@ -377,7 +377,7 @@ extension NeighbourhoodServiceTests {
         var resultError: NeighbourhoodError?
         do {
             _ = try await service.neighbourhoodPolicingTeam(at: coordinate)
-        } catch let error as NeighbourhoodError {
+        } catch {
             resultError = error
         }
 
