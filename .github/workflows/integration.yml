@@ -12,7 +12,7 @@ on:
       - "**/*.swift"
   schedule:
     # Every Sunday at 12am
-    - cron:  '0 0 * * 0'
+    - cron: '0 0 * * 0'
   workflow_dispatch:
 
 concurrency:
@@ -20,18 +20,99 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  DEVELOPER_DIR: /Applications/Xcode_16.2.app/Contents/Developer
+  DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
 
 jobs:
-  integration-test:
-    name: Integration Test
-    runs-on: macos-15
+  changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      swift: ${{ steps.filter.outputs.swift }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+
+      - name: Detect file changes
+        id: filter
+        uses: dorny/paths-filter@v4
+        with:
+          filters: |
+            swift:
+              - '**/*.swift'
+              - 'Package.swift'
+              - 'Package.resolved'
+              - '.github/workflows/integration.yml'
+
+  integration-test:
+    name: Integration Test
+    needs: changes
+    if: always()
+    runs-on: >-
+      ${{
+        (needs.changes.outputs.swift == 'true' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule')
+        && 'macos-26' || 'ubuntu-latest'
+      }}
+    timeout-minutes: 30
+    steps:
+      - name: No changes detected
+        if: >-
+          needs.changes.outputs.swift != 'true'
+          && github.event_name != 'workflow_dispatch'
+          && github.event_name != 'schedule'
+        run: echo "No Swift changes detected, skipping integration tests"
+
+      - name: Checkout
+        if: >-
+          needs.changes.outputs.swift == 'true'
+          || github.event_name == 'workflow_dispatch'
+          || github.event_name == 'schedule'
+        uses: actions/checkout@v6
+
+      - name: Install xcsift
+        if: >-
+          needs.changes.outputs.swift == 'true'
+          || github.event_name == 'workflow_dispatch'
+          || github.event_name == 'schedule'
+        run: brew install xcsift
 
       - name: Build
-        run: swift build --build-tests
+        if: >-
+          needs.changes.outputs.swift == 'true'
+          || github.event_name == 'workflow_dispatch'
+          || github.event_name == 'schedule'
+        run: set -o pipefail && swift build --build-tests 2>&1 | xcsift -f github-actions
 
       - name: Test
-        run: swift test --skip-build --filter IntegrationTests
+        if: >-
+          needs.changes.outputs.swift == 'true'
+          || github.event_name == 'workflow_dispatch'
+          || github.event_name == 'schedule'
+        run: set -o pipefail && swift test --skip-build --filter IntegrationTests --xunit-output junit.xml 2>&1 | xcsift -f github-actions
+
+      - name: Upload test results to Codecov
+        if: >-
+          !cancelled()
+          && (needs.changes.outputs.swift == 'true' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule')
+        uses: codecov/test-results-action@v1
+        with:
+          file: ./junit.xml
+          flags: integration-tests
+          verbose: true
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  integration:
+    name: Integration
+    if: always()
+    needs: [integration-test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check job results
+        run: |
+          result="${{ needs.integration-test.result }}"
+          if [[ "$result" == "failure" || "$result" == "cancelled" ]]; then
+            echo "Job failed or cancelled: $result"
+            exit 1
+          fi
