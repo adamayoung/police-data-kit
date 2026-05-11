@@ -18,84 +18,86 @@
 //
 
 import PoliceDataKit
-import XCTest
+import Testing
 
-final class PoliceForceIntegrationTests: XCTestCase {
+@Suite("Police force integration", .tags(.integration))
+struct PoliceForceIntegrationTests {
 
-    var policeForceService: PoliceForceService!
+    let policeForceService: PoliceForceService
 
-    override func setUp() {
-        super.setUp()
-        policeForceService = PoliceForceService()
+    init() {
+        self.policeForceService = PoliceForceService()
     }
 
-    override func tearDown() {
-        policeForceService = nil
-        super.tearDown()
-    }
-
-    func testPoliceForces() async throws {
+    @Test("police forces returns forces")
+    func policeForces() async throws {
         let policeForces = try await policeForceService.policeForces()
 
-        XCTAssertGreaterThan(policeForces.count, 0)
+        #expect(!policeForces.isEmpty)
     }
 
-    func testPoliceForceWithCambridgeshireConstabulary() async throws {
-        let policForceID = "cambridgeshire"
+    @Test("police force with Cambridgeshire Constabulary")
+    func policeForceWithCambridgeshireConstabulary() async throws {
+        let policeForceID = "cambridgeshire"
 
-        let policeForce = try await policeForceService.policeForce(withID: policForceID)
+        let policeForce = try await policeForceService.policeForce(withID: policeForceID)
 
-        XCTAssertEqual(policeForce.id, policForceID)
+        #expect(policeForce.id == policeForceID)
     }
 
-    func testPoliceForceWithSulfolkConstabulary() async throws {
-        let policForceID = "suffolk"
+    @Test("police force with Suffolk Constabulary")
+    func policeForceWithSuffolkConstabulary() async throws {
+        let policeForceID = "suffolk"
 
-        let policeForce = try await policeForceService.policeForce(withID: policForceID)
+        let policeForce = try await policeForceService.policeForce(withID: policeForceID)
 
-        XCTAssertEqual(policeForce.id, policForceID)
+        #expect(policeForce.id == policeForceID)
     }
 
-    func testPoliceForceWithInvalidPoliceForce() async throws {
-        let policForceID = "aaa"
+    @Test("police force with invalid police force throws not found")
+    func policeForceWithInvalidPoliceForce() async throws {
+        let policeForceID = "aaa"
 
         var policeForceError: PoliceForceError?
         do {
-            _ = try await policeForceService.policeForce(withID: policForceID)
-        } catch let error {
-            policeForceError = error as? PoliceForceError
+            _ = try await policeForceService.policeForce(withID: policeForceID)
+        } catch {
+            policeForceError = error
         }
 
-        XCTAssertEqual(policeForceError, .notFound)
+        #expect(policeForceError == .notFound)
     }
 
-    func testSeniorOfficersForWarwickshirePolice() async throws {
-        let policForceID = "warwickshire"
+    @Test("senior officers for Warwickshire Police")
+    func seniorOfficersForWarwickshirePolice() async throws {
+        let policeForceID = "warwickshire"
 
-        let policeOfficers = try await policeForceService.seniorOfficers(inPoliceForce: policForceID)
+        let policeOfficers = try await policeForceService.seniorOfficers(inPoliceForce: policeForceID)
 
-        XCTAssertGreaterThan(policeOfficers.count, 0)
+        #expect(!policeOfficers.isEmpty)
     }
 
-    func testSeniorOfficersForNottinghamshirePolice() async throws {
-        let policForceID = "nottinghamshire"
+    @Test("senior officers for Nottinghamshire Police")
+    func seniorOfficersForNottinghamshirePolice() async throws {
+        let policeForceID = "nottinghamshire"
 
-        let policeOfficers = try await policeForceService.seniorOfficers(inPoliceForce: policForceID)
+        let policeOfficers = try await policeForceService.seniorOfficers(inPoliceForce: policeForceID)
 
-        XCTAssertGreaterThan(policeOfficers.count, 0)
+        #expect(!policeOfficers.isEmpty)
     }
 
-    func testSeniorOfficersForInvalidPoliceForce() async throws {
-        let policForceID = "bbb"
+    @Test("senior officers for invalid police force throws not found")
+    func seniorOfficersForInvalidPoliceForce() async throws {
+        let policeForceID = "bbb"
 
         var policeForceError: PoliceForceError?
         do {
-            _ = try await policeForceService.seniorOfficers(inPoliceForce: policForceID)
-        } catch let error {
-            policeForceError = error as? PoliceForceError
+            _ = try await policeForceService.seniorOfficers(inPoliceForce: policeForceID)
+        } catch {
+            policeForceError = error
         }
 
-        XCTAssertEqual(policeForceError, .notFound)
+        #expect(policeForceError == .notFound)
     }
 
 }

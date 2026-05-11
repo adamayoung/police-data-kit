@@ -19,33 +19,29 @@
 
 import CoreLocation
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class NeighbourhoodDefaultCacheTests: XCTestCase {
+@Suite("NeighbourhoodDefaultCache")
+struct NeighbourhoodDefaultCacheTests {
 
-    var cache: NeighbourhoodDefaultCache!
-    var cacheStore: MockCache!
+    let cache: NeighbourhoodDefaultCache
+    let cacheStore: MockCache
 
-    override func setUp() {
-        super.setUp()
-        cacheStore = MockCache()
-        cache = NeighbourhoodDefaultCache(cacheStore: cacheStore)
+    init() {
+        self.cacheStore = MockCache()
+        self.cache = NeighbourhoodDefaultCache(cacheStore: cacheStore)
     }
 
-    override func tearDown() {
-        cache = nil
-        cacheStore = nil
-        super.tearDown()
-    }
-
-    func testNeighbourhoodsInPoliceForceWhenMissReturnsNil() async {
+    @Test("neighbourhoods in police force when miss returns nil")
+    func neighbourhoodsInPoliceForceWhenMissReturnsNil() async {
         let policeForceID = "test-police-force"
         let result = await cache.neighbourhoods(inPoliceForce: policeForceID)
 
-        XCTAssertNil(result)
+        #expect(result == nil)
     }
 
-    func testNeighbourhoodsInPoliceForceWhenHitReturnsNeighbourReferences() async {
+    @Test("neighbourhoods in police force when hit returns neighbour references")
+    func neighbourhoodsInPoliceForceWhenHitReturnsNeighbourReferences() async {
         let policeForceID = "test-police-force"
         let cacheKey = NeighbourhoodsInPoliceForceCachingKey(policeForceID: policeForceID)
         let expectedResult = NeighbourhoodReference.mocks
@@ -53,10 +49,11 @@ final class NeighbourhoodDefaultCacheTests: XCTestCase {
 
         let result = await cache.neighbourhoods(inPoliceForce: policeForceID)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testNeighbourhoodsInPoliceForceSetsNeighbourhoods() async {
+    @Test("neighbourhoods in police force sets neighbourhoods")
+    func neighbourhoodsInPoliceForceSetsNeighbourhoods() async {
         let policeForceID = "test-police-force"
         let cacheKey = NeighbourhoodsInPoliceForceCachingKey(policeForceID: policeForceID)
         let expectedResult = NeighbourhoodReference.mocks
@@ -64,18 +61,20 @@ final class NeighbourhoodDefaultCacheTests: XCTestCase {
         await cache.setNeighbourhoods(expectedResult, inPoliceForce: policeForceID)
         let result = await cacheStore.object(for: cacheKey, type: [NeighbourhoodReference].self)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testNeighbourhoodWhenMissReturnsNil() async {
+    @Test("neighbourhood when miss returns nil")
+    func neighbourhoodWhenMissReturnsNil() async {
         let id = "test-neighbourhood"
         let policeForceID = "test-police-force"
         let result = await cache.neighbourhood(withID: id, inPoliceForce: policeForceID)
 
-        XCTAssertNil(result)
+        #expect(result == nil)
     }
 
-    func testNeighbourhoodWhenHitReturnsNeighbour() async {
+    @Test("neighbourhood when hit returns neighbour")
+    func neighbourhoodWhenHitReturnsNeighbour() async {
         let id = "test-neighbourhood"
         let policeForceID = "test-police-force"
         let cacheKey = NeighbourhoodCachingKey(id: id, policeForceID: policeForceID)
@@ -84,10 +83,11 @@ final class NeighbourhoodDefaultCacheTests: XCTestCase {
 
         let result = await cache.neighbourhood(withID: id, inPoliceForce: policeForceID)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testSetNeighbourhoodSetsNeighbourhood() async {
+    @Test("set neighbourhood sets neighbourhood")
+    func setNeighbourhoodSetsNeighbourhood() async {
         let id = "test-neighbourhood"
         let policeForceID = "test-police-force"
         let cacheKey = NeighbourhoodCachingKey(id: id, policeForceID: policeForceID)
@@ -96,18 +96,20 @@ final class NeighbourhoodDefaultCacheTests: XCTestCase {
         await cache.setNeighbourhood(expectedResult, withID: id, inPoliceForce: policeForceID)
         let result = await cacheStore.object(for: cacheKey, type: Neighbourhood.self)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testBoundaryForNeighbourhoodWhenMissReturnsNil() async {
+    @Test("boundary for neighbourhood when miss returns nil")
+    func boundaryForNeighbourhoodWhenMissReturnsNil() async {
         let neighbourhoodID = "test-neighbourhood"
         let policeForceID = "test-police-force"
         let result = await cache.boundary(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
-        XCTAssertNil(result)
+        #expect(result == nil)
     }
 
-    func testBoundaryForNeighbourhoodWhenHitReturnsBoundary() async {
+    @Test("boundary for neighbourhood when hit returns boundary")
+    func boundaryForNeighbourhoodWhenHitReturnsBoundary() async {
         let neighbourhoodID = "test-neighbourhood"
         let policeForceID = "test-police-force"
         let cacheKey = NeighbourhoodBoundaryCachingKey(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID)
@@ -116,10 +118,11 @@ final class NeighbourhoodDefaultCacheTests: XCTestCase {
 
         let result = await cache.boundary(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testSetBoundaryForNeighbourhoodSetsBoundary() async {
+    @Test("set boundary for neighbourhood sets boundary")
+    func setBoundaryForNeighbourhoodSetsBoundary() async {
         let neighbourhoodID = "test-neighbourhood"
         let policeForceID = "test-police-force"
         let cacheKey = NeighbourhoodBoundaryCachingKey(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID)
@@ -128,18 +131,20 @@ final class NeighbourhoodDefaultCacheTests: XCTestCase {
         await cache.setBoundary(expectedResult, forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
         let result = await cacheStore.object(for: cacheKey, type: [CLLocationCoordinate2D].self)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testPoliceOfficersForNeighbourhoodWhenMissReturnsNil() async {
+    @Test("police officers for neighbourhood when miss returns nil")
+    func policeOfficersForNeighbourhoodWhenMissReturnsNil() async {
         let neighbourhoodID = "test-neighbourhood"
         let policeForceID = "test-police-force"
         let result = await cache.policeOfficers(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
-        XCTAssertNil(result)
+        #expect(result == nil)
     }
 
-    func testPoliceOfficersForNeighbourhoodWhenHitReturnsPoliceOfficers() async {
+    @Test("police officers for neighbourhood when hit returns police officers")
+    func policeOfficersForNeighbourhoodWhenHitReturnsPoliceOfficers() async {
         let neighbourhoodID = "test-neighbourhood"
         let policeForceID = "test-police-force"
         let cacheKey = NeighbourhoodPoliceOfficersCachingKey(
@@ -151,10 +156,11 @@ final class NeighbourhoodDefaultCacheTests: XCTestCase {
 
         let result = await cache.policeOfficers(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testSetPoliceOfficersForNeighbourhoodSetsPoliceOfficers() async {
+    @Test("set police officers for neighbourhood sets police officers")
+    func setPoliceOfficersForNeighbourhoodSetsPoliceOfficers() async {
         let neighbourhoodID = "test-neighbourhood"
         let policeForceID = "test-police-force"
         let cacheKey = NeighbourhoodPoliceOfficersCachingKey(
@@ -166,18 +172,20 @@ final class NeighbourhoodDefaultCacheTests: XCTestCase {
         await cache.setPoliceOfficers(expectedResult, forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
         let result = await cacheStore.object(for: cacheKey, type: [PoliceOfficer].self)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testPrioritiesForNeighbourhoodWhenMissReturnsNil() async {
+    @Test("priorities for neighbourhood when miss returns nil")
+    func prioritiesForNeighbourhoodWhenMissReturnsNil() async {
         let neighbourhoodID = "test-neighbourhood"
         let policeForceID = "test-police-force"
         let result = await cache.priorities(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
-        XCTAssertNil(result)
+        #expect(result == nil)
     }
 
-    func testPrioritiesForNeighbourhoodWhenHitReturnsPriorities() async {
+    @Test("priorities for neighbourhood when hit returns priorities")
+    func prioritiesForNeighbourhoodWhenHitReturnsPriorities() async {
         let neighbourhoodID = "test-neighbourhood"
         let policeForceID = "test-police-force"
         let cacheKey = NeighbourhoodPrioritiesCachingKey(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID)
@@ -186,10 +194,11 @@ final class NeighbourhoodDefaultCacheTests: XCTestCase {
 
         let result = await cache.priorities(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testSetPrioritiesForNeighbourhoodSetsPoliceOfficers() async {
+    @Test("set priorities for neighbourhood sets police officers")
+    func setPrioritiesForNeighbourhoodSetsPoliceOfficers() async {
         let neighbourhoodID = "test-neighbourhood"
         let policeForceID = "test-police-force"
         let cacheKey = NeighbourhoodPrioritiesCachingKey(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID)
@@ -198,7 +207,7 @@ final class NeighbourhoodDefaultCacheTests: XCTestCase {
         await cache.setPriorities(expectedResult, forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
         let result = await cacheStore.object(for: cacheKey, type: [NeighbourhoodPriority].self)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
 }

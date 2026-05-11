@@ -18,28 +18,32 @@
 //
 
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class StringHTMLTests: XCTestCase {
+@Suite("String HTML")
+struct StringHTMLTests {
 
-    func testHTMLStrippedWhenNoHTMLReturnsSelf() {
+    @Test("htmlStripped when no HTML returns self")
+    func htmlStrippedWhenNoHTMLReturnsSelf() {
         let value = "Hello, this is the PoliceDataKit."
 
         let result = value.htmlStripped
 
-        XCTAssertEqual(result, value)
+        #expect(result == value)
     }
 
-    func testHTMLStrippedWhenContainsSimpleHTMLTagReturnsSelfWithoutHTML() {
+    @Test("htmlStripped when contains simple HTML tag returns self without HTML")
+    func htmlStrippedWhenContainsSimpleHTMLTagReturnsSelfWithoutHTML() {
         let value = "Hello, this is the <b>PoliceDataKit</b>."
         let expectedResult = "Hello, this is the PoliceDataKit."
 
         let result = value.htmlStripped
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testHTMLStrippedWhenContainsHTMLTagReturnsSelfWithoutHTML() {
+    @Test("htmlStripped when contains HTML tag returns self without HTML")
+    func htmlStrippedWhenContainsHTMLTagReturnsSelfWithoutHTML() {
         let value = "<p>The Castle neighbourhood is a diverse covering all of the City Centre. In addition it covers "
             + "De Montfort University, the University of Leicester, Leicester Royal Infirmary, the Leicester Tigers "
             + "rugby ground and the Clarendon Park and Riverside communities.</p>\n<p>The Highcross and Haymarket "
@@ -51,24 +55,26 @@ final class StringHTMLTests: XCTestCase {
 
         let result = value.htmlStripped
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testHTMLStrippedWhenEmptyStringReturnsEmptyString() {
+    @Test("htmlStripped when empty string returns empty string")
+    func htmlStrippedWhenEmptyStringReturnsEmptyString() {
         let value = ""
 
         let result = value.htmlStripped
 
-        XCTAssertEqual(result, "")
+        #expect(result == "")
     }
 
-    func testHTMLStrippedWhenContainsHTMLEntityReturnsConvertedString() {
+    @Test("htmlStripped when contains HTML entity returns converted string")
+    func htmlStrippedWhenContainsHTMLEntityReturnsConvertedString() {
         let value = "Cops &amp; Robbers"
         let expectedResult = "Cops & Robbers"
 
         let result = value.htmlStripped
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
 }

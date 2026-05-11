@@ -18,50 +18,57 @@
 //
 
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class StopAndSearchTypeTests: XCTestCase {
+@Suite("StopAndSearchType")
+struct StopAndSearchTypeTests {
 
-    func testPersonSearch() {
+    @Test("person search")
+    func personSearch() {
         let result = StopAndSearchType(rawValue: "Person search")
 
-        XCTAssertEqual(result, .personSearch)
+        #expect(result == .personSearch)
     }
 
-    func testVehicleSearch() {
+    @Test("vehicle search")
+    func vehicleSearch() {
         let result = StopAndSearchType(rawValue: "Vehicle search")
 
-        XCTAssertEqual(result, .vehicleSearch)
+        #expect(result == .vehicleSearch)
     }
 
-    func testPersonAndVehicleSearch() {
+    @Test("person and vehicle search")
+    func personAndVehicleSearch() {
         let result = StopAndSearchType(rawValue: "Person and Vehicle search")
 
-        XCTAssertEqual(result, .personAndVehicleSearch)
+        #expect(result == .personAndVehicleSearch)
     }
 
-    func testDescriptionWhenPersonSearchReturnDescription() {
+    @Test("description when person search return description")
+    func descriptionWhenPersonSearchReturnDescription() {
         let expectedResult = "Person search"
 
         let result = StopAndSearchType.personSearch.rawValue
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testDescriptionWhenVehicleSearchReturnDescription() {
+    @Test("description when vehicle search return description")
+    func descriptionWhenVehicleSearchReturnDescription() {
         let expectedResult = "Vehicle search"
 
         let result = StopAndSearchType.vehicleSearch.rawValue
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testDescriptionWhenPersonAndVehicleSearchReturnDescription() {
+    @Test("description when person and vehicle search return description")
+    func descriptionWhenPersonAndVehicleSearchReturnDescription() {
         let expectedResult = "Person and Vehicle search"
 
         let result = StopAndSearchType.personAndVehicleSearch.rawValue
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
 }

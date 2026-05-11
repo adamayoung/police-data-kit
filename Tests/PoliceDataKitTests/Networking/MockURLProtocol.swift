@@ -22,7 +22,7 @@ import Foundation
 final class MockURLProtocol: URLProtocol {
 
     // nonisolated(unsafe) is safe here: MockURLProtocol is test-only infrastructure
-    // accessed sequentially from setUp/tearDown in a single XCTestCase instance.
+    // accessed sequentially within a @Suite(.serialized) test suite.
     nonisolated(unsafe) static var data: Data?
     nonisolated(unsafe) static var failError: Error?
     nonisolated(unsafe) static var responseStatusCode: Int = 200

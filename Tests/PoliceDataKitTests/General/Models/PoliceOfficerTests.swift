@@ -17,22 +17,26 @@
 //  limitations under the License.
 //
 
+import Foundation
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class PoliceOfficerTests: XCTestCase {
+@Suite("Police officer")
+struct PoliceOfficerTests {
 
-    func testDecodeReturnsPoliceOfficer() throws {
+    @Test("decode returns police officer")
+    func decodeReturnsPoliceOfficer() throws {
         let result = try JSONDecoder.policeDataAPI.decode(PoliceOfficer.self, fromResource: "police-officer")
 
-        XCTAssertEqual(result, .mock)
+        #expect(result == .mock)
     }
 
-    func testDecodeWithNullsReturnsPoliceOfficer() throws {
+    @Test("decode with nulls returns police officer")
+    func decodeWithNullsReturnsPoliceOfficer() throws {
         let result = try JSONDecoder.policeDataAPI
             .decode(PoliceOfficer.self, fromResource: "police-officer-nulls")
 
-        XCTAssertEqual(result, .mockNoBioOrContactDetails)
+        #expect(result == .mockNoBioOrContactDetails)
     }
 
 }

@@ -18,60 +18,56 @@
 //
 
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class AvailabilityServiceTests: XCTestCase {
+@Suite("Availability service")
+struct AvailabilityServiceTests {
 
-    var service: AvailabilityService!
-    var apiClient: MockAPIClient!
-    var cache: AvailabilityMockCache!
+    let service: AvailabilityService
+    let apiClient: MockAPIClient
+    let cache: AvailabilityMockCache
 
-    override func setUp() {
-        super.setUp()
-        apiClient = MockAPIClient()
-        cache = AvailabilityMockCache()
-        service = AvailabilityService(apiClient: apiClient, cache: cache)
+    init() {
+        self.apiClient = MockAPIClient()
+        self.cache = AvailabilityMockCache()
+        self.service = AvailabilityService(apiClient: apiClient, cache: cache)
     }
 
-    override func tearDown() {
-        service = nil
-        cache = nil
-        apiClient = nil
-        super.tearDown()
-    }
-
-    func testAvailableDataSetsWhenNotCachedReturnsDataSets() async throws {
+    @Test("availableDataSets when not cached returns data sets")
+    func availableDataSetsWhenNotCachedReturnsDataSets() async throws {
         let expectedResult = DataSet.mocks
         await apiClient.add(response: .success(DataSet.mocks))
 
         let result = try await service.availableDataSets()
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
         let requestedURLsCount = await apiClient.requestedURLs.count
-        XCTAssertEqual(requestedURLsCount, 1)
+        #expect(requestedURLsCount == 1)
         let lastURL = await apiClient.requestedURLs.last
-        XCTAssertEqual(lastURL, AvailabilityEndpoint.dataSets.path)
+        #expect(lastURL == AvailabilityEndpoint.dataSets.path)
     }
 
-    func testAvailableDataSetsWhenCachedReturnsCachedDataSets() async throws {
+    @Test("availableDataSets when cached returns cached data sets")
+    func availableDataSetsWhenCachedReturnsCachedDataSets() async throws {
         let expectedResult = DataSet.mocks
         await cache.setAvailableDataSets(expectedResult)
 
         let result = try await service.availableDataSets()
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
         let requestedURLsCount = await apiClient.requestedURLs.count
-        XCTAssertEqual(requestedURLsCount, 0)
+        #expect(requestedURLsCount == 0)
     }
 
-    func testAvailableDataSetsWhenNotCachedAndReturnsDataSetsShouldCacheResult() async throws {
+    @Test("availableDataSets when not cached and returns data sets should cache result")
+    func availableDataSetsWhenNotCachedAndReturnsDataSetsShouldCacheResult() async throws {
         let expectedResult = DataSet.mocks
         await apiClient.add(response: .success(DataSet.mocks))
         _ = try await service.availableDataSets()
 
         let cachedResult = await cache.availableDataSets()
 
-        XCTAssertEqual(cachedResult, expectedResult)
+        #expect(cachedResult == expectedResult)
     }
 
 }

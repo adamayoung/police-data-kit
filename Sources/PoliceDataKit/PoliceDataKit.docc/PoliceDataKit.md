@@ -19,6 +19,10 @@ For the Police API documentation, see [https://data.police.uk](https://data.poli
 
 ## Topics
 
+### Migrating
+
+* <doc:MigratingFrom4To5>
+
 ### Police Forces
 
 * <doc:/GettingStartedWithPoliceForces>

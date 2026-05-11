@@ -18,16 +18,17 @@
 //
 
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class PoliceForceCachingKeyTests: XCTestCase {
-
-    func testKeyValue() {
+@Suite("PoliceForceCachingKey")
+struct PoliceForceCachingKeyTests {
+    @Test
+    func keyValue() {
         let id = "abc123"
 
         let cacheKey = PoliceForceCachingKey(id: id)
 
-        XCTAssertEqual(cacheKey.keyValue, "police-force-\(id)")
+        #expect(cacheKey.keyValue == "police-force-\(id)")
     }
 
 }

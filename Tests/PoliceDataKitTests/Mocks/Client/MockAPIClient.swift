@@ -17,8 +17,9 @@
 //  limitations under the License.
 //
 
+import Foundation
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
 final actor MockAPIClient: APIClient {
 
@@ -36,7 +37,7 @@ final actor MockAPIClient: APIClient {
         let anyValue: Any
         do {
             guard let value = try response?.get() else {
-                XCTFail("No response configured for request to \(path)")
+                Issue.record("No response configured for request to \(path)")
                 throw APIClientError.unknown
             }
             anyValue = value
@@ -47,7 +48,7 @@ final actor MockAPIClient: APIClient {
         }
 
         guard let result = anyValue as? Response else {
-            XCTFail("Can't cast response to type \(String(describing: Response.self))")
+            Issue.record("Can't cast response to type \(String(describing: Response.self))")
             throw APIClientError.unknown
         }
 

@@ -40,7 +40,8 @@ jobs:
           --disable-indexing \
           --transform-for-static-hosting \
           --hosting-base-path police-data-kit \
-          --output-path docs
+          --output-path docs \
+          --warnings-as-errors
         env:
           SWIFTCI_DOCC: 1
 

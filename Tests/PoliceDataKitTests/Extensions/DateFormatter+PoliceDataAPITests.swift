@@ -17,76 +17,85 @@
 //  limitations under the License.
 //
 
+import Foundation
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class DateFormatterPoliceDataAPITests: XCTestCase {
+@Suite("DateFormatter PoliceDataAPI")
+struct DateFormatterPoliceDataAPITests {
 
-    func testDateTimeFormatterReturnsDate() {
+    @Test("dateTime formatter returns date")
+    func dateTimeFormatterReturnsDate() {
         let dateString = "2021-05-24T10:22:45"
         let expectedResult = "2021-05-24 10:22:45 +0000"
         let dateFormatter = DateFormatter.dateTime
 
         let result = dateFormatter.date(from: dateString)?.description
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testDateTimeFormatterWhenInvalidDateFormatReturnsNil() {
+    @Test("dateTime formatter when invalid date format returns nil")
+    func dateTimeFormatterWhenInvalidDateFormatReturnsNil() {
         let dateString = "2021-05-24"
         let dateFormatter = DateFormatter.dateTime
 
         let result = dateFormatter.date(from: dateString)
 
-        XCTAssertNil(result)
+        #expect(result == nil)
     }
 
-    func testDateTimeWithTimeZoneOffsetFormatterWhenUTCReturnsDate() {
+    @Test("dateTime with timezone offset formatter when UTC returns date")
+    func dateTimeWithTimeZoneOffsetFormatterWhenUTCReturnsDate() {
         let dateString = "2020-01-31T12:45:12+00:00"
         let expectedResult = "2020-01-31 12:45:12 +0000"
         let dateFormatter = DateFormatter.dateTimeWithTimeZoneOffset
 
         let result = dateFormatter.date(from: dateString)?.description
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testDateTimeWithTimeZoneOffsetFormatterWhenMinusFiveHoursReturnsDate() {
+    @Test("dateTime with timezone offset formatter when minus five hours returns date")
+    func dateTimeWithTimeZoneOffsetFormatterWhenMinusFiveHoursReturnsDate() {
         let dateString = "2019-09-15T21:01:58-05:00"
         let expectedResult = "2019-09-16 02:01:58 +0000"
         let dateFormatter = DateFormatter.dateTimeWithTimeZoneOffset
 
         let result = dateFormatter.date(from: dateString)?.description
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testDateTimeWithTimeZoneOffsetFormatterWhenInvalidDateFormatReturnsNil() {
+    @Test("dateTime with timezone offset formatter when invalid date format returns nil")
+    func dateTimeWithTimeZoneOffsetFormatterWhenInvalidDateFormatReturnsNil() {
         let dateString = "2020-01-31"
         let dateFormatter = DateFormatter.dateTimeWithTimeZoneOffset
 
         let result = dateFormatter.date(from: dateString)
 
-        XCTAssertNil(result)
+        #expect(result == nil)
     }
 
-    func testYearMonthFormatterReturnsDate() {
+    @Test("yearMonth formatter returns date")
+    func yearMonthFormatterReturnsDate() {
         let dateString = "2021-02"
         let expectedResult = "2021-02-01 00:00:00 +0000"
         let dateFormatter = DateFormatter.yearMonth
 
         let result = dateFormatter.date(from: dateString)?.description
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testYearMonthFormatterWhenInvalidDateFormatReturnsDate() {
+    @Test("yearMonth formatter when invalid date format returns nil")
+    func yearMonthFormatterWhenInvalidDateFormatReturnsDate() {
         let dateString = "2021-02-01"
         let dateFormatter = DateFormatter.yearMonth
 
         let result = dateFormatter.date(from: dateString)
 
-        XCTAssertNil(result)
+        #expect(result == nil)
     }
 
 }

@@ -17,17 +17,19 @@
 //  limitations under the License.
 //
 
+import Foundation
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class AvailabilityEndpointTests: XCTestCase {
-
-    func testDataSetsEndpointReturnsURL() throws {
-        let expectedPath = try XCTUnwrap(URL(string: "/crimes-street-dates"))
+@Suite("AvailabilityEndpoint")
+struct AvailabilityEndpointTests {
+    @Test
+    func dataSetsEndpointReturnsURL() throws {
+        let expectedPath = try #require(URL(string: "/crimes-street-dates"))
 
         let path = AvailabilityEndpoint.dataSets.path
 
-        XCTAssertEqual(path, expectedPath)
+        #expect(path == expectedPath)
     }
 
 }

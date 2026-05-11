@@ -19,66 +19,57 @@
 
 import CoreLocation
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class NeighbourhoodServiceTests: XCTestCase {
+@Suite("Neighbourhood service")
+struct NeighbourhoodServiceTests {
 
-    var service: NeighbourhoodService!
-    var apiClient: MockAPIClient!
-    var cache: NeighbourhoodMockCache!
-    var availableDataRegion: AvailableRegion!
+    let service: NeighbourhoodService
+    let apiClient: MockAPIClient
+    let cache: NeighbourhoodMockCache
+    let availableDataRegion: AvailableRegion
 
-    override func setUp() {
-        super.setUp()
-        apiClient = MockAPIClient()
-        cache = NeighbourhoodMockCache()
-        availableDataRegion = .test
-        service = NeighbourhoodService(
+    init() {
+        self.apiClient = MockAPIClient()
+        self.cache = NeighbourhoodMockCache()
+        self.availableDataRegion = .test
+        self.service = NeighbourhoodService(
             apiClient: apiClient,
             cache: cache,
             availableDataRegion: availableDataRegion
         )
     }
 
-    override func tearDown() {
-        service = nil
-        availableDataRegion = nil
-        cache = nil
-        apiClient = nil
-        super.tearDown()
-    }
-
-}
-
-extension NeighbourhoodServiceTests {
-
-    func testNeighboursWhenNotCachedReturnsNeighbourhoodReferences() async throws {
+    @Test("neighbours when not cached returns neighbourhood references")
+    func neighboursWhenNotCachedReturnsNeighbourhoodReferences() async throws {
         let policeForceID = "leicestershire"
         let expectedResult = NeighbourhoodReference.mocks
         await apiClient.add(response: .success(NeighbourhoodReference.mocks))
 
         let result = try await service.neighbourhoods(inPoliceForce: policeForceID)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
         let requestedURLsCount = await apiClient.requestedURLs.count
-        XCTAssertEqual(requestedURLsCount, 1)
+        #expect(requestedURLsCount == 1)
         let lastURL = await apiClient.requestedURLs.last
-        XCTAssertEqual(lastURL, NeighbourhoodsEndpoint.list(policeForceID: policeForceID).path)
+        #expect(lastURL == NeighbourhoodsEndpoint.list(policeForceID: policeForceID).path)
     }
 
-    func testNeighboursWhenCachedReturnsCachedNeighbourhoodReferences() async throws {
+    @Test("neighbours when cached returns cached neighbourhood references")
+    func neighboursWhenCachedReturnsCachedNeighbourhoodReferences() async throws {
         let policeForceID = "leicestershire"
         let expectedResult = NeighbourhoodReference.mocks
         await cache.setNeighbourhoods(expectedResult, inPoliceForce: policeForceID)
 
         let result = try await service.neighbourhoods(inPoliceForce: policeForceID)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
         let requestedURLsCount = await apiClient.requestedURLs.count
-        XCTAssertEqual(requestedURLsCount, 0)
+        #expect(requestedURLsCount == 0)
     }
 
-    func testNeighboursWhenNotCachedAndReturnsNeighbourhoodReferencesShouldCacheResult() async throws {
+    @Test("neighbours when not cached and returns neighbourhood references should cache result")
+    func neighboursWhenNotCachedAndReturnsNeighbourhoodReferencesShouldCacheResult() async throws {
         let policeForceID = "leicestershire"
         let expectedResult = NeighbourhoodReference.mocks
         await apiClient.add(response: .success(NeighbourhoodReference.mocks))
@@ -86,10 +77,11 @@ extension NeighbourhoodServiceTests {
 
         let cachedResult = await cache.neighbourhoods(inPoliceForce: policeForceID)
 
-        XCTAssertEqual(cachedResult, expectedResult)
+        #expect(cachedResult == expectedResult)
     }
 
-    func testNeighbourhoodWhenNotCachedReturnsNeighbourhood() async throws {
+    @Test("neighbourhood when not cached returns neighbourhood")
+    func neighbourhoodWhenNotCachedReturnsNeighbourhood() async throws {
         let expectedResult = Neighbourhood.mock
         let id = expectedResult.id
         let policeForceID = "leicestershire"
@@ -97,17 +89,15 @@ extension NeighbourhoodServiceTests {
 
         let result = try await service.neighbourhood(withID: id, inPoliceForce: policeForceID)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
         let requestedURLsCount = await apiClient.requestedURLs.count
-        XCTAssertEqual(requestedURLsCount, 1)
+        #expect(requestedURLsCount == 1)
         let lastURL = await apiClient.requestedURLs.last
-        XCTAssertEqual(
-            lastURL,
-            NeighbourhoodsEndpoint.details(id: id, policeForceID: policeForceID).path
-        )
+        #expect(lastURL == NeighbourhoodsEndpoint.details(id: id, policeForceID: policeForceID).path)
     }
 
-    func testNeighbourhoodWhenNotCachedAndNotFoundThrowsNotFoundError() async throws {
+    @Test("neighbourhood when not cached and not found throws notFound error")
+    func neighbourhoodWhenNotCachedAndNotFoundThrowsNotFoundError() async throws {
         let id = "NC04"
         let policeForceID = "leicestershire"
         await apiClient.add(response: .failure(APIClientError.notFound))
@@ -119,10 +109,11 @@ extension NeighbourhoodServiceTests {
             resultError = error
         }
 
-        XCTAssertEqual(resultError, .notFound)
+        #expect(resultError == .notFound)
     }
 
-    func testNeighbourhoodWhenCachedReturnsCachedNeighbourhood() async throws {
+    @Test("neighbourhood when cached returns cached neighbourhood")
+    func neighbourhoodWhenCachedReturnsCachedNeighbourhood() async throws {
         let expectedResult = Neighbourhood.mock
         let id = expectedResult.id
         let policeForceID = "leicestershire"
@@ -130,12 +121,13 @@ extension NeighbourhoodServiceTests {
 
         let result = try await service.neighbourhood(withID: id, inPoliceForce: policeForceID)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
         let requestedURLsCount = await apiClient.requestedURLs.count
-        XCTAssertEqual(requestedURLsCount, 0)
+        #expect(requestedURLsCount == 0)
     }
 
-    func testNeighbourhoodWhenNotCachedAndReturnsNeighbourhoodShouldCacheResult() async throws {
+    @Test("neighbourhood when not cached and returns neighbourhood should cache result")
+    func neighbourhoodWhenNotCachedAndReturnsNeighbourhoodShouldCacheResult() async throws {
         let expectedResult = Neighbourhood.mock
         let id = expectedResult.id
         let policeForceID = "leicestershire"
@@ -144,10 +136,11 @@ extension NeighbourhoodServiceTests {
 
         let cachedResult = await cache.neighbourhood(withID: id, inPoliceForce: policeForceID)
 
-        XCTAssertEqual(cachedResult, expectedResult)
+        #expect(cachedResult == expectedResult)
     }
 
-    func testNeighbourhoodAtCoordinateReturnsNeighbourhood() async throws {
+    @Test("neighbourhood at coordinate returns neighbourhood")
+    func neighbourhoodAtCoordinateReturnsNeighbourhood() async throws {
         let coordinate = CLLocationCoordinate2D.mock
         let neighbourhoodPolicingTeam = NeighbourhoodPolicingTeam.mock
         let expectedResult = Neighbourhood.mock
@@ -157,29 +150,22 @@ extension NeighbourhoodServiceTests {
 
         let result = try await service.neighbourhood(at: coordinate)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
         let requestedURLsCount = await apiClient.requestedURLs.count
-        XCTAssertEqual(requestedURLsCount, 2)
+        #expect(requestedURLsCount == 2)
         let firstURL = await apiClient.requestedURLs.first
-        XCTAssertEqual(
-            firstURL,
-            NeighbourhoodsEndpoint.locateNeighbourhood(coordinate: coordinate).path
-        )
+        #expect(firstURL == NeighbourhoodsEndpoint.locateNeighbourhood(coordinate: coordinate).path)
         let lastURL = await apiClient.requestedURLs.last
-        XCTAssertEqual(
-            lastURL,
-            NeighbourhoodsEndpoint.details(
+        #expect(
+            lastURL == NeighbourhoodsEndpoint.details(
                 id: neighbourhoodPolicingTeam.neighbourhood,
                 policeForceID: neighbourhoodPolicingTeam.force
             ).path
         )
     }
 
-}
-
-extension NeighbourhoodServiceTests {
-
-    func testBoundaryWhenNotCachedReturnsBoundary() async throws {
+    @Test("boundary when not cached returns boundary")
+    func boundaryWhenNotCachedReturnsBoundary() async throws {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
         let expectedResult = CLLocationCoordinate2D.mocks
@@ -187,17 +173,20 @@ extension NeighbourhoodServiceTests {
 
         let result = try await service.boundary(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
         let requestedURLsCount = await apiClient.requestedURLs.count
-        XCTAssertEqual(requestedURLsCount, 1)
+        #expect(requestedURLsCount == 1)
         let lastURL = await apiClient.requestedURLs.last
-        XCTAssertEqual(
-            lastURL,
-            NeighbourhoodsEndpoint.boundary(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID).path
+        #expect(
+            lastURL == NeighbourhoodsEndpoint.boundary(
+                neighbourhoodID: neighbourhoodID,
+                policeForceID: policeForceID
+            ).path
         )
     }
 
-    func testBoundaryWhenNotCachedAndNotFoundThrowsNotFoundError() async throws {
+    @Test("boundary when not cached and not found throws notFound error")
+    func boundaryWhenNotCachedAndNotFoundThrowsNotFoundError() async throws {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
         await apiClient.add(response: .failure(APIClientError.notFound))
@@ -209,10 +198,11 @@ extension NeighbourhoodServiceTests {
             resultError = error
         }
 
-        XCTAssertEqual(resultError, .notFound)
+        #expect(resultError == .notFound)
     }
 
-    func testBoundaryWhenCachedReturnsCachedBoundary() async throws {
+    @Test("boundary when cached returns cached boundary")
+    func boundaryWhenCachedReturnsCachedBoundary() async throws {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
         let expectedResult = CLLocationCoordinate2D.mocks
@@ -220,12 +210,13 @@ extension NeighbourhoodServiceTests {
 
         let result = try await service.boundary(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
         let requestedURLsCount = await apiClient.requestedURLs.count
-        XCTAssertEqual(requestedURLsCount, 0)
+        #expect(requestedURLsCount == 0)
     }
 
-    func testBoundaryWhenNotCachedAndReturnsBoundaryShouldCacheResult() async throws {
+    @Test("boundary when not cached and returns boundary should cache result")
+    func boundaryWhenNotCachedAndReturnsBoundaryShouldCacheResult() async throws {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
         let expectedResult = CLLocationCoordinate2D.mocks
@@ -234,14 +225,17 @@ extension NeighbourhoodServiceTests {
 
         let cachedResult = await cache.boundary(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
-        XCTAssertEqual(cachedResult, expectedResult)
+        #expect(cachedResult == expectedResult)
     }
 
 }
 
+// MARK: - Police officers, priorities, and policing team
+
 extension NeighbourhoodServiceTests {
 
-    func testPoliceOfficersWhenNotCachedReturnsPoliceOfficers() async throws {
+    @Test("police officers when not cached returns police officers")
+    func policeOfficersWhenNotCachedReturnsPoliceOfficers() async throws {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
         let expectedResult = PoliceOfficer.mocks
@@ -252,17 +246,20 @@ extension NeighbourhoodServiceTests {
             inPoliceForce: policeForceID
         )
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
         let requestedURLsCount = await apiClient.requestedURLs.count
-        XCTAssertEqual(requestedURLsCount, 1)
+        #expect(requestedURLsCount == 1)
         let lastURL = await apiClient.requestedURLs.last
-        XCTAssertEqual(
-            lastURL,
-            NeighbourhoodsEndpoint.policeOfficers(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID).path
+        #expect(
+            lastURL == NeighbourhoodsEndpoint.policeOfficers(
+                neighbourhoodID: neighbourhoodID,
+                policeForceID: policeForceID
+            ).path
         )
     }
 
-    func testPoliceOfficersWhenCachedReturnsCachedPoliceOfficers() async throws {
+    @Test("police officers when cached returns cached police officers")
+    func policeOfficersWhenCachedReturnsCachedPoliceOfficers() async throws {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
         let expectedResult = PoliceOfficer.mocks
@@ -270,12 +267,13 @@ extension NeighbourhoodServiceTests {
 
         let result = try await service.policeOfficers(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
         let requestedURLsCount = await apiClient.requestedURLs.count
-        XCTAssertEqual(requestedURLsCount, 0)
+        #expect(requestedURLsCount == 0)
     }
 
-    func testPoliceOfficersWhenNotCachedAndReturnsPoliceOfficersShouldCacheResult() async throws {
+    @Test("police officers when not cached and returns police officers should cache result")
+    func policeOfficersWhenNotCachedAndReturnsPoliceOfficersShouldCacheResult() async throws {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
         let expectedResult = PoliceOfficer.mocks
@@ -284,14 +282,11 @@ extension NeighbourhoodServiceTests {
 
         let cachedResult = await cache.policeOfficers(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
-        XCTAssertEqual(cachedResult, expectedResult)
+        #expect(cachedResult == expectedResult)
     }
 
-}
-
-extension NeighbourhoodServiceTests {
-
-    func testPrioritiesWhenNotCachedReturnsNeighbourhoodPriorities() async throws {
+    @Test("priorities when not cached returns neighbourhood priorities")
+    func prioritiesWhenNotCachedReturnsNeighbourhoodPriorities() async throws {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
         let expectedResult = NeighbourhoodPriority.mocks
@@ -299,17 +294,20 @@ extension NeighbourhoodServiceTests {
 
         let result = try await service.priorities(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
         let requestedURLsCount = await apiClient.requestedURLs.count
-        XCTAssertEqual(requestedURLsCount, 1)
+        #expect(requestedURLsCount == 1)
         let lastURL = await apiClient.requestedURLs.last
-        XCTAssertEqual(
-            lastURL,
-            NeighbourhoodsEndpoint.priorities(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID).path
+        #expect(
+            lastURL == NeighbourhoodsEndpoint.priorities(
+                neighbourhoodID: neighbourhoodID,
+                policeForceID: policeForceID
+            ).path
         )
     }
 
-    func testPrioritiesWhenCachedReturnsCachedNeighbourhoodPriorities() async throws {
+    @Test("priorities when cached returns cached neighbourhood priorities")
+    func prioritiesWhenCachedReturnsCachedNeighbourhoodPriorities() async throws {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
         let expectedResult = NeighbourhoodPriority.mocks
@@ -317,12 +315,13 @@ extension NeighbourhoodServiceTests {
 
         let result = try await service.priorities(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
         let requestedURLsCount = await apiClient.requestedURLs.count
-        XCTAssertEqual(requestedURLsCount, 0)
+        #expect(requestedURLsCount == 0)
     }
 
-    func testPrioritiesWhenNotCachedAndReturnsNeighbourhoodPrioritiesShouldCacheResult() async throws {
+    @Test("priorities when not cached and returns neighbourhood priorities should cache result")
+    func prioritiesWhenNotCachedAndReturnsNeighbourhoodPrioritiesShouldCacheResult() async throws {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
         let expectedResult = NeighbourhoodPriority.mocks
@@ -331,31 +330,26 @@ extension NeighbourhoodServiceTests {
 
         let cachedResult = await cache.priorities(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
-        XCTAssertEqual(cachedResult, expectedResult)
+        #expect(cachedResult == expectedResult)
     }
 
-}
-
-extension NeighbourhoodServiceTests {
-
-    func testNeighbourhoodPolicingTeamAtCoordinateReturnsNeighbourhoodPolicingTeam() async throws {
+    @Test("neighbourhood policing team at coordinate returns neighbourhood policing team")
+    func neighbourhoodPolicingTeamAtCoordinateReturnsNeighbourhoodPolicingTeam() async throws {
         let coordinate = CLLocationCoordinate2D.mock
         let expectedResult = NeighbourhoodPolicingTeam.mock
         await apiClient.add(response: .success(NeighbourhoodPolicingTeam.mock))
 
         let result = try await service.neighbourhoodPolicingTeam(at: coordinate)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
         let requestedURLsCount = await apiClient.requestedURLs.count
-        XCTAssertEqual(requestedURLsCount, 1)
+        #expect(requestedURLsCount == 1)
         let lastURL = await apiClient.requestedURLs.last
-        XCTAssertEqual(
-            lastURL,
-            NeighbourhoodsEndpoint.locateNeighbourhood(coordinate: coordinate).path
-        )
+        #expect(lastURL == NeighbourhoodsEndpoint.locateNeighbourhood(coordinate: coordinate).path)
     }
 
-    func testNeighbourhoodPolicingTeamAtCoordinateWhenNotFoundThrowsNotFoundError() async throws {
+    @Test("neighbourhood policing team at coordinate when not found throws notFound error")
+    func neighbourhoodPolicingTeamAtCoordinateWhenNotFoundThrowsNotFoundError() async throws {
         let coordinate = CLLocationCoordinate2D.mock
         await apiClient.add(response: .failure(APIClientError.notFound))
 
@@ -366,10 +360,11 @@ extension NeighbourhoodServiceTests {
             resultError = error
         }
 
-        XCTAssertEqual(resultError, .notFound)
+        #expect(resultError == .notFound)
     }
 
-    func testNeighbourhoodPolicingTeamAtCoordsWhenNotInAvailableDataRegionThrowsError() async throws {
+    @Test("neighbourhood policing team at coords when not in available data region throws error")
+    func neighbourhoodPolicingTeamAtCoordsWhenNotInAvailableDataRegionThrowsError() async throws {
         let coordinate = CLLocationCoordinate2D.outsideAvailableDataRegion
         let expectedResult = NeighbourhoodPolicingTeam.mock
         await apiClient.add(response: .success(expectedResult))
@@ -381,9 +376,9 @@ extension NeighbourhoodServiceTests {
             resultError = error
         }
 
-        XCTAssertEqual(resultError, .locationOutsideOfDataSetRegion)
+        #expect(resultError == .locationOutsideOfDataSetRegion)
         let requestedURLsCount = await apiClient.requestedURLs.count
-        XCTAssertEqual(requestedURLsCount, 0)
+        #expect(requestedURLsCount == 0)
     }
 
 }

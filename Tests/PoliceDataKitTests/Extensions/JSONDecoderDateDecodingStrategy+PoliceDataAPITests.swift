@@ -17,25 +17,23 @@
 //  limitations under the License.
 //
 
+import Foundation
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class JSONDecoderDateDecodingStrategyPoliceDataAPITestsTests: XCTestCase {
+@Suite("JSONDecoder date decoding strategy PoliceDataAPI")
+struct JSONDecoderDateDecodingStrategyPoliceDataAPITestsTests {
 
-    var decoder: JSONDecoder!
+    let decoder: JSONDecoder
 
-    override func setUp() {
-        super.setUp()
-        decoder = JSONDecoder()
+    init() {
+        let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .policeDataAPI
+        self.decoder = decoder
     }
 
-    override func tearDown() {
-        decoder = nil
-        super.tearDown()
-    }
-
-    func testDecodingDateTimeDateReturnsDate() throws {
+    @Test("decoding DateTime date returns date")
+    func decodingDateTimeDateReturnsDate() throws {
         let data = Data("""
             {
                 "date": "2021-05-24T11:28:00"
@@ -46,10 +44,11 @@ final class JSONDecoderDateDecodingStrategyPoliceDataAPITestsTests: XCTestCase {
         let container = try decoder.decode(Container.self, from: data)
         let result = container.date
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testDecodingDateTimeWithTimeZoneOffsetDateReturnsDate() throws {
+    @Test("decoding DateTime with timezone offset date returns date")
+    func decodingDateTimeWithTimeZoneOffsetDateReturnsDate() throws {
         let data = Data("""
             {
                 "date": "2021-05-24T11:28:00-07:00"
@@ -60,10 +59,11 @@ final class JSONDecoderDateDecodingStrategyPoliceDataAPITestsTests: XCTestCase {
         let container = try decoder.decode(Container.self, from: data)
         let result = container.date
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testDecodingYearMonthDateReturnsDate() throws {
+    @Test("decoding year-month date returns date")
+    func decodingYearMonthDateReturnsDate() throws {
         let data = Data("""
             {
                 "date": "2021-05"
@@ -74,17 +74,20 @@ final class JSONDecoderDateDecodingStrategyPoliceDataAPITestsTests: XCTestCase {
         let container = try decoder.decode(Container.self, from: data)
         let result = container.date
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testDecodingWhenInvalidDateThrowsDecodingError() throws {
+    @Test("decoding when invalid date throws decoding error")
+    func decodingWhenInvalidDateThrowsDecodingError() {
         let data = Data("""
             {
                 "date": "11111"
             }
         """.utf8)
 
-        XCTAssertThrowsError(try decoder.decode(Container.self, from: data))
+        #expect(throws: (any Error).self) {
+            try decoder.decode(Container.self, from: data)
+        }
     }
 
 }

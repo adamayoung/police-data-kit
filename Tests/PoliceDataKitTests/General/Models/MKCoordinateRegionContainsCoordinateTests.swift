@@ -17,161 +17,60 @@
 //  limitations under the License.
 //
 
+import CoreLocation
 import MapKit
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class MKCoordinateRegionDataModelContainsTests: XCTestCase {
+@Suite("MKCoordinateRegion contains coordinate")
+struct MKCoordinateRegionDataModelContainsTests {
 
-    var region: MKCoordinateRegion!
+    let region: MKCoordinateRegion
 
-    override func setUp() {
-        super.setUp()
-        region = MKCoordinateRegion(
+    init() {
+        self.region = MKCoordinateRegion(
             center: CLLocationCoordinate2D(latitude: 0, longitude: 0),
             span: MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1)
         )
     }
 
-    override func tearDown() {
-        region = nil
-        super.tearDown()
-    }
-
-    func testContainsWhenCoordinateIsNorthOfRegionReturnsFalse() {
-        let coordinate = CLLocationCoordinate2D(latitude: -2, longitude: 0)
-
+    @Test(
+        "contains when coordinate is outside region returns false",
+        arguments: [
+            CLLocationCoordinate2D(latitude: -2, longitude: 0), // north of region
+            CLLocationCoordinate2D(latitude: -2, longitude: 2), // north-east
+            CLLocationCoordinate2D(latitude: 0, longitude: 2), // east
+            CLLocationCoordinate2D(latitude: 2, longitude: 2), // south-east
+            CLLocationCoordinate2D(latitude: 2, longitude: 0), // south
+            CLLocationCoordinate2D(latitude: 2, longitude: -2), // south-west
+            CLLocationCoordinate2D(latitude: 0, longitude: -2), // west
+            CLLocationCoordinate2D(latitude: -2, longitude: -2) // north-west
+        ]
+    )
+    func containsWhenCoordinateIsOutsideRegionReturnsFalse(coordinate: CLLocationCoordinate2D) {
         let result = region.contains(coordinate: coordinate)
 
-        XCTAssertFalse(result)
+        #expect(!result)
     }
 
-    func testContainsWhenCoordinateIsNorthEastOfRegionReturnsFalse() {
-        let coordinate = CLLocationCoordinate2D(latitude: -2, longitude: 2)
-
+    @Test(
+        "contains when coordinate is inside region returns true",
+        arguments: [
+            CLLocationCoordinate2D(latitude: 0, longitude: 0), // center
+            CLLocationCoordinate2D(latitude: -0.5, longitude: 0), // north inside
+            CLLocationCoordinate2D(latitude: -0.5, longitude: 0.5), // north-east inside
+            CLLocationCoordinate2D(latitude: 0, longitude: 0.5), // east inside
+            CLLocationCoordinate2D(latitude: 0.5, longitude: 0.5), // south-east inside
+            CLLocationCoordinate2D(latitude: 0.5, longitude: 0), // south inside
+            CLLocationCoordinate2D(latitude: 0.5, longitude: -0.5), // south-west inside
+            CLLocationCoordinate2D(latitude: 0, longitude: -0.5), // west inside
+            CLLocationCoordinate2D(latitude: -0.5, longitude: -0.5) // north-west inside
+        ]
+    )
+    func containsWhenCoordinateIsInsideRegionReturnsTrue(coordinate: CLLocationCoordinate2D) {
         let result = region.contains(coordinate: coordinate)
 
-        XCTAssertFalse(result)
-    }
-
-    func testContainsWhenCoordinateIsEastOfRegionReturnsFalse() {
-        let coordinate = CLLocationCoordinate2D(latitude: 0, longitude: 2)
-
-        let result = region.contains(coordinate: coordinate)
-
-        XCTAssertFalse(result)
-    }
-
-    func testContainsWhenCoordinateIsSouthEastOfRegionReturnsFalse() {
-        let coordinate = CLLocationCoordinate2D(latitude: 2, longitude: 2)
-
-        let result = region.contains(coordinate: coordinate)
-
-        XCTAssertFalse(result)
-    }
-
-    func testContainsWhenCoordinateIsSouthOfRegionReturnsFalse() {
-        let coordinate = CLLocationCoordinate2D(latitude: 2, longitude: 0)
-
-        let result = region.contains(coordinate: coordinate)
-
-        XCTAssertFalse(result)
-    }
-
-    func testContainsWhenCoordinateIsSouthWestOfRegionReturnsFalse() {
-        let coordinate = CLLocationCoordinate2D(latitude: 2, longitude: -2)
-
-        let result = region.contains(coordinate: coordinate)
-
-        XCTAssertFalse(result)
-    }
-
-    func testContainsWhenCoordinateIsWestOfRegionReturnsFalse() {
-        let coordinate = CLLocationCoordinate2D(latitude: 0, longitude: -2)
-
-        let result = region.contains(coordinate: coordinate)
-
-        XCTAssertFalse(result)
-    }
-
-    func testContainsWhenCoordinateIsNorthWestOfRegionReturnsFalse() {
-        let coordinate = CLLocationCoordinate2D(latitude: -2, longitude: -2)
-
-        let result = region.contains(coordinate: coordinate)
-
-        XCTAssertFalse(result)
-    }
-
-    func testContainsWhenCoordinateIsInCenterOfRegionReturnsTrue() {
-        let coordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
-
-        let result = region.contains(coordinate: coordinate)
-
-        XCTAssertTrue(result)
-    }
-
-    func testContainsWhenCoordinateIsNorthInsideOfRegionReturnsTrue() {
-        let coordinate = CLLocationCoordinate2D(latitude: -0.5, longitude: 0)
-
-        let result = region.contains(coordinate: coordinate)
-
-        XCTAssertTrue(result)
-    }
-
-    func testContainsWhenCoordinateIsNorthEastInsideOfRegionReturnsTrue() {
-        let coordinate = CLLocationCoordinate2D(latitude: -0.5, longitude: 0.5)
-
-        let result = region.contains(coordinate: coordinate)
-
-        XCTAssertTrue(result)
-    }
-
-    func testContainsWhenCoordinateIsEastInsideOfRegionReturnsTrue() {
-        let coordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0.5)
-
-        let result = region.contains(coordinate: coordinate)
-
-        XCTAssertTrue(result)
-    }
-
-    func testContainsWhenCoordinateIsSouthEastInsideOfRegionReturnsTrue() {
-        let coordinate = CLLocationCoordinate2D(latitude: 0.5, longitude: 0.5)
-
-        let result = region.contains(coordinate: coordinate)
-
-        XCTAssertTrue(result)
-    }
-
-    func testContainsWhenCoordinateIsSouthInsideOfRegionReturnsTrue() {
-        let coordinate = CLLocationCoordinate2D(latitude: 0.5, longitude: 0)
-
-        let result = region.contains(coordinate: coordinate)
-
-        XCTAssertTrue(result)
-    }
-
-    func testContainsWhenCoordinateIsSouthWestInsideOfRegionReturnsTrue() {
-        let coordinate = CLLocationCoordinate2D(latitude: 0.5, longitude: -0.5)
-
-        let result = region.contains(coordinate: coordinate)
-
-        XCTAssertTrue(result)
-    }
-
-    func testContainsWhenCoordinateIsWestInsideOfRegionReturnsTrue() {
-        let coordinate = CLLocationCoordinate2D(latitude: 0, longitude: -0.5)
-
-        let result = region.contains(coordinate: coordinate)
-
-        XCTAssertTrue(result)
-    }
-
-    func testContainsWhenCoordinateIsNorthWestInsideOfRegionReturnsTrue() {
-        let coordinate = CLLocationCoordinate2D(latitude: -0.5, longitude: -0.5)
-
-        let result = region.contains(coordinate: coordinate)
-
-        XCTAssertTrue(result)
+        #expect(result)
     }
 
 }

@@ -17,27 +17,31 @@
 //  limitations under the License.
 //
 
+import Foundation
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class LinkTests: XCTestCase {
-
-    func testDecodeReturnsLink() throws {
+@Suite("Link")
+struct LinkTests {
+    @Test
+    func decodeReturnsLink() throws {
         let result = try JSONDecoder.policeDataAPI.decode(Link.self, fromResource: "link")
 
-        XCTAssertEqual(result, .mock)
+        #expect(result == .mock)
     }
 
-    func testDecodeWhenNoDescriptionReturnsLink() throws {
+    @Test
+    func decodeWhenNoDescriptionReturnsLink() throws {
         let result = try JSONDecoder.policeDataAPI.decode(Link.self, fromResource: "link-no-description")
 
-        XCTAssertEqual(result, .mockNoDescription)
+        #expect(result == .mockNoDescription)
     }
 
-    func testURLWhenURLIsEmptyReturnsNil() {
+    @Test
+    func uRLWhenURLIsEmptyReturnsNil() {
         let link = Link(title: "Title", description: "Description", url: nil)
 
-        XCTAssertNil(link.url)
+        #expect(link.url == nil)
     }
 
 }

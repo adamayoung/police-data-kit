@@ -18,49 +18,46 @@
 //
 
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class AvailabilityDefaultCacheTests: XCTestCase {
+@Suite("AvailabilityDefaultCache")
+struct AvailabilityDefaultCacheTests {
 
-    var cache: AvailabilityDefaultCache!
-    var cacheStore: MockCache!
+    let cache: AvailabilityDefaultCache
+    let cacheStore: MockCache
 
-    override func setUp() {
-        super.setUp()
-        cacheStore = MockCache()
-        cache = AvailabilityDefaultCache(cacheStore: cacheStore)
+    init() {
+        self.cacheStore = MockCache()
+        self.cache = AvailabilityDefaultCache(cacheStore: cacheStore)
     }
 
-    override func tearDown() {
-        cache = nil
-        cacheStore = nil
-        super.tearDown()
-    }
-
-    func testAvailableDataSetsWhenMissReturnsNil() async {
+    @Test("availableDataSets when miss returns nil")
+    func availableDataSetsWhenMissReturnsNil() async {
         let result = await cache.availableDataSets()
 
-        XCTAssertNil(result)
+        #expect(result == nil)
     }
 
-    func testAvailableDataSetsWhenHitReturnsAvailableDataSets() async {
+    @Test("availableDataSets when hit returns available data sets")
+    func availableDataSetsWhenHitReturnsAvailableDataSets() async {
         let cacheKey = AvailableDataSetsCachingKey()
         let expectedResult = DataSet.mocks
         await cacheStore.set(expectedResult, for: cacheKey)
 
         let result = await cache.availableDataSets()
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testSetAvailableDataSetsAvailableDataSets() async {
+    @Test("setAvailableDataSets sets available data sets")
+    func setAvailableDataSetsAvailableDataSets() async {
         let cacheKey = AvailableDataSetsCachingKey()
         let expectedResult = DataSet.mocks
 
         await cache.setAvailableDataSets(expectedResult)
         let result = await cacheStore.object(for: cacheKey, type: [DataSet].self)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
 }

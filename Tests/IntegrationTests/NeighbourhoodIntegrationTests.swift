@@ -19,52 +19,51 @@
 
 import CoreLocation
 import PoliceDataKit
-import XCTest
+import Testing
 
-final class NeighbourhoodIntegrationTests: XCTestCase {
+@Suite("Neighbourhood integration", .tags(.integration))
+struct NeighbourhoodIntegrationTests {
 
-    var neighbourhoodService: NeighbourhoodService!
+    let neighbourhoodService: NeighbourhoodService
 
-    override func setUp() {
-        super.setUp()
-        neighbourhoodService = NeighbourhoodService()
+    init() {
+        self.neighbourhoodService = NeighbourhoodService()
     }
 
-    override func tearDown() {
-        neighbourhoodService = nil
-        super.tearDown()
-    }
-
-    func testNeighbourhoodsInPoliceForceForNorfolkConstabulary() async throws {
+    @Test("neighbourhoods in police force for Norfolk Constabulary")
+    func neighbourhoodsInPoliceForceForNorfolkConstabulary() async throws {
         let policeForceID = "norfolk"
 
         let neighbourhoods = try await neighbourhoodService.neighbourhoods(inPoliceForce: policeForceID)
 
-        XCTAssertGreaterThan(neighbourhoods.count, 0)
+        #expect(!neighbourhoods.isEmpty)
     }
 
-    func testNeighbourhoodsInPoliceForceForNorthWalesPolice() async throws {
+    @Test("neighbourhoods in police force for North Wales Police")
+    func neighbourhoodsInPoliceForceForNorthWalesPolice() async throws {
         let policeForceID = "north-wales"
 
         let neighbourhoods = try await neighbourhoodService.neighbourhoods(inPoliceForce: policeForceID)
 
-        XCTAssertGreaterThan(neighbourhoods.count, 0)
+        #expect(!neighbourhoods.isEmpty)
     }
 
-    func testNeighbourhoodsInPoliceForceForInvalidPoliceForce() async throws {
+    @Test("neighbourhoods in police force for invalid police force throws not found")
+    func neighbourhoodsInPoliceForceForInvalidPoliceForce() async throws {
         let policeForceID = "ccc"
 
         var neighbourhoodError: NeighbourhoodError?
         do {
             _ = try await neighbourhoodService.neighbourhoods(inPoliceForce: policeForceID)
-        } catch let error {
-            neighbourhoodError = error as? NeighbourhoodError
+        } catch {
+            neighbourhoodError = error
         }
 
-        XCTAssertEqual(neighbourhoodError, .notFound)
+        #expect(neighbourhoodError == .notFound)
     }
 
-    func testNeighbourhoodWithIDInPoliceForceForCityCentreLeicestershire() async throws {
+    @Test("neighbourhood with ID in police force for City Centre Leicestershire")
+    func neighbourhoodWithIDInPoliceForceForCityCentreLeicestershire() async throws {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
 
@@ -73,10 +72,11 @@ final class NeighbourhoodIntegrationTests: XCTestCase {
             inPoliceForce: policeForceID
         )
 
-        XCTAssertEqual(neighbourhood.id, neighbourhoodID)
+        #expect(neighbourhood.id == neighbourhoodID)
     }
 
-    func testNeighbourhoodWithIDInPoliceForceForCaistorLincolnshire() async throws {
+    @Test("neighbourhood with ID in police force for Caistor Lincolnshire")
+    func neighbourhoodWithIDInPoliceForceForCaistorLincolnshire() async throws {
         let neighbourhoodID = "NC09"
         let policeForceID = "lincolnshire"
 
@@ -85,60 +85,65 @@ final class NeighbourhoodIntegrationTests: XCTestCase {
             inPoliceForce: policeForceID
         )
 
-        XCTAssertEqual(neighbourhood.id, neighbourhoodID)
+        #expect(neighbourhood.id == neighbourhoodID)
     }
 
-    func testNeighbourhoodWithIDInPoliceForceForInvalidNeigbourhood() async throws {
+    @Test("neighbourhood with ID in police force for invalid neighbourhood throws not found")
+    func neighbourhoodWithIDInPoliceForceForInvalidNeighbourhood() async throws {
         let neighbourhoodID = "111"
         let policeForceID = "lincolnshire"
 
         var neighbourhoodError: NeighbourhoodError?
         do {
             _ = try await neighbourhoodService.neighbourhood(withID: neighbourhoodID, inPoliceForce: policeForceID)
-        } catch let error {
-            neighbourhoodError = error as? NeighbourhoodError
+        } catch {
+            neighbourhoodError = error
         }
 
-        XCTAssertEqual(neighbourhoodError, .notFound)
+        #expect(neighbourhoodError == .notFound)
     }
 
-    func testNeighbourhoodWithIDInPoliceForceForInvalidPoliceForce() async throws {
+    @Test("neighbourhood with ID in police force for invalid police force throws not found")
+    func neighbourhoodWithIDInPoliceForceForInvalidPoliceForce() async throws {
         let neighbourhoodID = "NC09"
         let policeForceID = "fff"
 
         var neighbourhoodError: NeighbourhoodError?
         do {
             _ = try await neighbourhoodService.neighbourhood(withID: neighbourhoodID, inPoliceForce: policeForceID)
-        } catch let error {
-            neighbourhoodError = error as? NeighbourhoodError
+        } catch {
+            neighbourhoodError = error
         }
 
-        XCTAssertEqual(neighbourhoodError, .notFound)
+        #expect(neighbourhoodError == .notFound)
     }
 
-    func testNeighbourhoodAtCoordinateForLeedsCityCentre() async throws {
+    @Test("neighbourhood at coordinate for Leeds City Centre")
+    func neighbourhoodAtCoordinateForLeedsCityCentre() async throws {
         let leedsCityCentreCoordinate = CLLocationCoordinate2D(latitude: 53.797927, longitude: -1.541522)
 
         let neighbourhood = try await neighbourhoodService.neighbourhood(at: leedsCityCentreCoordinate)
 
-        XCTAssertEqual(neighbourhood.id, "LDT_CITY")
-        XCTAssertEqual(neighbourhood.name, "Leeds City")
+        #expect(neighbourhood.id == "LDT_CITY")
+        #expect(neighbourhood.name == "Leeds City")
     }
 
-    func testNeighbourhoodAtCoordinateWhenCoordinateIsOutsideOfDataSetRegion() async throws {
+    @Test("neighbourhood at coordinate when coordinate is outside of data set region throws error")
+    func neighbourhoodAtCoordinateWhenCoordinateIsOutsideOfDataSetRegion() async throws {
         let coordinate = CLLocationCoordinate2D(latitude: 10.11, longitude: 12.21)
 
         var neighbourhoodError: NeighbourhoodError?
         do {
             _ = try await neighbourhoodService.neighbourhood(at: coordinate)
-        } catch let error {
-            neighbourhoodError = error as? NeighbourhoodError
+        } catch {
+            neighbourhoodError = error
         }
 
-        XCTAssertEqual(neighbourhoodError, .locationOutsideOfDataSetRegion)
+        #expect(neighbourhoodError == .locationOutsideOfDataSetRegion)
     }
 
-    func testBoundaryForNeighbourhoodInPoliceForceForWakefieldCentralWestYokrshire() async throws {
+    @Test("boundary for neighbourhood in police force for Wakefield Central West Yorkshire")
+    func boundaryForNeighbourhoodInPoliceForceForWakefieldCentralWestYorkshire() async throws {
         let neighbourhoodID = "WDT_CEN"
         let policeForceID = "west-yorkshire"
 
@@ -147,10 +152,11 @@ final class NeighbourhoodIntegrationTests: XCTestCase {
             inPoliceForce: policeForceID
         )
 
-        XCTAssertEqual(boundary.count, 961)
+        #expect(boundary.count == 961)
     }
 
-    func testPoliceOfficersForNeighbourhoodInPoliceForceForWakefieldCentralWestYorkshire() async throws {
+    @Test("police officers for neighbourhood in police force for Wakefield Central West Yorkshire")
+    func policeOfficersForNeighbourhoodInPoliceForceForWakefieldCentralWestYorkshire() async throws {
         let neighbourhoodID = "WDT_CEN"
         let policeForceID = "west-yorkshire"
 
@@ -159,10 +165,11 @@ final class NeighbourhoodIntegrationTests: XCTestCase {
             inPoliceForce: policeForceID
         )
 
-        XCTAssertGreaterThan(policeOfficers.count, 0)
+        #expect(!policeOfficers.isEmpty)
     }
 
-    func testPoliceOfficersForNeighbourhoodInPoliceForceForDoncasterWestSouthYorkshire() async throws {
+    @Test("police officers for neighbourhood in police force for Doncaster West South Yorkshire")
+    func policeOfficersForNeighbourhoodInPoliceForceForDoncasterWestSouthYorkshire() async throws {
         let neighbourhoodID = "AB"
         let policeForceID = "south-yorkshire"
 
@@ -171,54 +178,58 @@ final class NeighbourhoodIntegrationTests: XCTestCase {
             inPoliceForce: policeForceID
         )
 
-        XCTAssertGreaterThan(policeOfficers.count, 0)
+        #expect(!policeOfficers.isEmpty)
     }
 
-    func testPrioritiesForNeighbourhoodInPoliceForceForDoncasterWestSouthYorkshire() async throws {
+    @Test("priorities for neighbourhood in police force for Doncaster West South Yorkshire")
+    func prioritiesForNeighbourhoodInPoliceForceForDoncasterWestSouthYorkshire() async throws {
         let neighbourhoodID = "AB"
         let policeForceID = "south-yorkshire"
 
-        let priorties = try await neighbourhoodService.priorities(
+        let priorities = try await neighbourhoodService.priorities(
             forNeighbourhood: neighbourhoodID,
             inPoliceForce: policeForceID
         )
 
-        XCTAssertGreaterThan(priorties.count, 0)
+        #expect(!priorities.isEmpty)
     }
 
-    func testPrioritiesForNeighbourhoodInPoliceForceForGloucesterCityCentreGloucestershire() async throws {
+    @Test("priorities for neighbourhood in police force for Gloucester City Centre Gloucestershire")
+    func prioritiesForNeighbourhoodInPoliceForceForGloucesterCityCentreGloucestershire() async throws {
         let neighbourhoodID = "BA1"
         let policeForceID = "gloucestershire"
 
-        let priorties = try await neighbourhoodService.priorities(
+        let priorities = try await neighbourhoodService.priorities(
             forNeighbourhood: neighbourhoodID,
             inPoliceForce: policeForceID
         )
 
-        XCTAssertGreaterThan(priorties.count, 0)
+        #expect(!priorities.isEmpty)
     }
 
-    func testNeighbourhoodPolicingTeamAtCoordinateForGloucesterCityCentreGloucestershire() async throws {
+    @Test("neighbourhood policing team at coordinate for Gloucester City Centre Gloucestershire")
+    func neighbourhoodPolicingTeamAtCoordinateForGloucesterCityCentreGloucestershire() async throws {
         let gloucesterCoordinate = CLLocationCoordinate2D(latitude: 51.86703, longitude: -2.2413)
 
         let policingTeam = try await neighbourhoodService.neighbourhoodPolicingTeam(at: gloucesterCoordinate)
 
-        XCTAssertEqual(policingTeam.force, "gloucestershire")
-        XCTAssertEqual(policingTeam.neighbourhood, "BA1")
+        #expect(policingTeam.force == "gloucestershire")
+        #expect(policingTeam.neighbourhood == "BA1")
     }
 
-    func testEventsForNeighbourhoodInPoliceForce() async throws {
+    @Test("events for neighbourhood in police force")
+    func eventsForNeighbourhoodInPoliceForce() async throws {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
 
         let events = try await retry {
-            try await self.neighbourhoodService.events(
+            try await neighbourhoodService.events(
                 forNeighbourhood: neighbourhoodID,
                 inPoliceForce: policeForceID
             )
         }
 
-        XCTAssertNotNil(events)
+        _ = events
     }
 
 }

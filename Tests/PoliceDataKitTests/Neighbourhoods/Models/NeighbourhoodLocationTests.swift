@@ -17,41 +17,47 @@
 //  limitations under the License.
 //
 
+import Foundation
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class NeighbourhoodLocationTests: XCTestCase {
+@Suite("NeighbourhoodLocation")
+struct NeighbourhoodLocationTests {
 
-    func testDecodeReturnsLocation() throws {
+    @Test("decode returns location")
+    func decodeReturnsLocation() throws {
         let result = try JSONDecoder.policeDataAPI
             .decode(NeighbourhoodLocation.self, fromResource: "neighbourhood-location")
 
-        XCTAssertEqual(result, .mock)
+        #expect(result == .mock)
     }
 
-    func testDecodeWhenTypeIsNill() throws {
+    @Test("decode when type is nill")
+    func decodeWhenTypeIsNill() throws {
         let result = try JSONDecoder.policeDataAPI
             .decode(NeighbourhoodLocation.self, fromResource: "neighbourhood-location-null-type")
 
-        XCTAssertNil(result.type)
+        #expect(result.type == nil)
     }
 
-    func testLatitudeReturnsLatitude() throws {
+    @Test("latitude returns latitude")
+    func latitudeReturnsLatitude() throws {
         let expectedResult = NeighbourhoodLocation.mock.coordinate?.latitude
 
         let result = try JSONDecoder.policeDataAPI
             .decode(NeighbourhoodLocation.self, fromResource: "neighbourhood-location").coordinate?.latitude
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testLongitudeReturnsLongitude() throws {
+    @Test("longitude returns longitude")
+    func longitudeReturnsLongitude() throws {
         let expectedResult = NeighbourhoodLocation.mock.coordinate?.longitude
 
         let result = try JSONDecoder.policeDataAPI
             .decode(NeighbourhoodLocation.self, fromResource: "neighbourhood-location").coordinate?.longitude
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
 }

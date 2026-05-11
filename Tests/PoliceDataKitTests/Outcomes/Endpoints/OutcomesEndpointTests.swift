@@ -18,53 +18,59 @@
 //
 
 import CoreLocation
+import Foundation
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class OutcomesEndpointTests: XCTestCase {
+@Suite("OutcomesEndpoint")
+struct OutcomesEndpointTests {
 
-    func testStreetLevelOutcomesForStreetEndpointReturnsURL() throws {
+    @Test("street level outcomes for street endpoint returns u r l")
+    func streetLevelOutcomesForStreetEndpointReturnsURL() throws {
         let streetID = 12345
         let date = Date(timeIntervalSince1970: 0)
-        let expectedPath = try XCTUnwrap(URL(string: "/outcomes-at-location?location_id=\(streetID)&date=1970-01"))
+        let expectedPath = try #require(URL(string: "/outcomes-at-location?location_id=\(streetID)&date=1970-01"))
 
         let path = OutcomesEndpoint.streetLevelOutcomesForStreet(streetID: streetID, date: date).path
 
-        XCTAssertEqual(path, expectedPath)
+        #expect(path == expectedPath)
     }
 
-    func testStreetLevelOutcomesAtSpecificPointEndpointReturnsURL() throws {
+    @Test("street level outcomes at specific point endpoint returns u r l")
+    func streetLevelOutcomesAtSpecificPointEndpointReturnsURL() throws {
         let coordinate = CLLocationCoordinate2D(latitude: 2.345, longitude: -1.234)
         let date = Date(timeIntervalSince1970: 0)
-        let expectedPath = try XCTUnwrap(URL(
+        let expectedPath = try #require(URL(
             string: "/outcomes-at-location?lat=\(coordinate.latitude)&lng=\(coordinate.longitude)&date=1970-01"
         ))
 
         let path = OutcomesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate, date: date).path
 
-        XCTAssertEqual(path, expectedPath)
+        #expect(path == expectedPath)
     }
 
-    func testStreetLevelOutcomesInAreaEndpointReturnsURL() throws {
+    @Test("street level outcomes in area endpoint returns u r l")
+    func streetLevelOutcomesInAreaEndpointReturnsURL() throws {
         let coordinates = CLLocationCoordinate2D.mocks
         let coordinatePairs = coordinates.map { "\($0.latitude),\($0.longitude)" }
         let date = Date(timeIntervalSince1970: 0)
-        let expectedPath = try XCTUnwrap(URL(
+        let expectedPath = try #require(URL(
             string: "/outcomes-at-location?poly=\(coordinatePairs.joined(separator: ":"))&date=1970-01"
         ))
 
         let path = OutcomesEndpoint.streetLevelOutcomesInArea(coordinates: coordinates, date: date).path
 
-        XCTAssertEqual(path, expectedPath)
+        #expect(path == expectedPath)
     }
 
-    func testCaseHistoryReturnsURL() throws {
+    @Test("case history returns u r l")
+    func caseHistoryReturnsURL() throws {
         let crimeID = CaseHistory.mock.crime.crimeID
-        let expectedPath = try XCTUnwrap(URL(string: "/outcomes-for-crime/\(crimeID)"))
+        let expectedPath = try #require(URL(string: "/outcomes-for-crime/\(crimeID)"))
 
         let path = OutcomesEndpoint.caseHistory(crimeID: crimeID).path
 
-        XCTAssertEqual(path, expectedPath)
+        #expect(path == expectedPath)
     }
 
 }

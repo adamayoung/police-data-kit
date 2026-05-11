@@ -17,15 +17,17 @@
 //  limitations under the License.
 //
 
+import Foundation
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class CaseHistoryTests: XCTestCase {
-
-    func testDecodeReturnsCaseHistory() throws {
+@Suite("CaseHistory")
+struct CaseHistoryTests {
+    @Test
+    func decodeReturnsCaseHistory() throws {
         let result = try JSONDecoder.policeDataAPI.decode(CaseHistory.self, fromResource: "case-history")
 
-        XCTAssertEqual(result, .mock)
+        #expect(result == .mock)
     }
 
 }

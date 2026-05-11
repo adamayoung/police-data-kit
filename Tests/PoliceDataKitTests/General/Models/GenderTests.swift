@@ -18,36 +18,41 @@
 //
 
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class GenderTests: XCTestCase {
+@Suite("Gender")
+struct GenderTests {
 
-    func testMale() {
+    @Test("male raw value returns .male")
+    func male() {
         let result = Gender(rawValue: "Male")
 
-        XCTAssertEqual(result, .male)
+        #expect(result == .male)
     }
 
-    func testFemale() {
+    @Test("female raw value returns .female")
+    func female() {
         let result = Gender(rawValue: "Female")
 
-        XCTAssertEqual(result, .female)
+        #expect(result == .female)
     }
 
-    func testDescriptionWhenMaleReturnDescription() {
+    @Test("description when male returns description")
+    func descriptionWhenMaleReturnDescription() {
         let expectedResult = "Male"
 
         let result = Gender.male.rawValue
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testDescriptionWhenVehicleSearchReturnDescription() {
+    @Test("description when female returns description")
+    func descriptionWhenVehicleSearchReturnDescription() {
         let expectedResult = "Female"
 
         let result = Gender.female.rawValue
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
 }

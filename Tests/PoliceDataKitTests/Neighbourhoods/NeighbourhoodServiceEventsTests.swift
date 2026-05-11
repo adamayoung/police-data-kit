@@ -17,37 +17,31 @@
 //  limitations under the License.
 //
 
+import Foundation
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class NeighbourhoodServiceEventsTests: XCTestCase {
+@Suite("Neighbourhood service events")
+struct NeighbourhoodServiceEventsTests {
 
-    var service: NeighbourhoodService!
-    var apiClient: MockAPIClient!
-    var cache: NeighbourhoodMockCache!
-    var availableDataRegion: AvailableRegion!
+    let service: NeighbourhoodService
+    let apiClient: MockAPIClient
+    let cache: NeighbourhoodMockCache
+    let availableDataRegion: AvailableRegion
 
-    override func setUp() {
-        super.setUp()
-        apiClient = MockAPIClient()
-        cache = NeighbourhoodMockCache()
-        availableDataRegion = .test
-        service = NeighbourhoodService(
+    init() {
+        self.apiClient = MockAPIClient()
+        self.cache = NeighbourhoodMockCache()
+        self.availableDataRegion = .test
+        self.service = NeighbourhoodService(
             apiClient: apiClient,
             cache: cache,
             availableDataRegion: availableDataRegion
         )
     }
 
-    override func tearDown() {
-        service = nil
-        availableDataRegion = nil
-        cache = nil
-        apiClient = nil
-        super.tearDown()
-    }
-
-    func testEventsWhenNotCachedReturnsEvents() async throws {
+    @Test("events when not cached returns events")
+    func eventsWhenNotCachedReturnsEvents() async throws {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
         let expectedResult = NeighbourhoodEvent.mocks
@@ -55,17 +49,20 @@ final class NeighbourhoodServiceEventsTests: XCTestCase {
 
         let result = try await service.events(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
         let requestedURLsCount = await apiClient.requestedURLs.count
-        XCTAssertEqual(requestedURLsCount, 1)
+        #expect(requestedURLsCount == 1)
         let lastURL = await apiClient.requestedURLs.last
-        XCTAssertEqual(
-            lastURL,
-            NeighbourhoodsEndpoint.events(policeForceID: policeForceID, neighbourhoodID: neighbourhoodID).path
+        #expect(
+            lastURL == NeighbourhoodsEndpoint.events(
+                policeForceID: policeForceID,
+                neighbourhoodID: neighbourhoodID
+            ).path
         )
     }
 
-    func testEventsWhenCachedReturnsCachedEvents() async throws {
+    @Test("events when cached returns cached events")
+    func eventsWhenCachedReturnsCachedEvents() async throws {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
         let expectedResult = NeighbourhoodEvent.mocks
@@ -73,12 +70,13 @@ final class NeighbourhoodServiceEventsTests: XCTestCase {
 
         let result = try await service.events(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
         let requestedURLsCount = await apiClient.requestedURLs.count
-        XCTAssertEqual(requestedURLsCount, 0)
+        #expect(requestedURLsCount == 0)
     }
 
-    func testEventsWhenNotCachedAndReturnsEventsShouldCacheResult() async throws {
+    @Test("events when not cached and returns events should cache result")
+    func eventsWhenNotCachedAndReturnsEventsShouldCacheResult() async throws {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
         let expectedResult = NeighbourhoodEvent.mocks
@@ -87,10 +85,11 @@ final class NeighbourhoodServiceEventsTests: XCTestCase {
 
         let cachedResult = await cache.events(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
-        XCTAssertEqual(cachedResult, expectedResult)
+        #expect(cachedResult == expectedResult)
     }
 
-    func testEventsWhenNotFoundThrowsNotFoundError() async throws {
+    @Test("events when not found throws notFound error")
+    func eventsWhenNotFoundThrowsNotFoundError() async throws {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
         await apiClient.add(response: .failure(APIClientError.notFound))
@@ -102,10 +101,11 @@ final class NeighbourhoodServiceEventsTests: XCTestCase {
             resultError = error
         }
 
-        XCTAssertEqual(resultError, .notFound)
+        #expect(resultError == .notFound)
     }
 
-    func testEventsWhenNetworkErrorThrowsNetworkError() async throws {
+    @Test("events when network error throws network error")
+    func eventsWhenNetworkErrorThrowsNetworkError() async throws {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
         let networkError = URLError(.notConnectedToInternet)
@@ -118,13 +118,16 @@ final class NeighbourhoodServiceEventsTests: XCTestCase {
             resultError = error
         }
 
-        XCTAssertNotNil(resultError)
-        if case .network = resultError {} else {
-            XCTFail("Expected .network error, got \(String(describing: resultError))")
+        #expect(resultError != nil)
+        if case .network = resultError {
+            // pass
+        } else {
+            Issue.record("Expected .network error, got \(String(describing: resultError))")
         }
     }
 
-    func testEventsWhenDecodeErrorThrowsUnknownError() async throws {
+    @Test("events when decode error throws unknown error")
+    func eventsWhenDecodeErrorThrowsUnknownError() async throws {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
         let decodeError = DecodingError.dataCorrupted(.init(codingPath: [], debugDescription: "bad"))
@@ -137,7 +140,7 @@ final class NeighbourhoodServiceEventsTests: XCTestCase {
             resultError = error
         }
 
-        XCTAssertEqual(resultError, .unknown)
+        #expect(resultError == .unknown)
     }
 
 }

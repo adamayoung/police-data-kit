@@ -17,16 +17,18 @@
 //  limitations under the License.
 //
 
+import Foundation
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class CrimeCategoriesCachingKeyTests: XCTestCase {
-
-    func testKeyValue() {
+@Suite("CrimeCategoriesCachingKey")
+struct CrimeCategoriesCachingKeyTests {
+    @Test
+    func keyValue() {
         let date = Date(timeIntervalSince1970: 0)
         let cacheKey = CrimeCategoriesCachingKey(date: date)
 
-        XCTAssertEqual(cacheKey.keyValue, "crime-categories-date-1970-01")
+        #expect(cacheKey.keyValue == "crime-categories-date-1970-01")
     }
 
 }

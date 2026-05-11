@@ -18,59 +18,58 @@
 //
 
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class PoliceForceDefaultCacheTests: XCTestCase {
+@Suite("PoliceForceDefaultCache")
+struct PoliceForceDefaultCacheTests {
 
-    var cache: PoliceForceDefaultCache!
-    var cacheStore: MockCache!
+    let cache: PoliceForceDefaultCache
+    let cacheStore: MockCache
 
-    override func setUp() {
-        super.setUp()
-        cacheStore = MockCache()
-        cache = PoliceForceDefaultCache(cacheStore: cacheStore)
+    init() {
+        self.cacheStore = MockCache()
+        self.cache = PoliceForceDefaultCache(cacheStore: cacheStore)
     }
 
-    override func tearDown() {
-        cache = nil
-        cacheStore = nil
-        super.tearDown()
-    }
-
-    func testPoliceForcesWhenMissReturnsNil() async {
+    @Test("police forces when miss returns nil")
+    func policeForcesWhenMissReturnsNil() async {
         let result = await cache.policeForces()
 
-        XCTAssertNil(result)
+        #expect(result == nil)
     }
 
-    func testPoliceForcesWhenHitReturnsPoliceForces() async {
+    @Test("police forces when hit returns police forces")
+    func policeForcesWhenHitReturnsPoliceForces() async {
         let expectedResult = PoliceForceReference.mocks
         let cacheKey = PoliceForcesCachingKey()
         await cacheStore.set(expectedResult, for: cacheKey)
 
         let result = await cache.policeForces()
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testSetPoliceForcesSetsPoliceForces() async {
+    @Test("set police forces sets police forces")
+    func setPoliceForcesSetsPoliceForces() async {
         let expectedResult = PoliceForceReference.mocks
         let cacheKey = PoliceForcesCachingKey()
 
         await cache.setPoliceForces(expectedResult)
         let result = await cacheStore.object(for: cacheKey, type: [PoliceForceReference].self)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testPoliceForceWhenMissReturnsNil() async {
+    @Test("police force when miss returns nil")
+    func policeForceWhenMissReturnsNil() async {
         let policeForceID = "test-police-force"
         let result = await cache.policeForce(withID: policeForceID)
 
-        XCTAssertNil(result)
+        #expect(result == nil)
     }
 
-    func testPoliceForceWhenHitReturnsPoliceForce() async {
+    @Test("police force when hit returns police force")
+    func policeForceWhenHitReturnsPoliceForce() async {
         let policeForceID = "test-police-force"
         let expectedResult = PoliceForce.mock
         let cacheKey = PoliceForceCachingKey(id: policeForceID)
@@ -78,10 +77,11 @@ final class PoliceForceDefaultCacheTests: XCTestCase {
 
         let result = await cache.policeForce(withID: policeForceID)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testSetPoliceForceSetsPoliceForce() async {
+    @Test("set police force sets police force")
+    func setPoliceForceSetsPoliceForce() async {
         let policeForceID = "test-police-force"
         let expectedResult = PoliceForce.mock
         let cacheKey = PoliceForceCachingKey(id: policeForceID)
@@ -89,17 +89,19 @@ final class PoliceForceDefaultCacheTests: XCTestCase {
         await cache.setPoliceForce(expectedResult, withID: policeForceID)
         let result = await cacheStore.object(for: cacheKey, type: PoliceForce.self)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testSeniorOfficersWhenMissReturnsNil() async {
+    @Test("senior officers when miss returns nil")
+    func seniorOfficersWhenMissReturnsNil() async {
         let policeForceID = "test-police-force"
         let result = await cache.seniorOfficers(inPoliceForce: policeForceID)
 
-        XCTAssertNil(result)
+        #expect(result == nil)
     }
 
-    func testSeniorOfficersWhenWhenHitReturnsSeniorOfficers() async {
+    @Test("senior officers when when hit returns senior officers")
+    func seniorOfficersWhenWhenHitReturnsSeniorOfficers() async {
         let policeForceID = "test-police-force"
         let expectedResult = PoliceOfficer.mocks
         let cacheKey = PoliceForceSeniorOfficersCachingKey(policeForceID: policeForceID)
@@ -107,10 +109,11 @@ final class PoliceForceDefaultCacheTests: XCTestCase {
 
         let result = await cache.seniorOfficers(inPoliceForce: policeForceID)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testSetSeniorOfficersSetsSeniorOfficers() async {
+    @Test("set senior officers sets senior officers")
+    func setSeniorOfficersSetsSeniorOfficers() async {
         let policeForceID = "test-police-force"
         let expectedResult = PoliceOfficer.mocks
         let cacheKey = PoliceForceSeniorOfficersCachingKey(policeForceID: policeForceID)
@@ -118,7 +121,7 @@ final class PoliceForceDefaultCacheTests: XCTestCase {
         await cache.setSeniorOfficers(expectedResult, inPoliceForce: policeForceID)
         let result = await cacheStore.object(for: cacheKey, type: [PoliceOfficer].self)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
 }

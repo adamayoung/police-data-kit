@@ -24,4 +24,4 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build
-        run: swift package generate-documentation --product PoliceDataKit
+        run: swift package generate-documentation --product PoliceDataKit --warnings-as-errors

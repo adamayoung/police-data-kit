@@ -213,7 +213,7 @@ public final class CrimeService: Sendable {
     /// [https://data.police.uk/docs/method/crimes-no-location/](https://data.police.uk/docs/method/crimes-no-location/)
     ///
     /// - Parameters:
-    ///   - category: The category of the crimes. All crimes with be shown by default.
+    ///   - categoryID: The category of the crimes. All crimes with be shown by default.
     ///   - policeForceID: Police Force identifier.
     ///   - date: Limit results to a specific month. The latest month will be shown by default.
     ///

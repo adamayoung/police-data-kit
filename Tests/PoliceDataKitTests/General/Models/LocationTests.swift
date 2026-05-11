@@ -17,43 +17,52 @@
 //  limitations under the License.
 //
 
+import Foundation
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class LocationTests: XCTestCase {
+@Suite("Location")
+struct LocationTests {
 
-    func testDecodeReturnsCrimeLocation() throws {
+    @Test("decode returns crime location")
+    func decodeReturnsCrimeLocation() throws {
         let result = try JSONDecoder.policeDataAPI.decode(Location.self, fromResource: "location")
 
-        XCTAssertEqual(result, .mock)
+        #expect(result == .mock)
     }
 
-    func testLatitudeReturnsLatitude() throws {
+    @Test("latitude returns latitude")
+    func latitudeReturnsLatitude() throws {
         let expectedResult = Location.mock.coordinate?.latitude
 
         let result = try JSONDecoder.policeDataAPI.decode(Location.self, fromResource: "location").coordinate?.latitude
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testLongitudeReturnsLongitude() throws {
+    @Test("longitude returns longitude")
+    func longitudeReturnsLongitude() throws {
         let expectedResult = Location.mock.coordinate?.longitude
 
-        let result = try JSONDecoder.policeDataAPI.decode(Location.self, fromResource: "location").coordinate?.longitude
+        let result = try JSONDecoder.policeDataAPI.decode(
+            Location.self,
+            fromResource: "location"
+        ).coordinate?.longitude
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testEncodeProducesLatitudeAndLongitudeKeys() throws {
+    @Test("encode produces latitude and longitude keys")
+    func encodeProducesLatitudeAndLongitudeKeys() throws {
         let location = Location.mock
 
         let data = try JSONEncoder().encode(location)
-        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        let json = try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])
 
-        let latitudeString = try XCTUnwrap(json["latitude"] as? String)
-        let longitudeString = try XCTUnwrap(json["longitude"] as? String)
-        XCTAssertEqual(Double(latitudeString), location.coordinate?.latitude)
-        XCTAssertEqual(Double(longitudeString), location.coordinate?.longitude)
+        let latitudeString = try #require(json["latitude"] as? String)
+        let longitudeString = try #require(json["longitude"] as? String)
+        #expect(Double(latitudeString) == location.coordinate?.latitude)
+        #expect(Double(longitudeString) == location.coordinate?.longitude)
     }
 
 }

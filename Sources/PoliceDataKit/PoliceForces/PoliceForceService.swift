@@ -116,7 +116,7 @@ public final class PoliceForceService: Sendable {
     ///
     /// [https://data.police.uk/docs/method/senior-officers/](https://data.police.uk/docs/method/senior-officers/)
     ///
-    /// - Parameter id: Police Force identifier.
+    /// - Parameter policeForceID: Police Force identifier.
     ///
     /// - Throws: ``PoliceForceError/notFound`` if no data exists; ``PoliceForceError/network(_:)`` on transport failure;
     ///   ``PoliceForceError/unknown`` otherwise.

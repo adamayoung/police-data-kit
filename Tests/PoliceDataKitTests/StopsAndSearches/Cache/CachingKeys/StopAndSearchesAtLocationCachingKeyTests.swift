@@ -17,18 +17,20 @@
 //  limitations under the License.
 //
 
+import Foundation
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class StopAndSearchesAtLocationCachingKeyTests: XCTestCase {
-
-    func testKeyValue() {
+@Suite("StopAndSearchesAtLocationCachingKey")
+struct StopAndSearchesAtLocationCachingKeyTests {
+    @Test
+    func keyValue() {
         let streetID = 123
         let date = Date(timeIntervalSince1970: 0)
 
         let cacheKey = StopAndSearchesAtLocationCachingKey(streetID: streetID, date: date)
 
-        XCTAssertEqual(cacheKey.keyValue, "stop-and-searches-at-location-\(streetID)-date-1970-01")
+        #expect(cacheKey.keyValue == "stop-and-searches-at-location-\(streetID)-date-1970-01")
     }
 
 }

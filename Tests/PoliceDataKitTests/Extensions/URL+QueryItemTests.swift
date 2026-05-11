@@ -18,12 +18,15 @@
 //
 
 import CoreLocation
+import Foundation
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class URLQueryItemTests: XCTestCase {
+@Suite("URL query item")
+struct URLQueryItemTests {
 
-    func testAppendingQueryItemWithCustomStringConvertibleWhenURLContainsNoQueryItemsReturnsURL() {
+    @Test("appendingQueryItem with CustomStringConvertible when URL contains no query items returns URL")
+    func appendingQueryItemWithCustomStringConvertibleWhenURLContainsNoQueryItemsReturnsURL() {
         let baseURL = URL(string: "https://some.domain.com")
         let queryItemName = "name"
         let value: CustomStringConvertible = "dave"
@@ -31,10 +34,11 @@ final class URLQueryItemTests: XCTestCase {
 
         let result = baseURL?.appendingQueryItem(name: queryItemName, value: value)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testAppendingQueryItemWithCustomStringConvertibleWhenURLContainsQueryItemsReturnsURL() {
+    @Test("appendingQueryItem with CustomStringConvertible when URL contains query items returns URL")
+    func appendingQueryItemWithCustomStringConvertibleWhenURLContainsQueryItemsReturnsURL() {
         let baseURL = URL(string: "https://some.domain.com?id=123")
         let queryItemName = "sort"
         let value: CustomStringConvertible = "asc"
@@ -42,10 +46,11 @@ final class URLQueryItemTests: XCTestCase {
 
         let result = baseURL?.appendingQueryItem(name: queryItemName, value: value)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testAppendingQueryItemWithDateWhenURLContainsNoQueryItemsAndNoDateFormatterReturnsURLWithYearMonthDate() {
+    @Test("appendingQueryItem with Date when no query items and no date formatter returns URL with year-month date")
+    func appendingQueryItemWithDateWhenURLContainsNoQueryItemsAndNoDateFormatterReturnsURLWithYearMonthDate() {
         let baseURL = URL(string: "https://some.domain.com")
         let queryItemName = "date"
         let date = Date(timeIntervalSince1970: 1_621_850_198) // 2021-05-24 09:56:38 +0000
@@ -53,10 +58,11 @@ final class URLQueryItemTests: XCTestCase {
 
         let result = baseURL?.appendingQueryItem(name: queryItemName, date: date)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testAppendingQueryItemWithDateWhenURLContainsQueryItemsAndNoDateFormatterReturnsURLWithYearMonthDate() {
+    @Test("appendingQueryItem with Date when query items exist and no formatter returns URL with year-month date")
+    func appendingQueryItemWithDateWhenURLContainsQueryItemsAndNoDateFormatterReturnsURLWithYearMonthDate() {
         let baseURL = URL(string: "https://some.domain.com?id=987")
         let queryItemName = "date"
         let date = Date(timeIntervalSince1970: 1_621_850_198) // 2021-05-24 09:56:38 +0000
@@ -64,10 +70,11 @@ final class URLQueryItemTests: XCTestCase {
 
         let result = baseURL?.appendingQueryItem(name: queryItemName, date: date)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testAppendingQueryItemWithDateWhenURLContainsNoQueryItemsAndWithDateFormatterReturnsURLWithFormattedDate() {
+    @Test("appendingQueryItem with Date when no query items and with date formatter returns URL with formatted date")
+    func appendingQueryItemWithDateWhenURLContainsNoQueryItemsAndWithDateFormatterReturnsURLWithFormattedDate() {
         let baseURL = URL(string: "https://some.domain.com")
         let queryItemName = "date"
         let date = Date(timeIntervalSince1970: 1_621_850_198) // 2021-05-24 09:56:38 +0000
@@ -77,10 +84,11 @@ final class URLQueryItemTests: XCTestCase {
 
         let result = baseURL?.appendingQueryItem(name: queryItemName, date: date, formatter: dateFormatter)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testAppendingQueryItemWithDateWhenURLContainsNoQueryItemsAndDateIsNilReturnsURL() {
+    @Test("appendingQueryItem with Date when URL contains no query items and date is nil returns URL")
+    func appendingQueryItemWithDateWhenURLContainsNoQueryItemsAndDateIsNilReturnsURL() {
         let baseURL = URL(string: "https://some.domain.com")
         let queryItemName = "date"
 
@@ -88,10 +96,11 @@ final class URLQueryItemTests: XCTestCase {
 
         let result = baseURL?.appendingQueryItem(name: queryItemName, date: nil)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testAppendingQueryItemWithDateWhenURLContainsQueryItemsAndDateIsNilReturnsURL() {
+    @Test("appendingQueryItem with Date when URL contains query items and date is nil returns URL")
+    func appendingQueryItemWithDateWhenURLContainsQueryItemsAndDateIsNilReturnsURL() {
         let baseURL = URL(string: "https://some.domain.com?id=654")
         let queryItemName = "date"
 
@@ -99,10 +108,11 @@ final class URLQueryItemTests: XCTestCase {
 
         let result = baseURL?.appendingQueryItem(name: queryItemName, date: nil)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testAppendingQueryItemWithCoordinateWhenURLContainsNoQueryItemsReturnsURLWithCoordinate() {
+    @Test("appendingQueryItem with coordinate when URL contains no query items returns URL with coordinate")
+    func appendingQueryItemWithCoordinateWhenURLContainsNoQueryItemsReturnsURLWithCoordinate() {
         let baseURL = URL(string: "https://some.domain.com")
         let queryItemName = "coord"
         let coordinate = CLLocationCoordinate2D(latitude: 52.6389, longitude: -1.13619)
@@ -112,10 +122,11 @@ final class URLQueryItemTests: XCTestCase {
 
         let result = baseURL?.appendingQueryItem(name: queryItemName, coordinate: coordinate)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testAppendingQueryItemWithCoordinateWhenURLContainsQueryItemsReturnsURLWithCoordinate() {
+    @Test("appendingQueryItem with coordinate when URL contains query items returns URL with coordinate")
+    func appendingQueryItemWithCoordinateWhenURLContainsQueryItemsReturnsURLWithCoordinate() {
         let baseURL = URL(string: "https://some.domain.com?id=456")
         let queryItemName = "coord"
         let coordinate = CLLocationCoordinate2D(latitude: 52.6389, longitude: -1.13619)
@@ -125,10 +136,11 @@ final class URLQueryItemTests: XCTestCase {
 
         let result = baseURL?.appendingQueryItem(name: queryItemName, coordinate: coordinate)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testAppendingQueryItemWithCoordinatesWhenURLContainsNoQueryItemsReturnsURLWithCoordinates() {
+    @Test("appendingQueryItem with coordinates when URL contains no query items returns URL with coordinates")
+    func appendingQueryItemWithCoordinatesWhenURLContainsNoQueryItemsReturnsURLWithCoordinates() {
         let baseURL = URL(string: "https://some.domain.com")
         let queryItemName = "poly"
         let coordinates = CLLocationCoordinate2D.mocks
@@ -139,10 +151,11 @@ final class URLQueryItemTests: XCTestCase {
 
         let result = baseURL?.appendingQueryItem(name: queryItemName, coordinates: coordinates)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
-    func testAppendingQueryItemWithCoordinatesWhenURLContainsQueryItemsReturnsURLWithCoordinates() {
+    @Test("appendingQueryItem with coordinates when URL contains query items returns URL with coordinates")
+    func appendingQueryItemWithCoordinatesWhenURLContainsQueryItemsReturnsURLWithCoordinates() {
         let baseURL = URL(string: "https://some.domain.com?id=789")
         let queryItemName = "poly"
         let coordinates = CLLocationCoordinate2D.mocks
@@ -153,7 +166,7 @@ final class URLQueryItemTests: XCTestCase {
 
         let result = baseURL?.appendingQueryItem(name: queryItemName, coordinates: coordinates)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
 }

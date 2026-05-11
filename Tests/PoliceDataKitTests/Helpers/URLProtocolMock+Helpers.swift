@@ -1,5 +1,5 @@
 //
-//  XCTestCase+URLProtocolMock.swift
+//  URLProtocolMock+Helpers.swift
 //  PoliceDataKit
 //
 //  Copyright © 2024 Adam Young.
@@ -18,22 +18,17 @@
 //
 
 import Foundation
-import XCTest
+import Testing
 
-extension XCTestCase {
+func setMockURLSessionResponses(_ responseConfigs: [URL?: (HTTPURLResponse?, Data?)]) {
+    URLProtocolMock.responseConfigs = responseConfigs
+}
 
-    func verify(request: URLRequest) {
-        let nextRequest = URLProtocolMock.requests.removeFirst()
+func resetMockURLSession() {
+    URLProtocolMock.reset()
+}
 
-        XCTAssertEqual(request, nextRequest)
-    }
-
-    func setMockURLSessionResponses(_ responseConfigs: [URL?: (HTTPURLResponse?, Data?)]) {
-        URLProtocolMock.responseConfigs = responseConfigs
-    }
-
-    func resetMockURLSession() {
-        URLProtocolMock.reset()
-    }
-
+func verifyNextRequest(_ request: URLRequest) {
+    let nextRequest = URLProtocolMock.requests.removeFirst()
+    #expect(request == nextRequest)
 }

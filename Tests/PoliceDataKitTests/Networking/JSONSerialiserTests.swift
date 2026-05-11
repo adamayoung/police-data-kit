@@ -17,43 +17,36 @@
 //  limitations under the License.
 //
 
+import Foundation
 @testable import PoliceDataKit
-import XCTest
+import Testing
 
-final class JSONSerialiserTests: XCTestCase {
+@Suite("JSONSerialiser")
+struct JSONSerialiserTests {
 
-    var serialiser: JSONSerialiser!
+    let serialiser: JSONSerialiser
 
-    override func setUp() {
-        super.setUp()
-        serialiser = JSONSerialiser(decoder: JSONDecoder())
+    init() {
+        self.serialiser = JSONSerialiser(decoder: JSONDecoder())
     }
 
-    override func tearDown() {
-        serialiser = nil
-        super.tearDown()
-    }
-
-    func testDecodeWhenDataCannotBeDecodedThrowsDecodeError() throws {
+    @Test("decode when data cannot be decoded throws decode error")
+    func decodeWhenDataCannotBeDecodedThrowsDecodeError() {
         let data = Data("aaa".utf8)
 
-        do {
-            _ = try serialiser.decode(MockObject.self, from: data)
-        } catch {
-            XCTAssertTrue(true)
-            return
+        #expect(throws: (any Error).self) {
+            try serialiser.decode(MockObject.self, from: data)
         }
-
-        XCTFail("Expected decode error to be thrown")
     }
 
-    func testDecodeWhenDataCanBeDecodedReturnsDecodedObject() throws {
+    @Test("decode when data can be decoded returns decoded object")
+    func decodeWhenDataCanBeDecodedReturnsDecodedObject() throws {
         let expectedResult = MockObject()
         let data = expectedResult.data
 
         let result = try serialiser.decode(MockObject.self, from: data)
 
-        XCTAssertEqual(result, expectedResult)
+        #expect(result == expectedResult)
     }
 
 }
