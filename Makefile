@@ -2,8 +2,8 @@ TARGET = PoliceDataKit
 TEST_TARGET = PoliceDataKitTests
 INTEGRATION_TEST_TARGET = IntegrationTests
 
-IOS_DESTINATION = 'platform=iOS Simulator,name=iPhone 16,OS=26.2'
-WATCHOS_DESTINATION = 'platform=watchOS Simulator,name=Apple Watch Series 10 (46mm),OS=26.2'
+IOS_DESTINATION = 'platform=iOS Simulator,name=iPhone 17,OS=26.2'
+WATCHOS_DESTINATION = 'platform=watchOS Simulator,name=Apple Watch Series 11 (46mm),OS=26.2'
 TVOS_DESTINATION = 'platform=tvOS Simulator,name=Apple TV 4K (3rd generation),OS=26.2'
 
 SWIFT_CONTAINER_IMAGE = swift:6.0.3-jammy

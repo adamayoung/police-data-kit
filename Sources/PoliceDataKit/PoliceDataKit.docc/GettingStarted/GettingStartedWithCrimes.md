@@ -90,8 +90,9 @@ let policeForceID = "nottinghamshire"
 let crimes = try await crimeService.crimesWithNoLocation(inPoliceForce: policeForceID)
 ```
 
-> Tip: You can filter on the type of crime by using the `category` parameter,
-and include a `date` parameter to find crimes with no location for a particular month.
+> Tip: You can filter on the type of crime by using the `category`
+parameter, and include a `date` parameter to find crimes with no location
+for a particular month.
 
 ### Getting a list of all Crime Categories
 

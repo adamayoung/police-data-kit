@@ -28,8 +28,8 @@ import Testing
 struct IntegrationGateTrait: TestTrait, SuiteTrait, TestScoping {
 
     func provideScope(
-        for test: Test,
-        testCase: Test.Case?,
+        for _: Test,
+        testCase _: Test.Case?,
         performing function: @Sendable () async throws -> Void
     ) async throws {
         await IntegrationGate.shared.acquire()
@@ -42,7 +42,9 @@ struct IntegrationGateTrait: TestTrait, SuiteTrait, TestScoping {
 extension Trait where Self == IntegrationGateTrait {
 
     /// Serialises every annotated test across the entire test run.
-    static var integrationGate: Self { IntegrationGateTrait() }
+    static var integrationGate: Self {
+        IntegrationGateTrait()
+    }
 
 }
 

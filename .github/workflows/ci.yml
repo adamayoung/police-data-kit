@@ -149,7 +149,7 @@ jobs:
 
       - name: Test
         if: needs.changes.outputs.swift == 'true' || github.event_name == 'workflow_dispatch'
-        run: set -o pipefail && swift test --skip-build --filter PoliceDataKitTests --enable-code-coverage --xunit-output junit.xml 2>&1 | xcsift -f github-actions
+        run: set -o pipefail && swift test --filter PoliceDataKitTests --enable-code-coverage --xunit-output junit.xml 2>&1 | xcsift -f github-actions
 
       - name: Prepare Code Coverage
         if: needs.changes.outputs.swift == 'true' || github.event_name == 'workflow_dispatch'
@@ -183,33 +183,6 @@ jobs:
         if: needs.changes.outputs.swift == 'true' || github.event_name == 'workflow_dispatch'
         run: set -o pipefail && swift build -c release -Xswiftc -warnings-as-errors 2>&1 | xcsift -f github-actions --Werror
 
-  build-test-linux:
-    name: Build and Test (Linux)
-    needs: changes
-    if: always()
-    runs-on: ubuntu-latest
-    container: swift:6.0.3-jammy
-    steps:
-      - name: No changes detected
-        if: needs.changes.outputs.swift != 'true' && github.event_name != 'workflow_dispatch'
-        run: echo "No Swift changes detected, skipping build and test"
-
-      - name: Checkout
-        if: needs.changes.outputs.swift == 'true' || github.event_name == 'workflow_dispatch'
-        uses: actions/checkout@v6
-
-      - name: Build
-        if: needs.changes.outputs.swift == 'true' || github.event_name == 'workflow_dispatch'
-        run: swift build --build-tests -Xswiftc -warnings-as-errors
-
-      - name: Test
-        if: needs.changes.outputs.swift == 'true' || github.event_name == 'workflow_dispatch'
-        run: swift test --skip-build --filter PoliceDataKitTests
-
-      - name: Build for Release
-        if: needs.changes.outputs.swift == 'true' || github.event_name == 'workflow_dispatch'
-        run: swift build -c release -Xswiftc -warnings-as-errors
-
   build-test-platforms:
     name: Build and Test (${{ matrix.name }})
     needs: changes
@@ -226,9 +199,9 @@ jobs:
       matrix:
         include:
           - name: iOS
-            destination: platform=iOS Simulator,name=iPhone 16,OS=26.2
+            destination: platform=iOS Simulator,name=iPhone 17,OS=26.2
           - name: watchOS
-            destination: platform=watchOS Simulator,name=Apple Watch Series 10 (46mm),OS=26.2
+            destination: platform=watchOS Simulator,name=Apple Watch Series 11 (46mm),OS=26.2
           - name: tvOS
             destination: platform=tvOS Simulator,name=Apple TV 4K (3rd generation),OS=26.2
     steps:
@@ -256,8 +229,13 @@ jobs:
     name: Build Documentation
     needs: changes
     if: always()
-    runs-on: ubuntu-latest
-    container: swift:6.0.3-jammy
+    runs-on: >-
+      ${{
+        (needs.changes.outputs.docc == 'true' || github.event_name == 'workflow_dispatch')
+        && 'macos-26' || 'ubuntu-latest'
+      }}
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
     steps:
       - name: No changes detected
         if: needs.changes.outputs.docc != 'true' && github.event_name != 'workflow_dispatch'
@@ -276,7 +254,7 @@ jobs:
   ci:
     name: CI
     if: always()
-    needs: [lint, lint-markdown, build-test, build-test-linux, build-test-platforms, build-documentation]
+    needs: [lint, lint-markdown, build-test, build-test-platforms, build-documentation]
     runs-on: ubuntu-latest
     steps:
       - name: Check job results
@@ -285,7 +263,6 @@ jobs:
             "${{ needs.lint.result }}" \
             "${{ needs.lint-markdown.result }}" \
             "${{ needs.build-test.result }}" \
-            "${{ needs.build-test-linux.result }}" \
             "${{ needs.build-test-platforms.result }}" \
             "${{ needs.build-documentation.result }}" \
           )

@@ -58,7 +58,9 @@ struct NeighbourhoodIntegrationTests {
 
         var neighbourhoodError: NeighbourhoodError?
         do {
-            _ = try await retryOnRateLimit { try await neighbourhoodService.neighbourhoods(inPoliceForce: policeForceID) }
+            _ = try await retryOnRateLimit {
+                try await neighbourhoodService.neighbourhoods(inPoliceForce: policeForceID)
+            }
         } catch let error as NeighbourhoodError {
             neighbourhoodError = error
         }
@@ -103,7 +105,12 @@ struct NeighbourhoodIntegrationTests {
 
         var neighbourhoodError: NeighbourhoodError?
         do {
-            _ = try await retryOnRateLimit { try await neighbourhoodService.neighbourhood(withID: neighbourhoodID, inPoliceForce: policeForceID) }
+            _ = try await retryOnRateLimit {
+                try await neighbourhoodService.neighbourhood(
+                    withID: neighbourhoodID,
+                    inPoliceForce: policeForceID
+                )
+            }
         } catch let error as NeighbourhoodError {
             neighbourhoodError = error
         }
@@ -118,7 +125,12 @@ struct NeighbourhoodIntegrationTests {
 
         var neighbourhoodError: NeighbourhoodError?
         do {
-            _ = try await retryOnRateLimit { try await neighbourhoodService.neighbourhood(withID: neighbourhoodID, inPoliceForce: policeForceID) }
+            _ = try await retryOnRateLimit {
+                try await neighbourhoodService.neighbourhood(
+                    withID: neighbourhoodID,
+                    inPoliceForce: policeForceID
+                )
+            }
         } catch let error as NeighbourhoodError {
             neighbourhoodError = error
         }

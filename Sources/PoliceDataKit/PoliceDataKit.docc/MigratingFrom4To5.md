@@ -4,9 +4,10 @@ Upgrade your PoliceDataKit dependency from 4.x to 5.0.
 
 ## Overview
 
-PoliceDataKit 5.0 modernises the package for Swift 6, removes the Combine `*Publisher` API,
-introduces typed-throws on every public service method, and raises the supported platform
-versions. This guide describes the changes you'll need to make.
+PoliceDataKit 5.0 modernises the package for Swift 6, removes the Combine
+`*Publisher` API, introduces typed-throws on every public service method,
+and raises the supported platform versions. This guide describes the changes
+you'll need to make.
 
 ## Platform Requirements
 
@@ -21,9 +22,10 @@ The minimum supported platform versions have been raised:
 
 A **Swift 6 toolchain (Xcode 16 or later)** is required to build PoliceDataKit 5.0.
 
-The package itself compiles with `swiftLanguageMode(.v6)` on all its targets. Consumers
-can still target an earlier Swift language mode in their own project settings — the
-requirement is only for the toolchain version, not the language mode you choose in your app.
+The package itself compiles with `swiftLanguageMode(.v6)` on all its
+targets. Consumers can still target an earlier Swift language mode in their
+own project settings — the requirement is only for the toolchain version,
+not the language mode you choose in your app.
 
 ## Removed Combine API
 
@@ -66,7 +68,8 @@ needed and can be removed.
 
 ## Typed Throws
 
-All public service methods now declare typed throws, meaning the compiler knows the
+All public service methods now declare typed throws, meaning the compiler
+knows the
 precise error type at each call site. You no longer need a catch-all clause for
 unreachable cases.
 
@@ -103,16 +106,17 @@ The typed error for each service is:
 Each error type is a `Sendable` enum. The common cases are:
 
 - `notFound` — the API returned a 404 response.
-- `network(_:)` — a transport-level failure; the associated value is the underlying `Error`.
+- `network(_:)` — a transport-level failure; the associated value is the
+  underlying `Error`.
 - `unknown` — an unexpected response or decode failure.
 
 Services that validate coordinate inputs also add:
 
-- `locationOutsideOfDataSetRegion` — the supplied coordinate falls outside England, Wales,
-  or Northern Ireland and no API call was made.
+- `locationOutsideOfDataSetRegion` — the supplied coordinate falls outside
+  England, Wales, or Northern Ireland and no API call was made.
 
-This case applies to ``CrimeService``, ``OutcomeService``, ``NeighbourhoodService``, and
-``StopAndSearchService``.
+This case applies to ``CrimeService``, ``OutcomeService``,
+``NeighbourhoodService``, and ``StopAndSearchService``.
 
 ## New APIs
 
@@ -152,12 +156,12 @@ wrappers on PoliceDataKit types, those workarounds can now be removed.
 
 These are not public API, but may affect advanced integrations or forks:
 
-- `PoliceDataKitFactory` is now an `enum` with `static let` properties, ensuring a
-  single shared cache instance per process. The previous class-based implementation
-  has been removed.
-- The shared `URLSession` is configured with `waitsForConnectivity = true`, a 30-second
-  timeout, and — on iOS — `multipathServiceType = .handover`. This behaviour is unchanged
-  from 4.x.
+- `PoliceDataKitFactory` is now an `enum` with `static let` properties,
+  ensuring a single shared cache instance per process. The previous
+  class-based implementation has been removed.
+- The shared `URLSession` is configured with `waitsForConnectivity = true`,
+  a 30-second timeout, and — on iOS — `multipathServiceType = .handover`.
+  This behaviour is unchanged from 4.x.
 
 ## See Also
 
