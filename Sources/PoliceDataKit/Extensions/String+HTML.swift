@@ -18,25 +18,36 @@
 //
 
 import Foundation
+#if canImport(UIKit)
+    import UIKit
+#elseif canImport(AppKit)
+    import AppKit
+#endif
 
 extension String {
 
     var htmlStripped: String {
-        guard let data = data(using: .unicode) else {
-            return self
-        }
+        #if canImport(UIKit) || canImport(AppKit)
+            guard let data = data(using: .unicode) else {
+                return self
+            }
 
-        let attributed = try? NSAttributedString(
-            data: data,
-            options: [
-                .documentType: NSAttributedString.DocumentType.html
-            ],
-            documentAttributes: nil
-        )
+            let attributed = try? NSAttributedString(
+                data: data,
+                options: [
+                    .documentType: NSAttributedString.DocumentType.html
+                ],
+                documentAttributes: nil
+            )
 
-        return (attributed?.string ?? self)
-            .replacingOccurrences(of: "\n", with: " ")
-            .trimmingCharacters(in: .whitespacesAndNewlines)
+            return (attributed?.string ?? self)
+                .replacingOccurrences(of: "\n", with: " ")
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+        #else
+            return replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression)
+                .replacingOccurrences(of: "\n", with: " ")
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+        #endif
     }
 
 }
