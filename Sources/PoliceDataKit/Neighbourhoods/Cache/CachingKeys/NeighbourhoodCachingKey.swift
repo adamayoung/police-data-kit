@@ -28,9 +28,4 @@ struct NeighbourhoodCachingKey: CachingKey {
         "neighbourhood-\(id)-\(policeForceID)"
     }
 
-    init(id: Neighbourhood.ID, policeForceID: PoliceForce.ID) {
-        self.id = id
-        self.policeForceID = policeForceID
-    }
-
 }

@@ -342,4 +342,68 @@ final class CrimeServiceTests: XCTestCase {
         XCTAssertEqual(cachedResult, expectedResult)
     }
 
+    func testLatestDataDateWhenCachedReturnsCachedDate() async throws {
+        let expectedDate = Date(timeIntervalSince1970: 1_759_190_400) // 2025-09-30
+        await cache.setLatestDataDate(expectedDate)
+
+        let result = try await service.latestDataDate()
+
+        XCTAssertEqual(result, expectedDate)
+        XCTAssertEqual(apiClient.requestedURLs.count, 0)
+    }
+
+    func testLatestDataDateWhenNotCachedReturnsDate() async throws {
+        let expectedDate = Date(timeIntervalSince1970: 1_759_190_400) // 2025-09-30
+        let mockDTO = LastUpdatedDTO.mock(date: expectedDate)
+        apiClient.add(response: .success(mockDTO))
+
+        let result = try await service.latestDataDate()
+
+        XCTAssertEqual(result, expectedDate)
+        XCTAssertEqual(apiClient.requestedURLs.count, 1)
+        XCTAssertEqual(apiClient.requestedURLs.last, CrimesEndpoint.lastUpdated.path)
+    }
+
+    func testLatestDataDateWhenNotCachedShouldCacheResult() async throws {
+        let expectedDate = Date(timeIntervalSince1970: 1_759_190_400)
+        let mockDTO = LastUpdatedDTO.mock(date: expectedDate)
+        apiClient.add(response: .success(mockDTO))
+        _ = try await service.latestDataDate()
+
+        let cachedDate = await cache.latestDataDate()
+
+        XCTAssertEqual(cachedDate, expectedDate)
+    }
+
+    func testLatestDataDateWhenNetworkErrorThrowsNetworkError() async throws {
+        let networkError = URLError(.notConnectedToInternet)
+        apiClient.add(response: .failure(APIClientError.network(networkError)))
+
+        var resultError: CrimeError?
+        do {
+            _ = try await service.latestDataDate()
+        } catch let error as CrimeError {
+            resultError = error
+        }
+
+        XCTAssertNotNil(resultError)
+        if case .network = resultError {} else {
+            XCTFail("Expected .network error, got \(String(describing: resultError))")
+        }
+    }
+
+    func testLatestDataDateWhenDecodeErrorThrowsUnknownError() async throws {
+        let decodeError = DecodingError.dataCorrupted(.init(codingPath: [], debugDescription: "bad"))
+        apiClient.add(response: .failure(APIClientError.decode(decodeError)))
+
+        var resultError: CrimeError?
+        do {
+            _ = try await service.latestDataDate()
+        } catch let error as CrimeError {
+            resultError = error
+        }
+
+        XCTAssertEqual(resultError, .unknown)
+    }
+
 }

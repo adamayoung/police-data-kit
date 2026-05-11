@@ -43,4 +43,8 @@ protocol CrimeCache {
 
     func setCrimeCategories(_ crimeCategories: [CrimeCategory], forDate date: Date) async
 
+    func latestDataDate() async -> Date?
+
+    func setLatestDataDate(_ date: Date) async
+
 }

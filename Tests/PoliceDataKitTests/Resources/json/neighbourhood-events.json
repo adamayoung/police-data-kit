@@ -1,0 +1,17 @@
+[
+    {
+        "title": "Sherwood Beat Surgery",
+        "type": "meeting",
+        "description": "Come meet your local team&hellip;",
+        "address": "Sherwood Library, Nottingham",
+        "start_date": "2016-09-17T16:00:00",
+        "end_date": "2016-09-17T18:00:00"
+    },
+    {
+        "title": "Community Forum",
+        "type": "forum",
+        "description": "Discuss local issues",
+        "start_date": "2016-10-05T10:00:00",
+        "end_date": null
+    }
+]

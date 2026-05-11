@@ -24,6 +24,8 @@ final class CrimeMockCache: CrimeCache {
 
     private var cacheStore: [String: Any] = [:]
 
+    private(set) var latestDataDateSet: Date?
+
     private enum CacheKey {
 
         static func crimesForStreet(streetID: Int, date: Date) -> String {
@@ -41,6 +43,8 @@ final class CrimeMockCache: CrimeCache {
         static func crimeCategories(date: Date) -> String {
             "crime-categories-\(date)"
         }
+
+        static let crimeLastUpdated = "crime-last-updated"
 
     }
 
@@ -77,6 +81,15 @@ final class CrimeMockCache: CrimeCache {
 
     func setCrimeCategories(_ crimeCategories: [CrimeCategory], forDate date: Date) async {
         cacheStore[CacheKey.crimeCategories(date: date)] = crimeCategories
+    }
+
+    func latestDataDate() async -> Date? {
+        cacheStore[CacheKey.crimeLastUpdated] as? Date
+    }
+
+    func setLatestDataDate(_ date: Date) async {
+        latestDataDateSet = date
+        cacheStore[CacheKey.crimeLastUpdated] = date
     }
 
 }

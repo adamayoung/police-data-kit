@@ -44,4 +44,16 @@ final class LocationTests: XCTestCase {
         XCTAssertEqual(result, expectedResult)
     }
 
+    func testEncodeProducesLatitudeAndLongitudeKeys() throws {
+        let location = Location.mock
+
+        let data = try JSONEncoder().encode(location)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+
+        let latitudeString = try XCTUnwrap(json["latitude"] as? String)
+        let longitudeString = try XCTUnwrap(json["longitude"] as? String)
+        XCTAssertEqual(Double(latitudeString), location.coordinate?.latitude)
+        XCTAssertEqual(Double(longitudeString), location.coordinate?.longitude)
+    }
+
 }

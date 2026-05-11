@@ -28,6 +28,7 @@ enum CrimesEndpoint {
     case crimesAtLocationAtSpecificPoint(coordinate: CLLocationCoordinate2D, date: Date)
     case crimesWithNoLocation(categoryID: CrimeCategory.ID, policeForceID: PoliceForce.ID, date: Date)
     case categories(date: Date)
+    case lastUpdated
 
 }
 
@@ -37,6 +38,7 @@ extension CrimesEndpoint: Endpoint {
     private static let crimesAtLocationBasePath = URL(string: "/crimes-at-location")!
     private static let crimesWithNoLocationBasePath = URL(string: "/crimes-no-location")!
     private static let crimeCategoriesBasePath = URL(string: "/crime-categories")!
+    private static let crimeLastUpdatedPath = URL(string: "/crime-last-updated")!
 
     var path: URL {
         switch self {
@@ -73,6 +75,9 @@ extension CrimesEndpoint: Endpoint {
         case let .categories(date):
             Self.crimeCategoriesBasePath
                 .appendingQueryItem(name: "date", date: date)
+
+        case .lastUpdated:
+            Self.crimeLastUpdatedPath
         }
     }
 

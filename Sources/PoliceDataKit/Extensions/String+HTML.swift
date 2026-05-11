@@ -34,11 +34,9 @@ extension String {
             documentAttributes: nil
         )
 
-        let value = (attributed?.string ?? self)
+        return (attributed?.string ?? self)
             .replacingOccurrences(of: "\n", with: " ")
             .trimmingCharacters(in: .whitespacesAndNewlines)
-
-        return value
     }
 
 }

@@ -49,21 +49,17 @@ final class OutcomeIntegrationTests: XCTestCase {
     }
 
     func testStreetLevelOutcomesAtCoordinateForLeedsCityCentre() async throws {
-        // The API is sometimes slow and times out, causing this test to fail
-        try XCTSkipIf(true)
-
         let leedsCityCentreCoordinate = CLLocationCoordinate2D(latitude: 53.797927, longitude: -1.541522)
         let date = try XCTUnwrap(Date(isoString: "2022-08-01T12:00:00Z"))
 
-        let outcomes = try await outcomeService.streetLevelOutcomes(at: leedsCityCentreCoordinate, date: date)
+        let outcomes = try await retry {
+            try await self.outcomeService.streetLevelOutcomes(at: leedsCityCentreCoordinate, date: date)
+        }
 
         XCTAssertGreaterThan(outcomes.count, 0)
     }
 
     func testStreetLevelOutcomesPublisherAtCoordinateForLeedsCityCentre() throws {
-        // The API is sometimes slow and times out, causing this test to fail
-        try XCTSkipIf(true)
-
         let leedsCityCentreCoordinate = CLLocationCoordinate2D(latitude: 53.797927, longitude: -1.541522)
         let date = try XCTUnwrap(Date(isoString: "2022-03-01T12:00:00Z"))
 

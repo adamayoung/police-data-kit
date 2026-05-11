@@ -38,6 +38,10 @@ extension JSONDecoder.DateDecodingStrategy {
                 return date
             }
 
+            if let date = DateFormatter.dateOnly.date(from: string) {
+                return date
+            }
+
             throw DecodingError.dataCorruptedError(in: container, debugDescription: "Date is in invalid format")
         }
     }

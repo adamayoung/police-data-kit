@@ -170,7 +170,7 @@ extension NeighbourhoodServiceTests {
         )
     }
 
-    func testNeighbourhoodPublisherAtCoordinateReturnsNeighbourhood() throws {
+    func testNeighbourhoodPublisherAtCoordinateReturnsNeighbourhood() {
         let coordinate = CLLocationCoordinate2D.mock
         let neighbourhoodPolicingTeam = NeighbourhoodPolicingTeam.mock
         let expectedResult = Neighbourhood.mock

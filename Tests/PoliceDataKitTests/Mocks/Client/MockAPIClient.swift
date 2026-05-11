@@ -27,7 +27,7 @@ final class MockAPIClient: APIClient {
 
     private var responseIndex = 0
 
-    func get<Response>(path: URL) async throws -> Response where Response: Decodable {
+    func get<Response: Decodable>(path: URL) async throws -> Response {
         requestedURLs.append(path)
 
         let response = response(at: responseIndex)

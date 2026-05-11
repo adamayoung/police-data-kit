@@ -95,7 +95,7 @@ public extension Location {
         }()
 
         try container.encodeIfPresent(latitudeString, forKey: .latitude)
-        try container.encodeIfPresent(longitudeString, forKey: .latitude)
+        try container.encodeIfPresent(longitudeString, forKey: .longitude)
         try container.encode(street, forKey: .street)
     }
 

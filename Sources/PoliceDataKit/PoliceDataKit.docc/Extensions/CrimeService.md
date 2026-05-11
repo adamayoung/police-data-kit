@@ -27,6 +27,10 @@
 
 - ``crimeCategories(forDate:)``
 
+### Data Updates
+
+- ``latestDataDate()``
+
 ### Shared instance
 
 - ``shared``

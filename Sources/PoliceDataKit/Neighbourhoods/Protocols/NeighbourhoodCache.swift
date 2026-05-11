@@ -70,4 +70,15 @@ protocol NeighbourhoodCache {
         inPoliceForce policeForceID: PoliceForce.ID
     ) async
 
+    func events(
+        forNeighbourhood neighbourhoodID: Neighbourhood.ID,
+        inPoliceForce policeForceID: PoliceForce.ID
+    ) async -> [NeighbourhoodEvent]?
+
+    func setEvents(
+        _ events: [NeighbourhoodEvent],
+        forNeighbourhood neighbourhoodID: Neighbourhood.ID,
+        inPoliceForce policeForceID: PoliceForce.ID
+    ) async
+
 }

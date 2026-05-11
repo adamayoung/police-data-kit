@@ -29,9 +29,7 @@ final class StopAndSearchDefaultCache: StopAndSearchCache {
 
     func stopAndSearches(atLocation streetID: Int, date: Date) async -> [StopAndSearch]? {
         let cacheKey = StopAndSearchesAtLocationCachingKey(streetID: streetID, date: date)
-        let cachedStopAndSearches = await cacheStore.object(for: cacheKey, type: [StopAndSearch].self)
-
-        return cachedStopAndSearches
+        return await cacheStore.object(for: cacheKey, type: [StopAndSearch].self)
     }
 
     func setStopAndSearches(
@@ -49,9 +47,7 @@ final class StopAndSearchDefaultCache: StopAndSearchCache {
         date: Date
     ) async -> [StopAndSearch]? {
         let cacheKey = StopAndSearchesWithNoLocationCachingKey(policeForceID: policeForceID, date: date)
-        let cachedStopAndSearches = await cacheStore.object(for: cacheKey, type: [StopAndSearch].self)
-
-        return cachedStopAndSearches
+        return await cacheStore.object(for: cacheKey, type: [StopAndSearch].self)
     }
 
     func setStopAndSearchesWithNoLocation(
@@ -66,9 +62,7 @@ final class StopAndSearchDefaultCache: StopAndSearchCache {
 
     func stopAndSearches(forPoliceForce policeForceID: PoliceForce.ID, date: Date) async -> [StopAndSearch]? {
         let cacheKey = StopAndSearchesForPoliceForceCachingKey(policeForceID: policeForceID, date: date)
-        let cachedStopAndSearches = await cacheStore.object(for: cacheKey, type: [StopAndSearch].self)
-
-        return cachedStopAndSearches
+        return await cacheStore.object(for: cacheKey, type: [StopAndSearch].self)
     }
 
     func setStopAndSearches(

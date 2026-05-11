@@ -47,6 +47,10 @@ final class NeighbourhoodMockCache: NeighbourhoodCache {
             "priorities-neighbourhood-\(neighbourhoodID)-police-force-\(policeForceID)"
         }
 
+        static func events(neighbourhoodID: Neighbourhood.ID, policeForceID: PoliceForce.ID) -> String {
+            "events-neighbourhood-\(neighbourhoodID)-police-force-\(policeForceID)"
+        }
+
     }
 
     func neighbourhoods(inPoliceForce policeForceID: PoliceForce.ID) async -> [NeighbourhoodReference]? {
@@ -121,6 +125,23 @@ final class NeighbourhoodMockCache: NeighbourhoodCache {
     ) async {
         let key = CacheKey.priorities(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID)
         cacheStore[key] = priorities
+    }
+
+    func events(
+        forNeighbourhood neighbourhoodID: Neighbourhood.ID,
+        inPoliceForce policeForceID: PoliceForce.ID
+    ) async -> [NeighbourhoodEvent]? {
+        let key = CacheKey.events(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID)
+        return cacheStore[key] as? [NeighbourhoodEvent]
+    }
+
+    func setEvents(
+        _ events: [NeighbourhoodEvent],
+        forNeighbourhood neighbourhoodID: Neighbourhood.ID,
+        inPoliceForce policeForceID: PoliceForce.ID
+    ) async {
+        let key = CacheKey.events(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID)
+        cacheStore[key] = events
     }
 
 }

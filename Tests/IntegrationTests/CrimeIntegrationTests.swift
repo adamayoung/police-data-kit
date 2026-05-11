@@ -171,4 +171,14 @@ final class CrimeIntegrationTests: XCTestCase {
         XCTAssertGreaterThan(crimeCategories.count, 0)
     }
 
+    func testLatestDataDateReturnsDate() async throws {
+        let currentDate = Date()
+
+        let date = try await retry {
+            try await self.crimeService.latestDataDate()
+        }
+
+        XCTAssertLessThanOrEqual(date, currentDate)
+    }
+
 }

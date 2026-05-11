@@ -30,9 +30,7 @@ final class NeighbourhoodDefaultCache: NeighbourhoodCache {
 
     func neighbourhoods(inPoliceForce policeForceID: PoliceForce.ID) async -> [NeighbourhoodReference]? {
         let cacheKey = NeighbourhoodsInPoliceForceCachingKey(policeForceID: policeForceID)
-        let cachedNeighbourhoods = await cacheStore.object(for: cacheKey, type: [NeighbourhoodReference].self)
-
-        return cachedNeighbourhoods
+        return await cacheStore.object(for: cacheKey, type: [NeighbourhoodReference].self)
     }
 
     func setNeighbourhoods(
@@ -46,9 +44,7 @@ final class NeighbourhoodDefaultCache: NeighbourhoodCache {
 
     func neighbourhood(withID id: String, inPoliceForce policeForceID: PoliceForce.ID) async -> Neighbourhood? {
         let cacheKey = NeighbourhoodCachingKey(id: id, policeForceID: policeForceID)
-        let cachedNeighbourhood = await cacheStore.object(for: cacheKey, type: Neighbourhood.self)
-
-        return cachedNeighbourhood
+        return await cacheStore.object(for: cacheKey, type: Neighbourhood.self)
     }
 
     func setNeighbourhood(
@@ -66,9 +62,7 @@ final class NeighbourhoodDefaultCache: NeighbourhoodCache {
         inPoliceForce policeForceID: PoliceForce.ID
     ) async -> [CLLocationCoordinate2D]? {
         let cacheKey = NeighbourhoodBoundaryCachingKey(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID)
-        let cachedBoundary = await cacheStore.object(for: cacheKey, type: [CLLocationCoordinate2D].self)
-
-        return cachedBoundary
+        return await cacheStore.object(for: cacheKey, type: [CLLocationCoordinate2D].self)
     }
 
     func setBoundary(
@@ -89,9 +83,7 @@ final class NeighbourhoodDefaultCache: NeighbourhoodCache {
             neighbourhoodID: neighbourhoodID,
             policeForceID: policeForceID
         )
-        let cachedPoliceOfficers = await cacheStore.object(for: cacheKey, type: [PoliceOfficer].self)
-
-        return cachedPoliceOfficers
+        return await cacheStore.object(for: cacheKey, type: [PoliceOfficer].self)
     }
 
     func setPoliceOfficers(
@@ -112,9 +104,7 @@ final class NeighbourhoodDefaultCache: NeighbourhoodCache {
         inPoliceForce policeForceID: PoliceForce.ID
     ) async -> [NeighbourhoodPriority]? {
         let cacheKey = NeighbourhoodPrioritiesCachingKey(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID)
-        let cachedPriorities = await cacheStore.object(for: cacheKey, type: [NeighbourhoodPriority].self)
-
-        return cachedPriorities
+        return await cacheStore.object(for: cacheKey, type: [NeighbourhoodPriority].self)
     }
 
     func setPriorities(
@@ -125,6 +115,23 @@ final class NeighbourhoodDefaultCache: NeighbourhoodCache {
         let cacheKey = NeighbourhoodPrioritiesCachingKey(neighbourhoodID: neighbourhoodID, policeForceID: policeForceID)
 
         await cacheStore.set(priorities, for: cacheKey)
+    }
+
+    func events(
+        forNeighbourhood neighbourhoodID: Neighbourhood.ID,
+        inPoliceForce policeForceID: PoliceForce.ID
+    ) async -> [NeighbourhoodEvent]? {
+        let cacheKey = NeighbourhoodEventsCachingKey(policeForceID: policeForceID, neighbourhoodID: neighbourhoodID)
+        return await cacheStore.object(for: cacheKey, type: [NeighbourhoodEvent].self)
+    }
+
+    func setEvents(
+        _ events: [NeighbourhoodEvent],
+        forNeighbourhood neighbourhoodID: Neighbourhood.ID,
+        inPoliceForce policeForceID: PoliceForce.ID
+    ) async {
+        let cacheKey = NeighbourhoodEventsCachingKey(policeForceID: policeForceID, neighbourhoodID: neighbourhoodID)
+        await cacheStore.set(events, for: cacheKey)
     }
 
 }

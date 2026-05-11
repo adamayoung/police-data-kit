@@ -249,4 +249,18 @@ final class NeighbourhoodIntegrationTests: XCTestCase {
         XCTAssertEqual(result?.neighbourhood, "BA1")
     }
 
+    func testEventsForNeighbourhoodInPoliceForce() async throws {
+        let neighbourhoodID = "NC04"
+        let policeForceID = "leicestershire"
+
+        let events = try await retry {
+            try await self.neighbourhoodService.events(
+                forNeighbourhood: neighbourhoodID,
+                inPoliceForce: policeForceID
+            )
+        }
+
+        XCTAssertNotNil(events)
+    }
+
 }

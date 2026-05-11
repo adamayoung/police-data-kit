@@ -25,6 +25,10 @@
 
 - ``priorities(forNeighbourhood:inPoliceForce:)``
 
+### Neighbourhood Events
+
+- ``events(forNeighbourhood:inPoliceForce:)``
+
 ### Neighbourhood Policing Teams
 
 - ``neighbourhoodPolicingTeam(at:)``

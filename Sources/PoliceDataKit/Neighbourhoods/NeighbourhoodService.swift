@@ -135,12 +135,10 @@ public final class NeighbourhoodService {
     ///
     public func neighbourhood(at coordinate: CLLocationCoordinate2D) async throws -> Neighbourhood {
         let neighbourhoodPolicingTeam = try await neighbourhoodPolicingTeam(at: coordinate)
-        let neighbourhood = try await neighbourhood(
+        return try await neighbourhood(
             withID: neighbourhoodPolicingTeam.neighbourhood,
             inPoliceForce: neighbourhoodPolicingTeam.force
         )
-
-        return neighbourhood
     }
 
     ///
@@ -248,6 +246,43 @@ public final class NeighbourhoodService {
         await cache.setPoliceOfficers(policeOfficers, forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
         return policeOfficers
+    }
+
+    ///
+    /// Returns a list of events for a neighbourhood.
+    ///
+    /// [https://data.police.uk/docs/method/neighbourhood-events/](https://data.police.uk/docs/method/neighbourhood-events/)
+    ///
+    /// - Parameters:
+    ///   - neighbourhoodID: Neighbourhood identifier.
+    ///   - policeForceID: Police Force identifier.
+    ///
+    /// - Throws: Neighbourhood data error ``NeighbourhoodError``.
+    ///
+    /// - Returns: The neighbourhood events for the specified neighbourhood and police force.
+    ///
+    public func events(
+        forNeighbourhood neighbourhoodID: Neighbourhood.ID,
+        inPoliceForce policeForceID: PoliceForce.ID
+    ) async throws -> [NeighbourhoodEvent] {
+        if let cachedEvents = await cache.events(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID) {
+            return cachedEvents
+        }
+
+        let events: [NeighbourhoodEvent]
+        do {
+            events = try await apiClient.get(
+                endpoint: NeighbourhoodsEndpoint.events(
+                    policeForceID: policeForceID, neighbourhoodID: neighbourhoodID
+                )
+            )
+        } catch let error {
+            throw Self.mapToNeighbourhoodError(error)
+        }
+
+        await cache.setEvents(events, forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
+
+        return events
     }
 
     ///

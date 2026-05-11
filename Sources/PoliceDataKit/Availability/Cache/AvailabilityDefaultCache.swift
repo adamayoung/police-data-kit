@@ -29,9 +29,7 @@ final class AvailabilityDefaultCache: AvailabilityCache {
 
     func availableDataSets() async -> [DataSet]? {
         let cacheKey = AvailableDataSetsCachingKey()
-        let cachedDataSets = await cacheStore.object(for: cacheKey, type: [DataSet].self)
-
-        return cachedDataSets
+        return await cacheStore.object(for: cacheKey, type: [DataSet].self)
     }
 
     func setAvailableDataSets(_ dataSets: [DataSet]) async {

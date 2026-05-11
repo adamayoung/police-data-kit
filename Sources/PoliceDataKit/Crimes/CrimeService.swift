@@ -359,6 +359,29 @@ public final class CrimeService {
     }
 
     ///
+    /// Returns the date when crime data was last updated.
+    ///
+    /// [https://data.police.uk/docs/method/crime-last-updated/](https://data.police.uk/docs/method/crime-last-updated/)
+    ///
+    /// - Throws: Crime data error ``CrimeError``.
+    ///
+    /// - Returns: The date the crime data was last updated.
+    ///
+    public func latestDataDate() async throws -> Date {
+        if let cached = await cache.latestDataDate() {
+            return cached
+        }
+        let lastUpdated: LastUpdatedDTO
+        do {
+            lastUpdated = try await apiClient.get(endpoint: CrimesEndpoint.lastUpdated)
+        } catch let error {
+            throw Self.mapToCrimeError(error)
+        }
+        await cache.setLatestDataDate(lastUpdated.date)
+        return lastUpdated.date
+    }
+
+    ///
     /// Returns a list of valid crime categories for a given data set date.
     ///
     /// [https://data.police.uk/docs/method/crime-categories/](https://data.police.uk/docs/method/crime-categories/)

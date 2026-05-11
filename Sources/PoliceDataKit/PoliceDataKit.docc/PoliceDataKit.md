@@ -37,6 +37,7 @@ For the Police API documentation, see [https://data.police.uk](https://data.poli
 * ``NeighbourhoodLocation``
 * ``NeighbourhoodPolicingTeam``
 * ``NeighbourhoodPriority``
+* ``NeighbourhoodEvent``
 * ``Link``
 * ``NeighbourhoodError``
 
