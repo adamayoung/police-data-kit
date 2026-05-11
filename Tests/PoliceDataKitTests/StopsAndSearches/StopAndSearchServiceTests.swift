@@ -17,7 +17,6 @@
 //  limitations under the License.
 //
 
-import Combine
 import MapKit
 @testable import PoliceDataKit
 import XCTest
@@ -28,14 +27,12 @@ final class StopAndSearchServiceTests: XCTestCase {
     var apiClient: MockAPIClient!
     var cache: StopAndSearchMockCache!
     var availableDataRegion: MKCoordinateRegion!
-    var cancellables: Set<AnyCancellable>!
 
     override func setUp() {
         super.setUp()
         apiClient = MockAPIClient()
         cache = StopAndSearchMockCache()
         availableDataRegion = .test
-        cancellables = Set<AnyCancellable>()
         service = StopAndSearchService(
             apiClient: apiClient,
             cache: cache,
@@ -45,7 +42,6 @@ final class StopAndSearchServiceTests: XCTestCase {
 
     override func tearDown() {
         service = nil
-        cancellables = nil
         availableDataRegion = nil
         cache = nil
         apiClient = nil
@@ -59,32 +55,6 @@ final class StopAndSearchServiceTests: XCTestCase {
         apiClient.add(response: .success(StopAndSearch.mocks))
 
         let result = try await service.stopAndSearches(at: coordinate, date: date)
-
-        XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 1)
-        XCTAssertEqual(
-            apiClient.requestedURLs.last,
-            StopAndSearchesEndpoint.stopAndSearchesByAreaAtSpecificPoint(coordinate: .mock, date: date).path
-        )
-    }
-
-    func testStopAndSearchesPublisherAtCoordinateReturnsStopAndSearches() {
-        let coordinate = CLLocationCoordinate2D.mock
-        let date = Date()
-        let expectedResult = StopAndSearch.mocks
-        apiClient.add(response: .success(StopAndSearch.mocks))
-
-        let expectation = expectation(description: "StopAndSearchPublisher")
-        var result: [StopAndSearch]?
-        service.stopAndSearchesPublisher(at: coordinate, date: date)
-            .sink { _ in
-                expectation.fulfill()
-            } receiveValue: { stopAndSearches in
-                result = stopAndSearches
-            }
-            .store(in: &cancellables)
-
-        wait(for: [expectation])
 
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(apiClient.requestedURLs.count, 1)
@@ -117,32 +87,6 @@ final class StopAndSearchServiceTests: XCTestCase {
         apiClient.add(response: .success(StopAndSearch.mocks))
 
         let result = try await service.stopAndSearches(in: coordinates, date: date)
-
-        XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 1)
-        XCTAssertEqual(
-            apiClient.requestedURLs.last,
-            StopAndSearchesEndpoint.stopAndSearchesByAreaInArea(coordinates: coordinates, date: date).path
-        )
-    }
-
-    func testStopAndSearchesPublisherInAreaReturnsStopAndSearches() {
-        let coordinates = CLLocationCoordinate2D.mocks
-        let date = Date()
-        let expectedResult = StopAndSearch.mocks
-        apiClient.add(response: .success(StopAndSearch.mocks))
-
-        let expectation = expectation(description: "StopAndSearchPublisher")
-        var result: [StopAndSearch]?
-        service.stopAndSearchesPublisher(in: coordinates, date: date)
-            .sink { _ in
-                expectation.fulfill()
-            } receiveValue: { stopAndSearches in
-                result = stopAndSearches
-            }
-            .store(in: &cancellables)
-
-        wait(for: [expectation])
 
         XCTAssertEqual(result, expectedResult)
         XCTAssertEqual(apiClient.requestedURLs.count, 1)

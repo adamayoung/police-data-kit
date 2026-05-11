@@ -17,7 +17,6 @@
 //  limitations under the License.
 //
 
-import Combine
 import MapKit
 @testable import PoliceDataKit
 import XCTest
@@ -28,14 +27,12 @@ final class NeighbourhoodServiceEventsTests: XCTestCase {
     var apiClient: MockAPIClient!
     var cache: NeighbourhoodMockCache!
     var availableDataRegion: MKCoordinateRegion!
-    var cancellables: Set<AnyCancellable>!
 
     override func setUp() {
         super.setUp()
         apiClient = MockAPIClient()
         cache = NeighbourhoodMockCache()
         availableDataRegion = .test
-        cancellables = Set<AnyCancellable>()
         service = NeighbourhoodService(
             apiClient: apiClient,
             cache: cache,
@@ -45,7 +42,6 @@ final class NeighbourhoodServiceEventsTests: XCTestCase {
 
     override func tearDown() {
         service = nil
-        cancellables = nil
         availableDataRegion = nil
         cache = nil
         apiClient = nil

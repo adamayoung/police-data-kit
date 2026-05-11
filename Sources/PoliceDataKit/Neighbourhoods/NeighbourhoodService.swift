@@ -17,7 +17,6 @@
 //  limitations under the License.
 //
 
-import Combine
 import Foundation
 import MapKit
 
@@ -139,36 +138,6 @@ public final class NeighbourhoodService {
             withID: neighbourhoodPolicingTeam.neighbourhood,
             inPoliceForce: neighbourhoodPolicingTeam.force
         )
-    }
-
-    ///
-    /// Returns a publisher that wraps a neighbourhood for the specified location.
-    ///
-    /// - Parameters:
-    ///   - coordinate: A coordinate.
-    ///
-    /// - Returns: The neighbourhood at the specified coordinate.
-    ///
-    public func neighbourhoodPublisher(
-        at coordinate: CLLocationCoordinate2D
-    ) -> AnyPublisher<Neighbourhood, NeighbourhoodError> {
-        Future { [weak self] promise in
-            guard let self else {
-                promise(.failure(.unknown))
-                return
-            }
-
-            Task {
-                do {
-                    let neighbourhood = try await self.neighbourhood(at: coordinate)
-                    promise(.success(neighbourhood))
-                } catch let error {
-                    let neighbourhoodError = Self.mapToNeighbourhoodError(error)
-                    promise(.failure(neighbourhoodError))
-                }
-            }
-        }
-        .eraseToAnyPublisher()
     }
 
     ///
@@ -353,37 +322,6 @@ public final class NeighbourhoodService {
         }
 
         return policingTeam
-    }
-
-    ///
-    /// Returns a publisher that wraps a neighbourhood policing team responsible for a particular area.
-    ///
-    /// [https://data.police.uk/docs/method/neighbourhood-locate/](https://data.police.uk/docs/method/neighbourhood-locate/)
-    ///
-    /// - Parameter coordinate: A coordinate.
-    ///
-    /// - Returns: The neighbourhood policing team for the specificed location.
-    ///
-    public func neighbourhoodPolicingTeamPublisher(
-        at coordinate: CLLocationCoordinate2D
-    ) -> AnyPublisher<NeighbourhoodPolicingTeam, NeighbourhoodError> {
-        Future { [weak self] promise in
-            guard let self else {
-                promise(.failure(.unknown))
-                return
-            }
-
-            Task {
-                do {
-                    let policingTeam = try await self.neighbourhoodPolicingTeam(at: coordinate)
-                    promise(.success(policingTeam))
-                } catch let error {
-                    let neighbourhoodError = Self.mapToNeighbourhoodError(error)
-                    promise(.failure(neighbourhoodError))
-                }
-            }
-        }
-        .eraseToAnyPublisher()
     }
 
 }

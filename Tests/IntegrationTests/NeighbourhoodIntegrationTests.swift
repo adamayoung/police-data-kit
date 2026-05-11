@@ -17,7 +17,6 @@
 //  limitations under the License.
 //
 
-import Combine
 import CoreLocation
 import PoliceDataKit
 import XCTest
@@ -25,17 +24,14 @@ import XCTest
 final class NeighbourhoodIntegrationTests: XCTestCase {
 
     var neighbourhoodService: NeighbourhoodService!
-    var cancellables: Set<AnyCancellable>!
 
     override func setUp() {
         super.setUp()
-        cancellables = Set<AnyCancellable>()
         neighbourhoodService = NeighbourhoodService()
     }
 
     override func tearDown() {
         neighbourhoodService = nil
-        cancellables = nil
         super.tearDown()
     }
 
@@ -142,25 +138,6 @@ final class NeighbourhoodIntegrationTests: XCTestCase {
         XCTAssertEqual(neighbourhoodError, .locationOutsideOfDataSetRegion)
     }
 
-    func testNeighbourhoodPublisherAtCoordinateForLeedsCityCentre() {
-        let leedsCityCentreCoordinate = CLLocationCoordinate2D(latitude: 53.797927, longitude: -1.541522)
-
-        let expectation = expectation(description: "NeighbourhoodPublisher")
-        var result: Neighbourhood?
-        neighbourhoodService.neighbourhoodPublisher(at: leedsCityCentreCoordinate)
-            .sink { _ in
-                expectation.fulfill()
-            } receiveValue: { neighbourhood in
-                result = neighbourhood
-            }
-            .store(in: &cancellables)
-
-        wait(for: [expectation])
-
-        XCTAssertEqual(result?.id, "LDT_CITY")
-        XCTAssertEqual(result?.name, "Leeds City")
-    }
-
     func testBoundaryForNeighbourhoodInPoliceForceForWakefieldCentralWestYokrshire() async throws {
         let neighbourhoodID = "WDT_CEN"
         let policeForceID = "west-yorkshire"
@@ -228,25 +205,6 @@ final class NeighbourhoodIntegrationTests: XCTestCase {
 
         XCTAssertEqual(policingTeam.force, "gloucestershire")
         XCTAssertEqual(policingTeam.neighbourhood, "BA1")
-    }
-
-    func testNeighbourhoodPolicingTeamPublisherAtCoordinateForGloucesterCityCentreGloucestershire() {
-        let gloucesterCoordinate = CLLocationCoordinate2D(latitude: 51.86703, longitude: -2.2413)
-
-        let expectation = expectation(description: "NeighbourhoodPublisher")
-        var result: NeighbourhoodPolicingTeam?
-        neighbourhoodService.neighbourhoodPolicingTeamPublisher(at: gloucesterCoordinate)
-            .sink { _ in
-                expectation.fulfill()
-            } receiveValue: { policingTeam in
-                result = policingTeam
-            }
-            .store(in: &cancellables)
-
-        wait(for: [expectation])
-
-        XCTAssertEqual(result?.force, "gloucestershire")
-        XCTAssertEqual(result?.neighbourhood, "BA1")
     }
 
     func testEventsForNeighbourhoodInPoliceForce() async throws {

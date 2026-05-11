@@ -11,7 +11,6 @@
 - ``neighbourhoods(inPoliceForce:)``
 - ``neighbourhood(withID:inPoliceForce:)``
 - ``neighbourhood(at:)``
-- ``neighbourhoodPublisher(at:)``
 
 ### Neighbourhood Boundaries
 
@@ -32,7 +31,6 @@
 ### Neighbourhood Policing Teams
 
 - ``neighbourhoodPolicingTeam(at:)``
-- ``neighbourhoodPublisher(at:)``
 
 ### Shared instance
 
