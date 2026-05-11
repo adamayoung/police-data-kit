@@ -17,14 +17,13 @@
 //  limitations under the License.
 //
 
+import CoreLocation
 import Foundation
-import MapKit
 
 ///
 /// Provides an interface for obtaining neighbourhood data from the UK Police API.
 ///
-@available(iOS 15.0, tvOS 15.0, watchOS 8.0, macOS 12, *)
-public final class NeighbourhoodService {
+public final class NeighbourhoodService: Sendable {
 
     ///
     /// A single, shared neighbourhood service object.
@@ -33,9 +32,9 @@ public final class NeighbourhoodService {
     ///
     public static let shared = NeighbourhoodService()
 
-    private let apiClient: any APIClient
-    private let cache: any NeighbourhoodCache
-    private let availableDataRegion: MKCoordinateRegion
+    private let apiClient: any APIClient & Sendable
+    private let cache: any NeighbourhoodCache & Sendable
+    private let availableDataRegion: AvailableRegion
 
     ///
     /// Creates a neighbourhood service object.
@@ -51,7 +50,11 @@ public final class NeighbourhoodService {
         )
     }
 
-    init(apiClient: some APIClient, cache: some NeighbourhoodCache, availableDataRegion: MKCoordinateRegion) {
+    init(
+        apiClient: some APIClient & Sendable,
+        cache: some NeighbourhoodCache & Sendable,
+        availableDataRegion: AvailableRegion
+    ) {
         self.apiClient = apiClient
         self.cache = cache
         self.availableDataRegion = availableDataRegion

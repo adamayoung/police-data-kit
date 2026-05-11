@@ -17,14 +17,13 @@
 //  limitations under the License.
 //
 
+import CoreLocation
 import Foundation
-import MapKit
 
 ///
 /// Provides an interface for obtaining outcome data from the UK Police API.
 ///
-@available(iOS 15.0, tvOS 15.0, watchOS 8.0, macOS 12, *)
-public final class OutcomeService {
+public final class OutcomeService: Sendable {
 
     ///
     /// A single, shared outcome service object.
@@ -33,9 +32,9 @@ public final class OutcomeService {
     ///
     public static let shared = OutcomeService()
 
-    private let apiClient: any APIClient
-    private let cache: any OutcomeCache
-    private let availableDataRegion: MKCoordinateRegion
+    private let apiClient: any APIClient & Sendable
+    private let cache: any OutcomeCache & Sendable
+    private let availableDataRegion: AvailableRegion
 
     ///
     /// Creates an outcome service object.
@@ -51,7 +50,11 @@ public final class OutcomeService {
         )
     }
 
-    init(apiClient: some APIClient, cache: some OutcomeCache, availableDataRegion: MKCoordinateRegion) {
+    init(
+        apiClient: some APIClient & Sendable,
+        cache: some OutcomeCache & Sendable,
+        availableDataRegion: AvailableRegion
+    ) {
         self.apiClient = apiClient
         self.cache = cache
         self.availableDataRegion = availableDataRegion

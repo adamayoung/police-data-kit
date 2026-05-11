@@ -20,14 +20,14 @@
 @testable import PoliceDataKit
 import XCTest
 
-final class MockAPIClient: APIClient {
+final actor MockAPIClient: APIClient {
 
     var responses: [Result<Any, Error>] = []
     private(set) var requestedURLs: [URL] = []
 
     private var responseIndex = 0
 
-    func get<Response: Decodable>(path: URL) async throws -> Response {
+    func get<Response: Decodable & Sendable>(path: URL) async throws -> Response {
         requestedURLs.append(path)
 
         let response = response(at: responseIndex)

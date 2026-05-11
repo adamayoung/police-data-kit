@@ -22,7 +22,7 @@ import Foundation
 ///
 /// A model representing an associated link.
 ///
-public struct Link: Equatable, Codable {
+public struct Link: Equatable, Codable, Sendable {
 
     /// Title of the link.
     public let title: String

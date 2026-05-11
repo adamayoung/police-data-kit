@@ -22,7 +22,7 @@ import Foundation
 ///
 /// A model representing a neighbourhood priority.
 ///
-public struct NeighbourhoodPriority: Equatable, Codable {
+public struct NeighbourhoodPriority: Equatable, Codable, Sendable {
 
     /// An issue raised with the police.
     public let issue: String

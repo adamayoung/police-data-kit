@@ -22,7 +22,7 @@ import Foundation
 ///
 /// A model representing an outcome's status.
 ///
-public struct OutcomeStatus: Equatable, Codable {
+public struct OutcomeStatus: Equatable, Codable, Sendable {
 
     /// Category of the outcome.
     public let category: String

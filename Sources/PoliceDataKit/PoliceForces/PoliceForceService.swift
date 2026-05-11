@@ -22,8 +22,7 @@ import Foundation
 ///
 /// Provides an interface for obtaining police force data from the UK Police API.
 ///
-@available(iOS 15.0, tvOS 15.0, watchOS 8.0, macOS 12, *)
-public final class PoliceForceService {
+public final class PoliceForceService: Sendable {
 
     ///
     /// A single, shared police force service object.
@@ -32,8 +31,8 @@ public final class PoliceForceService {
     ///
     public static let shared = PoliceForceService()
 
-    private let apiClient: any APIClient
-    private let cache: any PoliceForceCache
+    private let apiClient: any APIClient & Sendable
+    private let cache: any PoliceForceCache & Sendable
 
     ///
     /// Creates a police force service object.
@@ -48,7 +47,7 @@ public final class PoliceForceService {
         )
     }
 
-    init(apiClient: some APIClient, cache: some PoliceForceCache) {
+    init(apiClient: some APIClient & Sendable, cache: some PoliceForceCache & Sendable) {
         self.apiClient = apiClient
         self.cache = cache
     }

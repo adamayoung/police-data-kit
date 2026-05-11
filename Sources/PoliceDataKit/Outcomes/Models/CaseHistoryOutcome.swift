@@ -22,7 +22,7 @@ import Foundation
 ///
 /// A model representing a case history outcome.
 ///
-public struct CaseHistoryOutcome: Equatable, Codable {
+public struct CaseHistoryOutcome: Equatable, Codable, Sendable {
 
     /// An identifier for the suspect/offender, where available.
     public let personID: String?

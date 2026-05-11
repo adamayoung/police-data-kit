@@ -19,15 +19,15 @@
 
 import Foundation
 
-protocol APIClient {
+protocol APIClient: Sendable {
 
-    func get<Response: Decodable>(path: URL) async throws -> Response
+    func get<Response: Decodable & Sendable>(path: URL) async throws -> Response
 
 }
 
 extension APIClient {
 
-    func get<Response: Decodable>(endpoint: Endpoint) async throws -> Response {
+    func get<Response: Decodable & Sendable>(endpoint: Endpoint) async throws -> Response {
         try await get(path: endpoint.path)
     }
 

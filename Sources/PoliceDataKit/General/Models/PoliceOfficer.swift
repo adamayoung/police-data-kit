@@ -22,7 +22,7 @@ import Foundation
 ///
 /// A model representing a police officer.
 ///
-public struct PoliceOfficer: Equatable, Codable {
+public struct PoliceOfficer: Equatable, Codable, Sendable {
 
     /// Name of the person.
     public let name: String

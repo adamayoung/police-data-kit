@@ -19,7 +19,7 @@
 
 import Foundation
 
-protocol Endpoint {
+protocol Endpoint: Sendable {
 
     var path: URL { get }
 

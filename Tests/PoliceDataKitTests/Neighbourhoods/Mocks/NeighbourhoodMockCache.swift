@@ -21,7 +21,7 @@ import CoreLocation
 import Foundation
 @testable import PoliceDataKit
 
-final class NeighbourhoodMockCache: NeighbourhoodCache {
+final actor NeighbourhoodMockCache: NeighbourhoodCache {
 
     private var cacheStore: [String: Any] = [:]
 

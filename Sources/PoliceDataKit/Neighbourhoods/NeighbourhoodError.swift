@@ -22,7 +22,7 @@ import Foundation
 ///
 /// An error PoliceDataKit returns.
 ///
-public enum NeighbourhoodError: LocalizedError, Equatable {
+public enum NeighbourhoodError: LocalizedError, Equatable, Sendable {
 
     /// An error indicating a neighbourhood could not be found.
     case notFound

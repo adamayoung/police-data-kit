@@ -2,11 +2,11 @@ TARGET = PoliceDataKit
 TEST_TARGET = PoliceDataKitTests
 INTEGRATION_TEST_TARGET = IntegrationTests
 
-IOS_DESTINATION = 'platform=iOS Simulator,name=iPhone 15,OS=17.2'
-WATCHOS_DESINTATION = 'platform=watchOS Simulator,name=Apple Watch Series 9 (45mm),OS=10.2'
-TVOS_DESTINATION =  'platform=tvOS Simulator,name=Apple TV 4K (3rd generation),OS=17.2'
+IOS_DESTINATION = 'platform=iOS Simulator,name=iPhone 16,OS=18.2'
+WATCHOS_DESINTATION = 'platform=watchOS Simulator,name=Apple Watch Series 10 (46mm),OS=11.2'
+TVOS_DESTINATION =  'platform=tvOS Simulator,name=Apple TV 4K (3rd generation),OS=18.2'
 
-SWIFT_CONTAINER_IMAGE = swift:5.9.2-jammy
+SWIFT_CONTAINER_IMAGE = swift:6.0-noble
 
 all: build
 

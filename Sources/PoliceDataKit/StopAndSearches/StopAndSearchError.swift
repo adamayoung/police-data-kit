@@ -22,7 +22,7 @@ import Foundation
 ///
 /// An error PoliceDataKit returns.
 ///
-public enum StopAndSearchError: LocalizedError, Equatable {
+public enum StopAndSearchError: LocalizedError, Equatable, Sendable {
 
     /// An error indicating a stop and search could not be found.
     case notFound

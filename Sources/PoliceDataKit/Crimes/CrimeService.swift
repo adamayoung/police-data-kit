@@ -17,14 +17,13 @@
 //  limitations under the License.
 //
 
+import CoreLocation
 import Foundation
-import MapKit
 
 ///
 /// Provides an interface for obtaining crime data from the UK Police API.
 ///
-@available(iOS 15.0, tvOS 15.0, watchOS 8.0, macOS 12, *)
-public final class CrimeService {
+public final class CrimeService: Sendable {
 
     ///
     /// A single, shared crime service object.
@@ -33,9 +32,9 @@ public final class CrimeService {
     ///
     public static let shared = CrimeService()
 
-    private let apiClient: any APIClient
-    private let cache: any CrimeCache
-    private let availableDataRegion: MKCoordinateRegion
+    private let apiClient: any APIClient & Sendable
+    private let cache: any CrimeCache & Sendable
+    private let availableDataRegion: AvailableRegion
 
     ///
     /// Creates a crime service object.
@@ -51,7 +50,11 @@ public final class CrimeService {
         )
     }
 
-    init(apiClient: some APIClient, cache: some CrimeCache, availableDataRegion: MKCoordinateRegion) {
+    init(
+        apiClient: some APIClient & Sendable,
+        cache: some CrimeCache & Sendable,
+        availableDataRegion: AvailableRegion
+    ) {
         self.apiClient = apiClient
         self.cache = cache
         self.availableDataRegion = availableDataRegion

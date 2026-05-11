@@ -19,7 +19,7 @@
 
 import Foundation
 
-protocol StopAndSearchCache {
+protocol StopAndSearchCache: Sendable {
 
     func stopAndSearches(atLocation streetID: Int, date: Date) async -> [StopAndSearch]?
 

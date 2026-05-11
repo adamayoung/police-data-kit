@@ -22,7 +22,7 @@ import Foundation
 ///
 /// A model representing a neighbourhood event.
 ///
-public struct NeighbourhoodEvent: Equatable, Codable {
+public struct NeighbourhoodEvent: Equatable, Codable, Sendable {
 
     /// Event title.
     public let title: String

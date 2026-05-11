@@ -22,7 +22,7 @@ import Foundation
 ///
 /// A model representing an engagement method - ways to keep informed.
 ///
-public struct EngagementMethod: Equatable, Codable {
+public struct EngagementMethod: Equatable, Codable, Sendable {
 
     /// Engagement method title.
     public let title: String

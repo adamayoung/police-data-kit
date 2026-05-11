@@ -1,3 +1,4 @@
+--swiftversion 6.0
 --typeblanklines preserve
 --indent 4
 --commas inline

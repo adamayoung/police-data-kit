@@ -23,7 +23,7 @@ import Foundation
 ///
 /// A model representing a location.
 ///
-public struct Location: Equatable, Codable {
+public struct Location: Equatable, Codable, Sendable {
 
     /// An approximate street for the location.
     ///

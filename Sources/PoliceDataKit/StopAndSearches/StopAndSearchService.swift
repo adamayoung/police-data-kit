@@ -17,8 +17,8 @@
 //  limitations under the License.
 //
 
+import CoreLocation
 import Foundation
-import MapKit
 
 ///
 /// Provides an interface for obtaining stop and search data from the UK Police API.
@@ -27,8 +27,7 @@ import MapKit
 /// validation to check for mandatory fields and data formats. The location coordinates of the stop are anonymised
 /// and the age of the person stopped is changed to an age group (e.g. 18-24) before publication.
 ///
-@available(iOS 15.0, tvOS 15.0, watchOS 8.0, macOS 12, *)
-public final class StopAndSearchService {
+public final class StopAndSearchService: Sendable {
 
     ///
     /// A single, shared stop and search service object.
@@ -37,9 +36,9 @@ public final class StopAndSearchService {
     ///
     public static let shared = StopAndSearchService()
 
-    private let apiClient: any APIClient
-    private let cache: any StopAndSearchCache
-    private let availableDataRegion: MKCoordinateRegion
+    private let apiClient: any APIClient & Sendable
+    private let cache: any StopAndSearchCache & Sendable
+    private let availableDataRegion: AvailableRegion
 
     ///
     /// Creates a stop and search service object.
@@ -55,7 +54,11 @@ public final class StopAndSearchService {
         )
     }
 
-    init(apiClient: some APIClient, cache: some StopAndSearchCache, availableDataRegion: MKCoordinateRegion) {
+    init(
+        apiClient: some APIClient & Sendable,
+        cache: some StopAndSearchCache & Sendable,
+        availableDataRegion: AvailableRegion
+    ) {
         self.apiClient = apiClient
         self.cache = cache
         self.availableDataRegion = availableDataRegion

@@ -22,7 +22,7 @@ import Foundation
 ///
 /// An error PoliceDataKit returns.
 ///
-public enum OutcomeError: LocalizedError, Equatable {
+public enum OutcomeError: LocalizedError, Equatable, Sendable {
 
     /// An error indicating an outcome could not be found.
     case notFound

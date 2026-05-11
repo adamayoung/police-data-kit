@@ -17,7 +17,6 @@
 //  limitations under the License.
 //
 
-import MapKit
 @testable import PoliceDataKit
 import XCTest
 
@@ -26,7 +25,7 @@ final class NeighbourhoodServiceEventsTests: XCTestCase {
     var service: NeighbourhoodService!
     var apiClient: MockAPIClient!
     var cache: NeighbourhoodMockCache!
-    var availableDataRegion: MKCoordinateRegion!
+    var availableDataRegion: AvailableRegion!
 
     override func setUp() {
         super.setUp()
@@ -52,14 +51,16 @@ final class NeighbourhoodServiceEventsTests: XCTestCase {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
         let expectedResult = NeighbourhoodEvent.mocks
-        apiClient.add(response: .success(NeighbourhoodEvent.mocks))
+        await apiClient.add(response: .success(NeighbourhoodEvent.mocks))
 
         let result = try await service.events(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
         XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 1)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        XCTAssertEqual(requestedURLsCount, 1)
+        let lastURL = await apiClient.requestedURLs.last
         XCTAssertEqual(
-            apiClient.requestedURLs.last,
+            lastURL,
             NeighbourhoodsEndpoint.events(policeForceID: policeForceID, neighbourhoodID: neighbourhoodID).path
         )
     }
@@ -73,14 +74,15 @@ final class NeighbourhoodServiceEventsTests: XCTestCase {
         let result = try await service.events(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
         XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 0)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        XCTAssertEqual(requestedURLsCount, 0)
     }
 
     func testEventsWhenNotCachedAndReturnsEventsShouldCacheResult() async throws {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
         let expectedResult = NeighbourhoodEvent.mocks
-        apiClient.add(response: .success(NeighbourhoodEvent.mocks))
+        await apiClient.add(response: .success(NeighbourhoodEvent.mocks))
         _ = try await service.events(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
 
         let cachedResult = await cache.events(forNeighbourhood: neighbourhoodID, inPoliceForce: policeForceID)
@@ -91,7 +93,7 @@ final class NeighbourhoodServiceEventsTests: XCTestCase {
     func testEventsWhenNotFoundThrowsNotFoundError() async throws {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
-        apiClient.add(response: .failure(APIClientError.notFound))
+        await apiClient.add(response: .failure(APIClientError.notFound))
 
         var resultError: NeighbourhoodError?
         do {
@@ -107,7 +109,7 @@ final class NeighbourhoodServiceEventsTests: XCTestCase {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
         let networkError = URLError(.notConnectedToInternet)
-        apiClient.add(response: .failure(APIClientError.network(networkError)))
+        await apiClient.add(response: .failure(APIClientError.network(networkError)))
 
         var resultError: NeighbourhoodError?
         do {
@@ -126,7 +128,7 @@ final class NeighbourhoodServiceEventsTests: XCTestCase {
         let neighbourhoodID = "NC04"
         let policeForceID = "leicestershire"
         let decodeError = DecodingError.dataCorrupted(.init(codingPath: [], debugDescription: "bad"))
-        apiClient.add(response: .failure(APIClientError.decode(decodeError)))
+        await apiClient.add(response: .failure(APIClientError.decode(decodeError)))
 
         var resultError: NeighbourhoodError?
         do {

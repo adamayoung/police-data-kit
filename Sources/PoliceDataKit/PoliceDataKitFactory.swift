@@ -19,43 +19,33 @@
 
 import Foundation
 
-final class PoliceDataKitFactory {
+enum PoliceDataKitFactory {
 
-    private init() {}
-
-}
-
-extension PoliceDataKitFactory {
-
-    static let apiClient: some APIClient = PoliceDataAPIClient(
+    static let apiClient: any APIClient & Sendable = PoliceDataAPIClient(
         baseURL: policeDataBaseURL,
         urlSession: urlSession,
         serialiser: serialiser
     )
 
-    static var availabilityCache: some AvailabilityCache {
-        AvailabilityDefaultCache(cacheStore: cacheStore)
-    }
+    static let availabilityCache: any AvailabilityCache & Sendable = AvailabilityDefaultCache(
+        cacheStore: cacheStore
+    )
 
-    static var crimeCache: some CrimeCache {
-        CrimeDefaultCache(cacheStore: cacheStore)
-    }
+    static let crimeCache: any CrimeCache & Sendable = CrimeDefaultCache(cacheStore: cacheStore)
 
-    static var neighbourhoodCache: some NeighbourhoodCache {
-        NeighbourhoodDefaultCache(cacheStore: cacheStore)
-    }
+    static let neighbourhoodCache: any NeighbourhoodCache & Sendable = NeighbourhoodDefaultCache(
+        cacheStore: cacheStore
+    )
 
-    static var outcomeCache: some OutcomeCache {
-        OutcomeDefaultCache(cacheStore: cacheStore)
-    }
+    static let outcomeCache: any OutcomeCache & Sendable = OutcomeDefaultCache(cacheStore: cacheStore)
 
-    static var policeForceCache: some PoliceForceCache {
-        PoliceForceDefaultCache(cacheStore: cacheStore)
-    }
+    static let policeForceCache: any PoliceForceCache & Sendable = PoliceForceDefaultCache(
+        cacheStore: cacheStore
+    )
 
-    static var stopAndSearchCache: some StopAndSearchCache {
-        StopAndSearchDefaultCache(cacheStore: cacheStore)
-    }
+    static let stopAndSearchCache: any StopAndSearchCache & Sendable = StopAndSearchDefaultCache(
+        cacheStore: cacheStore
+    )
 
 }
 
@@ -75,18 +65,14 @@ extension PoliceDataKitFactory {
         return configuration
     }
 
-    static let cacheStore: some Cache = InMemoryCache(name: "PoliceDataKitCache")
+    static let cacheStore: any Cache & Sendable = InMemoryCache(name: "PoliceDataKitCache")
 
-    private static var serialiser: some Serialiser {
-        JSONSerialiser(decoder: .policeDataAPI)
-    }
+    private static let serialiser: any Serialiser & Sendable = JSONSerialiser(decoder: .policeDataAPI)
 
 }
 
 extension PoliceDataKitFactory {
 
-    private static var policeDataBaseURL: URL {
-        URL(string: "https://data.police.uk/api")!
-    }
+    private static let policeDataBaseURL = URL(string: "https://data.police.uk/api")!
 
 }

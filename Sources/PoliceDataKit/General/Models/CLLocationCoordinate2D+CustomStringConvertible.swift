@@ -20,7 +20,7 @@
 import CoreLocation
 import Foundation
 
-extension CLLocationCoordinate2D: CustomStringConvertible {
+extension CLLocationCoordinate2D: @retroactive CustomStringConvertible {
 
     public var description: String {
         "(\(latitude), \(longitude))"

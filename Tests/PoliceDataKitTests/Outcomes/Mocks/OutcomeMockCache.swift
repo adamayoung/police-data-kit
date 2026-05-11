@@ -20,7 +20,7 @@
 import Foundation
 @testable import PoliceDataKit
 
-final class OutcomeMockCache: OutcomeCache {
+final actor OutcomeMockCache: OutcomeCache {
 
     private var cacheStore: [String: Any] = [:]
 

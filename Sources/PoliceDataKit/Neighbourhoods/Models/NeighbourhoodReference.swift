@@ -22,7 +22,7 @@ import Foundation
 ///
 /// A model representing a neighbourhood reference.
 ///
-public struct NeighbourhoodReference: Identifiable, Equatable, Codable {
+public struct NeighbourhoodReference: Identifiable, Equatable, Codable, Sendable {
 
     /// Police Force specific team identifier.
     ///

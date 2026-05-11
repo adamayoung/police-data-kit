@@ -34,11 +34,11 @@ final class JSONSerialiserTests: XCTestCase {
         super.tearDown()
     }
 
-    func testDecodeWhenDataCannotBeDecodedThrowsDecodeError() async throws {
+    func testDecodeWhenDataCannotBeDecodedThrowsDecodeError() throws {
         let data = Data("aaa".utf8)
 
         do {
-            _ = try await serialiser.decode(MockObject.self, from: data)
+            _ = try serialiser.decode(MockObject.self, from: data)
         } catch {
             XCTAssertTrue(true)
             return
@@ -47,11 +47,11 @@ final class JSONSerialiserTests: XCTestCase {
         XCTFail("Expected decode error to be thrown")
     }
 
-    func testDecodeWhenDataCanBeDecodedReturnsDecodedObject() async throws {
+    func testDecodeWhenDataCanBeDecodedReturnsDecodedObject() throws {
         let expectedResult = MockObject()
         let data = expectedResult.data
 
-        let result = try await serialiser.decode(MockObject.self, from: data)
+        let result = try serialiser.decode(MockObject.self, from: data)
 
         XCTAssertEqual(result, expectedResult)
     }

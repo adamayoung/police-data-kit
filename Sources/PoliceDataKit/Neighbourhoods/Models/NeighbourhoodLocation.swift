@@ -23,7 +23,7 @@ import Foundation
 ///
 /// A model representing a neighbourhood location.
 ///
-public struct NeighbourhoodLocation: Equatable, Codable {
+public struct NeighbourhoodLocation: Equatable, Codable, Sendable {
 
     /// Name.
     public let name: String?

@@ -21,19 +21,21 @@ import Foundation
 
 final class URLProtocolMock: URLProtocol {
 
-    static var responseConfigs = [URL?: (HTTPURLResponse?, Data?)]()
-    static var requests = [URLRequest]()
+    // nonisolated(unsafe) is safe here: URLProtocolMock is test-only infrastructure
+    // accessed sequentially from a single test's setUp/tearDown cycle.
+    nonisolated(unsafe) static var responseConfigs = [URL?: (HTTPURLResponse?, Data?)]()
+    nonisolated(unsafe) static var requests = [URLRequest]()
 
-    class func reset() {
+    static func reset() {
         responseConfigs = [:]
         requests = []
     }
 
-    override class func canInit(with _: URLRequest) -> Bool {
+    override static func canInit(with _: URLRequest) -> Bool {
         true
     }
 
-    override class func canonicalRequest(for request: URLRequest) -> URLRequest {
+    override static func canonicalRequest(for request: URLRequest) -> URLRequest {
         request
     }
 
@@ -45,6 +47,8 @@ final class URLProtocolMock: URLProtocol {
         guard let url = request.url else {
             return
         }
+
+        URLProtocolMock.requests.append(request)
 
         guard let responseConfig = URLProtocolMock.responseConfigs[url] else {
             let error = URLError(.unsupportedURL)

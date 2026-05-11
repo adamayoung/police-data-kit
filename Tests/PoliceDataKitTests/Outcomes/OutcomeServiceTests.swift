@@ -17,7 +17,7 @@
 //  limitations under the License.
 //
 
-import MapKit
+import CoreLocation
 @testable import PoliceDataKit
 import XCTest
 
@@ -26,7 +26,7 @@ final class OutcomeServiceTests: XCTestCase {
     var service: OutcomeService!
     var apiClient: MockAPIClient!
     var cache: OutcomeMockCache!
-    var availableDataRegion: MKCoordinateRegion!
+    var availableDataRegion: AvailableRegion!
 
     override func setUp() {
         super.setUp()
@@ -48,14 +48,16 @@ final class OutcomeServiceTests: XCTestCase {
         let expectedResult = Outcome.mocks
         let streetID = expectedResult[0].crime.location.street.id
         let date = Date()
-        apiClient.add(response: .success(Outcome.mocks))
+        await apiClient.add(response: .success(Outcome.mocks))
 
         let result = try await service.streetLevelOutcomes(forStreet: streetID, date: date)
 
         XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 1)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        XCTAssertEqual(requestedURLsCount, 1)
+        let lastURL = await apiClient.requestedURLs.last
         XCTAssertEqual(
-            apiClient.requestedURLs.last,
+            lastURL,
             OutcomesEndpoint.streetLevelOutcomesForStreet(streetID: streetID, date: date).path
         )
     }
@@ -69,14 +71,15 @@ final class OutcomeServiceTests: XCTestCase {
         let result = try await service.streetLevelOutcomes(forStreet: streetID, date: date)
 
         XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 0)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        XCTAssertEqual(requestedURLsCount, 0)
     }
 
     func testStreetLevelOutcomesForStreetWhenNotCachedAndReturnsOutcomesShouldCacheResult() async throws {
         let expectedResult = Outcome.mocks
         let streetID = expectedResult[0].crime.location.street.id
         let date = Date()
-        apiClient.add(response: .success(Outcome.mocks))
+        await apiClient.add(response: .success(Outcome.mocks))
         _ = try await service.streetLevelOutcomes(forStreet: streetID, date: date)
 
         let cachedResult = await cache.streetLevelOutcomes(forStreet: streetID, date: date)
@@ -88,14 +91,16 @@ final class OutcomeServiceTests: XCTestCase {
         let coordinate = CLLocationCoordinate2D.mock
         let expectedResult = Outcome.mocks
         let date = Date()
-        apiClient.add(response: .success(Outcome.mocks))
+        await apiClient.add(response: .success(Outcome.mocks))
 
         let result = try await service.streetLevelOutcomes(at: coordinate, date: date)
 
         XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 1)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        XCTAssertEqual(requestedURLsCount, 1)
+        let lastURL = await apiClient.requestedURLs.last
         XCTAssertEqual(
-            apiClient.requestedURLs.last,
+            lastURL,
             OutcomesEndpoint.streetLevelOutcomesAtSpecificPoint(coordinate: coordinate, date: date).path
         )
     }
@@ -103,7 +108,7 @@ final class OutcomeServiceTests: XCTestCase {
     func testStreetLevelOutcomesAtCoordsWhenNotInAvailableDataRegionThrowsError() async throws {
         let coordinate = CLLocationCoordinate2D.outsideAvailableDataRegion
         let date = Date()
-        apiClient.add(response: .success(Outcome.mocks))
+        await apiClient.add(response: .success(Outcome.mocks))
 
         var resultError: OutcomeError?
         do {
@@ -113,21 +118,24 @@ final class OutcomeServiceTests: XCTestCase {
         }
 
         XCTAssertEqual(resultError, .locationOutsideOfDataSetRegion)
-        XCTAssertEqual(apiClient.requestedURLs.count, 0)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        XCTAssertEqual(requestedURLsCount, 0)
     }
 
     func testStreetLevelOutcomesInAreaReturnsOutcomes() async throws {
         let boundary = CLLocationCoordinate2D.mocks
         let expectedResult = Outcome.mocks
         let date = Date()
-        apiClient.add(response: .success(Outcome.mocks))
+        await apiClient.add(response: .success(Outcome.mocks))
 
         let result = try await service.streetLevelOutcomes(in: boundary, date: date)
 
         XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 1)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        XCTAssertEqual(requestedURLsCount, 1)
+        let lastURL = await apiClient.requestedURLs.last
         XCTAssertEqual(
-            apiClient.requestedURLs.last,
+            lastURL,
             OutcomesEndpoint.streetLevelOutcomesInArea(coordinates: CLLocationCoordinate2D.mocks, date: date).path
         )
     }
@@ -135,18 +143,20 @@ final class OutcomeServiceTests: XCTestCase {
     func testFetchCaseHistoryNotCachedReturnsCaseHistory() async throws {
         let expectedResult = CaseHistory.mock
         let crimeID = expectedResult.crime.crimeID
-        apiClient.add(response: .success(CaseHistory.mock))
+        await apiClient.add(response: .success(CaseHistory.mock))
 
         let result = try await service.caseHistory(forCrime: crimeID)
 
         XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 1)
-        XCTAssertEqual(apiClient.requestedURLs.last, OutcomesEndpoint.caseHistory(crimeID: crimeID).path)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        XCTAssertEqual(requestedURLsCount, 1)
+        let lastURL = await apiClient.requestedURLs.last
+        XCTAssertEqual(lastURL, OutcomesEndpoint.caseHistory(crimeID: crimeID).path)
     }
 
     func testFetchCaseHistoryWhenNotFoundThrowsNotFoundError() async throws {
         let crimeID = "123ABC"
-        apiClient.add(response: .failure(APIClientError.notFound))
+        await apiClient.add(response: .failure(APIClientError.notFound))
 
         var resultError: OutcomeError?
         do {
@@ -166,13 +176,14 @@ final class OutcomeServiceTests: XCTestCase {
         let result = try await service.caseHistory(forCrime: crimeID)
 
         XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 0)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        XCTAssertEqual(requestedURLsCount, 0)
     }
 
     func testFetchCaseHistoryWhenNotCachedAndReturnsCaseHistoryShouldCacheResult() async throws {
         let expectedResult = CaseHistory.mock
         let crimeID = expectedResult.crime.crimeID
-        apiClient.add(response: .success(CaseHistory.mock))
+        await apiClient.add(response: .success(CaseHistory.mock))
         _ = try await service.caseHistory(forCrime: crimeID)
 
         let cachedResult = await cache.caseHistory(forCrime: crimeID)

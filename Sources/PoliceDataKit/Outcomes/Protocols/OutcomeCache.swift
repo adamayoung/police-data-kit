@@ -19,7 +19,7 @@
 
 import Foundation
 
-protocol OutcomeCache {
+protocol OutcomeCache: Sendable {
 
     func streetLevelOutcomes(forStreet streetID: Int, date: Date) async -> [Outcome]?
 

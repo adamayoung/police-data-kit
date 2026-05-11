@@ -19,7 +19,7 @@
 
 import Foundation
 
-protocol PoliceForceCache {
+protocol PoliceForceCache: Sendable {
 
     func policeForces() async -> [PoliceForceReference]?
 

@@ -22,7 +22,7 @@ import Foundation
 ///
 /// The type of a stop and search.
 ///
-public enum StopAndSearchType: String, Equatable, CaseIterable, Codable {
+public enum StopAndSearchType: String, Equatable, CaseIterable, Codable, Sendable {
 
     /// Person search.
     case personSearch = "Person search"

@@ -22,7 +22,7 @@ import Foundation
 ///
 /// A model representing a data set.
 ///
-public struct DataSet: Equatable, Codable {
+public struct DataSet: Equatable, Codable, Sendable {
 
     /// Year and month of all available street level crime data.
     public let date: Date

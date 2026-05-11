@@ -17,37 +17,39 @@
 //  limitations under the License.
 //
 
-import Foundation
-import MapKit
+#if canImport(MapKit)
+    import Foundation
+    import MapKit
 
-public extension MKCoordinateRegion {
+    public extension MKCoordinateRegion {
 
-    func contains(coordinate: CLLocationCoordinate2D) -> Bool {
-        let northWestCoordinate = northWestCoordinate
-        let southEastRightCoordinate = southEastRightCoordinate
+        func contains(coordinate: CLLocationCoordinate2D) -> Bool {
+            let northWestCoordinate = northWestCoordinate
+            let southEastRightCoordinate = southEastRightCoordinate
 
-        return coordinate.latitude >= northWestCoordinate.latitude
-            && coordinate.longitude >= northWestCoordinate.longitude
-            && coordinate.latitude <= southEastRightCoordinate.latitude
-            && coordinate.longitude <= southEastRightCoordinate.longitude
+            return coordinate.latitude >= northWestCoordinate.latitude
+                && coordinate.longitude >= northWestCoordinate.longitude
+                && coordinate.latitude <= southEastRightCoordinate.latitude
+                && coordinate.longitude <= southEastRightCoordinate.longitude
+        }
+
     }
 
-}
+    extension MKCoordinateRegion {
 
-extension MKCoordinateRegion {
+        private var northWestCoordinate: CLLocationCoordinate2D {
+            CLLocationCoordinate2D(
+                latitude: center.latitude - (span.latitudeDelta / 2.0),
+                longitude: center.longitude - (span.longitudeDelta / 2.0)
+            )
+        }
 
-    private var northWestCoordinate: CLLocationCoordinate2D {
-        CLLocationCoordinate2D(
-            latitude: center.latitude - (span.latitudeDelta / 2.0),
-            longitude: center.longitude - (span.longitudeDelta / 2.0)
-        )
+        private var southEastRightCoordinate: CLLocationCoordinate2D {
+            CLLocationCoordinate2D(
+                latitude: center.latitude + (span.latitudeDelta / 2.0),
+                longitude: center.longitude + (span.longitudeDelta / 2.0)
+            )
+        }
+
     }
-
-    private var southEastRightCoordinate: CLLocationCoordinate2D {
-        CLLocationCoordinate2D(
-            latitude: center.latitude + (span.latitudeDelta / 2.0),
-            longitude: center.longitude + (span.longitudeDelta / 2.0)
-        )
-    }
-
-}
+#endif

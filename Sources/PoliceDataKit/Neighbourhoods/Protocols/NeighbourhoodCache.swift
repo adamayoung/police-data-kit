@@ -20,7 +20,7 @@
 import CoreLocation
 import Foundation
 
-protocol NeighbourhoodCache {
+protocol NeighbourhoodCache: Sendable {
 
     func neighbourhoods(inPoliceForce policeForceID: PoliceForce.ID) async -> [NeighbourhoodReference]?
 

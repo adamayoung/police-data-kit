@@ -20,7 +20,7 @@
 import CoreLocation
 import Foundation
 
-protocol CrimeCache {
+protocol CrimeCache: Sendable {
 
     func crimes(forStreet streetID: Int, date: Date) async -> [Crime]?
 

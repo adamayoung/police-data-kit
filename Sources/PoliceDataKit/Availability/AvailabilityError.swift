@@ -22,7 +22,7 @@ import Foundation
 ///
 /// An error PoliceDataKit returns.
 ///
-public enum AvailabilityError: LocalizedError, Equatable {
+public enum AvailabilityError: LocalizedError, Equatable, Sendable {
 
     /// An error indicating there was a network problem.
     case network(Error)

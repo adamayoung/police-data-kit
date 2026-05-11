@@ -19,7 +19,7 @@
 
 import Foundation
 
-actor JSONSerialiser: Serialiser {
+final class JSONSerialiser: Serialiser {
 
     private let decoder: JSONDecoder
 
@@ -27,7 +27,7 @@ actor JSONSerialiser: Serialiser {
         self.decoder = decoder
     }
 
-    func decode<T: Decodable>(_: T.Type, from data: Data) async throws -> T {
+    func decode<T: Decodable>(_: T.Type, from data: Data) throws -> T {
         try decoder.decode(T.self, from: data)
     }
 

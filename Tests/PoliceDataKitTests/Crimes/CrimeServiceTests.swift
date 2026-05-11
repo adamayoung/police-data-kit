@@ -17,7 +17,7 @@
 //  limitations under the License.
 //
 
-import MapKit
+import CoreLocation
 @testable import PoliceDataKit
 import XCTest
 
@@ -26,7 +26,7 @@ final class CrimeServiceTests: XCTestCase {
     var service: CrimeService!
     var apiClient: MockAPIClient!
     var cache: CrimeMockCache!
-    var availableDataRegion: MKCoordinateRegion!
+    var availableDataRegion: AvailableRegion!
 
     override func setUp() {
         super.setUp()
@@ -44,18 +44,24 @@ final class CrimeServiceTests: XCTestCase {
         super.tearDown()
     }
 
+}
+
+extension CrimeServiceTests {
+
     func testStreetLevelCrimesAtCoordinateReturnsCrimes() async throws {
         let coordinate = CLLocationCoordinate2D.mock
         let date = Date()
         let expectedResult = Crime.mocks
-        apiClient.add(response: .success(Crime.mocks))
+        await apiClient.add(response: .success(Crime.mocks))
 
         let result = try await service.streetLevelCrimes(at: coordinate, date: date)
 
         XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 1)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        XCTAssertEqual(requestedURLsCount, 1)
+        let lastURL = await apiClient.requestedURLs.last
         XCTAssertEqual(
-            apiClient.requestedURLs.last,
+            lastURL,
             CrimesEndpoint.streetLevelCrimesAtSpecificPoint(coordinate: coordinate, date: date).path
         )
     }
@@ -63,7 +69,7 @@ final class CrimeServiceTests: XCTestCase {
     func testStreetLevelCrimesAtCoordsWhenOutsideDataRegionThrowsLocationOutsideOfDataSetRegionError() async throws {
         let coordinate = CLLocationCoordinate2D.outsideAvailableDataRegion
         let date = Date()
-        apiClient.add(response: .success(Crime.mocks))
+        await apiClient.add(response: .success(Crime.mocks))
 
         var resultError: CrimeError?
         do {
@@ -73,36 +79,44 @@ final class CrimeServiceTests: XCTestCase {
         }
 
         XCTAssertEqual(resultError, .locationOutsideOfDataSetRegion)
-        XCTAssertEqual(apiClient.requestedURLs.count, 0)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        XCTAssertEqual(requestedURLsCount, 0)
     }
 
     func testStreetLevelCrimesInAreaReturnsCrimes() async throws {
         let coordinates = CLLocationCoordinate2D.mocks
         let date = Date()
         let expectedResult = Crime.mocks
-        apiClient.add(response: .success(Crime.mocks))
+        await apiClient.add(response: .success(Crime.mocks))
 
         let result = try await service.streetLevelCrimes(in: coordinates, date: date)
 
         XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 1)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        XCTAssertEqual(requestedURLsCount, 1)
+        let lastURL = await apiClient.requestedURLs.last
         XCTAssertEqual(
-            apiClient.requestedURLs.last,
+            lastURL,
             CrimesEndpoint.streetLevelCrimesInArea(coordinates: CLLocationCoordinate2D.mocks, date: date).path
         )
     }
+
+}
+
+extension CrimeServiceTests {
 
     func testCrimesForStreetWhenNotCachedReturnsCrimes() async throws {
         let expectedResult = Crime.mocks
         let streetID = try XCTUnwrap(expectedResult[0].location?.street.id)
         let date = Date()
-        apiClient.add(response: .success(Crime.mocks))
+        await apiClient.add(response: .success(Crime.mocks))
 
         let result = try await service.crimes(forStreet: streetID, date: date)
 
         XCTAssertEqual(result, expectedResult)
+        let lastURL = await apiClient.requestedURLs.last
         XCTAssertEqual(
-            apiClient.requestedURLs.last,
+            lastURL,
             CrimesEndpoint.crimesAtLocationForStreet(streetID: streetID, date: date).path
         )
     }
@@ -116,14 +130,15 @@ final class CrimeServiceTests: XCTestCase {
         let result = try await service.crimes(forStreet: streetID, date: date)
 
         XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 0)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        XCTAssertEqual(requestedURLsCount, 0)
     }
 
     func testCrimesForStreetWhenNotCachedAndReturnsCrimesShouldCacheResult() async throws {
         let expectedResult = Crime.mocks
         let streetID = try XCTUnwrap(expectedResult[0].location?.street.id)
         let date = Date()
-        apiClient.add(response: .success(Crime.mocks))
+        await apiClient.add(response: .success(Crime.mocks))
         _ = try await service.crimes(forStreet: streetID, date: date)
 
         let cachedResult = await cache.crimes(forStreet: streetID, date: date)
@@ -135,14 +150,16 @@ final class CrimeServiceTests: XCTestCase {
         let coordinate = CLLocationCoordinate2D.mock
         let date = Date()
         let expectedResult = Crime.mocks
-        apiClient.add(response: .success(Crime.mocks))
+        await apiClient.add(response: .success(Crime.mocks))
 
         let result = try await service.crimes(at: coordinate, date: date)
 
         XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 1)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        XCTAssertEqual(requestedURLsCount, 1)
+        let lastURL = await apiClient.requestedURLs.last
         XCTAssertEqual(
-            apiClient.requestedURLs.last,
+            lastURL,
             CrimesEndpoint.crimesAtLocationAtSpecificPoint(coordinate: coordinate, date: date).path
         )
     }
@@ -150,7 +167,7 @@ final class CrimeServiceTests: XCTestCase {
     func testCrimesAtCoordsWhenNotInAvailableDataRegionThrowsLocationOutsideOfDataSetRegionError() async throws {
         let coordinate = CLLocationCoordinate2D.outsideAvailableDataRegion
         let date = Date()
-        apiClient.add(response: .success(Crime.mocks))
+        await apiClient.add(response: .success(Crime.mocks))
 
         var resultError: CrimeError?
         do {
@@ -160,8 +177,13 @@ final class CrimeServiceTests: XCTestCase {
         }
 
         XCTAssertEqual(resultError, .locationOutsideOfDataSetRegion)
-        XCTAssertEqual(apiClient.requestedURLs.count, 0)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        XCTAssertEqual(requestedURLsCount, 0)
     }
+
+}
+
+extension CrimeServiceTests {
 
     func testCrimesWithNoLocationWhenNotCachedReturnsCrimes() async throws {
         let category = CrimeCategory.mock
@@ -169,7 +191,7 @@ final class CrimeServiceTests: XCTestCase {
         let policeForceID = PoliceForce.mock.id
         let date = Date()
         let expectedResult = Crime.mocks
-        apiClient.add(response: .success(Crime.mocks))
+        await apiClient.add(response: .success(Crime.mocks))
 
         let result = try await service.crimesWithNoLocation(
             forCategory: categoryID,
@@ -178,8 +200,9 @@ final class CrimeServiceTests: XCTestCase {
         )
 
         XCTAssertEqual(result, expectedResult)
+        let lastURL = await apiClient.requestedURLs.last
         XCTAssertEqual(
-            apiClient.requestedURLs.last,
+            lastURL,
             CrimesEndpoint.crimesWithNoLocation(categoryID: categoryID, policeForceID: policeForceID, date: date).path
         )
     }
@@ -204,7 +227,8 @@ final class CrimeServiceTests: XCTestCase {
         )
 
         XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 0)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        XCTAssertEqual(requestedURLsCount, 0)
     }
 
     func testCrimesWithNoLocationWhenNotCachedAndReturnsCrimesShouldCacheResult() async throws {
@@ -213,7 +237,7 @@ final class CrimeServiceTests: XCTestCase {
         let policeForceID = PoliceForce.mock.id
         let date = Date()
         let expectedResult = Crime.mocks
-        apiClient.add(response: .success(Crime.mocks))
+        await apiClient.add(response: .success(Crime.mocks))
         _ = try await service.crimesWithNoLocation(forCategory: categoryID, inPoliceForce: policeForceID, date: date)
 
         let cachedResult = await cache.crimesWithNoLocation(
@@ -225,16 +249,22 @@ final class CrimeServiceTests: XCTestCase {
         XCTAssertEqual(cachedResult, expectedResult)
     }
 
+}
+
+extension CrimeServiceTests {
+
     func testCrimeCategoriesWhenNotCachedReturnsCrimeCategories() async throws {
         let expectedResult = CrimeCategory.mocks
         let date = Date()
-        apiClient.add(response: .success(CrimeCategory.mocks))
+        await apiClient.add(response: .success(CrimeCategory.mocks))
 
         let result = try await service.crimeCategories(forDate: date)
 
         XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 1)
-        XCTAssertEqual(apiClient.requestedURLs.last, CrimesEndpoint.categories(date: date).path)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        XCTAssertEqual(requestedURLsCount, 1)
+        let lastURL = await apiClient.requestedURLs.last
+        XCTAssertEqual(lastURL, CrimesEndpoint.categories(date: date).path)
     }
 
     func testCrimeCategoriesWhenCachedReturnsCachedCrimeCategories() async throws {
@@ -245,19 +275,24 @@ final class CrimeServiceTests: XCTestCase {
         let result = try await service.crimeCategories(forDate: date)
 
         XCTAssertEqual(result, expectedResult)
-        XCTAssertEqual(apiClient.requestedURLs.count, 0)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        XCTAssertEqual(requestedURLsCount, 0)
     }
 
     func testCrimeCategoriesWhenNotCachedReturnsCrimeCategoriesShouldCacheResult() async throws {
         let expectedResult = CrimeCategory.mocks
         let date = Date()
-        apiClient.add(response: .success(CrimeCategory.mocks))
+        await apiClient.add(response: .success(CrimeCategory.mocks))
         _ = try await service.crimeCategories(forDate: date)
 
         let cachedResult = await cache.crimeCategories(forDate: date)
 
         XCTAssertEqual(cachedResult, expectedResult)
     }
+
+}
+
+extension CrimeServiceTests {
 
     func testLatestDataDateWhenCachedReturnsCachedDate() async throws {
         let expectedDate = Date(timeIntervalSince1970: 1_759_190_400) // 2025-09-30
@@ -266,25 +301,28 @@ final class CrimeServiceTests: XCTestCase {
         let result = try await service.latestDataDate()
 
         XCTAssertEqual(result, expectedDate)
-        XCTAssertEqual(apiClient.requestedURLs.count, 0)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        XCTAssertEqual(requestedURLsCount, 0)
     }
 
     func testLatestDataDateWhenNotCachedReturnsDate() async throws {
         let expectedDate = Date(timeIntervalSince1970: 1_759_190_400) // 2025-09-30
         let mockDTO = LastUpdatedDTO.mock(date: expectedDate)
-        apiClient.add(response: .success(mockDTO))
+        await apiClient.add(response: .success(mockDTO))
 
         let result = try await service.latestDataDate()
 
         XCTAssertEqual(result, expectedDate)
-        XCTAssertEqual(apiClient.requestedURLs.count, 1)
-        XCTAssertEqual(apiClient.requestedURLs.last, CrimesEndpoint.lastUpdated.path)
+        let requestedURLsCount = await apiClient.requestedURLs.count
+        XCTAssertEqual(requestedURLsCount, 1)
+        let lastURL = await apiClient.requestedURLs.last
+        XCTAssertEqual(lastURL, CrimesEndpoint.lastUpdated.path)
     }
 
     func testLatestDataDateWhenNotCachedShouldCacheResult() async throws {
         let expectedDate = Date(timeIntervalSince1970: 1_759_190_400)
         let mockDTO = LastUpdatedDTO.mock(date: expectedDate)
-        apiClient.add(response: .success(mockDTO))
+        await apiClient.add(response: .success(mockDTO))
         _ = try await service.latestDataDate()
 
         let cachedDate = await cache.latestDataDate()
@@ -294,7 +332,7 @@ final class CrimeServiceTests: XCTestCase {
 
     func testLatestDataDateWhenNetworkErrorThrowsNetworkError() async throws {
         let networkError = URLError(.notConnectedToInternet)
-        apiClient.add(response: .failure(APIClientError.network(networkError)))
+        await apiClient.add(response: .failure(APIClientError.network(networkError)))
 
         var resultError: CrimeError?
         do {
@@ -311,7 +349,7 @@ final class CrimeServiceTests: XCTestCase {
 
     func testLatestDataDateWhenDecodeErrorThrowsUnknownError() async throws {
         let decodeError = DecodingError.dataCorrupted(.init(codingPath: [], debugDescription: "bad"))
-        apiClient.add(response: .failure(APIClientError.decode(decodeError)))
+        await apiClient.add(response: .failure(APIClientError.decode(decodeError)))
 
         var resultError: CrimeError?
         do {

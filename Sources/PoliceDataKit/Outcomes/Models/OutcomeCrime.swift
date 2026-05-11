@@ -22,7 +22,7 @@ import Foundation
 ///
 /// A model representing a crime of an outcome.
 ///
-public struct OutcomeCrime: Identifiable, Equatable, Codable {
+public struct OutcomeCrime: Identifiable, Equatable, Codable, Sendable {
 
     /// Identifier of the crime.
     ///
